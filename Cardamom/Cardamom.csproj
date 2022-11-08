@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="SFML.Graphics">
+      <HintPath>..\..\..\..\OneDrive\Documents\SFML.Net-2.5-sources\SFML.Net-2.5\src\SFML.Graphics\bin\Debug\netstandard2.0\SFML.Graphics.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.System">
+      <HintPath>..\..\..\..\OneDrive\Documents\SFML.Net-2.5-sources\SFML.Net-2.5\src\SFML.Graphics\bin\Debug\netstandard2.0\SFML.System.dll</HintPath>
+    </Reference>
+    <Reference Include="SFML.Window">
+      <HintPath>..\..\..\..\OneDrive\Documents\SFML.Net-2.5-sources\SFML.Net-2.5\src\SFML.Graphics\bin\Debug\netstandard2.0\SFML.Window.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
