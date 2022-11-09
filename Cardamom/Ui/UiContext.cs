@@ -1,12 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SFML.Graphics;
+using SFML.System;
 
 namespace Cardamom.Ui
 {
     public class UiContext
     {
+        private MouseListener _mouseListener;
+
+        private IUiInteractiveElement? _topElement;
+
+        public UiContext(MouseListener mouseListener)
+        {
+            _mouseListener = mouseListener;
+        }
+
+        public void Clear()
+        {
+            _topElement = null;
+        }
+
+        public void Register(IUiInteractiveElement element, Transform transform)
+        {
+            Vector2i mousePosition = _mouseListener.GetMousePosition();
+            if (element.IsPointWithinBounds(transform.GetInverse() * new Vector2f(mousePosition.X, mousePosition.Y)))
+            {
+                _topElement = element;
+            }
+        }
     }
 }
