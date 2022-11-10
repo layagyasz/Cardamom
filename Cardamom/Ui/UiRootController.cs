@@ -1,28 +1,45 @@
 ﻿using Cardamom.Ui.Controller;
 using SFML.Graphics;
 using SFML.Window;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cardamom.Ui
 {
     public class UiRootController
     {
-        private readonly MouseListener _mouseListener;
-
+        private UiContext? _context;
         private IControlled? _focus;
         private IControlled? _mouseOver;
 
-        public UiRootController(RenderWindow window, MouseListener mouseListener)
+        public void Bind(RenderWindow window)
         {
             window.KeyPressed += HandleKeyPressed;
             window.TextEntered += HandleTextEntered;
+        }
 
-            _mouseListener = mouseListener;
-            _mouseListener.MouseButtonClicked += HandleMouseButtonClicked;
+        public void Bind(MouseListener mouseListener)
+        {
+            mouseListener.MouseButtonClicked += HandleMouseButtonClicked;
+            mouseListener.MouseWheelScrolled += HandleMouseWheelScrolled;
+        }
+
+        public void Bind(UiContext context)
+        {
+            _context = context;
+        }
+
+        public void DispatchEvents()
+        {
+            if (_context == null)
+            {
+                return;
+            }
+
+            if (_context?.GetTopElement() != _mouseOver)
+            {
+                _mouseOver?.Controller?.HandleMouseLeft();
+                _mouseOver = _context?.GetTopElement();
+                _mouseOver?.Controller?.HandleMouseEntered();
+            }
         }
 
         private void HandleKeyPressed(object? sender, KeyEventArgs e)
@@ -37,8 +54,17 @@ namespace Cardamom.Ui
 
         private void HandleMouseButtonClicked(object? sender, MouseButtonEventArgs e)
         {
+            if (e.Button == Mouse.Button.Left)
+            {
+                _focus = _mouseOver;
+            }
             // Translate into component relative coordinates.
             _mouseOver?.Controller?.HandleMouseButtonClicked(e);
+        }
+
+        private void HandleMouseWheelScrolled(object? sender, MouseWheelScrollEventArgs e)
+        {
+            _mouseOver?.Controller?.HandleMouseWheelScrolled(e);
         }
     }
 }

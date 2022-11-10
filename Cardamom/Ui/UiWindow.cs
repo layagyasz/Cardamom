@@ -1,20 +1,15 @@
 ﻿using SFML.Graphics;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cardamom.Ui
 {
     public class UiWindow
     {
         public RenderWindow RenderWindow { get; }
-        public UiRootController UiRootController { get; }
-        public MouseListener MouseListener { get; }
         public IRenderable? UiRoot { get; set; }
 
+        private readonly UiRootController _controller;
+        private readonly MouseListener _mouseListener;
         private readonly UiContext _context;
 
         private bool _run = true;
@@ -23,9 +18,15 @@ namespace Cardamom.Ui
         {
             RenderWindow = renderWindow;
             RenderWindow.Closed += HandleClose;
-            MouseListener = new MouseListener(renderWindow);
-            UiRootController = new UiRootController(RenderWindow, MouseListener);
-            _context = new UiContext(MouseListener);
+
+            _mouseListener = new();
+            _mouseListener.Bind(renderWindow);
+
+            _controller = new();
+            _controller.Bind(renderWindow);
+            _controller.Bind(_mouseListener);
+
+            _context = new(_mouseListener);
         }
 
         public void Start()
@@ -34,6 +35,7 @@ namespace Cardamom.Ui
             while (_run)
             {
                 RenderWindow.DispatchEvents();
+                _controller.DispatchEvents();
 
                 if (UiRoot != null)
                 {

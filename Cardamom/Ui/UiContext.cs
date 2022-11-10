@@ -19,6 +19,11 @@ namespace Cardamom.Ui
             _topElement = null;
         }
 
+        public IUiInteractiveElement? GetTopElement()
+        {
+            return _topElement;
+        }
+
         public void Register(IUiInteractiveElement element, Transform transform)
         {
             Vector2i mousePosition = _mouseListener.GetMousePosition();

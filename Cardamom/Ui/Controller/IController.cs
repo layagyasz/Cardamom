@@ -15,5 +15,6 @@ namespace Cardamom.Ui.Controller
         void HandleMouseEntered();
         void HandleMouseLeft();
         void HandleMouseButtonClicked(MouseButtonEventArgs e);
+        void HandleMouseWheelScrolled(MouseWheelScrollEventArgs e);
     }
 }
