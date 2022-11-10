@@ -19,6 +19,7 @@ namespace Cardamom.Ui
         public void Bind(MouseListener mouseListener)
         {
             mouseListener.MouseButtonClicked += HandleMouseButtonClicked;
+            mouseListener.MouseButtonDragged += HandleMouseButtonDragged;
             mouseListener.MouseWheelScrolled += HandleMouseWheelScrolled;
         }
 
@@ -56,10 +57,17 @@ namespace Cardamom.Ui
         {
             if (e.Button == Mouse.Button.Left)
             {
+                _focus?.Controller?.HandleFocusLeft();
                 _focus = _mouseOver;
+                _focus?.Controller?.HandleFocusEntered();
             }
             // Translate into component relative coordinates.
             _mouseOver?.Controller?.HandleMouseButtonClicked(e);
+        }
+
+        private void HandleMouseButtonDragged(object? sender, MouseButtonDragEventArgs e)
+        {
+            _mouseOver?.Controller?.HandleMouseButtonDragged(e);
         }
 
         private void HandleMouseWheelScrolled(object? sender, MouseWheelScrollEventArgs e)
