@@ -22,7 +22,7 @@ namespace Cardamom.Json
             }
 
             TCollection collect = 
-                (TCollection)Precondition.CheckNotNull(typeof(TCollection).GetConstructor(Array.Empty<Type>()))
+                (TCollection)Precondition.NotNull(typeof(TCollection).GetConstructor(Array.Empty<Type>()))
                                          .Invoke(Array.Empty<object>());
 
             while (reader.Read())
@@ -43,7 +43,7 @@ namespace Cardamom.Json
                     value = JsonSerializer.Deserialize<T>(ref reader, options);
                 }
 
-                collect.Add(Precondition.CheckNotNull(value));
+                collect.Add(Precondition.NotNull(value));
             }
 
             throw new JsonException();

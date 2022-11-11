@@ -7,7 +7,7 @@ namespace Cardamom.Json
     {
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            string stringValue = Precondition.CheckNotNull(reader.GetString());
+            string stringValue = Precondition.NotNull(reader.GetString());
             if (!Enum.TryParse(stringValue, ignoreCase: false, out T value) &&
                 !Enum.TryParse(stringValue, ignoreCase: true, out value))
             {
@@ -19,7 +19,7 @@ namespace Cardamom.Json
 
         public override void Write(Utf8JsonWriter writer, T @object, JsonSerializerOptions options)
         {
-            writer.WritePropertyName(Precondition.CheckNotNull(@object.ToString()));
+            writer.WritePropertyName(Precondition.NotNull(@object.ToString()));
         }
     }
 }

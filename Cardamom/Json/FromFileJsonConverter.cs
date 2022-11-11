@@ -8,7 +8,7 @@ namespace Cardamom.Json
         public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             return JsonSerializer.Deserialize<T>(
-                File.ReadAllText(Precondition.CheckNotNull(reader.GetString())), options);
+                File.ReadAllText(Precondition.NotNull(reader.GetString())), options);
         }
 
         public override void Write(Utf8JsonWriter writer, T @object, JsonSerializerOptions options)

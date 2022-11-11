@@ -30,7 +30,7 @@ namespace Cardamom.Json
             }
 
             TCollection dict = 
-                (TCollection)Precondition.CheckNotNull(typeof(TCollection).GetConstructor(Array.Empty<Type>()))
+                (TCollection)Precondition.NotNull(typeof(TCollection).GetConstructor(Array.Empty<Type>()))
                                          .Invoke(Array.Empty<object>());
 
             while (reader.Read())
@@ -49,11 +49,11 @@ namespace Cardamom.Json
                     KeyConverter ?? (JsonConverter<TKey>)options.GetConverter(typeof(TKey));
                 if (keyConverter != null)
                 {
-                    key = Precondition.CheckNotNull(keyConverter.Read(ref reader, typeof(TKey), options));
+                    key = Precondition.NotNull(keyConverter.Read(ref reader, typeof(TKey), options));
                 }
                 else
                 {
-                    key = Precondition.CheckNotNull(JsonSerializer.Deserialize<TKey>(ref reader, options));
+                    key = Precondition.NotNull(JsonSerializer.Deserialize<TKey>(ref reader, options));
                 }
 
                 TValue value;
@@ -62,11 +62,11 @@ namespace Cardamom.Json
                 reader.Read();
                 if (valueConverter != null)
                 {
-                    value = Precondition.CheckNotNull(valueConverter.Read(ref reader, typeof(TValue), options));
+                    value = Precondition.NotNull(valueConverter.Read(ref reader, typeof(TValue), options));
                 }
                 else
                 {
-                    value = Precondition.CheckNotNull(JsonSerializer.Deserialize<TValue>(ref reader, options));
+                    value = Precondition.NotNull(JsonSerializer.Deserialize<TValue>(ref reader, options));
                 }
 
                 dict.Add(new KeyValuePair<TKey, TValue>(key, value));
@@ -81,7 +81,7 @@ namespace Cardamom.Json
             JsonConverter<TValue> valueConverter = (JsonConverter<TValue>)options.GetConverter(typeof(TValue));
             foreach (KeyValuePair<TKey, TValue> kvp in @object)
             {
-                writer.WritePropertyName(Precondition.CheckNotNull(kvp.Key?.ToString()));
+                writer.WritePropertyName(Precondition.NotNull(kvp.Key?.ToString()));
 
                 if (valueConverter != null)
                 {

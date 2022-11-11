@@ -35,7 +35,7 @@ namespace Cardamom.Ui
             while (_run)
             {
                 RenderWindow.DispatchEvents();
-                _controller.DispatchEvents();
+                _context.Clear();
 
                 if (UiRoot != null)
                 {
@@ -43,6 +43,7 @@ namespace Cardamom.Ui
                     UiRoot.Draw(RenderWindow, Transform.Identity);
                 }
 
+                _controller.DispatchEvents();
                 RenderWindow.Display();
             }
         }

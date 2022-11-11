@@ -6,7 +6,7 @@ namespace Cardamom.Collections
 
         public TValue this[TKey key]
         {
-            get => Precondition.CheckNotNull(_values[(int)(object)key]);
+            get => Precondition.NotNull(_values[(int)(object)key]);
             set => _values[(int)(object)key] = value;
         }
 
@@ -18,7 +18,7 @@ namespace Cardamom.Collections
             }
         }
         public ICollection<TValue> Values { 
-            get { return _values.Where(x => !x?.Equals(default) ?? false).Select(Precondition.CheckNotNull).ToList(); }
+            get { return _values.Where(x => !x?.Equals(default) ?? false).Select(Precondition.NotNull).ToList(); }
         }
         public int Count { get { return _values.Length; } }
         public bool IsReadOnly { get; } = false;
@@ -43,7 +43,7 @@ namespace Cardamom.Collections
             {
                 if (!this[key]?.Equals(default) ?? false)
                 {
-                    yield return new KeyValuePair<TKey, TValue>(key, Precondition.CheckNotNull(this[key]));
+                    yield return new KeyValuePair<TKey, TValue>(key, Precondition.NotNull(this[key]));
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace Cardamom.Collections
             int i = 0;
             foreach (TKey Key in Keys)
             {
-                values[i + index] = new KeyValuePair<TKey, TValue>(Key, Precondition.CheckNotNull(this[Key]));
+                values[i + index] = new KeyValuePair<TKey, TValue>(Key, Precondition.NotNull(this[Key]));
             }
         }
     }
