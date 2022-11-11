@@ -34,7 +34,6 @@ namespace Cardamom.Ui
                 BorderColor = Precondition.HasSize(
                     Inherit(ancestors.Select(x => x.BorderColor), BorderColor) ?? new Color[4], 4),
                 BorderWidth = Inherit(ancestors.Select(x => x.BorderWidth), BorderWidth) ?? 0
-
             };
 
             private static T Inherit<T>(IEnumerable<T> ancestors, T child)

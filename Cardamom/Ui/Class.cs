@@ -14,17 +14,17 @@
 
         public string Key { get; }
 
-        private ClassAttributes[] _classForStates;
+        private ClassAttributes[] _attributes;
 
         public Class(string key, ClassAttributes[] classForStates)
         {
             Key = key;
-            _classForStates = Precondition.HasSize(classForStates, 16);
+            _attributes = Precondition.HasSize(classForStates, 16);
         }
 
         public ClassAttributes Get(State state)
         {
-            return _classForStates[(int)state];
+            return _attributes[(int)state];
         }
 
         public class Builder : IKeyed
@@ -34,7 +34,7 @@
                 public ClassAttributes.Builder Attributes { get; set; } = new();
             }
 
-            public string Key { get; set; }
+            public string Key { get; set; } = string.Empty;
             public Builder? Parent { get; set; }
             public ClassAttributes.Builder? Default { get; set; }
             public List<ClassAttributesBuilderWithState> States { get; set; } = new();
@@ -71,23 +71,16 @@
             {
                 foreach (var potentialAncestor in potentialAncestors)
                 {
-                    if (IsAncestor(child, potentialAncestor))
+                    if (IsAncestor(child.State, potentialAncestor.State))
                     {
                         yield return potentialAncestor.Attributes;
                     }
                 }
             }
 
-            private bool IsAncestor(ClassAttributesBuilderWithState child, ClassAttributesBuilderWithState ancestor)
+            private static bool IsAncestor(State child, State ancestor)
             {
-                foreach (var state in Enum.GetValues(typeof(State)).Cast<State>())
-                {
-                    if (child.State.HasFlag(state) || !ancestor.State.HasFlag(state))
-                    {
-                        return false;
-                    }
-                }
-                return true;
+                return (ancestor & ~child) == 0;
             }
         }
     }
