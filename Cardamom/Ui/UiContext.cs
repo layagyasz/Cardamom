@@ -5,7 +5,7 @@ namespace Cardamom.Ui
 {
     public class UiContext
     {
-        private MouseListener _mouseListener;
+        private readonly MouseListener _mouseListener;
 
         private IUiInteractiveElement? _topElement;
 

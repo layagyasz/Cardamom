@@ -2,7 +2,7 @@
 
 namespace Cardamom.Planar
 {
-    internal interface IPolygon
+    public interface IPolygon
     {
         int VertexCount { get; }
 

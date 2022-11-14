@@ -10,6 +10,8 @@ namespace Cardamom.Ui.Controller
 {
     public interface IController
     {
+        void Bind(object @object);
+        void Unbind();
         void HandleKeyPressed(KeyEventArgs e);
         void HandleTextEntered(TextEventArgs e);
         void HandleMouseEntered();

@@ -10,6 +10,7 @@ namespace Cardamom.Ui
 {
     public interface IUiElement : IRenderable, IControlled
     {
-        Vector2i Position { get; set; }
+        Vector2f Position { get; set; }
+        Vector2f Size { get; }
     }
 }
