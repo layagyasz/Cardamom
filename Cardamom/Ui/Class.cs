@@ -14,12 +14,12 @@
 
         public string Key { get; }
 
-        private ClassAttributes[] _attributes;
+        private readonly ClassAttributes[] _attributes;
 
         public Class(string key, ClassAttributes[] classForStates)
         {
             Key = key;
-            _attributes = Precondition.HasSize(classForStates, 16);
+            _attributes = Precondition.HasSize<ClassAttributes[], ClassAttributes>(classForStates, 16);
         }
 
         public ClassAttributes Get(State state)
@@ -63,10 +63,10 @@
                     ancestors.AddRange(GetAncestry(builder, States));
                     attributesForStates[(int)builder.State] = builder.Attributes.Build(ancestors);
                 }
-                return new Class(Key, attributesForStates);
+                return new Class(Precondition.IsNotEmpty<string, char>(Key), attributesForStates);
             }
 
-            private IEnumerable<ClassAttributes.Builder> GetAncestry(
+            private static IEnumerable<ClassAttributes.Builder> GetAncestry(
                 ClassAttributesBuilderWithState child, IEnumerable<ClassAttributesBuilderWithState> potentialAncestors)
             {
                 foreach (var potentialAncestor in potentialAncestors)

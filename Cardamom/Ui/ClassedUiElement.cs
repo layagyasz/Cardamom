@@ -12,13 +12,11 @@ namespace Cardamom.Ui
         public Vector2f RightPadding { get; private set; }
 
         private readonly Class _class;
-        private Class.State _state;
 
         public ClassedUiElement(Class @class, IController controller)
             : base(controller)
         {
             _class = @class;
-            _state = Class.State.NONE;
         }
 
         public virtual void SetAttributes(ClassAttributes attributes)
@@ -31,7 +29,6 @@ namespace Cardamom.Ui
 
         public void SetState(Class.State state)
         {
-            _state = state;
             SetAttributes(_class.Get(state));
         }
 

@@ -35,11 +35,11 @@ namespace Cardamom.Ui
                 RightPadding = Inherit(ancestors.Select(x => x.RightPadding), RightPadding) ?? new Vector2f(),
                 Size = Inherit(ancestors.Select(x => x.Size), Size) ?? new Vector2f(),
                 FontFace = Inherit(ancestors.Select(x => x.FontFace), FontFace),
-                BackgroundColor = Precondition.HasSize(
+                BackgroundColor = Precondition.HasSize<Color[], Color>(
                     Inherit(ancestors.Select(x => x.BackgroundColor), BackgroundColor) ?? new Color[4], 4),
-                BorderColor = Precondition.HasSize(
+                BorderColor = Precondition.HasSize<Color[], Color>(
                     Inherit(ancestors.Select(x => x.BorderColor), BorderColor) ?? new Color[4], 4),
-                BorderWidth = Precondition.HasSize(
+                BorderWidth = Precondition.HasSize<byte[], byte>(
                     Inherit(ancestors.Select(x => x.BorderWidth), BorderWidth) ?? new byte[4], 4)
             };
 

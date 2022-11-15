@@ -52,7 +52,7 @@ namespace Cardamom.Ui.Elements
         
         private void ComputeShownElements()
         {
-            float total = 0;
+            float total = LeftPadding.Y;
             bool ended = false;
             for (uint i=0; i<_elements.Count; ++i)
             {
@@ -60,7 +60,7 @@ namespace Cardamom.Ui.Elements
                 {
                     _elements[(int)i].Position = new Vector2f(0, total);
                     total += _elements[(int)i].Size.Y;
-                    if (total > Size.Y)
+                    if (total + RightPadding.Y > Size.Y)
                     {
                         _endIndex = i;
                         _elements[(int)i].Visible = false;

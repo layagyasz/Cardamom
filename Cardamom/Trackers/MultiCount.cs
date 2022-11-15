@@ -78,7 +78,7 @@ namespace Cardamom.Trackers
 
         public MultiCount<T> Copy()
         {
-            MultiCount<T> newCounter = new MultiCount<T>();
+            MultiCount<T> newCounter = new();
             foreach (var count in this)
             {
                 newCounter.Add(count);
