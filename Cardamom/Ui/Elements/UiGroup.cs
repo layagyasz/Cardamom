@@ -23,7 +23,13 @@ namespace Cardamom.Ui.Elements
 
         public void Draw(RenderTarget target, Transform transform)
         {
-            _elements.ForEach(x => x.Draw(target, transform));
+            foreach (var element in _elements)
+            {
+                if (element.Visible)
+                {
+                    element.Draw(target, transform);
+                }
+            }
         }
 
         public void Update(UiContext context, Transform transform, long delta)

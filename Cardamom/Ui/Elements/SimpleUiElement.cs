@@ -9,7 +9,7 @@ namespace Cardamom.Ui.Elements
     {
         private readonly RectComponent _rectComponent = new();
 
-        public override Vector2f Size => _rectComponent.Size;
+        public override Vector2f Size => _rectComponent.Size + LeftMargin + RightMargin;
 
         public SimpleUiElement(Class @class, IController controller)
             : base(@class, controller) 
@@ -19,6 +19,7 @@ namespace Cardamom.Ui.Elements
 
         public override void Draw(RenderTarget target, Transform transform)
         {
+            transform.Translate(Position + LeftMargin);
             _rectComponent.Draw(target, transform);
         }
 

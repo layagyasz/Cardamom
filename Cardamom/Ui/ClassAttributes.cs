@@ -5,8 +5,10 @@ namespace Cardamom.Ui
 {
     public class ClassAttributes
     {
-        public Vector2f Margin { get; set; }
-        public Vector2f Padding { get; set; }
+        public Vector2f LeftMargin { get; set; }
+        public Vector2f RightMargin { get; set; }
+        public Vector2f LeftPadding { get; set; }
+        public Vector2f RightPadding { get; set; }
         public Vector2f Size { get; set; }
         public Font? FontFace { get; set; }
         public Color[] BackgroundColor { get; set; } = new Color[4];
@@ -15,8 +17,10 @@ namespace Cardamom.Ui
 
         public class Builder
         {
-            public Vector2f? Margin { get; set; }
-            public Vector2f? Padding { get; set; }
+            public Vector2f? LeftMargin { get; set; }
+            public Vector2f? RightMargin { get; set; }
+            public Vector2f? LeftPadding { get; set; }
+            public Vector2f? RightPadding { get; set; }
             public Vector2f? Size { get; set; }
             public Font? FontFace { get; set; }
             public Color[]? BackgroundColor { get; set; }
@@ -25,8 +29,10 @@ namespace Cardamom.Ui
 
             public ClassAttributes Build(IEnumerable<Builder> ancestors) => new()
             {
-                Margin = Inherit(ancestors.Select(x => x.Margin), Margin) ?? new Vector2f(),
-                Padding = Inherit(ancestors.Select(x => x.Padding), Padding) ?? new Vector2f(),
+                LeftMargin = Inherit(ancestors.Select(x => x.LeftMargin), LeftMargin) ?? new Vector2f(),
+                RightMargin = Inherit(ancestors.Select(x => x.RightMargin), RightMargin) ?? new Vector2f(),
+                LeftPadding = Inherit(ancestors.Select(x => x.LeftPadding), LeftPadding) ?? new Vector2f(),
+                RightPadding = Inherit(ancestors.Select(x => x.RightPadding), RightPadding) ?? new Vector2f(),
                 Size = Inherit(ancestors.Select(x => x.Size), Size) ?? new Vector2f(),
                 FontFace = Inherit(ancestors.Select(x => x.FontFace), FontFace),
                 BackgroundColor = Precondition.HasSize(

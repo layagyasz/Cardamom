@@ -28,12 +28,20 @@ namespace Cardamom.Ui.Elements
         public override void Draw(RenderTarget target, Transform transform)
         {
             base.Draw(target, transform);
-            _elements.ForEach(x => x.Draw(target, transform));
+            transform.Translate(Position + LeftMargin);
+            foreach (var element in _elements)
+            {
+                if (element.Visible)
+                {
+                    element.Draw(target, transform);
+                }
+            }
         }
 
         public override void Update(UiContext context, Transform transform, long delta)
         {
             base.Update(context, transform, delta);
+            transform.Translate(Position + LeftMargin);
             _elements.ForEach(x => x.Update(context, transform, delta));
         }
     }

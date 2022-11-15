@@ -6,6 +6,7 @@ namespace Cardamom.Ui
 {
     public abstract class BaseUiInteractiveElement : IUiInteractiveElement
     {
+        public bool Visible { get; set; }
         public IController Controller { get; }
         public Vector2f Position { get; set; }
         public abstract Vector2f Size { get; }
@@ -22,8 +23,11 @@ namespace Cardamom.Ui
 
         public virtual void Update(UiContext context, Transform transform, long delta)
         {
-            transform.Translate(Position);
-            context.Register(this, transform);
+            if (Visible)
+            {
+                transform.Translate(Position);
+                context.Register(this, transform);
+            }
         }
     }
 }
