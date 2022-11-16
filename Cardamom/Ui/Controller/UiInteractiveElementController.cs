@@ -7,7 +7,7 @@ namespace Cardamom.Ui.Controller
         public EventHandler<MouseButtonEventArgs>? LeftClicked { get; set; }
         public EventHandler<MouseButtonEventArgs>? RightClicked { get; set; }
 
-        private T? _element;
+        protected T? _element;
 
         public void Bind(object @object)
         {
@@ -17,11 +17,6 @@ namespace Cardamom.Ui.Controller
         public void Unbind()
         {
             _element = default;
-        }
-
-        public T? GetElement()
-        {
-            return _element;
         }
 
         public virtual void HandleKeyPressed(KeyEventArgs e) { }

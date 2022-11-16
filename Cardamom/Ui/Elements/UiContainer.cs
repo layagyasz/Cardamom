@@ -13,6 +13,7 @@ namespace Cardamom.Ui.Elements
         public void Add(IUiElement element)
         {
             _elements.Add(element);
+            element.Parent = this;
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
@@ -28,7 +29,7 @@ namespace Cardamom.Ui.Elements
         public override void Draw(RenderTarget target, Transform transform)
         {
             base.Draw(target, transform);
-            transform.Translate(Position + LeftMargin);
+            transform.Translate(Position + LeftMargin + LeftPadding);
             foreach (var element in _elements)
             {
                 if (element.Visible)
@@ -41,7 +42,7 @@ namespace Cardamom.Ui.Elements
         public override void Update(UiContext context, Transform transform, long delta)
         {
             base.Update(context, transform, delta);
-            transform.Translate(Position + LeftMargin);
+            transform.Translate(Position + LeftMargin + LeftPadding);
             _elements.ForEach(x => x.Update(context, transform, delta));
         }
     }

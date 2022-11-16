@@ -10,6 +10,7 @@ namespace Cardamom.Ui
         public IController Controller { get; }
         public Vector2f Position { get; set; }
         public abstract Vector2f Size { get; }
+        public IControlled? Parent { get; set; }
 
         public BaseUiInteractiveElement(IController controller)
         {

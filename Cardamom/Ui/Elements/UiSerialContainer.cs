@@ -17,6 +17,7 @@ namespace Cardamom.Ui.Elements
         public void Add(IUiElement element)
         {
             _elements.Add(element);
+            element.Parent = this;
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
@@ -32,7 +33,7 @@ namespace Cardamom.Ui.Elements
         public override void Draw(RenderTarget target, Transform transform)
         {
             base.Draw(target, transform);
-            transform.Translate(Position + LeftMargin);
+            transform.Translate(Position + LeftMargin + LeftPadding);
             for (int i=(int)Index; i<_endIndex; ++i)
             {
                 _elements[i].Draw(target, transform);
@@ -42,7 +43,7 @@ namespace Cardamom.Ui.Elements
         public override void Update(UiContext context, Transform transform, long delta)
         {
             base.Update(context, transform, delta);
-            transform.Translate(Position + LeftMargin);
+            transform.Translate(Position + LeftMargin + LeftPadding);
             ComputeShownElements();
             for (int i = (int)Index; i < _endIndex; ++i)
             {
@@ -52,7 +53,7 @@ namespace Cardamom.Ui.Elements
         
         private void ComputeShownElements()
         {
-            float total = LeftPadding.Y;
+            float total = 0;
             bool ended = false;
             for (uint i=0; i<_elements.Count; ++i)
             {
@@ -60,7 +61,7 @@ namespace Cardamom.Ui.Elements
                 {
                     _elements[(int)i].Position = new Vector2f(0, total);
                     total += _elements[(int)i].Size.Y;
-                    if (total + RightPadding.Y > Size.Y)
+                    if (total + LeftPadding.Y + RightPadding.Y > Size.Y)
                     {
                         _endIndex = i;
                         _elements[(int)i].Visible = false;

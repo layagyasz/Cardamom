@@ -1,15 +1,18 @@
 ﻿using SFML.System;
+using SFML.Window;
 
 namespace Cardamom.Ui
 {
     public class MouseButtonDragEventArgs : EventArgs
     {
-        public Vector2i Start { get; }
-        public Vector2i End { get; }
-        public Vector2i Delta { get; }
+        public Mouse.Button Button { get; }
+        public Vector2f Start { get; }
+        public Vector2f End { get; }
+        public Vector2f Delta { get; }
 
-        public MouseButtonDragEventArgs(Vector2i start, Vector2i end, Vector2i delta)
+        public MouseButtonDragEventArgs(Mouse.Button button, Vector2f start, Vector2f end, Vector2f delta)
         {
+            Button = button;
             Start = start;
             End = end;
             Delta = delta;

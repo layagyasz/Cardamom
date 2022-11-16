@@ -7,8 +7,12 @@ namespace Cardamom.Ui
     public class UiRootController
     {
         private UiContext? _context;
+
         private IControlled? _focus;
+        private HashSet<IControlled> _focusAncestry = new();
+
         private IControlled? _mouseOver;
+        private HashSet<IControlled> _mouseOverAncestry = new();
 
         public void Bind(RenderWindow window)
         {
@@ -35,11 +39,20 @@ namespace Cardamom.Ui
                 return;
             }
 
-            if (_context?.GetTopElement() != _mouseOver)
+            var newMouseOver = _context?.GetTopElement();
+            if (newMouseOver != _mouseOver)
             {
-                _mouseOver?.Controller?.HandleMouseLeft();
-                _mouseOver = _context?.GetTopElement();
-                _mouseOver?.Controller?.HandleMouseEntered();
+                var newAncestry = GetAncestry(newMouseOver);
+                foreach (var element in _mouseOverAncestry.Except(newAncestry))
+                {
+                    element.Controller?.HandleMouseLeft();
+                }
+                foreach (var element in newAncestry.Except(_mouseOverAncestry))
+                {
+                    element.Controller?.HandleMouseEntered();
+                }
+                _mouseOver = newMouseOver;
+                _mouseOverAncestry = newAncestry;           
             }
         }
 
@@ -57,9 +70,21 @@ namespace Cardamom.Ui
         {
             if (e.Button == Mouse.Button.Left)
             {
-                _focus?.Controller?.HandleFocusLeft();
-                _focus = _mouseOver;
-                _focus?.Controller?.HandleFocusEntered();
+                var newFocus = _context?.GetTopElement();
+                if (newFocus != _focus)
+                {
+                    var newAncestry = GetAncestry(newFocus);
+                    foreach (var element in _focusAncestry.Except(newAncestry))
+                    {
+                        element.Controller?.HandleFocusLeft();
+                    }
+                    foreach (var element in newAncestry.Except(_focusAncestry))
+                    {
+                        element.Controller?.HandleFocusEntered();
+                    }
+                    _focus = newFocus;
+                    _focusAncestry = newAncestry;
+                }
             }
             // Translate into component relative coordinates.
             _mouseOver?.Controller?.HandleMouseButtonClicked(e);
@@ -73,6 +98,17 @@ namespace Cardamom.Ui
         private void HandleMouseWheelScrolled(object? sender, MouseWheelScrollEventArgs e)
         {
             _mouseOver?.Controller?.HandleMouseWheelScrolled(e);
+        }
+
+        private static HashSet<IControlled> GetAncestry(IControlled? element)
+        {
+            var result = new HashSet<IControlled>();
+            while (element != null)
+            {
+                result.Add(element);
+                element = element.Parent;
+            }
+            return result;
         }
     }
 }

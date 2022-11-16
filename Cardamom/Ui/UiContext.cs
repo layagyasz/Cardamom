@@ -26,8 +26,7 @@ namespace Cardamom.Ui
 
         public void Register(IUiInteractiveElement element, Transform transform)
         {
-            Vector2i mousePosition = _mouseListener.GetMousePosition();
-            if (element.IsPointWithinBounds(transform.GetInverse() * new Vector2f(mousePosition.X, mousePosition.Y)))
+            if (element.IsPointWithinBounds(transform.GetInverse() * _mouseListener.GetMousePosition()))
             {
                 _topElement = element;
             }

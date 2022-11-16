@@ -13,9 +13,9 @@ namespace Cardamom.Ui
         private RenderWindow? _window;
 
         private Mouse.Button? _depressedButton;
-        private Vector2i _depressedPosition;
+        private Vector2f _depressedPosition;
         private bool _drag;
-        private Vector2i _draggedPosition;
+        private Vector2f _draggedPosition;
 
         public void Bind(RenderWindow window)
         {
@@ -26,9 +26,10 @@ namespace Cardamom.Ui
             window.MouseMoved += HandleMouseMoved;
         }
 
-        public Vector2i GetMousePosition()
+        public Vector2f GetMousePosition()
         {
-            return Mouse.GetPosition(_window);
+            var position = Mouse.GetPosition(_window);
+            return new Vector2f(position.X, position.Y);
         }
 
         private void HandleMouseButtonPressed(object? sender, MouseButtonEventArgs e)
@@ -60,10 +61,16 @@ namespace Cardamom.Ui
             if (_drag || _depressedButton != null)
             {
                 _drag = true;
-                var newPosition = new Vector2i(e.X, e.Y);
+                var newPosition = new Vector2f(e.X, e.Y);
                 var delta = newPosition - _draggedPosition;
                 _draggedPosition = newPosition;
-                MouseButtonDragged?.Invoke(this, new(_depressedPosition, _draggedPosition, delta));
+                MouseButtonDragged?.Invoke(
+                    this, 
+                    new(
+                        (Mouse.Button)Precondition.NotNull(_depressedButton),
+                        _depressedPosition, 
+                        _draggedPosition, 
+                        delta));
 ;            }
         }
 
