@@ -12,7 +12,7 @@ namespace Cardamom.Ui
         public Vector2f LeftPadding => new(Padding[0], Padding[1]);
         public Vector2f RightPadding => new(Padding[2], Padding[3]);
         public Vector2f Size { get; set; }
-        public Font? FontFace { get; set; }
+        public KeyedWrapper<Font>? FontFace { get; set; }
         public Color[] BackgroundColor { get; set; } = new Color[4];
         public Color[] BorderColor { get; set; } = new Color[4];
         public byte[] BorderWidth { get; set; } = new byte[4];
@@ -22,7 +22,7 @@ namespace Cardamom.Ui
             public byte[]? Margin { get; set; }
             public byte[]? Padding { get; set; }
             public Vector2f? Size { get; set; }
-            public Font? FontFace { get; set; }
+            public KeyedWrapper<Font>? FontFace { get; set; }
             public Color[]? BackgroundColor { get; set; }
             public Color[]? BorderColor { get; set; }
             public byte[]? BorderWidth { get; set; }

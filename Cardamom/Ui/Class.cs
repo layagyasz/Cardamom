@@ -1,4 +1,7 @@
-﻿namespace Cardamom.Ui
+﻿using Cardamom.Json;
+using System.Text.Json.Serialization;
+
+namespace Cardamom.Ui
 {
     public class Class : IKeyed
     {
@@ -35,6 +38,7 @@
             }
 
             public string Key { get; set; } = string.Empty;
+            [JsonConverter(typeof(KeyedJsonConverter<Builder>))]
             public Builder? Parent { get; set; }
             public ClassAttributes.Builder? Default { get; set; }
             public List<ClassAttributesBuilderWithState> States { get; set; } = new();

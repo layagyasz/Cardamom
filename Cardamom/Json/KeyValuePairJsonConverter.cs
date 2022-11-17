@@ -13,8 +13,8 @@ namespace Cardamom.Json
 
         public KeyValuePairJsonConverter(JsonConverter<TKey>? keyConverter, JsonConverter<TValue>? valueConverter)
         {
-            this.KeyConverter = keyConverter;
-            this.ValueConverter = valueConverter;
+            KeyConverter = keyConverter;
+            ValueConverter = valueConverter;
         }
 
         public override TCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

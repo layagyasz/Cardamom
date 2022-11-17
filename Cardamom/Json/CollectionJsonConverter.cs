@@ -3,7 +3,8 @@ using System.Text.Json.Serialization;
 
 namespace Cardamom.Json
 {
-    class CollectionJsonConverter<TCollection, T> : JsonConverter<TCollection> where TCollection : ICollection<T>
+    public class CollectionJsonConverter<TCollection, T> 
+        : JsonConverter<TCollection> where TCollection : ICollection<T>
     {
         public JsonConverter<T>? Converter { get; }
 
@@ -11,7 +12,7 @@ namespace Cardamom.Json
 
         public CollectionJsonConverter(JsonConverter<T>? converter)
         {
-            this.Converter = converter;
+            Converter = converter;
         }
 
         public override TCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

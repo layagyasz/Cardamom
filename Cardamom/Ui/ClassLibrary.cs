@@ -1,17 +1,69 @@
-﻿namespace Cardamom.Ui
+﻿using Cardamom.Json;
+using SFML.Graphics;
+using System.Text.Json;
+
+namespace Cardamom.Ui
 {
     public class ClassLibrary
     {
         private readonly Dictionary<string, Class> _classes = new();
 
-        public void Add(Class @class)
+        public ClassLibrary(IEnumerable<Class> classes)
         {
-            _classes.Add(@class.Key, @class);
+            _classes = classes.ToDictionary(x => x.Key, x => x);
         }
 
         public Class Get(string key)
         {
             return _classes[key];
+        }
+
+        public class Builder
+        {
+            private readonly Dictionary<string, KeyedWrapper<Font>> _fonts = new();
+            private readonly Dictionary<string, Class.Builder> _classes = new();
+
+            public void ReadFonts(string path)
+            {
+                JsonSerializerOptions options = new();
+                options.Converters.Add(new FontJsonConverter());
+                foreach (var font in Precondition.NotNull(
+                    JsonSerializer.Deserialize<List<KeyedWrapper<Font>>>(File.ReadAllText(path), options)))
+                {
+                    _fonts.Add(font.Key, font);
+                }
+            }
+
+            public void ReadClasses(string directory, string pattern)
+            {
+                var objects = new Dictionary<string, IKeyed>();
+                foreach (var font in _fonts)
+                {
+                    objects.Add(font.Key, font.Value);
+                }
+                foreach (var @class in _classes)
+                {
+                    objects.Add(@class.Key, @class.Value);
+                }
+                JsonSerializerOptions options = new();
+                options.Converters.Add(new ColorJsonConverter());
+                options.Converters.Add(new Vector2fJsonConverter());
+                options.Converters.Add(new KeyedJsonConverter<Class.Builder>(objects));
+                options.Converters.Add(new KeyedCollectionJsonConverter<List<Class.Builder>, Class.Builder>(objects));
+                foreach (var file in Directory.EnumerateFiles(directory, pattern, SearchOption.AllDirectories))
+                {
+                    foreach (var @class in Precondition.NotNull(
+                        JsonSerializer.Deserialize<List<Class.Builder>>(File.ReadAllText(file), options)))
+                    {
+                        _classes.Add(@class.Key, @class);
+                    }
+                }
+            }
+
+            public ClassLibrary Build()
+            {
+                return new ClassLibrary(_classes.Values.Select(x => x.Build()));
+            }
         }
     }
 }
