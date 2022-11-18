@@ -6,6 +6,7 @@ namespace Cardamom.Ui
     public class Class : IKeyed
     {
         [Flags]
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum State
         {
             NONE = 0,
@@ -32,13 +33,14 @@ namespace Cardamom.Ui
 
         public class Builder : IKeyed
         {
-            public class ClassAttributesBuilderWithState {
+            public class ClassAttributesBuilderWithState 
+            {
+                [JsonConverter(typeof(FlagJsonConverter<State>))]
                 public State State { get; set; }
                 public ClassAttributes.Builder Attributes { get; set; } = new();
             }
 
             public string Key { get; set; } = string.Empty;
-            [JsonConverter(typeof(KeyedJsonConverter<Builder>))]
             public Builder? Parent { get; set; }
             public ClassAttributes.Builder? Default { get; set; }
             public List<ClassAttributesBuilderWithState> States { get; set; } = new();
@@ -49,7 +51,7 @@ namespace Cardamom.Ui
                 for (int i = 0; i < attributesForStates.Length; ++i)
                 {
                     var builder = States.Where(x => (int)x.State == i).FirstOrDefault() ?? new();
-                    Precondition.IsNull(attributesForStates[(int)builder.State]);
+                    Precondition.IsNull(attributesForStates[i]);
 
                     var ancestors = new List<ClassAttributes.Builder>();
                     if (Parent != null)
@@ -58,24 +60,24 @@ namespace Cardamom.Ui
                         {
                             ancestors.Add(Parent.Default);
                         }
-                        ancestors.AddRange(GetAncestry(builder, Parent.States));
+                        ancestors.AddRange(GetAncestry((State)i, Parent.States));
                     }
                     if (Default != null)
                     {
                         ancestors.Add(Default);
                     }
-                    ancestors.AddRange(GetAncestry(builder, States));
-                    attributesForStates[(int)builder.State] = builder.Attributes.Build(ancestors);
+                    ancestors.AddRange(GetAncestry((State)i, States));
+                    attributesForStates[i] = builder.Attributes.Build(ancestors);
                 }
                 return new Class(Precondition.IsNotEmpty<string, char>(Key), attributesForStates);
             }
 
             private static IEnumerable<ClassAttributes.Builder> GetAncestry(
-                ClassAttributesBuilderWithState child, IEnumerable<ClassAttributesBuilderWithState> potentialAncestors)
+                State state, IEnumerable<ClassAttributesBuilderWithState> potentialAncestors)
             {
                 foreach (var potentialAncestor in potentialAncestors)
                 {
-                    if (IsAncestor(child.State, potentialAncestor.State))
+                    if (IsAncestor(state, potentialAncestor.State))
                     {
                         yield return potentialAncestor.Attributes;
                     }
@@ -84,7 +86,8 @@ namespace Cardamom.Ui
 
             private static bool IsAncestor(State child, State ancestor)
             {
-                return (ancestor & ~child) == 0;
+                return (ancestor & ~child) == 0
+                    || (ancestor < child && (ancestor == State.HOVER || ancestor == State.FOCUS));
             }
         }
     }

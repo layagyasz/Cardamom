@@ -85,7 +85,7 @@
             int i;
             for (i = 0; i < Count; ++i)
             {
-                if (Precondition.NotNull(_values[i].Key).Equals(value))
+                if (_values[i].Key!.Equals(value))
                 {
                     break;
                 }

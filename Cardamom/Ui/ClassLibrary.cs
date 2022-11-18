@@ -23,18 +23,19 @@ namespace Cardamom.Ui
             private readonly Dictionary<string, KeyedWrapper<Font>> _fonts = new();
             private readonly Dictionary<string, Class.Builder> _classes = new();
 
-            public void ReadFonts(string path)
+            public Builder ReadFonts(string path)
             {
                 JsonSerializerOptions options = new();
                 options.Converters.Add(new FontJsonConverter());
-                foreach (var font in Precondition.NotNull(
-                    JsonSerializer.Deserialize<List<KeyedWrapper<Font>>>(File.ReadAllText(path), options)))
+                foreach (var font in 
+                    JsonSerializer.Deserialize<List<KeyedWrapper<Font>>>(File.ReadAllText(path), options)!)
                 {
                     _fonts.Add(font.Key, font);
                 }
+                return this;
             }
 
-            public void ReadClasses(string directory, string pattern)
+            public Builder ReadClasses(string directory, string pattern)
             {
                 var objects = new Dictionary<string, IKeyed>();
                 foreach (var font in _fonts)
@@ -48,16 +49,16 @@ namespace Cardamom.Ui
                 JsonSerializerOptions options = new();
                 options.Converters.Add(new ColorJsonConverter());
                 options.Converters.Add(new Vector2fJsonConverter());
-                options.Converters.Add(new KeyedJsonConverter<Class.Builder>(objects));
                 options.Converters.Add(new KeyedCollectionJsonConverter<List<Class.Builder>, Class.Builder>(objects));
                 foreach (var file in Directory.EnumerateFiles(directory, pattern, SearchOption.AllDirectories))
                 {
-                    foreach (var @class in Precondition.NotNull(
-                        JsonSerializer.Deserialize<List<Class.Builder>>(File.ReadAllText(file), options)))
+                    foreach (var @class in 
+                        JsonSerializer.Deserialize<List<Class.Builder>>(File.ReadAllText(file), options)!)
                     {
                         _classes.Add(@class.Key, @class);
                     }
                 }
+                return this;
             }
 
             public ClassLibrary Build()

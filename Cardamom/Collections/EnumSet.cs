@@ -1,6 +1,6 @@
 namespace Cardamom.Collections
 {
-    class EnumSet<T> : ISet<T> where T : struct, IComparable
+    class EnumSet<T> : ISet<T> where T : Enum
     {
         readonly bool[] _values;
 
@@ -9,10 +9,6 @@ namespace Cardamom.Collections
 
         public EnumSet()
         {
-            if (!typeof(T).IsEnum)
-            {
-                throw new ArgumentException(string.Format("Type {0} is not an enum.", typeof(T).Name));
-            }
             _values = new bool[Enum.GetValues(typeof(T)).Length];
         }
 

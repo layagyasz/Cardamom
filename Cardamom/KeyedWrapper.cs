@@ -1,4 +1,4 @@
-﻿namespace Cardamom.Ui
+﻿namespace Cardamom
 {
     public class KeyedWrapper<T> : IKeyed
     {

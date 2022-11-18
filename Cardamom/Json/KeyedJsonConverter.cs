@@ -14,8 +14,7 @@ namespace Cardamom.Json
 
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            string stringValue = Precondition.NotNull(reader.GetString());
-            return (T)_objects[stringValue];
+            return (T)_objects[reader.GetString()!];
         }
 
         public override void Write(Utf8JsonWriter writer, T @object, JsonSerializerOptions options)

@@ -32,10 +32,7 @@ namespace Cardamom.Ui.Elements
             transform.Translate(Position + LeftMargin + LeftPadding);
             foreach (var element in _elements)
             {
-                if (element.Visible)
-                {
-                    element.Draw(target, transform);
-                }
+                element.Draw(target, transform);
             }
         }
 

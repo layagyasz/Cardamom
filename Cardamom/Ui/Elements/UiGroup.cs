@@ -2,16 +2,16 @@
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiGroup : IEnumerable<IUiElement>, IRenderable
+    public class UiGroup : IEnumerable<IRenderable>, IRenderable
     {
-        private readonly List<IUiElement> _elements = new();
+        private readonly List<IRenderable> _elements = new();
 
-        public void Add(IUiElement element)
+        public void Add(IRenderable element)
         {
             _elements.Add(element);
         }
 
-        public IEnumerator<IUiElement> GetEnumerator()
+        public IEnumerator<IRenderable> GetEnumerator()
         {
             return _elements.GetEnumerator();
         }
@@ -21,18 +21,15 @@ namespace Cardamom.Ui.Elements
             return GetEnumerator();
         }
 
-        public void Draw(RenderTarget target, Transform transform)
+        public virtual void Draw(RenderTarget target, Transform transform)
         {
             foreach (var element in _elements)
             {
-                if (element.Visible)
-                {
-                    element.Draw(target, transform);
-                }
+                element.Draw(target, transform);
             }
         }
 
-        public void Update(UiContext context, Transform transform, long delta)
+        public virtual void Update(UiContext context, Transform transform, long delta)
         {
             _elements.ForEach(x => x.Update(context, transform, delta));
         }

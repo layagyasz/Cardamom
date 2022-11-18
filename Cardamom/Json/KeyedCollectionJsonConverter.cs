@@ -21,8 +21,7 @@ namespace Cardamom.Json
             }
 
             TCollection collect =
-                (TCollection)Precondition.NotNull(typeof(TCollection).GetConstructor(Array.Empty<Type>()))
-                                         .Invoke(Array.Empty<object>());
+                (TCollection)typeof(TCollection).GetConstructor(Array.Empty<Type>())!.Invoke(Array.Empty<object>());
 
             while (reader.Read())
             {
@@ -35,14 +34,14 @@ namespace Cardamom.Json
                 JsonConverter<T> converter = Converter ?? (JsonConverter<T>)options.GetConverter(typeof(T));
                 if (converter != null)
                 {
-                    value = Precondition.NotNull(converter.Read(ref reader, typeof(T), options));
+                    value = converter.Read(ref reader, typeof(T), options)!;
                 }
                 else
                 {
-                    value = Precondition.NotNull(JsonSerializer.Deserialize<T>(ref reader, options));
+                    value = JsonSerializer.Deserialize<T>(ref reader, options)!;
                 }
 
-                _objects.Add(Precondition.NotNull(value).Key, value);
+                _objects.Add(value!.Key, value);
                 collect.Add(value);
             }
 

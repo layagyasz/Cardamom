@@ -12,7 +12,7 @@
             return (_disable ? Class.State.DISABLE : Class.State.NONE)
                 | (_hover ? Class.State.HOVER : Class.State.NONE)
                 | (_focus ? Class.State.FOCUS : Class.State.NONE)
-                | (_toggle ? Class.State.TOGGLE : Class.State.TOGGLE);
+                | (_toggle ? Class.State.TOGGLE : Class.State.NONE);
         }
 
         public void SetDisable(bool value)

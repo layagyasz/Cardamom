@@ -19,8 +19,11 @@ namespace Cardamom.Ui.Elements
 
         public override void Draw(RenderTarget target, Transform transform)
         {
-            transform.Translate(Position + LeftMargin);
-            _rectComponent.Draw(target, transform);
+            if (Visible)
+            {
+                transform.Translate(Position + LeftMargin);
+                _rectComponent.Draw(target, transform);
+            }
         }
 
         public override bool IsPointWithinBounds(Vector2f point)

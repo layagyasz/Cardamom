@@ -9,7 +9,7 @@ namespace Cardamom.Json
     {
         public override Color Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            string stringValue = Precondition.NotNull(reader.GetString());
+            string stringValue = reader.GetString()!;
             if (stringValue[0] != '#' || (stringValue.Length != 7 && stringValue.Length != 9))
             {
                 throw new JsonException($"Improperly formatted color '{stringValue}'.");

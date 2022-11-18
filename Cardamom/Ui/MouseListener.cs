@@ -34,10 +34,11 @@ namespace Cardamom.Ui
 
         private void HandleMouseButtonPressed(object? sender, MouseButtonEventArgs e)
         {
-            if (_depressedButton != null)
+            if (_depressedButton == null)
             {
                 _depressedButton = e.Button;
                 _depressedPosition = GetMousePosition();
+                _draggedPosition = _depressedPosition;
             }
         }
 
@@ -67,7 +68,7 @@ namespace Cardamom.Ui
                 MouseButtonDragged?.Invoke(
                     this, 
                     new(
-                        (Mouse.Button)Precondition.NotNull(_depressedButton),
+                        (Mouse.Button)_depressedButton!,
                         _depressedPosition, 
                         _draggedPosition, 
                         delta));

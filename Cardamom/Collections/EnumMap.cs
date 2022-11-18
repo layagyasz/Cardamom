@@ -1,12 +1,12 @@
 namespace Cardamom.Collections
 {
-    public class EnumMap<TKey, TValue> : IDictionary<TKey, TValue> where TKey : struct, IConvertible
+    public class EnumMap<TKey, TValue> : IDictionary<TKey, TValue> where TKey : Enum
     {
         readonly TValue?[] _values;
 
         public TValue this[TKey key]
         {
-            get => Precondition.NotNull(_values[(int)(object)key]);
+            get => _values[(int)(object)key]!;
             set => _values[(int)(object)key] = value;
         }
 
@@ -14,21 +14,17 @@ namespace Cardamom.Collections
         {
             get
             {
-                return Enum.GetValues(typeof(TKey)).Cast<TKey>().Where(this.ContainsKey).ToList();
+                return Enum.GetValues(typeof(TKey)).Cast<TKey>().Where(ContainsKey).ToList();
             }
         }
         public ICollection<TValue> Values { 
-            get { return _values.Where(x => !x?.Equals(default) ?? false).Select(Precondition.NotNull).ToList(); }
+            get { return _values.Where(x => !x?.Equals(default) ?? false).Select(x => x!).ToList(); }
         }
         public int Count { get { return _values.Length; } }
         public bool IsReadOnly { get; } = false;
 
         public EnumMap()
         {
-            if (!typeof(TKey).IsEnum)
-            {
-                throw new ArgumentException(string.Format("Type {0} is not an enum.", typeof(TKey).Name));
-            }
             _values = new TValue[Enum.GetValues(typeof(TKey)).Length];
         }
 
@@ -43,7 +39,7 @@ namespace Cardamom.Collections
             {
                 if (!this[key]?.Equals(default) ?? false)
                 {
-                    yield return new KeyValuePair<TKey, TValue>(key, Precondition.NotNull(this[key]));
+                    yield return new KeyValuePair<TKey, TValue>(key, this[key]!);
                 }
             }
         }
@@ -107,7 +103,7 @@ namespace Cardamom.Collections
             int i = 0;
             foreach (TKey Key in Keys)
             {
-                values[i + index] = new KeyValuePair<TKey, TValue>(Key, Precondition.NotNull(this[Key]));
+                values[i + index] = new KeyValuePair<TKey, TValue>(Key, this[Key]!);
             }
         }
     }

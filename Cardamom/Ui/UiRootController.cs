@@ -34,11 +34,6 @@ namespace Cardamom.Ui
 
         public void DispatchEvents()
         {
-            if (_context == null)
-            {
-                return;
-            }
-
             var newMouseOver = _context?.GetTopElement();
             if (newMouseOver != _mouseOver)
             {

@@ -6,7 +6,7 @@ namespace Cardamom.Ui
 {
     public abstract class BaseUiInteractiveElement : IUiInteractiveElement
     {
-        public bool Visible { get; set; }
+        public bool Visible { get; set; } = true;
         public IController Controller { get; }
         public Vector2f Position { get; set; }
         public abstract Vector2f Size { get; }

@@ -22,11 +22,12 @@ namespace Cardamom.Ui
             _mouseListener = new();
             _mouseListener.Bind(renderWindow);
 
+            _context = new(_mouseListener);
+
             _controller = new();
             _controller.Bind(renderWindow);
             _controller.Bind(_mouseListener);
-
-            _context = new(_mouseListener);
+            _controller.Bind(_context);
         }
 
         public void Start()
@@ -36,6 +37,7 @@ namespace Cardamom.Ui
             {
                 RenderWindow.DispatchEvents();
                 _context.Clear();
+                RenderWindow.Clear();
 
                 if (UiRoot != null)
                 {

@@ -5,27 +5,27 @@ namespace Cardamom.Planar
     public class Rectangle : IPolygon
     {
         private readonly Vector2f _topLeft;
-        private readonly Vector2f _size;
 
+        public Vector2f Size { get; }
         public int VertexCount => 4;
 
         public Rectangle(Vector2f topLeft, Vector2f size)
         {
             _topLeft = topLeft;
-            _size = size;
+            Size = size;
         }
 
         public bool ContainsPoint(Vector2f point)
         {
             return point.X >= _topLeft.X
-                && point.X <= _topLeft.X + _size.X 
+                && point.X <= _topLeft.X + Size.X 
                 && point.Y >= _topLeft.Y 
-                && point.Y <= _topLeft.Y + _size.Y;
+                && point.Y <= _topLeft.Y + Size.Y;
         }
 
         public float GetArea()
         {
-            return _size.X * _size.Y;
+            return Size.X * Size.Y;
         }
 
         public Vector2f GetVertex(int index)
@@ -33,9 +33,9 @@ namespace Cardamom.Planar
             return index switch
             {
                 1 => _topLeft,
-                2 => new Vector2f(_topLeft.X + _size.X, _topLeft.Y),
-                3 => _topLeft + _size,
-                4 => new Vector2f(_topLeft.X, _topLeft.Y + _size.Y),
+                2 => new Vector2f(_topLeft.X + Size.X, _topLeft.Y),
+                3 => _topLeft + Size,
+                4 => new Vector2f(_topLeft.X, _topLeft.Y + Size.Y),
                 _ => throw new IndexOutOfRangeException(),
             };
         }

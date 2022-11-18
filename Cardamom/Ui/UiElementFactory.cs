@@ -1,5 +1,6 @@
 ﻿using Cardamom.Ui.Controller;
 using Cardamom.Ui.Elements;
+using SFML.System;
 
 namespace Cardamom.Ui
 {
@@ -12,14 +13,14 @@ namespace Cardamom.Ui
             _classLibrary = classLibrary;
         }
 
-        public IUiElement CreatePane(string className)
+        public UiContainer CreatePane(string className)
         {
             return new UiContainer(_classLibrary.Get(className), new PaneController());
         }
 
-        public IUiElement CreateSimpleButton(string className)
+        public IUiElement CreateSimpleButton(string className, Vector2f position = new())
         {
-            return new SimpleUiElement(_classLibrary.Get(className), new ButtonController());
+            return new SimpleUiElement(_classLibrary.Get(className), new ButtonController()) { Position = position };
         }
     }
 }
