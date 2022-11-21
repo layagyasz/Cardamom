@@ -19,7 +19,7 @@ namespace Cardamom
                                     .ReadClasses("Example", "Style.json")
                                     .Build());
             var pane = uiElementFactory.CreatePane("example-base-class");
-            pane.Add(uiElementFactory.CreateSimpleButton("example-base-class", new(100, 100)));
+            pane.Add(uiElementFactory.CreateSimpleButton("example-child-class", new(100, 100)));
             var screen = 
                 new Screen(
                     new Planar.Rectangle(new(), new(800, 600)), 

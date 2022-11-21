@@ -8,21 +8,31 @@ namespace Cardamom.Json
     {
         public override Vector2f Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            string? def = reader.GetString();
-            if (def != null)
+            if (reader.TokenType != JsonTokenType.StartArray)
             {
-                string[] code = def.Split(',');
-                if (code.Length == 2)
-                {
-                    return new Vector2f(float.Parse(code[0]), float.Parse(code[1]));
-                }
+                throw new JsonException();
             }
-            throw new JsonException();
+            reader.Read();
+
+            var value = new Vector2f();
+            value.X = reader.GetSingle();
+            reader.Read();
+            value.Y = reader.GetSingle();
+            reader.Read();
+
+            if (reader.TokenType != JsonTokenType.EndArray)
+            {
+                throw new JsonException();
+            }
+            return value;
         }
 
         public override void Write(Utf8JsonWriter writer, Vector2f @object, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(string.Format("{0},{1}", @object.X, @object.Y));
+            writer.WriteStartArray();
+            writer.WriteStringValue(@object.X.ToString());
+            writer.WriteStringValue(@object.Y.ToString());
+            writer.WriteEndArray();
         }
     }
 }

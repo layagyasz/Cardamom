@@ -1,8 +1,36 @@
 [
   {
-    "Key": "example-base-class",
+    "$id": "example-base-class",
     "Default": {
-      "Size": "100,100",
+      "Size": [ 500, 500 ],
+      "BackgroundColor": [ "#ff0000", "#ff0000", "#ff0000", "#ff0000" ],
+      "BorderColor": [ "#00ff00", "#00ff00", "#00ff00", "#00ff00" ],
+      "BorderWidth": [ 1, 2, 4, 8 ]
+    },
+    "States": [
+      {
+        "State": [ "HOVER" ],
+        "Attributes": {
+          "BackgroundColor": [ "#0000ff", "#0000ff", "#0000ff", "#0000ff" ],
+          "BorderColor": [ "#ffff00", "#ffff00", "#ffff00", "#ffff00" ]
+        }
+      },
+      {
+        "State": [ "FOCUS" ],
+        "Attributes": {
+          "BackgroundColor": [ "#ff00ff", "#ff00ff", "#0000ff", "#0000ff" ],
+          "BorderColor": [ "#ffff00", "#ffffff", "#ffff00", "#ffff00" ]
+        }
+      }
+    ]
+  },
+  {
+    "$id": "example-child-class",
+    "Parent": {
+      "$ref": "example-base-class"
+    },
+    "Default": {
+      "Size": [ 200, 100 ],
       "BackgroundColor": [ "#ff0000", "#ff0000", "#ff0000", "#ff0000" ],
       "BorderColor": [ "#00ff00", "#00ff00", "#00ff00", "#00ff00" ],
       "BorderWidth": [ 1, 2, 4, 8 ]

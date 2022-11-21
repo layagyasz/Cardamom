@@ -47,9 +47,9 @@ namespace Cardamom.Ui
                     objects.Add(@class.Key, @class.Value);
                 }
                 JsonSerializerOptions options = new();
+                options.ReferenceHandler = new KeyedReferenceHandler(objects);
                 options.Converters.Add(new ColorJsonConverter());
                 options.Converters.Add(new Vector2fJsonConverter());
-                options.Converters.Add(new KeyedCollectionJsonConverter<List<Class.Builder>, Class.Builder>(objects));
                 foreach (var file in Directory.EnumerateFiles(directory, pattern, SearchOption.AllDirectories))
                 {
                     foreach (var @class in 

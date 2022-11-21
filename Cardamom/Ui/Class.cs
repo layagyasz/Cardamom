@@ -16,7 +16,7 @@ namespace Cardamom.Ui
             TOGGLE = 8,
         }
 
-        public string Key { get; }
+        public string Key { get; set; }
 
         private readonly ClassAttributes[] _attributes;
 
