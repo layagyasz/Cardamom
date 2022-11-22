@@ -1,6 +1,6 @@
 ﻿using Cardamom.Ui.Controller;
 using Cardamom.Ui.Elements;
-using SFML.System;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
 {
@@ -18,7 +18,7 @@ namespace Cardamom.Ui
             return new UiContainer(_classLibrary.Get(className), new PaneController());
         }
 
-        public IUiElement CreateSimpleButton(string className, Vector2f position = new())
+        public IUiElement CreateSimpleButton(string className, Vector2 position = new())
         {
             return new SimpleUiElement(_classLibrary.Get(className), new ButtonController()) { Position = position };
         }

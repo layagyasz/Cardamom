@@ -1,5 +1,4 @@
 ﻿using Cardamom.Json;
-using SFML.Graphics;
 using System.Text.Json;
 
 namespace Cardamom.Ui
@@ -20,11 +19,12 @@ namespace Cardamom.Ui
 
         public class Builder
         {
-            private readonly Dictionary<string, KeyedWrapper<Font>> _fonts = new();
+            // private readonly Dictionary<string, KeyedWrapper<Font>> _fonts = new();
             private readonly Dictionary<string, Class.Builder> _classes = new();
-
+            
             public Builder ReadFonts(string path)
             {
+                /*
                 JsonSerializerOptions options = new();
                 options.Converters.Add(new FontJsonConverter());
                 foreach (var font in 
@@ -32,16 +32,19 @@ namespace Cardamom.Ui
                 {
                     _fonts.Add(font.Key, font);
                 }
+                */
                 return this;
             }
 
             public Builder ReadClasses(string directory, string pattern)
             {
                 var objects = new Dictionary<string, IKeyed>();
+                /*
                 foreach (var font in _fonts)
                 {
                     objects.Add(font.Key, font.Value);
                 }
+                */
                 foreach (var @class in _classes)
                 {
                     objects.Add(@class.Key, @class.Value);
@@ -49,7 +52,7 @@ namespace Cardamom.Ui
                 JsonSerializerOptions options = new();
                 options.ReferenceHandler = new KeyedReferenceHandler(objects);
                 options.Converters.Add(new ColorJsonConverter());
-                options.Converters.Add(new Vector2fJsonConverter());
+                options.Converters.Add(new Vector2JsonConverter());
                 foreach (var file in Directory.EnumerateFiles(directory, pattern, SearchOption.AllDirectories))
                 {
                     foreach (var @class in 

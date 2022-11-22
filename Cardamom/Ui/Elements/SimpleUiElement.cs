@@ -1,7 +1,8 @@
-﻿using Cardamom.Ui.Controller;
+﻿using Cardamom.Graphics;
+using Cardamom.Planar;
+using Cardamom.Ui.Controller;
 using Cardamom.Ui.Elements.Components;
-using SFML.Graphics;
-using SFML.System;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
@@ -9,7 +10,7 @@ namespace Cardamom.Ui.Elements
     {
         private readonly RectComponent _rectComponent = new();
 
-        public override Vector2f Size => _rectComponent.Size + LeftMargin + RightMargin;
+        public override Vector2 Size => _rectComponent.Size + LeftMargin + RightMargin;
 
         public SimpleUiElement(Class @class, IController controller)
             : base(@class, controller) 
@@ -17,7 +18,7 @@ namespace Cardamom.Ui.Elements
             SetAttributes(@class.Get(Class.State.NONE));
         }
 
-        public override void Draw(RenderTarget target, Transform transform)
+        public override void Draw(RenderTarget target, Transform2 transform)
         {
             if (Visible)
             {
@@ -26,7 +27,7 @@ namespace Cardamom.Ui.Elements
             }
         }
 
-        public override bool IsPointWithinBounds(Vector2f point)
+        public override bool IsPointWithinBounds(Vector2 point)
         {
             return _rectComponent.IsPointWithinBounds(point);
         }

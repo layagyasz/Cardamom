@@ -1,5 +1,4 @@
-﻿using SFML.Graphics;
-using SFML.System;
+﻿using Cardamom.Planar;
 
 namespace Cardamom.Ui
 {
@@ -24,7 +23,7 @@ namespace Cardamom.Ui
             return _topElement;
         }
 
-        public void Register(IUiInteractiveElement element, Transform transform)
+        public void Register(IUiInteractiveElement element, Transform2 transform)
         {
             if (element.IsPointWithinBounds(transform.GetInverse() * _mouseListener.GetMousePosition()))
             {

@@ -1,16 +1,16 @@
 ﻿using Cardamom.Ui;
 using Cardamom.Ui.Controller;
 using Cardamom.Ui.Elements;
-using SFML.Graphics;
-using SFML.Window;
+using Cardamom.Window;
+using OpenTK.Mathematics;
 
 namespace Cardamom
 {
     public static class Example
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            var window = new RenderWindow(new VideoMode(800, 600), "Cardamom");
+            var window = new RenderWindow("Cardamom - Example", new Vector2i(800, 600));
             var ui = new UiWindow(window);
             var uiElementFactory = 
                 new UiElementFactory(

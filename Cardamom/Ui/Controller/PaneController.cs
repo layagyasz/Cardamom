@@ -1,4 +1,5 @@
-﻿using SFML.Window;
+﻿using Cardamom.Window;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui.Controller
 {
@@ -16,7 +17,7 @@ namespace Cardamom.Ui.Controller
 
         public override void HandleMouseButtonDragged(MouseButtonDragEventArgs e)
         {
-            if (e.Button == Mouse.Button.Left && _element != null)
+            if (e.Button == MouseButton.Left && _element != null)
             {
                 _element.Position += e.Delta;
             }

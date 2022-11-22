@@ -1,19 +1,19 @@
-﻿using SFML.System;
+﻿using OpenTK.Mathematics;
 
 namespace Cardamom.Planar
 {
     public class Ngon : IPolygon
     {
-        private readonly Vector2f[] _vertices;
+        private readonly Vector2[] _vertices;
 
         public int VertexCount => _vertices.Length;
 
-        public Ngon(Vector2f[] vertices)
+        public Ngon(Vector2[] vertices)
         {
             _vertices = vertices;
         }
 
-        public bool ContainsPoint(Vector2f point)
+        public bool ContainsPoint(Vector2 point)
         {
             bool c = false;
             int i;
@@ -42,7 +42,7 @@ namespace Cardamom.Planar
             return Math.Abs(a) / 2;
         }
 
-        public Vector2f GetVertex(int index)
+        public Vector2 GetVertex(int index)
         {
             return _vertices[index];
         }
@@ -75,7 +75,7 @@ namespace Cardamom.Planar
                 }
             }
 
-            return new Rectangle(new Vector2f(minX, minY), new Vector2f(maxX - minX, maxY - minY));
+            return new Rectangle(new Vector2(minX, minY), new Vector2(maxX - minX, maxY - minY));
         }
     }
 }

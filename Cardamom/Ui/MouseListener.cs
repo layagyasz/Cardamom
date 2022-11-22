@@ -1,6 +1,7 @@
-﻿using SFML.Graphics;
-using SFML.System;
-using SFML.Window;
+﻿using Cardamom.Window;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui
 {
@@ -8,14 +9,14 @@ namespace Cardamom.Ui
     {
         public EventHandler<MouseButtonEventArgs>? MouseButtonClicked { get; set; }
         public EventHandler<MouseButtonDragEventArgs>? MouseButtonDragged { get; set; }
-        public EventHandler<MouseWheelScrollEventArgs>? MouseWheelScrolled { get; set; }
+        public EventHandler<MouseWheelEventArgs>? MouseWheelScrolled { get; set; }
 
         private RenderWindow? _window;
 
-        private Mouse.Button? _depressedButton;
-        private Vector2f _depressedPosition;
+        private MouseButton? _depressedButton;
+        private Vector2 _depressedPosition;
         private bool _drag;
-        private Vector2f _draggedPosition;
+        private Vector2 _draggedPosition;
 
         public void Bind(RenderWindow window)
         {
@@ -26,10 +27,10 @@ namespace Cardamom.Ui
             window.MouseMoved += HandleMouseMoved;
         }
 
-        public Vector2f GetMousePosition()
+        public Vector2 GetMousePosition()
         {
-            var position = Mouse.GetPosition(_window);
-            return new Vector2f(position.X, position.Y);
+            var position = _window!.GetMousePosition();
+            return new Vector2(position.X, position.Y);
         }
 
         private void HandleMouseButtonPressed(object? sender, MouseButtonEventArgs e)
@@ -62,20 +63,20 @@ namespace Cardamom.Ui
             if (_drag || _depressedButton != null)
             {
                 _drag = true;
-                var newPosition = new Vector2f(e.X, e.Y);
+                var newPosition = new Vector2(e.X, e.Y);
                 var delta = newPosition - _draggedPosition;
                 _draggedPosition = newPosition;
                 MouseButtonDragged?.Invoke(
                     this, 
                     new(
-                        (Mouse.Button)_depressedButton!,
+                        (MouseButton)_depressedButton!,
                         _depressedPosition, 
                         _draggedPosition, 
                         delta));
 ;            }
         }
 
-        private void HandleMouseWheelScrolled(object? sender, MouseWheelScrollEventArgs e)
+        private void HandleMouseWheelScrolled(object? sender, MouseWheelEventArgs e)
         {
             MouseWheelScrolled?.Invoke(this, e);
         }

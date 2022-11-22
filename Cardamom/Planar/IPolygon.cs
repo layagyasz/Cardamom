@@ -1,4 +1,4 @@
-﻿using SFML.System;
+﻿using OpenTK.Mathematics;
 
 namespace Cardamom.Planar
 {
@@ -6,9 +6,9 @@ namespace Cardamom.Planar
     {
         int VertexCount { get; }
 
-        bool ContainsPoint(Vector2f point);
+        bool ContainsPoint(Vector2 point);
         float GetArea();
-        Vector2f GetVertex(int index);
+        Vector2 GetVertex(int index);
         Rectangle GetBounds();
         bool Intersects(IPolygon polygon)
         {

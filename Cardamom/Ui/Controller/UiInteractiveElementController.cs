@@ -1,4 +1,6 @@
-﻿using SFML.Window;
+﻿using Cardamom.Window;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui.Controller
 {
@@ -19,9 +21,7 @@ namespace Cardamom.Ui.Controller
             _element = default;
         }
 
-        public virtual void HandleKeyPressed(KeyEventArgs e) { }
-
-        public virtual void HandleTextEntered(TextEventArgs e) { }
+        public virtual void HandleKeyPressed(KeyboardKeyEventArgs e) { }
 
         public virtual void HandleMouseEntered() { }
 
@@ -31,10 +31,10 @@ namespace Cardamom.Ui.Controller
         {
             switch (e.Button)
             {
-                case Mouse.Button.Left:
+                case MouseButton.Left:
                     LeftClicked?.Invoke(this, e);
                     break;
-                case Mouse.Button.Right:
+                case MouseButton.Right:
                     RightClicked?.Invoke(this, e);
                     break;
                 default:
@@ -44,7 +44,7 @@ namespace Cardamom.Ui.Controller
 
         public virtual void HandleMouseButtonDragged(MouseButtonDragEventArgs e) { }
 
-        public virtual void HandleMouseWheelScrolled(MouseWheelScrollEventArgs e) { }
+        public virtual void HandleMouseWheelScrolled(MouseWheelEventArgs e) { }
 
         public virtual void HandleFocusEntered() { }
 

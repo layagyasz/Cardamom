@@ -1,6 +1,7 @@
-﻿using Cardamom.Ui.Controller;
-using SFML.Graphics;
-using SFML.System;
+﻿using Cardamom.Graphics;
+using Cardamom.Planar;
+using Cardamom.Ui.Controller;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
 {
@@ -8,8 +9,8 @@ namespace Cardamom.Ui
     {
         public bool Visible { get; set; } = true;
         public IController Controller { get; }
-        public Vector2f Position { get; set; }
-        public abstract Vector2f Size { get; }
+        public Vector2 Position { get; set; }
+        public abstract Vector2 Size { get; }
         public IControlled? Parent { get; set; }
 
         public BaseUiInteractiveElement(IController controller)
@@ -18,11 +19,11 @@ namespace Cardamom.Ui
             Controller.Bind(this);
         }
 
-        public abstract bool IsPointWithinBounds(Vector2f point);
+        public abstract bool IsPointWithinBounds(Vector2 point);
 
-        public abstract void Draw(RenderTarget target, Transform transform);
+        public abstract void Draw(RenderTarget target, Transform2 transform);
 
-        public virtual void Update(UiContext context, Transform transform, long delta)
+        public virtual void Update(UiContext context, Transform2 transform, long delta)
         {
             if (Visible)
             {

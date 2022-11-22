@@ -1,4 +1,5 @@
-﻿using SFML.Graphics;
+﻿using Cardamom.Graphics;
+using Cardamom.Planar;
 
 namespace Cardamom.Ui.Elements
 {
@@ -21,7 +22,7 @@ namespace Cardamom.Ui.Elements
             return GetEnumerator();
         }
 
-        public virtual void Draw(RenderTarget target, Transform transform)
+        public virtual void Draw(RenderTarget target, Transform2 transform)
         {
             foreach (var element in _elements)
             {
@@ -29,7 +30,7 @@ namespace Cardamom.Ui.Elements
             }
         }
 
-        public virtual void Update(UiContext context, Transform transform, long delta)
+        public virtual void Update(UiContext context, Transform2 transform, long delta)
         {
             _elements.ForEach(x => x.Update(context, transform, delta));
         }

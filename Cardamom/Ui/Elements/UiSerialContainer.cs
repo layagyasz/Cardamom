@@ -1,6 +1,7 @@
-﻿using Cardamom.Ui.Controller;
-using SFML.Graphics;
-using SFML.System;
+﻿using Cardamom.Graphics;
+using Cardamom.Planar;
+using Cardamom.Ui.Controller;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
@@ -30,7 +31,7 @@ namespace Cardamom.Ui.Elements
             return GetEnumerator();
         }
 
-        public override void Draw(RenderTarget target, Transform transform)
+        public override void Draw(RenderTarget target, Transform2 transform)
         {
             base.Draw(target, transform);
             transform.Translate(Position + LeftMargin + LeftPadding);
@@ -40,7 +41,7 @@ namespace Cardamom.Ui.Elements
             }
         }
 
-        public override void Update(UiContext context, Transform transform, long delta)
+        public override void Update(UiContext context, Transform2 transform, long delta)
         {
             base.Update(context, transform, delta);
             transform.Translate(Position + LeftMargin + LeftPadding);
@@ -59,7 +60,7 @@ namespace Cardamom.Ui.Elements
             {
                 if (!ended && i >= Index)
                 {
-                    _elements[(int)i].Position = new Vector2f(0, total);
+                    _elements[(int)i].Position = new Vector2(0, total);
                     total += _elements[(int)i].Size.Y;
                     if (total + LeftPadding.Y + RightPadding.Y > Size.Y)
                     {

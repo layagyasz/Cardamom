@@ -1,21 +1,21 @@
-﻿using SFML.System;
+﻿using OpenTK.Mathematics;
 
 namespace Cardamom.Planar
 {
     public class Rectangle : IPolygon
     {
-        private readonly Vector2f _topLeft;
+        private readonly Vector2 _topLeft;
 
-        public Vector2f Size { get; }
+        public Vector2 Size { get; }
         public int VertexCount => 4;
 
-        public Rectangle(Vector2f topLeft, Vector2f size)
+        public Rectangle(Vector2 topLeft, Vector2 size)
         {
             _topLeft = topLeft;
             Size = size;
         }
 
-        public bool ContainsPoint(Vector2f point)
+        public bool ContainsPoint(Vector2 point)
         {
             return point.X >= _topLeft.X
                 && point.X <= _topLeft.X + Size.X 
@@ -28,14 +28,14 @@ namespace Cardamom.Planar
             return Size.X * Size.Y;
         }
 
-        public Vector2f GetVertex(int index)
+        public Vector2 GetVertex(int index)
         {
             return index switch
             {
                 1 => _topLeft,
-                2 => new Vector2f(_topLeft.X + Size.X, _topLeft.Y),
+                2 => new(_topLeft.X + Size.X, _topLeft.Y),
                 3 => _topLeft + Size,
-                4 => new Vector2f(_topLeft.X, _topLeft.Y + Size.Y),
+                4 => new(_topLeft.X, _topLeft.Y + Size.Y),
                 _ => throw new IndexOutOfRangeException(),
             };
         }

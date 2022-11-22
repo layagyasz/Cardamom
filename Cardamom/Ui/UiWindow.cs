@@ -1,4 +1,6 @@
-﻿using SFML.Graphics;
+﻿using Cardamom.Planar;
+using Cardamom.Window;
+using OpenTK.Mathematics;
 using System.Diagnostics;
 
 namespace Cardamom.Ui
@@ -22,12 +24,11 @@ namespace Cardamom.Ui
             _mouseListener = new();
             _mouseListener.Bind(renderWindow);
 
-            _context = new(_mouseListener);
-
             _controller = new();
             _controller.Bind(renderWindow);
             _controller.Bind(_mouseListener);
-            _controller.Bind(_context);
+
+            _context = new(_mouseListener);
         }
 
         public void Start()
@@ -36,13 +37,13 @@ namespace Cardamom.Ui
             while (_run)
             {
                 RenderWindow.DispatchEvents();
-                _context.Clear();
                 RenderWindow.Clear();
+                _context.Clear();
 
                 if (UiRoot != null)
                 {
-                    UiRoot.Update(_context, Transform.Identity, stopwatch.ElapsedMilliseconds);
-                    UiRoot.Draw(RenderWindow, Transform.Identity);
+                    UiRoot.Update(_context, Transform2.Identity, stopwatch.ElapsedMilliseconds);
+                    UiRoot.Draw(RenderWindow, Transform2.Identity);
                 }
 
                 _controller.DispatchEvents();
@@ -52,7 +53,6 @@ namespace Cardamom.Ui
 
         private void HandleClose(object? sender, EventArgs e)
         {
-            RenderWindow.Close();
             _run = false;
         }
     }

@@ -1,15 +1,15 @@
-﻿using Cardamom.Planar;
+﻿using Cardamom.Graphics;
+using Cardamom.Planar;
 using Cardamom.Ui.Controller;
-using SFML.Graphics;
-using SFML.System;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
     public class Screen : IUiInteractiveElement
     {
         public bool Visible { get; set; } = true;
-        public Vector2f Size => _bounds.Size;
-        public Vector2f Position { get; set; }
+        public Vector2 Size => _bounds.Size;
+        public Vector2 Position { get; set; }
         public IController Controller { get; set; }
         public IControlled? Parent { get; set; }
 
@@ -24,12 +24,12 @@ namespace Cardamom.Ui.Elements
             _uiLayers = UiLayers.ToArray();
         }
 
-        public bool IsPointWithinBounds(Vector2f point)
+        public bool IsPointWithinBounds(Vector2 point)
         {
             return _bounds.ContainsPoint(point);
         }
 
-        public void Draw(RenderTarget target, Transform transform)
+        public void Draw(RenderTarget target, Transform2 transform)
         {
             transform.Translate(Position);
             foreach (var layer in _uiLayers)
@@ -38,7 +38,7 @@ namespace Cardamom.Ui.Elements
             }
         }
 
-        public  void Update(UiContext context, Transform transform, long delta)
+        public  void Update(UiContext context, Transform2 transform, long delta)
         {
             transform.Translate(Position);
             foreach (var layer in _uiLayers)

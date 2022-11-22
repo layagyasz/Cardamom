@@ -1,15 +1,16 @@
-﻿using Cardamom.Ui.Controller;
-using SFML.Graphics;
-using SFML.System;
+﻿using Cardamom.Graphics;
+using Cardamom.Planar;
+using Cardamom.Ui.Controller;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
 {
     public abstract class ClassedUiElement : BaseUiInteractiveElement
     {
-        public Vector2f LeftMargin { get; private set; }
-        public Vector2f RightMargin { get; private set; }
-        public Vector2f LeftPadding { get; private set; }
-        public Vector2f RightPadding { get; private set; }
+        public Vector2 LeftMargin { get; private set; }
+        public Vector2 RightMargin { get; private set; }
+        public Vector2 LeftPadding { get; private set; }
+        public Vector2 RightPadding { get; private set; }
 
         private readonly Class _class;
 
@@ -32,7 +33,7 @@ namespace Cardamom.Ui
             SetAttributes(_class.Get(state));
         }
 
-        public override void Update(UiContext context, Transform transform, long delta)
+        public override void Update(UiContext context, Transform2 transform, long delta)
         {
             transform.Translate(LeftMargin);
             base.Update(context, transform, delta);

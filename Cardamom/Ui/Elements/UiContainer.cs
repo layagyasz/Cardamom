@@ -1,5 +1,6 @@
-﻿using Cardamom.Ui.Controller;
-using SFML.Graphics;
+﻿using Cardamom.Graphics;
+using Cardamom.Planar;
+using Cardamom.Ui.Controller;
 
 namespace Cardamom.Ui.Elements
 {
@@ -26,7 +27,7 @@ namespace Cardamom.Ui.Elements
             return GetEnumerator();
         }
 
-        public override void Draw(RenderTarget target, Transform transform)
+        public override void Draw(RenderTarget target, Transform2 transform)
         {
             base.Draw(target, transform);
             transform.Translate(Position + LeftMargin + LeftPadding);
@@ -36,7 +37,7 @@ namespace Cardamom.Ui.Elements
             }
         }
 
-        public override void Update(UiContext context, Transform transform, long delta)
+        public override void Update(UiContext context, Transform2 transform, long delta)
         {
             base.Update(context, transform, delta);
             transform.Translate(Position + LeftMargin + LeftPadding);

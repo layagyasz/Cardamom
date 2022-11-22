@@ -1,6 +1,7 @@
 ﻿using Cardamom.Ui.Controller;
-using SFML.Graphics;
-using SFML.Window;
+using Cardamom.Window;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui
 {
@@ -17,7 +18,6 @@ namespace Cardamom.Ui
         public void Bind(RenderWindow window)
         {
             window.KeyPressed += HandleKeyPressed;
-            window.TextEntered += HandleTextEntered;
         }
 
         public void Bind(MouseListener mouseListener)
@@ -51,19 +51,14 @@ namespace Cardamom.Ui
             }
         }
 
-        private void HandleKeyPressed(object? sender, KeyEventArgs e)
+        private void HandleKeyPressed(object? sender, KeyboardKeyEventArgs e)
         {
             _focus?.Controller?.HandleKeyPressed(e);
         }
 
-        private void HandleTextEntered(object? sender, TextEventArgs e)
-        {
-            _focus?.Controller?.HandleTextEntered(e);
-        }
-
         private void HandleMouseButtonClicked(object? sender, MouseButtonEventArgs e)
         {
-            if (e.Button == Mouse.Button.Left)
+            if (e.Button == MouseButton.Left)
             {
                 var newFocus = _context?.GetTopElement();
                 if (newFocus != _focus)
@@ -90,7 +85,7 @@ namespace Cardamom.Ui
             _mouseOver?.Controller?.HandleMouseButtonDragged(e);
         }
 
-        private void HandleMouseWheelScrolled(object? sender, MouseWheelScrollEventArgs e)
+        private void HandleMouseWheelScrolled(object? sender, MouseWheelEventArgs e)
         {
             _mouseOver?.Controller?.HandleMouseWheelScrolled(e);
         }
