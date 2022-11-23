@@ -24,6 +24,15 @@ namespace Cardamom.Ui.Elements
             _uiLayers = UiLayers.ToArray();
         }
 
+        public void Initialize()
+        {
+            foreach (var layer in _uiLayers)
+            {
+                layer.Initialize();
+            }
+            Controller.Bind(this);
+        }
+
         public bool IsPointWithinBounds(Vector2 point)
         {
             return _bounds.ContainsPoint(point);

@@ -6,8 +6,8 @@ namespace Cardamom.Ui.Controller
 {
     public class UiInteractiveElementController<T> : IController where T : IUiInteractiveElement
     {
-        public EventHandler<MouseButtonEventArgs>? LeftClicked { get; set; }
-        public EventHandler<MouseButtonEventArgs>? RightClicked { get; set; }
+        public EventHandler<MouseButtonEventArgs>? Clicked { get; set; }
+        public EventHandler<EventArgs>? Focused { get; set; }
 
         protected T? _element;
 
@@ -21,6 +21,11 @@ namespace Cardamom.Ui.Controller
             _element = default;
         }
 
+        public T GetElement()
+        {
+            return _element!;
+        }
+
         public virtual void HandleKeyPressed(KeyboardKeyEventArgs e) { }
 
         public virtual void HandleMouseEntered() { }
@@ -29,24 +34,17 @@ namespace Cardamom.Ui.Controller
 
         public virtual void HandleMouseButtonClicked(MouseButtonEventArgs e)
         {
-            switch (e.Button)
-            {
-                case MouseButton.Left:
-                    LeftClicked?.Invoke(this, e);
-                    break;
-                case MouseButton.Right:
-                    RightClicked?.Invoke(this, e);
-                    break;
-                default:
-                    break;
-            }
+            Clicked?.Invoke(this, e);
         }
 
         public virtual void HandleMouseButtonDragged(MouseButtonDragEventArgs e) { }
 
         public virtual void HandleMouseWheelScrolled(MouseWheelEventArgs e) { }
 
-        public virtual void HandleFocusEntered() { }
+        public virtual void HandleFocusEntered()
+        {
+            Focused?.Invoke(this, EventArgs.Empty);
+        }
 
         public virtual void HandleFocusLeft() { }
     }

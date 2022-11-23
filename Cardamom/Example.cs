@@ -19,18 +19,21 @@ namespace Cardamom
                                     .ReadClasses("Example", "Style.json")
                                     .Build());
             var pane = uiElementFactory.CreatePane("example-base-class");
-            pane.Add(uiElementFactory.CreateSimpleButton("example-child-class", new(100, 100)));
+            var button = uiElementFactory.CreateSimpleButton("example-child-class", new(100, 100));
+            if (button.Controller is ButtonController controller)
+            {
+                controller.Clicked += (s, e) => Console.WriteLine($"{e.Button} {e.Action} {e.Modifiers}");
+            }
+            pane.Add(button);
             var screen = 
                 new Screen(
                     new Planar.Rectangle(new(), new(800, 600)), 
                     new SecondaryController<Screen>(),
                     new List<UiLayer>()
                     {
-                        new UiLayer(new SecondaryController<UiLayer>())
-                        {
-                            pane
-                        }
+                        UiElementFactory.CreatePaneLayer(new List<IRenderable>() { pane })
                     });
+            screen.Initialize();
             ui.UiRoot = screen;
             ui.Start();
         }

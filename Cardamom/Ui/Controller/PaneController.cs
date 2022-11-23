@@ -5,6 +5,8 @@ namespace Cardamom.Ui.Controller
 {
     public class PaneController : ClassedUiElementController<ClassedUiElement>
     {
+        public EventHandler<EventArgs>? Closed { get; set; }
+
         public override void HandleMouseEntered()
         {
             SetHover(true);

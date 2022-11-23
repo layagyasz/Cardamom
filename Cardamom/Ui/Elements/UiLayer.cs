@@ -11,5 +11,11 @@ namespace Cardamom.Ui.Elements
         {
             Controller = controller;
         }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            Controller.Bind(this);
+        }
     }
 }

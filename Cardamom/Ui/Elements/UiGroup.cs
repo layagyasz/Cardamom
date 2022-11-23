@@ -7,9 +7,19 @@ namespace Cardamom.Ui.Elements
     {
         private readonly List<IRenderable> _elements = new();
 
+        public virtual void Initialize()
+        {
+            _elements.ForEach(x => x.Initialize());
+        }
+
         public void Add(IRenderable element)
         {
             _elements.Add(element);
+        }
+
+        public void Remove(IRenderable element)
+        {
+            _elements.Remove(element);
         }
 
         public IEnumerator<IRenderable> GetEnumerator()

@@ -18,6 +18,11 @@ namespace Cardamom.Ui.Controller
             _element = default;
         }
 
+        public T GetElement()
+        {
+            return _element!;
+        }
+
         public void HandleKeyPressed(KeyboardKeyEventArgs e) { }
 
         public void HandleMouseEntered() { }

@@ -58,7 +58,7 @@ namespace Cardamom.Graphics
             GL.GetProgram(program, GetProgramParameterName.LinkStatus, out var code);
             if (code != (int)All.True)
             {
-                throw new Exception("Error occurred whilst linking Shader Program");
+                throw new Exception("Error linking Shader Program");
             }
         }
 

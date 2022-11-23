@@ -13,6 +13,16 @@ namespace Cardamom.Ui
             _classLibrary = classLibrary;
         }
 
+        public static UiLayer CreatePaneLayer(IEnumerable<IRenderable> panes)
+        {
+            var layer = new UiLayer(new PaneLayerController());
+            foreach (var pane in panes)
+            {
+                layer.Add(pane);
+            }
+            return layer;
+        }
+
         public UiContainer CreatePane(string className)
         {
             return new UiContainer(_classLibrary.Get(className), new PaneController());

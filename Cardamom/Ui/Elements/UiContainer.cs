@@ -11,6 +11,12 @@ namespace Cardamom.Ui.Elements
         public UiContainer(Class @class, IController controller)
             : base(@class, controller) { }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+            _elements.ForEach(x => x.Initialize());
+        }
+
         public void Add(IUiElement element)
         {
             _elements.Add(element);

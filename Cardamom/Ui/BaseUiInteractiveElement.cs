@@ -16,6 +16,10 @@ namespace Cardamom.Ui
         public BaseUiInteractiveElement(IController controller)
         {
             Controller = controller;
+        }
+
+        public virtual void Initialize()
+        {
             Controller.Bind(this);
         }
 
