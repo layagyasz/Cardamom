@@ -19,6 +19,7 @@ namespace Cardamom.Window
         private readonly NativeWindow _window;
 
         public RenderWindow(string title, Vector2i size)
+            : base(new ViewPort(size))
         {
             _window = new NativeWindow(
                 new NativeWindowSettings()

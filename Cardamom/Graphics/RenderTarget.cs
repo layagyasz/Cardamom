@@ -11,9 +11,15 @@ namespace Cardamom.Graphics
         private static readonly Shader _shader =
             new("Shaders/default_planar_vert.sh", "Shaders/default_planar_frag.sh");
 
+        private ViewPort _viewPort;
+        private GLVertexArray? _vertexArray;
+
         public abstract IGLFWGraphicsContext GetContext();
 
-        private GLVertexArray? _vertexArray;
+        protected RenderTarget(ViewPort viewPort)
+        {
+            _viewPort = viewPort;
+        }
 
         public void Clear()
         {
@@ -35,6 +41,8 @@ namespace Cardamom.Graphics
 
             _vertexArray.SetData(vertices.Vertices);
             _shader.Bind();
+            _shader.SetMatrix3("projection", Transform2.CreateViewportOrthographicProjection(_viewPort).GetMatrix());
+            _shader.SetMatrix3("view", transform.GetMatrix());
             _vertexArray.Draw(vertices.PrimitiveType, start, count);
         }
 
@@ -42,6 +50,8 @@ namespace Cardamom.Graphics
         {
             GetContext().MakeCurrent();
             GL.Viewport(0, 0, size.X, size.Y);
+            _viewPort.Right = size.X;
+            _viewPort.Bottom = size.Y;
         }
     }
 }

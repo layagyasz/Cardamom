@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using Cardamom.Graphics;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Planar
 {
@@ -18,6 +19,11 @@ namespace Cardamom.Planar
             return new(_matrix.Inverted());
         }
 
+        public Matrix3 GetMatrix()
+        {
+            return _matrix;
+        }
+
         public void Translate(Vector2 translation)
         {
             _matrix *=
@@ -25,6 +31,27 @@ namespace Cardamom.Planar
                     1, 0, 0,
                     0, 1, 0,
                     translation.X, translation.Y, 1);
+        }
+
+        public static Transform2 CreateViewportOrthographicProjection(ViewPort viewPort)
+        {
+            return CreateViewportOrthographicProjection(viewPort.Left, viewPort.Right, viewPort.Top, viewPort.Bottom);
+        }
+
+        public static Transform2 CreateViewportOrthographicProjection(float left, float right, float top, float bottom)
+        {
+            var result = Identity;
+
+            var invRL = 1.0f / (right - left);
+            var invTB = 1.0f / (top - bottom);
+
+            result._matrix.Row0.X = 2 * invRL;
+            result._matrix.Row1.Y = 2 * invTB;
+
+            result._matrix.Row2.X = -(right + left) * invRL;
+            result._matrix.Row2.Y = -(top + bottom) * invTB;
+
+            return result;
         }
 
         public static Vector2 operator *(Transform2 left, Vector2 right)
