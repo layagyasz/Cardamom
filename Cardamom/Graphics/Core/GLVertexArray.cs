@@ -16,33 +16,46 @@ namespace Cardamom.Graphics.Core
             _buffer = buffer;
 
             Bind();
+            _buffer.Bind();
+
             GL.VertexAttribPointer(
                 POSITION_ATTRIBUTE_INDEX, 
                 2, 
                 VertexAttribPointerType.Float, 
                 /* normalized= */ false, 
-                2 * sizeof(float),
+                6 * sizeof(float),
                 0);
+            Error.LogGLError("link position attribute");
+
             GL.EnableVertexAttribArray(POSITION_ATTRIBUTE_INDEX);
+            Error.LogGLError("enable position attribute");
+
             GL.VertexAttribPointer(
                 COLOR_ATTRIBUTE_INDEX,
                 4, 
                 VertexAttribPointerType.Float,
-                /* normalized= */ false, 4 * sizeof(float), 
-                0);
+                /* normalized= */ false, 
+                6 * sizeof(float), 
+                2 * sizeof(float));
+            Error.LogGLError("link color attribute");
+
             GL.EnableVertexAttribArray(COLOR_ATTRIBUTE_INDEX);
+            Error.LogGLError("enable color attribute");
         }
 
         public void Bind()
         {
             GL.BindVertexArray(Handle);
+            Error.LogGLError("bind vertex array");
         }
 
         public void Draw(PrimitiveType primitiveType, int start, int count)
         {
             Bind();
             GL.DrawArrays(primitiveType, start, count);
+            Error.LogGLError($"draw {primitiveType} vertex array");
         }
+
         public void SetData(Vertex2[] data)
         {
             _buffer.SetData(data);

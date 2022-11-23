@@ -25,11 +25,12 @@
     <None Update="Example\Style.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Graphics\Shaders\2d\" />
-    <Folder Include="Graphics\Shaders\3d\" />
+    <None Update="Shaders\default_planar_frag.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Shaders\default_planar_vert.sh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

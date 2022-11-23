@@ -34,6 +34,7 @@ namespace Cardamom.Window
             _window.MouseMove += HandleMouseMove;
             _window.KeyDown += HandleKeyDown;
             _window.KeyUp += HandleKeyUp;
+            _window.Resize += HandleResize;
         }
 
         public static void DispatchEvents()
@@ -84,6 +85,11 @@ namespace Cardamom.Window
         private void HandleKeyDown(KeyboardKeyEventArgs e)
         {
             KeyPressed?.Invoke(this, e);
+        }
+
+        private void HandleResize(ResizeEventArgs e)
+        {
+            base.Resize(e.Size);
         }
     }
 }

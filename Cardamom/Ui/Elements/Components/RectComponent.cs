@@ -7,7 +7,7 @@ namespace Cardamom.Ui.Elements.Components
 {
     internal class RectComponent
     {
-        private readonly VertexArray _vertices = new(PrimitiveType.Quads, 20);
+        private readonly VertexArray _vertices = new(PrimitiveType.TriangleFan, 20);
 
         public Vector2 Size => _vertices[18].Position - _vertices[16].Position;
 

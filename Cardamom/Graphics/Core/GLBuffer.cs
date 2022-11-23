@@ -22,12 +22,14 @@ namespace Cardamom.Graphics.Core
         public void Bind()
         {
             GL.BindBuffer(BufferTarget, Handle);
+            Error.LogGLError("bind buffer");
         }
 
         public void SetData(T[] data)
         {
             Bind();
             GL.BufferData(BufferTarget, ElementSize * data.Length, data, BufferUsageHint);
+            Error.LogGLError("buffer data");
         }
 
         protected override void DisposeImpl()
