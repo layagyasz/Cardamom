@@ -17,5 +17,10 @@ namespace Cardamom.Window
             End = end;
             Delta = delta;
         }
+
+        public override string ToString()
+        {
+            return $"[MouseButtonDragEventArgs: Button={Button}, Start={Start}, End={End}, Delta={Delta}]";
+        }
     }
 }

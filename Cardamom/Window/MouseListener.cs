@@ -1,9 +1,8 @@
-﻿using Cardamom.Window;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace Cardamom.Ui
+namespace Cardamom.Window
 {
     public class MouseListener
     {
@@ -29,8 +28,7 @@ namespace Cardamom.Ui
 
         public Vector2 GetMousePosition()
         {
-            var position = _window!.GetMousePosition();
-            return new Vector2(position.X, position.Y);
+            return _window!.GetMousePosition();
         }
 
         private void HandleMouseButtonPressed(object? sender, MouseButtonEventArgs e)
@@ -63,17 +61,15 @@ namespace Cardamom.Ui
             if (_drag || _depressedButton != null)
             {
                 _drag = true;
-                var newPosition = new Vector2(e.X, e.Y);
-                var delta = newPosition - _draggedPosition;
-                _draggedPosition = newPosition;
+                _draggedPosition = e.Position;
                 MouseButtonDragged?.Invoke(
-                    this, 
+                    this,
                     new(
                         (MouseButton)_depressedButton!,
-                        _depressedPosition, 
-                        _draggedPosition, 
-                        delta));
-;            }
+                        _depressedPosition,
+                        _draggedPosition,
+                        e.Delta));
+            }
         }
 
         private void HandleMouseWheelScrolled(object? sender, MouseWheelEventArgs e)

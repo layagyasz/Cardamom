@@ -34,7 +34,7 @@ namespace Cardamom.Ui
 
         public void DispatchEvents()
         {
-            var newMouseOver = _context?.GetTopElement();
+            var newMouseOver = _context!.GetTopElement();
             if (newMouseOver != _mouseOver)
             {
                 var newAncestry = GetAncestry(newMouseOver);
