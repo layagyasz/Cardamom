@@ -9,7 +9,10 @@ namespace Cardamom.Graphics
     public abstract class RenderTarget
     {
         private static readonly Shader _shader =
-            new("Shaders/default_planar_vert.sh", "Shaders/default_planar_frag.sh");
+            new Shader.Builder()
+                .SetVertex("Shaders/default_planar_vert.sh")
+                .SetFragment("Shaders/default_planar_frag.sh")
+                .Build();
 
         private ViewPort _viewPort;
         private GLVertexArray? _vertexArray;
