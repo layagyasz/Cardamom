@@ -49,6 +49,7 @@ namespace Cardamom.Ui
 
                 _controller.DispatchEvents();
                 RenderWindow.Display();
+                stopwatch.Restart();
             }
         }
 

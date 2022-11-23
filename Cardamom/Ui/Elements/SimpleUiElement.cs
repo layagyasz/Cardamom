@@ -8,7 +8,7 @@ namespace Cardamom.Ui.Elements
 {
     public class SimpleUiElement : ClassedUiElement
     {
-        private readonly RectComponent _rectComponent = new();
+        private readonly RectangleComponent _rectComponent = new();
 
         public override Vector2 Size => _rectComponent.Size + LeftMargin + RightMargin;
 

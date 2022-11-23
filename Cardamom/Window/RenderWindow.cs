@@ -26,7 +26,7 @@ namespace Cardamom.Window
                 {
                     Title = title,
                     Size = size,
-                    Flags = ContextFlags.ForwardCompatible
+                    Flags = ContextFlags.ForwardCompatible,
                 });
             _window.Closing += HandleClosed;
             _window.MouseDown += HandleMouseDown;
