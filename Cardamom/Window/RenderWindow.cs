@@ -28,6 +28,7 @@ namespace Cardamom.Window
                     Size = size,
                     Flags = ContextFlags.ForwardCompatible,
                 });
+            _window.Context.SwapInterval = 0;
             _window.Closing += HandleClosed;
             _window.MouseDown += HandleMouseDown;
             _window.MouseUp += HandleMouseUp;

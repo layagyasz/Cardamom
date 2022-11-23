@@ -1,6 +1,5 @@
 ﻿using Cardamom.Planar;
 using Cardamom.Window;
-using OpenTK.Mathematics;
 using System.Diagnostics;
 
 namespace Cardamom.Ui
