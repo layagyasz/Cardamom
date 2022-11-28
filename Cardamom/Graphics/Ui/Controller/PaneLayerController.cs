@@ -1,6 +1,6 @@
-﻿using Cardamom.Ui.Elements;
+﻿using Cardamom.Graphics.Ui.Elements;
 
-namespace Cardamom.Ui.Controller
+namespace Cardamom.Graphics.Ui.Controller
 {
     public class PaneLayerController : SecondaryController<UiLayer>
     {

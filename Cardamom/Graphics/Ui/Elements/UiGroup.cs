@@ -1,7 +1,6 @@
-﻿using Cardamom.Graphics;
-using Cardamom.Planar;
+﻿using Cardamom.Planar;
 
-namespace Cardamom.Ui.Elements
+namespace Cardamom.Graphics.Ui.Elements
 {
     public class UiGroup : IEnumerable<IRenderable>, IRenderable
     {

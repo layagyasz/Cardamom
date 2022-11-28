@@ -1,7 +1,7 @@
 ﻿using Cardamom.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Ui
+namespace Cardamom.Graphics.Ui
 {
     public class Class : IKeyed
     {

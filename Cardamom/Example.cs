@@ -1,6 +1,7 @@
-﻿using Cardamom.Ui;
-using Cardamom.Ui.Controller;
-using Cardamom.Ui.Elements;
+﻿using Cardamom.Graphics;
+using Cardamom.Graphics.Ui;
+using Cardamom.Graphics.Ui.Controller;
+using Cardamom.Graphics.Ui.Elements;
 using Cardamom.Window;
 using OpenTK.Mathematics;
 

@@ -1,10 +1,9 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Graphics.Ui.Controller;
+using Cardamom.Graphics.Ui.Elements.Components;
 using Cardamom.Planar;
-using Cardamom.Ui.Controller;
-using Cardamom.Ui.Elements.Components;
 using OpenTK.Mathematics;
 
-namespace Cardamom.Ui.Elements
+namespace Cardamom.Graphics.Ui.Elements
 {
     public class SimpleUiElement : ClassedUiElement
     {

@@ -3,7 +3,7 @@ using Cardamom.Planar;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace Cardamom.Ui.Elements.Components
+namespace Cardamom.Graphics.Ui.Elements.Components
 {
     internal class RectangleComponent
     {

@@ -2,7 +2,7 @@
 using Cardamom.Json;
 using System.Text.Json;
 
-namespace Cardamom.Ui
+namespace Cardamom.Graphics.Ui
 {
     public class ClassLibrary
     {

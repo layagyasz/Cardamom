@@ -1,9 +1,9 @@
-﻿using Cardamom.Ui.Controller;
+﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Window;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace Cardamom.Ui
+namespace Cardamom.Graphics.Ui
 {
     public class UiRootController
     {

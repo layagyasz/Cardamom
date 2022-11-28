@@ -1,6 +1,6 @@
-﻿using Cardamom.Ui.Controller;
+﻿using Cardamom.Graphics.Ui.Controller;
 
-namespace Cardamom.Ui.Elements
+namespace Cardamom.Graphics.Ui.Elements
 {
     public class UiLayer : UiGroup, IControlled
     {

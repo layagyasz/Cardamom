@@ -1,7 +1,7 @@
 ﻿using Cardamom.Planar;
 using Cardamom.Window;
 
-namespace Cardamom.Ui
+namespace Cardamom.Graphics.Ui
 {
     public class UiContext
     {

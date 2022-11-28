@@ -1,9 +1,8 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Planar;
-using Cardamom.Ui.Controller;
 using OpenTK.Mathematics;
 
-namespace Cardamom.Ui
+namespace Cardamom.Graphics.Ui
 {
     public abstract class BaseUiInteractiveElement : IUiInteractiveElement
     {

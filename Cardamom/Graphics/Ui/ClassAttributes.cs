@@ -1,7 +1,7 @@
 ﻿using Cardamom.Graphics;
 using OpenTK.Mathematics;
 
-namespace Cardamom.Ui
+namespace Cardamom.Graphics.Ui
 {
     public class ClassAttributes
     {

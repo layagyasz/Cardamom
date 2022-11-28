@@ -1,7 +1,7 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Graphics.Ui;
 using Cardamom.Planar;
 
-namespace Cardamom.Ui
+namespace Cardamom.Graphics
 {
     public interface IRenderable : IInitializable
     {

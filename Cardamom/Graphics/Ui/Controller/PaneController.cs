@@ -1,7 +1,7 @@
 ﻿using Cardamom.Window;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace Cardamom.Ui.Controller
+namespace Cardamom.Graphics.Ui.Controller
 {
     public class PaneController : ClassedUiElementController<ClassedUiElement>
     {

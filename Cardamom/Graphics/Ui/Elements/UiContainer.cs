@@ -1,8 +1,7 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Planar;
-using Cardamom.Ui.Controller;
 
-namespace Cardamom.Ui.Elements
+namespace Cardamom.Graphics.Ui.Elements
 {
     public class UiContainer : SimpleUiElement, IEnumerable<IUiElement>
     {

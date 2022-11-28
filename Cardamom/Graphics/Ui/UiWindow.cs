@@ -2,7 +2,7 @@
 using Cardamom.Window;
 using System.Diagnostics;
 
-namespace Cardamom.Ui
+namespace Cardamom.Graphics.Ui
 {
     public class UiWindow
     {

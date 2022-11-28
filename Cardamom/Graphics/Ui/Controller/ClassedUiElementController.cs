@@ -1,4 +1,4 @@
-﻿namespace Cardamom.Ui.Controller
+﻿namespace Cardamom.Graphics.Ui.Controller
 {
     public abstract class ClassedUiElementController<T> : UiInteractiveElementController<T> where T : ClassedUiElement
     {

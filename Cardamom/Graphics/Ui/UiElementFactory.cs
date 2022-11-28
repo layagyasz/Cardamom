@@ -1,8 +1,8 @@
-﻿using Cardamom.Ui.Controller;
-using Cardamom.Ui.Elements;
+﻿using Cardamom.Graphics.Ui.Controller;
+using Cardamom.Graphics.Ui.Elements;
 using OpenTK.Mathematics;
 
-namespace Cardamom.Ui
+namespace Cardamom.Graphics.Ui
 {
     public class UiElementFactory
     {

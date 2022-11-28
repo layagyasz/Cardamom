@@ -1,7 +1,7 @@
 ﻿using Cardamom.Window;
 using OpenTK.Windowing.Common;
 
-namespace Cardamom.Ui.Controller
+namespace Cardamom.Graphics.Ui.Controller
 {
     public interface IController
     {
