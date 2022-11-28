@@ -1,26 +1,56 @@
-﻿using Cardamom.Json;
+﻿using Cardamom.Graphics;
+using Cardamom.Json;
 using System.Text.Json;
 
 namespace Cardamom.Ui
 {
     public class ClassLibrary
     {
+        private readonly Dictionary<string, Shader> _shaders;
         private readonly Dictionary<string, Class> _classes = new();
 
-        public ClassLibrary(IEnumerable<Class> classes)
+        public ClassLibrary(IEnumerable<KeyedWrapper<Shader>> shaders, IEnumerable<Class> classes)
         {
+            _shaders = shaders.ToDictionary(x => x.Key, x => x.Element!);
             _classes = classes.ToDictionary(x => x.Key, x => x);
         }
 
-        public Class Get(string key)
+        public Class GetClass(string key)
         {
             return _classes[key];
+        }
+
+        public Shader GetShader(string key)
+        {
+            return _shaders[key];
         }
 
         public class Builder
         {
             // private readonly Dictionary<string, KeyedWrapper<Font>> _fonts = new();
-            private readonly Dictionary<string, Class.Builder> _classes = new();
+            private readonly Dictionary<string, KeyedWrapper<Shader>> _shaders = new();
+            private readonly Dictionary<string, Class> _classes = new();
+
+            public Builder ReadShaders(string path)
+            {
+                JsonSerializerOptions options = new()
+                {
+                    ReferenceHandler = new KeyedReferenceHandler(new Dictionary<string, IKeyed>())
+                };
+                foreach (var shader 
+                    in JsonSerializer.Deserialize<List<KeyedWrapper<Shader.Builder>>>(
+                        File.ReadAllText(path), options)!)
+                {
+                    _shaders.Add(
+                        shader.Key, 
+                        new KeyedWrapper<Shader>() 
+                        {
+                            Key = shader.Key, 
+                            Element = shader!.Element!.Build()
+                        });
+                }
+                return this;
+            }
             
             public Builder ReadFonts(string path)
             {
@@ -45,12 +75,18 @@ namespace Cardamom.Ui
                     objects.Add(font.Key, font.Value);
                 }
                 */
+                foreach (var shader in _shaders)
+                {
+                    objects.Add(shader.Key, shader.Value);
+                }
                 foreach (var @class in _classes)
                 {
                     objects.Add(@class.Key, @class.Value);
                 }
-                JsonSerializerOptions options = new();
-                options.ReferenceHandler = new KeyedReferenceHandler(objects);
+                JsonSerializerOptions options = new()
+                {
+                    ReferenceHandler = new KeyedReferenceHandler(objects)
+                };
                 options.Converters.Add(new ColorJsonConverter());
                 options.Converters.Add(new Vector2JsonConverter());
                 foreach (var file in Directory.EnumerateFiles(directory, pattern, SearchOption.AllDirectories))
@@ -58,7 +94,7 @@ namespace Cardamom.Ui
                     foreach (var @class in 
                         JsonSerializer.Deserialize<List<Class.Builder>>(File.ReadAllText(file), options)!)
                     {
-                        _classes.Add(@class.Key, @class);
+                        _classes.Add(@class.Key, @class.Build());
                     }
                 }
                 return this;
@@ -66,7 +102,7 @@ namespace Cardamom.Ui
 
             public ClassLibrary Build()
             {
-                return new ClassLibrary(_classes.Values.Select(x => x.Build()));
+                return new ClassLibrary(_shaders.Values, _classes.Values);
             }
         }
     }

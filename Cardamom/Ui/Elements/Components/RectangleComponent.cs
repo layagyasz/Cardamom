@@ -7,6 +7,7 @@ namespace Cardamom.Ui.Elements.Components
 {
     internal class RectangleComponent
     {
+        private Shader? _shader;
         private readonly VertexArray _vertices = new(PrimitiveType.Triangles, 30);
 
         public Vector2 Size => _vertices[29].Position - _vertices[24].Position;
@@ -21,6 +22,7 @@ namespace Cardamom.Ui.Elements.Components
 
         public void SetAttributes(ClassAttributes attributes)
         {
+            _shader = attributes.Shader!.Element!;
             Vector2[] inner =
             {
                 new(),
@@ -56,7 +58,7 @@ namespace Cardamom.Ui.Elements.Components
 
         public void Draw(RenderTarget target, Transform2 transform)
         {
-            target.Draw(_vertices, 0, _vertices.Length, transform);
+            target.Draw(_vertices, 0, _vertices.Length, transform, _shader!);
         }
     }
 }

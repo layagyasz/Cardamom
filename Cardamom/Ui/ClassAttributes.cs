@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;
+﻿using Cardamom.Graphics;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
 {
@@ -16,6 +17,7 @@ namespace Cardamom.Ui
         public Color4[] BackgroundColor { get; set; } = new Color4[4];
         public Color4[] BorderColor { get; set; } = new Color4[4];
         public int[] BorderWidth { get; set; } = new int[4];
+        public KeyedWrapper<Shader>? Shader { get; set; }
 
         public class Builder
         {
@@ -28,6 +30,7 @@ namespace Cardamom.Ui
             public Color4[]? BackgroundColor { get; set; }
             public Color4[]? BorderColor { get; set; }
             public int[]? BorderWidth { get; set; }
+            public KeyedWrapper<Shader>? Shader { get; set; }
 
             public ClassAttributes Build(IEnumerable<Builder> ancestors) => new()
             {
@@ -43,7 +46,8 @@ namespace Cardamom.Ui
                 BorderColor = Precondition.HasSize<Color4[], Color4>(
                     Inherit(ancestors.Select(x => x.BorderColor), BorderColor) ?? new Color4[4], 4),
                 BorderWidth = Precondition.HasSize<int[], int>(
-                    Inherit(ancestors.Select(x => x.BorderWidth), BorderWidth) ?? new int[4], 4)
+                    Inherit(ancestors.Select(x => x.BorderWidth), BorderWidth) ?? new int[4], 4),
+                Shader = Inherit(ancestors.Select(x => x.Shader), null)!
             };
 
             private static T Inherit<T>(IEnumerable<T> ancestors, T child)

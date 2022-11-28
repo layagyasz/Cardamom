@@ -5,7 +5,10 @@
       "Size": [ 500, 500 ],
       "BackgroundColor": [ "#ff0000", "#ff0000", "#ff0000", "#ff0000" ],
       "BorderColor": [ "#00ff00", "#00ff00", "#00ff00", "#00ff00" ],
-      "BorderWidth": [ 1, 2, 4, 8 ]
+      "BorderWidth": [ 1, 2, 4, 8 ],
+      "Shader": {
+        "$ref": "shader-default-planar"
+      }
     },
     "States": [
       {

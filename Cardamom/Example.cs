@@ -16,6 +16,7 @@ namespace Cardamom
                 new UiElementFactory(
                     new ClassLibrary.Builder()
                                     .ReadFonts("Example/Fonts.json")
+                                    .ReadShaders("Example/Shaders.json")
                                     .ReadClasses("Example", "Style.json")
                                     .Build());
             var pane = uiElementFactory.CreatePane("example-base-class");

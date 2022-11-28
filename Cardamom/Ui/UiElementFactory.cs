@@ -25,12 +25,12 @@ namespace Cardamom.Ui
 
         public UiContainer CreatePane(string className)
         {
-            return new UiContainer(_classLibrary.Get(className), new PaneController());
+            return new UiContainer(_classLibrary.GetClass(className), new PaneController());
         }
 
         public IUiElement CreateSimpleButton(string className, Vector2 position = new())
         {
-            return new SimpleUiElement(_classLibrary.Get(className), new ButtonController()) { Position = position };
+            return new SimpleUiElement(_classLibrary.GetClass(className), new ButtonController()) { Position = position };
         }
     }
 }

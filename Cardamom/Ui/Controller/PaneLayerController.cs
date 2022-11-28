@@ -1,5 +1,4 @@
 ﻿using Cardamom.Ui.Elements;
-using System.Diagnostics.Tracing;
 
 namespace Cardamom.Ui.Controller
 {

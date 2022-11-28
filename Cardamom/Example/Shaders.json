@@ -1,0 +1,9 @@
+[
+  {
+    "$id": "shader-default-planar",
+    "Element": {
+      "Vertex": "Shaders/default_planar.vert",
+      "Fragment": "Shaders/default_planar.frag"
+    }
+  }
+]

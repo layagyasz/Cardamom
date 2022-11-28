@@ -8,12 +8,6 @@ namespace Cardamom.Graphics
 {
     public abstract class RenderTarget
     {
-        private static readonly Shader _shader =
-            new Shader.Builder()
-                .SetVertex("Shaders/default_planar_vert.sh")
-                .SetFragment("Shaders/default_planar_frag.sh")
-                .Build();
-
         private ViewPort _viewPort;
         private GLVertexArray? _vertexArray;
 
@@ -35,7 +29,7 @@ namespace Cardamom.Graphics
             GetContext().SwapBuffers();
         }
 
-        public void Draw(VertexArray vertices, int start, int count, Transform2 transform)
+        public void Draw(VertexArray vertices, int start, int count, Transform2 transform, Shader shader)
         {
             _vertexArray ??= new(new());
 
@@ -43,9 +37,9 @@ namespace Cardamom.Graphics
             Error.LogGLError("bind context");
 
             _vertexArray.SetData(vertices.Vertices);
-            _shader.Bind();
-            _shader.SetMatrix3("projection", Transform2.CreateViewportOrthographicProjection(_viewPort).GetMatrix());
-            _shader.SetMatrix3("view", transform.GetMatrix());
+            shader.Bind();
+            shader.SetMatrix3("projection", Transform2.CreateViewportOrthographicProjection(_viewPort).GetMatrix());
+            shader.SetMatrix3("view", transform.GetMatrix());
             _vertexArray.Draw(vertices.PrimitiveType, start, count);
         }
 
