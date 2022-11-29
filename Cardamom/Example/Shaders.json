@@ -5,5 +5,12 @@
       "Vertex": "Shaders/default_planar.vert",
       "Fragment": "Shaders/default_planar.frag"
     }
+  },
+  {
+    "$id": "shader-default-classed-ui-element",
+    "Element": {
+      "Vertex": "Shaders/default_planar.vert",
+      "Fragment": "Shaders/classed_ui_element.frag"
+    }
   }
 ]

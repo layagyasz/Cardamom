@@ -1,19 +1,13 @@
 ﻿using Cardamom.Graphics.Core;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Cardamom.Graphics
 {
     public class Shader : GLObject
     {
-        private readonly Dictionary<string, int> _uniformLocations;
-
-        private Shader(int handle, Dictionary<string, int> uniformLocations) 
-            : base(handle)
-        {
-            _uniformLocations = uniformLocations;
-        }
+        private Shader(int handle)
+            : base(handle) { }
 
         public void Bind()
         {
@@ -21,39 +15,62 @@ namespace Cardamom.Graphics
             Error.LogGLError("bind shader");
         }
 
-        public int GetAttribLocation(string attribName)
+        public int GetAttributeLocation(string name)
         {
-            return GL.GetAttribLocation(Handle, attribName);
+            return GL.GetAttribLocation(Handle, name);
+        }
+
+        public int GetUniformLocation(string name)
+        {
+            return GL.GetUniformLocation(Handle, name);
         }
 
         public void SetInt32(string name, int data)
         {
             Bind();
-            GL.Uniform1(_uniformLocations[name], data);
+            GL.Uniform1(GetUniformLocation(name), data);
         }
 
         public void SetFloat(string name, float data)
         {
             Bind();
-            GL.Uniform1(_uniformLocations[name], data);
+            GL.Uniform1(GetUniformLocation(name), data);
         }
 
         public void SetMatrix3(string name, Matrix3 data)
         {
             Bind();
-            GL.UniformMatrix3(_uniformLocations[name], true, ref data);
+            GL.UniformMatrix3(GetUniformLocation(name), true, ref data);
         }
 
         public void SetMatrix4(string name, Matrix4 data)
         {
             Bind();
-            GL.UniformMatrix4(_uniformLocations[name], true, ref data);
+            GL.UniformMatrix4(GetUniformLocation(name), true, ref data);
+        }
+
+        public void SetVector2(string name, Vector2 data)
+        {
+            Bind();
+            GL.Uniform2(GetUniformLocation(name), data);
         }
 
         public void SetVector3(string name, Vector3 data)
         {
             Bind();
-            GL.Uniform3(_uniformLocations[name], data);
+            GL.Uniform3(GetUniformLocation(name), data);
+        }
+
+        public void SetVector4(string name, Vector4 data)
+        {
+            Bind();
+            GL.Uniform4(GetUniformLocation(name), data);
+        }
+
+        public void SetColor(string name, Color4 data)
+        {
+            Bind();
+            GL.Uniform4(GetUniformLocation(name), data);
         }
 
         protected override void DisposeImpl()
@@ -146,16 +163,7 @@ namespace Cardamom.Graphics
                     GL.DeleteShader(handle);
                 }
 
-                GL.GetProgram(program, GetProgramParameterName.ActiveUniforms, out var numberOfUniforms);
-                var uniformLocations = new Dictionary<string, int>();
-                for (var i = 0; i < numberOfUniforms; i++)
-                {
-                    var key = GL.GetActiveUniform(program, i, out _, out _);
-                    var location = GL.GetUniformLocation(program, key);
-                    uniformLocations.Add(key, location);
-                }
-
-                return new Shader(program, uniformLocations);
+                return new Shader(program);
             }
 
             private static int CompileShader(string path, ShaderType shaderType)

@@ -7,7 +7,7 @@
       "BorderColor": [ "#00ff00", "#00ff00", "#00ff00", "#00ff00" ],
       "BorderWidth": [ 1, 2, 4, 8 ],
       "Shader": {
-        "$ref": "shader-default-planar"
+        "$ref": "shader-default-classed-ui-element"
       }
     },
     "States": [
@@ -15,7 +15,7 @@
         "State": [ "HOVER" ],
         "Attributes": {
           "BackgroundColor": [ "#0000ff", "#0000ff", "#0000ff", "#0000ff" ],
-          "BorderColor": [ "#ffff00", "#ffff00", "#ffff00", "#ffff00" ]
+          "BorderColor": [ "#ff0000", "#00ff00", "#0000ff", "#ffff00" ]
         }
       },
       {
