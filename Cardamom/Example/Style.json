@@ -6,6 +6,12 @@
       "BackgroundColor": [ "#ff0000", "#ff0000", "#ff0000", "#ff0000" ],
       "BorderColor": [ "#00ff00", "#00ff00", "#00ff00", "#00ff00" ],
       "BorderWidth": [ 1, 2, 4, 8 ],
+      "CornerRadius": [
+        [ 30, 30 ],
+        [ 100, 30 ],
+        [ 0, 0 ],
+        [ 30, 100 ]
+      ],
       "Shader": {
         "$ref": "shader-default-classed-ui-element"
       }

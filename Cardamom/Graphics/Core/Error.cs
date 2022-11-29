@@ -11,6 +11,7 @@ namespace Cardamom.Graphics.Core
             if (code != ErrorCode.NoError)
             {
                 Console.WriteLine($"({callPoint}): {code}");
+                Console.ReadLine();
             }
 # endif
         }

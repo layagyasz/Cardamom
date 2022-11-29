@@ -9,6 +9,7 @@ namespace Cardamom.Graphics.Ui.Elements.Components
         private Shader? _shader;
         private float[]? _borderWidth;
         private Color4[]? _borderColor;
+        private Vector2[]? _cornerRadius;
 
         private readonly VertexArray _vertices = new(PrimitiveType.Triangles, 6);
 
@@ -27,6 +28,7 @@ namespace Cardamom.Graphics.Ui.Elements.Components
             _shader = attributes.Shader!.Element!;
             _borderWidth = attributes.BorderWidth;
             _borderColor = attributes.BorderColor;
+            _cornerRadius = attributes.CornerRadius;
 
             Vector2[] inner =
             {
@@ -50,6 +52,7 @@ namespace Cardamom.Graphics.Ui.Elements.Components
             {
                 _shader!.SetFloat($"border_width[{i}]", _borderWidth![i]);
                 _shader!.SetColor($"border_color[{i}]", _borderColor![i]);
+                _shader!.SetVector2($"corner_radius[{i}]", _cornerRadius![i]);
             }
             target.Draw(_vertices, 0, _vertices.Length, transform, _shader!);
         }

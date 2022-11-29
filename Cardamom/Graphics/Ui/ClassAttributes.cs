@@ -17,6 +17,7 @@ namespace Cardamom.Graphics.Ui
         public Color4[] BackgroundColor { get; set; } = new Color4[4];
         public Color4[] BorderColor { get; set; } = new Color4[4];
         public float[] BorderWidth { get; set; } = new float[4];
+        public Vector2[] CornerRadius { get; set; } = new Vector2[4];
         public KeyedWrapper<Shader>? Shader { get; set; }
 
         public class Builder
@@ -30,6 +31,7 @@ namespace Cardamom.Graphics.Ui
             public Color4[]? BackgroundColor { get; set; }
             public Color4[]? BorderColor { get; set; }
             public float[]? BorderWidth { get; set; }
+            public Vector2[]? CornerRadius { get; set; }
             public KeyedWrapper<Shader>? Shader { get; set; }
 
             public ClassAttributes Build(IEnumerable<Builder> ancestors) => new()
@@ -47,6 +49,8 @@ namespace Cardamom.Graphics.Ui
                     Inherit(ancestors.Select(x => x.BorderColor), BorderColor) ?? new Color4[4], 4),
                 BorderWidth = Precondition.HasSize<float[], float>(
                     Inherit(ancestors.Select(x => x.BorderWidth), BorderWidth) ?? new float[4], 4),
+                CornerRadius = Precondition.HasSize<Vector2[], Vector2>(
+                    Inherit(ancestors.Select(x => x.CornerRadius), CornerRadius) ?? new Vector2[4], 4),
                 Shader = Inherit(ancestors.Select(x => x.Shader), null)!
             };
 
