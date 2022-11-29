@@ -3,9 +3,9 @@
     "$id": "example-base-class",
     "Default": {
       "Size": [ 500, 500 ],
-      "BackgroundColor": [ "#ff0000" ],
-      "BorderColor": [ "#00ff00" ],
-      "BorderWidth": [ 1, 2, 4, 8 ],
+      "BackgroundColor": [ "#0000ff88" ],
+      "BorderColor": [ "#ffffff88" ],
+      "BorderWidth": [ 2 ],
       "CornerRadius": [
         [ 50, 50 ]
       ],
@@ -17,15 +17,14 @@
       {
         "State": [ "HOVER" ],
         "Attributes": {
-          "BackgroundColor": [ "#0000ff" ],
-          "BorderColor": [ "#ff0000", "#00ff00", "#0000ff", "#ffff00" ]
+          "BackgroundColor": [ "#000000aa" ],
+          "BorderColor": [ "#ffffffaa" ]
         }
       },
       {
         "State": [ "FOCUS" ],
         "Attributes": {
-          "BackgroundColor": [ "#ff00ff", "#ff00ff", "#0000ff", "#0000ff" ],
-          "BorderColor": [ "#ffff00", "#ffffff", "#ffff00", "#ffff00" ]
+          "BorderColor": [ "#ffffff" ]
         }
       }
     ]
@@ -36,6 +35,7 @@
       "$ref": "example-base-class"
     },
     "Default": {
+      "BackgroundColor": [ "#00000088" ],
       "Size": [ 200, 100 ]
     }
   }

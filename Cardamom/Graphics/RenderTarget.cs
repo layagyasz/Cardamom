@@ -40,6 +40,13 @@ namespace Cardamom.Graphics
             shader.Bind();
             shader.SetMatrix3("projection", Transform2.CreateViewportOrthographicProjection(_viewPort).GetMatrix());
             shader.SetMatrix3("view", transform.GetMatrix());
+            GL.Enable(EnableCap.Blend);
+            GL.BlendEquation(BlendEquationMode.FuncAdd);
+            GL.BlendFuncSeparate(
+                BlendingFactorSrc.SrcAlpha,
+                BlendingFactorDest.OneMinusSrcAlpha, 
+                BlendingFactorSrc.One, 
+                BlendingFactorDest.OneMinusSrcAlpha);
             _vertexArray.Draw(vertices.PrimitiveType, start, count);
         }
 
