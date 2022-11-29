@@ -36,27 +36,38 @@ namespace Cardamom.Graphics.Ui
 
             public ClassAttributes Build(IEnumerable<Builder> ancestors) => new()
             {
-                Margin = Precondition.HasSize<float[], float>(
-                    Inherit(ancestors.Select(x => x.Margin), Margin) ?? new float[4], 4),
-                Padding = Precondition.HasSize<float[], float> (
-                    Inherit(ancestors.Select(x => x.Padding), Padding) ?? new float[4], 4),
+                Margin = ExpandOrThrow(Inherit(ancestors.Select(x => x.Margin), Margin) ?? new float[4]),
+                Padding = ExpandOrThrow(Inherit(ancestors.Select(x => x.Padding), Padding) ?? new float[4]),
                 Size = Inherit(ancestors.Select(x => x.Size), Size) ?? new Vector2(),
                 // Implement font with 
                 // FontFace = Inherit(ancestors.Select(x => x.FontFace), FontFace),
-                BackgroundColor = Precondition.HasSize<Color4[], Color4>(
-                    Inherit(ancestors.Select(x => x.BackgroundColor), BackgroundColor) ?? new Color4[4], 4),
-                BorderColor = Precondition.HasSize<Color4[], Color4>(
-                    Inherit(ancestors.Select(x => x.BorderColor), BorderColor) ?? new Color4[4], 4),
-                BorderWidth = Precondition.HasSize<float[], float>(
-                    Inherit(ancestors.Select(x => x.BorderWidth), BorderWidth) ?? new float[4], 4),
-                CornerRadius = Precondition.HasSize<Vector2[], Vector2>(
-                    Inherit(ancestors.Select(x => x.CornerRadius), CornerRadius) ?? new Vector2[4], 4),
+                BackgroundColor = 
+                    ExpandOrThrow(Inherit(ancestors.Select(x => x.BackgroundColor), BackgroundColor) ?? new Color4[4]),
+                BorderColor = ExpandOrThrow(
+                    Inherit(ancestors.Select(x => x.BorderColor), BorderColor) ?? new Color4[4]),
+                BorderWidth = ExpandOrThrow(
+                    Inherit(ancestors.Select(x => x.BorderWidth), BorderWidth) ?? new float[4]),
+                CornerRadius = ExpandOrThrow(
+                    Inherit(ancestors.Select(x => x.CornerRadius), CornerRadius) ?? new Vector2[4]),
                 Shader = Inherit(ancestors.Select(x => x.Shader), null)!
             };
 
             private static T Inherit<T>(IEnumerable<T> ancestors, T child)
             {
                 return ancestors.Aggregate((left, right) => right ?? left) ?? child;
+            }
+
+            private static T[] ExpandOrThrow<T>(T[] data)
+            {
+                if (data.Length == 4)
+                {
+                    return data;
+                }
+                if (data.Length == 1)
+                {
+                    return new T[] { data[0], data[0], data[0], data[0] };
+                }
+                throw new ArgumentException($"Array length must be either 1 or 4 but was {data.Length}.");
             }
         }
     }

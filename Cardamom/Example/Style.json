@@ -3,14 +3,11 @@
     "$id": "example-base-class",
     "Default": {
       "Size": [ 500, 500 ],
-      "BackgroundColor": [ "#ff0000", "#ff0000", "#ff0000", "#ff0000" ],
-      "BorderColor": [ "#00ff00", "#00ff00", "#00ff00", "#00ff00" ],
+      "BackgroundColor": [ "#ff0000" ],
+      "BorderColor": [ "#00ff00" ],
       "BorderWidth": [ 1, 2, 4, 8 ],
       "CornerRadius": [
-        [ 30, 30 ],
-        [ 100, 30 ],
-        [ 0, 0 ],
-        [ 30, 100 ]
+        [ 50, 50 ]
       ],
       "Shader": {
         "$ref": "shader-default-classed-ui-element"
@@ -20,7 +17,7 @@
       {
         "State": [ "HOVER" ],
         "Attributes": {
-          "BackgroundColor": [ "#0000ff", "#0000ff", "#0000ff", "#0000ff" ],
+          "BackgroundColor": [ "#0000ff" ],
           "BorderColor": [ "#ff0000", "#00ff00", "#0000ff", "#ffff00" ]
         }
       },
