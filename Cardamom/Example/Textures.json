@@ -1,0 +1,11 @@
+{
+  "$type": "static",
+  "TexturePath": "Example/texture-example.png",
+  "Segments": [
+    {
+      "Key": "texture-example",
+      "TopLeft": [ 0, 0 ],
+      "Size": [ 64, 64 ]
+    }
+  ]
+}

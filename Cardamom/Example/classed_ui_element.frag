@@ -1,14 +1,20 @@
 ﻿#version 330 core
 
+#define MODE_BACKGROUND 0
+#define MODE_TEXTURE 1
+
 out vec4 out_color;
 
 in vec4 vert_color;
 in vec2 vert_tex_coord;
+in vec2 vert_internal_coord;
 
 uniform vec2 size;
+uniform int mode;
 uniform vec4 border_color[4];
 uniform float border_width[4];
 uniform vec2 corner_radius[4];
+uniform sampler2D texture0;
 
 bool outside_ellipse(vec2 point, vec2 radius)
 {
@@ -87,13 +93,13 @@ int get_border(vec2 pixel_coord)
 
 void main()
 {
-    switch (get_border(size * vert_tex_coord))
+    switch (get_border(vert_internal_coord))
     {
         case -1:
             discard;
             break;
         case 0:
-            out_color = vert_color;
+            out_color = mode == MODE_TEXTURE ? vert_color * texture(texture0, vert_tex_coord) : vert_color;
             break;
         case 1:
             out_color = 

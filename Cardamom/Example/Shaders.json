@@ -2,15 +2,15 @@
   {
     "$id": "shader-default-planar",
     "Element": {
-      "Vertex": "Shaders/default_planar.vert",
-      "Fragment": "Shaders/default_planar.frag"
+      "Vertex": "Example/default_planar.vert",
+      "Fragment": "Example/default_planar.frag"
     }
   },
   {
     "$id": "shader-default-classed-ui-element",
     "Element": {
-      "Vertex": "Shaders/default_planar.vert",
-      "Fragment": "Shaders/classed_ui_element.frag"
+      "Vertex": "Example/default_planar.vert",
+      "Fragment": "Example/classed_ui_element.frag"
     }
   }
 ]

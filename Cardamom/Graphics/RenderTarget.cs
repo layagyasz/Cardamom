@@ -29,7 +29,8 @@ namespace Cardamom.Graphics
             GetContext().SwapBuffers();
         }
 
-        public void Draw(VertexArray vertices, int start, int count, Transform2 transform, Shader shader)
+        public void Draw(
+            VertexArray vertices, int start, int count, Transform2 transform, Shader shader, Texture? texture)
         {
             _vertexArray ??= new(new());
 
@@ -37,9 +38,13 @@ namespace Cardamom.Graphics
             Error.LogGLError("bind context");
 
             _vertexArray.SetData(vertices.Vertices);
+
+            texture?.Bind(TextureUnit.Texture0);
+
             shader.Bind();
             shader.SetMatrix3("projection", Transform2.CreateViewportOrthographicProjection(_viewPort).GetMatrix());
             shader.SetMatrix3("view", transform.GetMatrix());
+
             GL.Enable(EnableCap.Blend);
             GL.BlendEquation(BlendEquationMode.FuncAdd);
             GL.BlendFuncSeparate(
@@ -47,7 +52,10 @@ namespace Cardamom.Graphics
                 BlendingFactorDest.OneMinusSrcAlpha, 
                 BlendingFactorSrc.One, 
                 BlendingFactorDest.OneMinusSrcAlpha);
+
             _vertexArray.Draw(vertices.PrimitiveType, start, count);
+
+            texture?.Unbind(TextureUnit.Texture0);
         }
 
         public void Resize(Vector2i size)

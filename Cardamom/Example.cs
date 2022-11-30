@@ -16,6 +16,7 @@ namespace Cardamom
             var uiElementFactory = 
                 new UiElementFactory(
                     new ClassLibrary.Builder()
+                                    .ReadTextures("Example/Textures.json")
                                     .ReadFonts("Example/Fonts.json")
                                     .ReadShaders("Example/Shaders.json")
                                     .ReadClasses("Example", "Style.json")

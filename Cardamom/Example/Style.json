@@ -5,9 +5,9 @@
       "Size": [ 500, 500 ],
       "BackgroundColor": [ "#0000ff88" ],
       "BorderColor": [ "#ffffff88" ],
-      "BorderWidth": [ 2 ],
+      "BorderWidth": [ 1 ],
       "CornerRadius": [
-        [ 50, 50 ]
+        [ 16, 16 ]
       ],
       "Shader": {
         "$ref": "shader-default-classed-ui-element"
@@ -35,8 +35,10 @@
       "$ref": "example-base-class"
     },
     "Default": {
-      "BackgroundColor": [ "#00000088" ],
-      "Size": [ 200, 100 ]
+      "Size": [ 64, 64 ],
+      "Texture": {
+        "$ref": "texture-example"
+      }
     }
   }
 ]

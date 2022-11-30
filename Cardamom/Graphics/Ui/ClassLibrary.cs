@@ -1,16 +1,18 @@
-﻿using Cardamom.Graphics;
-using Cardamom.Json;
+﻿using Cardamom.Json;
 using System.Text.Json;
 
 namespace Cardamom.Graphics.Ui
 {
     public class ClassLibrary
     {
+        private readonly TextureLibrary _textures;
         private readonly Dictionary<string, Shader> _shaders;
         private readonly Dictionary<string, Class> _classes = new();
 
-        public ClassLibrary(IEnumerable<KeyedWrapper<Shader>> shaders, IEnumerable<Class> classes)
+        public ClassLibrary(
+            TextureLibrary textures, IEnumerable<KeyedWrapper<Shader>> shaders, IEnumerable<Class> classes)
         {
+            _textures = textures;
             _shaders = shaders.ToDictionary(x => x.Key, x => x.Element!);
             _classes = classes.ToDictionary(x => x.Key, x => x);
         }
@@ -27,9 +29,19 @@ namespace Cardamom.Graphics.Ui
 
         public class Builder
         {
+            private TextureLibrary _textures = TextureLibrary.Empty;
             // private readonly Dictionary<string, KeyedWrapper<Font>> _fonts = new();
             private readonly Dictionary<string, KeyedWrapper<Shader>> _shaders = new();
             private readonly Dictionary<string, Class> _classes = new();
+
+            public Builder ReadTextures(string path)
+            {
+                JsonSerializerOptions options = new();
+                options.Converters.Add(new Vector2JsonConverter());
+                _textures = 
+                    JsonSerializer.Deserialize<TextureLibrary.IBuilder>(File.ReadAllText(path), options)!.Build();
+                return this;
+            }
 
             public Builder ReadShaders(string path)
             {
@@ -75,6 +87,10 @@ namespace Cardamom.Graphics.Ui
                     objects.Add(font.Key, font.Value);
                 }
                 */
+                foreach (var texture in _textures.GetSegments())
+                {
+                    objects.Add(texture.Key, texture);
+                }
                 foreach (var shader in _shaders)
                 {
                     objects.Add(shader.Key, shader.Value);
@@ -102,7 +118,7 @@ namespace Cardamom.Graphics.Ui
 
             public ClassLibrary Build()
             {
-                return new ClassLibrary(_shaders.Values, _classes.Values);
+                return new ClassLibrary(_textures, _shaders.Values, _classes.Values);
             }
         }
     }

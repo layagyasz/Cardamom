@@ -19,6 +19,7 @@ namespace Cardamom.Graphics.Ui
         public float[] BorderWidth { get; set; } = new float[4];
         public Vector2[] CornerRadius { get; set; } = new Vector2[4];
         public KeyedWrapper<Shader>? Shader { get; set; }
+        public TextureSegment Texture { get; set; } = new(string.Empty, null, new(new(), new(1, 1)));
 
         public class Builder
         {
@@ -33,6 +34,7 @@ namespace Cardamom.Graphics.Ui
             public float[]? BorderWidth { get; set; }
             public Vector2[]? CornerRadius { get; set; }
             public KeyedWrapper<Shader>? Shader { get; set; }
+            public TextureSegment Texture { get; set; } = new(string.Empty, null, new(new(), new(1, 1)));
 
             public ClassAttributes Build(IEnumerable<Builder> ancestors) => new()
             {
@@ -49,7 +51,8 @@ namespace Cardamom.Graphics.Ui
                     Inherit(ancestors.Select(x => x.BorderWidth), BorderWidth) ?? new float[4]),
                 CornerRadius = ExpandOrThrow(
                     Inherit(ancestors.Select(x => x.CornerRadius), CornerRadius) ?? new Vector2[4]),
-                Shader = Inherit(ancestors.Select(x => x.Shader), null)!
+                Shader = Inherit(ancestors.Select(x => x.Shader), Shader)!,
+                Texture = Inherit(ancestors.Select(x => x.Texture), Texture)
             };
 
             private static T Inherit<T>(IEnumerable<T> ancestors, T child)
