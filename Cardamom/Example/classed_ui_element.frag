@@ -99,7 +99,11 @@ void main()
             discard;
             break;
         case 0:
-            out_color = mode == MODE_TEXTURE ? vert_color * texture(texture0, vert_tex_coord) : vert_color;
+            ivec2 texture_size = textureSize(texture0, 0);
+            out_color = 
+                mode == MODE_TEXTURE
+                    ? vert_color * texture(texture0, vert_tex_coord / texture_size) 
+                    : vert_color;
             break;
         case 1:
             out_color = 

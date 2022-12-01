@@ -39,7 +39,15 @@ namespace Cardamom.Graphics
 
             _vertexArray.SetData(vertices.Vertices);
 
-            texture?.Bind(TextureUnit.Texture0);
+            if (texture != null)
+            {
+                texture?.Bind(TextureUnit.Texture0);
+            }
+            else
+            {
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+            }
 
             shader.Bind();
             shader.SetMatrix3("projection", Transform2.CreateViewportOrthographicProjection(_viewPort).GetMatrix());
@@ -54,8 +62,6 @@ namespace Cardamom.Graphics
                 BlendingFactorDest.OneMinusSrcAlpha);
 
             _vertexArray.Draw(vertices.PrimitiveType, start, count);
-
-            texture?.Unbind(TextureUnit.Texture0);
         }
 
         public void Resize(Vector2i size)

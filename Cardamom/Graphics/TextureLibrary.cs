@@ -56,12 +56,12 @@ namespace Cardamom.Graphics
             public struct StaticSegment
             {
                 public string? Key { get; set; }
-                public Vector2 TopLeft { get; set; }
-                public Vector2 Size { get; set; }
+                public Vector2i TopLeft { get; set; }
+                public Vector2i Size { get; set; }
 
                 public TextureSegment ToSegment(Texture texture)
                 {
-                    return new TextureSegment(Key!, texture, new(TopLeft / texture.Size, Size / texture.Size));
+                    return new TextureSegment(Key!, texture, new(TopLeft, Size));
                 }
             }
 

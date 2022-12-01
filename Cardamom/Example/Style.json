@@ -36,6 +36,7 @@
     },
     "Default": {
       "Size": [ 64, 64 ],
+      "BackgroundColor": [ "#ffffff" ],
       "Texture": {
         "$ref": "texture-example"
       }

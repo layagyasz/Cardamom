@@ -12,8 +12,7 @@ namespace Cardamom.Graphics.Ui
         public Vector2 LeftPadding => new(Padding[0], Padding[1]);
         public Vector2 RightPadding => new(Padding[2], Padding[3]);
         public Vector2 Size { get; set; }
-        // Implement fonts with SharpFont
-        //public KeyedWrapper<Font>? FontFace { get; set; }
+        public KeyedWrapper<Font>? FontFace { get; set; }
         public Color4[] BackgroundColor { get; set; } = new Color4[4];
         public Color4[] BorderColor { get; set; } = new Color4[4];
         public float[] BorderWidth { get; set; } = new float[4];
@@ -26,9 +25,7 @@ namespace Cardamom.Graphics.Ui
             public float[]? Margin { get; set; }
             public float[]? Padding { get; set; }
             public Vector2? Size { get; set; }
-            
-            // Implement fonts with SharpFont
-            // public KeyedWrapper<Font>? FontFace { get; set; }
+            public KeyedWrapper<Font>? FontFace { get; set; }
             public Color4[]? BackgroundColor { get; set; }
             public Color4[]? BorderColor { get; set; }
             public float[]? BorderWidth { get; set; }
@@ -40,9 +37,8 @@ namespace Cardamom.Graphics.Ui
             {
                 Margin = ExpandOrThrow(Inherit(ancestors.Select(x => x.Margin), Margin) ?? new float[4]),
                 Padding = ExpandOrThrow(Inherit(ancestors.Select(x => x.Padding), Padding) ?? new float[4]),
-                Size = Inherit(ancestors.Select(x => x.Size), Size) ?? new Vector2(),
-                // Implement font with 
-                // FontFace = Inherit(ancestors.Select(x => x.FontFace), FontFace),
+                Size = Inherit(ancestors.Select(x => x.Size), Size) ?? new(),
+                FontFace = Inherit(ancestors.Select(x => x.FontFace), FontFace),
                 BackgroundColor = 
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.BackgroundColor), BackgroundColor) ?? new Color4[4]),
                 BorderColor = ExpandOrThrow(
