@@ -26,7 +26,7 @@ namespace Cardamom.Graphics.Ui.Elements.Components
 
         public void SetAttributes(ClassAttributes attributes)
         {
-            _shader = attributes.Shader!.Element!;
+            _shader = attributes.BackgroundShader!.Element!;
             _borderWidth = attributes.BorderWidth;
             _borderColor = attributes.BorderColor;
             _cornerRadius = attributes.CornerRadius;

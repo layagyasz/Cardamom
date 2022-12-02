@@ -59,6 +59,7 @@ namespace Cardamom.Graphics
             selectedRow ??= AddRow(paddedSize.X, (int)(RowHeightRatio * paddedSize.Y));
             var rect = new IntRect(Padding + new Vector2i(selectedRow.Width, selectedRow.Top), size);
             _texture.Update(rect.TopLeft, rect.Size, bitmap);
+            selectedRow.Width += paddedSize.X;
             return rect;
         }
 

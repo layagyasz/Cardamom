@@ -30,7 +30,21 @@ namespace Cardamom.Graphics.Ui
 
         public IUiElement CreateSimpleButton(string className, Vector2 position = new())
         {
-            return new SimpleUiElement(_classLibrary.GetClass(className), new ButtonController()) { Position = position };
+            return new SimpleUiElement(_classLibrary.GetClass(className), new ButtonController()) 
+            { 
+                Position = position
+            };
+        }
+
+        public IUiElement CreateTextButton(string className, string text, Vector2 position = new())
+        {
+            var button =
+                new TextUiElement(_classLibrary.GetClass(className), new ButtonController())
+                {
+                    Position = position
+                };
+            button.SetText(text);
+            return button;
         }
     }
 }

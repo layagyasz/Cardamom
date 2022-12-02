@@ -12,5 +12,10 @@ namespace Cardamom.Graphics
             TopLeft=  topLeft;
             Size = size;
         }
+
+        public override string ToString()
+        {
+            return string.Format($"[IntRect: TopLeft={TopLeft}, Size={Size}]");
+        }
     }
 }

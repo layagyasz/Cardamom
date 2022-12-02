@@ -3,14 +3,23 @@
     "$id": "example-base-class",
     "Default": {
       "Size": [ 500, 500 ],
+      "Padding": [ 16, 4, 16, 4 ],
       "BackgroundColor": [ "#0000ff88" ],
       "BorderColor": [ "#ffffff88" ],
       "BorderWidth": [ 1 ],
       "CornerRadius": [
         [ 16, 16 ]
       ],
-      "Shader": {
+      "BackgroundShader": {
         "$ref": "shader-default-classed-ui-element"
+      },
+      "FontFace": {
+        "$ref": "font-riesling"
+      },
+      "FontSize": 20,
+      "Color": "#ffffff",
+      "Shader": {
+        "$ref": "shader-default-planar"
       }
     },
     "States": [
@@ -18,7 +27,8 @@
         "State": [ "HOVER" ],
         "Attributes": {
           "BackgroundColor": [ "#000000aa" ],
-          "BorderColor": [ "#ffffffaa" ]
+          "BorderColor": [ "#ffffffaa" ],
+          "Color": "#ff0000"
         }
       },
       {
@@ -35,7 +45,7 @@
       "$ref": "example-base-class"
     },
     "Default": {
-      "Size": [ 64, 64 ],
+      "Size": [ 128, 32 ],
       "BackgroundColor": [ "#ffffff" ],
       "Texture": {
         "$ref": "texture-example"

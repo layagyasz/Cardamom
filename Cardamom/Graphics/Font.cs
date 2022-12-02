@@ -1,13 +1,15 @@
 ﻿using OpenTK.Mathematics;
+using OpenTK.Platform.Windows;
 using SharpFont;
+using System.Net.Security;
 
 namespace Cardamom.Graphics
 {
     public class Font
     {
         private readonly Face _face;
-        private Dictionary<uint, TexturePage> _pages = new();
-        private Dictionary<CompositeKey<uint, uint>, Glyph> _glyphs = new();
+        private readonly Dictionary<uint, TexturePage> _pages = new();
+        private readonly Dictionary<CompositeKey<uint, uint>, Glyph> _glyphs = new();
 
         public Font(string path)
         {
@@ -39,11 +41,17 @@ namespace Cardamom.Graphics
                 new Glyph()
                 {
                     Advance = (float)_face.Glyph.Advance.X,
-                    Bounds = new(new(_face.Glyph.BitmapLeft, _face.Glyph.BitmapTop), size),
+                    Bounds = new(new(-_face.Glyph.BitmapLeft, -_face.Glyph.BitmapTop), size),
                     TextureView = textureView
                 };
             _glyphs.Add(CompositeKey<uint, uint>.Create(code, characterSize), glyph);
             return glyph;
+        }
+
+        public float GetLineSpacing(uint characterSize)
+        {
+            _face.SetCharSize(0, (float)characterSize, 0, 96);
+            return (float)_face.Size.Metrics.Height;
         }
 
         private TexturePage GetOrLoadPage(uint characterSize)
@@ -52,9 +60,25 @@ namespace Cardamom.Graphics
             {
                 return page;
             }
-            TexturePage newPage = new TexturePage(new(128, 128), new(1, 1), 1.1f);
+            var newPage = new TexturePage(new(128, 128), new(1, 1), 1.1f);
             _pages.Add(characterSize, newPage);
             return newPage;
+        }
+
+        private TexturePage? GetPage(uint characterSize)
+        {
+            _pages.TryGetValue(characterSize, out TexturePage? page);
+            return page;
+        }
+
+        public Texture? GetTexure(uint characterSize)
+        {
+            return GetPage(characterSize)?.GetTexture();
+        }
+
+        public float GetWhitespace(uint characterSize)
+        {
+            return GetOrLoadGlyph(' ', characterSize).Advance;
         }
 
         private static byte[] TranslateBitmap(FTBitmap bitmap)

@@ -30,14 +30,26 @@ namespace Cardamom.Graphics
         }
 
         public void Draw(
-            VertexArray vertices, int start, int count, Transform2 transform, Shader shader, Texture? texture)
+            VertexArray vertices, int start, int count, Transform2 transform, Shader shader,Texture? texture)
+        {
+            Draw(vertices.Vertices, vertices.PrimitiveType, start, count, transform, shader, texture);
+        }
+
+        public void Draw(
+            Vertex2[] vertices, 
+            PrimitiveType primitiveType,
+            int start,
+            int count,
+            Transform2 transform,
+            Shader shader, 
+            Texture? texture)
         {
             _vertexArray ??= new(new());
 
             GetContext().MakeCurrent();
             Error.LogGLError("bind context");
 
-            _vertexArray.SetData(vertices.Vertices);
+            _vertexArray.SetData(vertices);
 
             if (texture != null)
             {
@@ -61,7 +73,7 @@ namespace Cardamom.Graphics
                 BlendingFactorSrc.One, 
                 BlendingFactorDest.OneMinusSrcAlpha);
 
-            _vertexArray.Draw(vertices.PrimitiveType, start, count);
+            _vertexArray.Draw(primitiveType, start, count);
         }
 
         public void Resize(Vector2i size)

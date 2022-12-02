@@ -91,7 +91,7 @@ namespace Cardamom.Window
 
         private void HandleResize(ResizeEventArgs e)
         {
-            base.Resize(e.Size);
+            Resize(e.Size);
         }
     }
 }

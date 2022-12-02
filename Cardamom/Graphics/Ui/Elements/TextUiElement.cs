@@ -5,14 +5,15 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
-    public class SimpleUiElement : ClassedUiElement
+    public class TextUiElement : ClassedUiElement
     {
         private readonly RectangleComponent _rectComponent = new();
+        private readonly TextComponent _textComponent = new();
 
         public override Vector2 Size => _rectComponent.Size + LeftMargin + RightMargin;
 
-        public SimpleUiElement(Class @class, IController controller)
-            : base(@class, controller) 
+        public TextUiElement(Class @class, IController controller)
+            : base(@class, controller)
         {
             SetAttributes(@class.Get(Class.State.NONE));
         }
@@ -23,6 +24,8 @@ namespace Cardamom.Graphics.Ui.Elements
             {
                 transform.Translate(Position + LeftMargin);
                 _rectComponent.Draw(target, transform);
+                transform.Translate(LeftPadding);
+                _textComponent.Draw(target, transform);
             }
         }
 
@@ -35,6 +38,12 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             base.SetAttributes(attributes);
             _rectComponent.SetAttributes(attributes);
+            _textComponent.SetAttributes(attributes);
+        }
+
+        public void SetText(string text)
+        {
+            _textComponent.SetText(text);
         }
     }
 }
