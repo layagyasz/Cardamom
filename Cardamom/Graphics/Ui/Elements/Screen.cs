@@ -37,22 +37,24 @@ namespace Cardamom.Graphics.Ui.Elements
             return _bounds.ContainsPoint(point);
         }
 
-        public void Draw(RenderTarget target, Transform2 transform)
+        public void Draw(RenderTarget target)
         {
-            transform.Translate(Position);
+            target.PushTranslation(Position);
             foreach (var layer in _uiLayers)
             {
-                layer.Draw(target, transform);
+                layer.Draw(target);
             }
+            target.PopTransform();
         }
 
-        public  void Update(UiContext context, Transform2 transform, long delta)
+        public  void Update(UiContext context, long delta)
         {
-            transform.Translate(Position);
+            context.PushTranslation(Position);
             foreach (var layer in _uiLayers)
             {
-                layer.Update(context, transform, delta);
+                layer.Update(context, delta);
             }
+            context.PopTransform();
         }
     }
 }

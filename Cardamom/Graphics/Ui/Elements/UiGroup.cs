@@ -31,17 +31,17 @@ namespace Cardamom.Graphics.Ui.Elements
             return GetEnumerator();
         }
 
-        public virtual void Draw(RenderTarget target, Transform2 transform)
+        public virtual void Draw(RenderTarget target)
         {
             foreach (var element in _elements)
             {
-                element.Draw(target, transform);
+                element.Draw(target);
             }
         }
 
-        public virtual void Update(UiContext context, Transform2 transform, long delta)
+        public virtual void Update(UiContext context, long delta)
         {
-            _elements.ForEach(x => x.Update(context, transform, delta));
+            _elements.ForEach(x => x.Update(context, delta));
         }
     }
 }

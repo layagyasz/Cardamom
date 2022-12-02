@@ -6,7 +6,7 @@ using OpenTK.Windowing.Desktop;
 
 namespace Cardamom.Graphics
 {
-    public abstract class RenderTarget
+    public abstract class RenderTarget : GraphicsContext
     {
         private ViewPort _viewPort;
         private GLVertexArray? _vertexArray;
@@ -21,6 +21,7 @@ namespace Cardamom.Graphics
         public void Clear()
         {
             GetContext().MakeCurrent();
+            GL.Disable(EnableCap.ScissorTest);
             GL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
@@ -30,9 +31,9 @@ namespace Cardamom.Graphics
         }
 
         public void Draw(
-            VertexArray vertices, int start, int count, Transform2 transform, Shader shader,Texture? texture)
+            VertexArray vertices, int start, int count, Shader shader,Texture? texture)
         {
-            Draw(vertices.Vertices, vertices.PrimitiveType, start, count, transform, shader, texture);
+            Draw(vertices.Vertices, vertices.PrimitiveType, start, count, shader, texture);
         }
 
         public void Draw(
@@ -40,7 +41,6 @@ namespace Cardamom.Graphics
             PrimitiveType primitiveType,
             int start,
             int count,
-            Transform2 transform,
             Shader shader, 
             Texture? texture)
         {
@@ -63,7 +63,7 @@ namespace Cardamom.Graphics
 
             shader.Bind();
             shader.SetMatrix3("projection", Transform2.CreateViewportOrthographicProjection(_viewPort).GetMatrix());
-            shader.SetMatrix3("view", transform.GetMatrix());
+            shader.SetMatrix3("view", GetTransform().GetMatrix());
 
             GL.Enable(EnableCap.Blend);
             GL.BlendEquation(BlendEquationMode.FuncAdd);
@@ -72,6 +72,21 @@ namespace Cardamom.Graphics
                 BlendingFactorDest.OneMinusSrcAlpha, 
                 BlendingFactorSrc.One, 
                 BlendingFactorDest.OneMinusSrcAlpha);
+
+            var scissor = GetScissor();
+            if (scissor == null)
+            {
+                GL.Disable(EnableCap.ScissorTest);
+            }
+            else
+            {
+                GL.Enable(EnableCap.ScissorTest);
+                GL.Scissor(
+                    (int)scissor.Value.TopLeft.X, 
+                    (int)(_viewPort.Bottom - scissor.Value.TopLeft.Y - scissor.Value.Size.Y), 
+                    (int)scissor.Value.Size.X,
+                    (int)scissor.Value.Size.Y);
+            }
 
             _vertexArray.Draw(primitiveType, start, count);
         }

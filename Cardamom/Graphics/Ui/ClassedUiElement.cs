@@ -1,5 +1,4 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
-using Cardamom.Planar;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
@@ -30,12 +29,6 @@ namespace Cardamom.Graphics.Ui
         public void SetState(Class.State state)
         {
             SetAttributes(_class.Get(state));
-        }
-
-        public override void Update(UiContext context, Transform2 transform, long delta)
-        {
-            transform.Translate(LeftMargin);
-            base.Update(context, transform, delta);
         }
     }
 }

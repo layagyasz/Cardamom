@@ -1,10 +1,7 @@
 ﻿using Cardamom.Collections;
 using Cardamom.Graphics.Ui;
-using Cardamom.Planar;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.GraphicsLibraryFramework;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Cardamom.Graphics
 {
@@ -70,9 +67,9 @@ namespace Cardamom.Graphics
             _update = true;
         }
 
-        public void Update(UiContext context, Transform2 transform, long delta) { }
+        public void Update(UiContext context, long delta) { }
 
-        public void Draw(RenderTarget target, Transform2 transform)
+        public void Draw(RenderTarget target)
         {
             if (_update)
             {
@@ -85,7 +82,6 @@ namespace Cardamom.Graphics
                 PrimitiveType.Triangles,
                 0,
                 _vertices.Count, 
-                transform, 
                 _shader!,
                 _font!.GetTexure(_characterSize));
         }

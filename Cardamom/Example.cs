@@ -22,7 +22,8 @@ namespace Cardamom
                                     .ReadClasses("Example", "Style.json")
                                     .Build());
             var pane = uiElementFactory.CreatePane("example-base-class");
-            var button = uiElementFactory.CreateTextButton("example-child-class", "Riesling Test", new(100, 100));
+            var button = 
+                uiElementFactory.CreateTextButton("example-child-class", "Riesling Test Hello World", new(100, 100));
             if (button.Controller is ButtonController controller)
             {
                 controller.Clicked += (s, e) => Console.WriteLine($"{e.Button} {e.Action} {e.Modifiers}");

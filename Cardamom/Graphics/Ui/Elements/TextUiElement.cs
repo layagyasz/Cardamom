@@ -2,6 +2,7 @@
 using Cardamom.Graphics.Ui.Elements.Components;
 using Cardamom.Planar;
 using OpenTK.Mathematics;
+using System.Formats.Tar;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
@@ -18,15 +19,26 @@ namespace Cardamom.Graphics.Ui.Elements
             SetAttributes(@class.Get(Class.State.NONE));
         }
 
-        public override void Draw(RenderTarget target, Transform2 transform)
+        public override void Draw(RenderTarget target)
         {
             if (Visible)
             {
-                transform.Translate(Position + LeftMargin);
-                _rectComponent.Draw(target, transform);
-                transform.Translate(LeftPadding);
-                _textComponent.Draw(target, transform);
+                target.PushTranslation(Position + LeftMargin);
+                _rectComponent.Draw(target);
+                target.PushTranslation(LeftPadding);
+                target.PushScissor(new(new(0, 0), _rectComponent.Size - (LeftPadding + RightPadding)));
+                _textComponent.Draw(target);
+                target.PopScissor();
+                target.PopTransform();
+                target.PopTransform();
             }
+        }
+
+        public override void Update(UiContext context, long delta)
+        {
+            context.PushTranslation(Position + LeftMargin);
+            base.Update(context, delta);
+            context.PopTransform();
         }
 
         public override bool IsPointWithinBounds(Vector2 point)

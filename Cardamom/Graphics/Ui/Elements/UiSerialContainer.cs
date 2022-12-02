@@ -30,25 +30,27 @@ namespace Cardamom.Graphics.Ui.Elements
             return GetEnumerator();
         }
 
-        public override void Draw(RenderTarget target, Transform2 transform)
+        public override void Draw(RenderTarget target)
         {
-            base.Draw(target, transform);
-            transform.Translate(Position + LeftMargin + LeftPadding);
+            base.Draw(target);
+            target.PushTranslation(Position + LeftMargin + LeftPadding);
             for (int i=(int)Index; i<_endIndex; ++i)
             {
-                _elements[i].Draw(target, transform);
+                _elements[i].Draw(target);
             }
+            target.PopTransform();
         }
 
-        public override void Update(UiContext context, Transform2 transform, long delta)
+        public override void Update(UiContext context, long delta)
         {
-            base.Update(context, transform, delta);
-            transform.Translate(Position + LeftMargin + LeftPadding);
+            base.Update(context, delta);
+            context.PushTranslation(Position + LeftMargin + LeftPadding);
             ComputeShownElements();
             for (int i = (int)Index; i < _endIndex; ++i)
             {
-                _elements[i].Update(context, transform, delta);
+                _elements[i].Update(context, delta);
             }
+            context.PopTransform();
         }
         
         private void ComputeShownElements()

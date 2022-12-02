@@ -24,13 +24,13 @@ namespace Cardamom.Planar
             return _matrix;
         }
 
-        public void Translate(Vector2 translation)
+        public static Transform2 CreateTranslation(Vector2 translation)
         {
-            _matrix *=
+            return new(
                 new Matrix3(
                     1, 0, 0,
                     0, 1, 0,
-                    translation.X, translation.Y, 1);
+                    translation.X, translation.Y, 1));
         }
 
         public static Transform2 CreateViewportOrthographicProjection(ViewPort viewPort)
@@ -52,6 +52,11 @@ namespace Cardamom.Planar
             result._matrix.Row2.Y = -(top + bottom) * invTB;
 
             return result;
+        }
+
+        public static Transform2 operator *(Transform2 left, Transform2 right)
+        {
+            return new(left._matrix * right._matrix);
         }
 
         public static Vector2 operator *(Transform2 left, Vector2 right)

@@ -46,7 +46,7 @@ namespace Cardamom.Graphics.Ui.Elements.Components
             _vertices[5] = new Vertex2(attributes.Size, attributes.BackgroundColor[2], bottomRight);
         }
 
-        public void Draw(RenderTarget target, Transform2 transform)
+        public void Draw(RenderTarget target)
         {
             _shader!.SetInt32("mode", _texture == null ? 0 : 1);
             _shader!.SetVector2("size", Size);
@@ -56,7 +56,7 @@ namespace Cardamom.Graphics.Ui.Elements.Components
                 _shader!.SetColor($"border_color[{i}]", _borderColor![i]);
                 _shader!.SetVector2($"corner_radius[{i}]", _cornerRadius![i]);
             }
-            target.Draw(_vertices, 0, _vertices.Length, transform, _shader!, _texture);
+            target.Draw(_vertices, 0, _vertices.Length, _shader!, _texture);
         }
     }
 }

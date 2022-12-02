@@ -3,7 +3,7 @@
     "$id": "example-base-class",
     "Default": {
       "Size": [ 500, 500 ],
-      "Padding": [ 16, 12, 16, 12 ],
+      "Padding": [ 16, 12, 16, 4 ],
       "BackgroundColor": [ "#0000ff88" ],
       "BorderColor": [ "#ffffff88" ],
       "BorderWidth": [ 1 ],

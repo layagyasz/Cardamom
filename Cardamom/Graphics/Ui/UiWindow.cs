@@ -42,8 +42,8 @@ namespace Cardamom.Graphics.Ui
 
                 if (UiRoot != null)
                 {
-                    UiRoot.Update(_context, Transform2.Identity, stopwatch.ElapsedMilliseconds);
-                    UiRoot.Draw(RenderWindow, Transform2.Identity);
+                    UiRoot.Update(_context, stopwatch.ElapsedMilliseconds);
+                    UiRoot.Draw(RenderWindow);
                 }
 
                 _controller.DispatchEvents();

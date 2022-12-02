@@ -1,5 +1,4 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
-using Cardamom.Planar;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
@@ -24,14 +23,13 @@ namespace Cardamom.Graphics.Ui
 
         public abstract bool IsPointWithinBounds(Vector2 point);
 
-        public abstract void Draw(RenderTarget target, Transform2 transform);
+        public abstract void Draw(RenderTarget target);
 
-        public virtual void Update(UiContext context, Transform2 transform, long delta)
+        public virtual void Update(UiContext context, long delta)
         {
             if (Visible)
             {
-                transform.Translate(Position);
-                context.Register(this, transform);
+                context.Register(this);
             }
         }
     }

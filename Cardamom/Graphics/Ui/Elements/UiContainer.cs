@@ -32,21 +32,26 @@ namespace Cardamom.Graphics.Ui.Elements
             return GetEnumerator();
         }
 
-        public override void Draw(RenderTarget target, Transform2 transform)
+        public override void Draw(RenderTarget target)
         {
-            base.Draw(target, transform);
-            transform.Translate(Position + LeftMargin + LeftPadding);
-            foreach (var element in _elements)
+            if (Visible)
             {
-                element.Draw(target, transform);
+                base.Draw(target);
+                target.PushTranslation(Position + LeftMargin + LeftPadding);
+                foreach (var element in _elements)
+                {
+                    element.Draw(target);
+                }
+                target.PopTransform();
             }
         }
 
-        public override void Update(UiContext context, Transform2 transform, long delta)
+        public override void Update(UiContext context, long delta)
         {
-            base.Update(context, transform, delta);
-            transform.Translate(Position + LeftMargin + LeftPadding);
-            _elements.ForEach(x => x.Update(context, transform, delta));
+            base.Update(context, delta);
+            context.PushTranslation(Position + LeftMargin + LeftPadding);
+            _elements.ForEach(x => x.Update(context, delta));
+            context.PopTransform();
         }
     }
 }

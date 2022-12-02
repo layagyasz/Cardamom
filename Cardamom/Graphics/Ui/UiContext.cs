@@ -1,9 +1,8 @@
-﻿using Cardamom.Planar;
-using Cardamom.Window;
+﻿using Cardamom.Window;
 
 namespace Cardamom.Graphics.Ui
 {
-    public class UiContext
+    public class UiContext : GraphicsContext
     {
         private readonly MouseListener _mouseListener;
 
@@ -24,11 +23,14 @@ namespace Cardamom.Graphics.Ui
             return _topElement;
         }
 
-        public void Register(IUiInteractiveElement element, Transform2 transform)
+        public void Register(IUiInteractiveElement element)
         {
-            if (element.IsPointWithinBounds(transform.GetInverse() * _mouseListener.GetMousePosition()))
+            if (GetScissor() == null || GetScissor().Value.Contains(_mouseListener.GetMousePosition()))
             {
-                _topElement = element;
+                if (element.IsPointWithinBounds(GetTransform().GetInverse() * _mouseListener.GetMousePosition()))
+                {
+                    _topElement = element;
+                }
             }
         }
     }
