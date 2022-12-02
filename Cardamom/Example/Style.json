@@ -3,7 +3,7 @@
     "$id": "example-base-class",
     "Default": {
       "Size": [ 500, 500 ],
-      "Padding": [ 16, 4, 16, 4 ],
+      "Padding": [ 16, 12, 16, 12 ],
       "BackgroundColor": [ "#0000ff88" ],
       "BorderColor": [ "#ffffff88" ],
       "BorderWidth": [ 1 ],
@@ -16,7 +16,7 @@
       "FontFace": {
         "$ref": "font-riesling"
       },
-      "FontSize": 20,
+      "FontSize": 40,
       "Color": "#ffffff",
       "Shader": {
         "$ref": "shader-default-planar"
@@ -45,7 +45,7 @@
       "$ref": "example-base-class"
     },
     "Default": {
-      "Size": [ 128, 32 ],
+      "Size": [ 256, 64 ],
       "BackgroundColor": [ "#ffffff" ],
       "Texture": {
         "$ref": "texture-example"

@@ -1,7 +1,7 @@
 ﻿using OpenTK.Mathematics;
 using OpenTK.Platform.Windows;
 using SharpFont;
-using System.Net.Security;
+using SharpFont.Cache;
 
 namespace Cardamom.Graphics
 {
@@ -28,7 +28,7 @@ namespace Cardamom.Graphics
 
         private Glyph LoadGlyph(uint code, uint characterSize)
         {
-            _face.SetCharSize(0, (float)characterSize, 0, 96);
+            SetCharacterSize(characterSize);
             _face.LoadGlyph(_face.GetCharIndex(code), LoadFlags.Default, LoadTarget.Normal);
             _face.Glyph.RenderGlyph(RenderMode.Normal);
 
@@ -41,16 +41,42 @@ namespace Cardamom.Graphics
                 new Glyph()
                 {
                     Advance = (float)_face.Glyph.Advance.X,
-                    Bounds = new(new(-_face.Glyph.BitmapLeft, -_face.Glyph.BitmapTop), size),
-                    TextureView = textureView
+                    Bounds = new(new(_face.Glyph.BitmapLeft, -_face.Glyph.BitmapTop), size),
+                    TextureView = textureView,
+                    LeftBuffer = _face.Glyph.DeltaLsb,
+                    RightBuffer = _face.Glyph.DeltaRsb
                 };
             _glyphs.Add(CompositeKey<uint, uint>.Create(code, characterSize), glyph);
             return glyph;
         }
 
+        public float GetKerning(uint left, uint right, uint characterSize)
+        {
+            if (left == 0 || right == 0)
+            {
+                return 0;
+            }
+
+            SetCharacterSize(characterSize);
+            var iLeft = _face.GetCharIndex(left);
+            var iRight = _face.GetCharIndex(right);
+            float kerning = 0;
+            if (_face.HasKerning)
+            {
+                kerning = (float)_face.GetKerning(iLeft, iRight, KerningMode.Unfitted).X;
+            }
+            if (_face.IsScalable)
+            {
+                return kerning;
+            }
+            return (float)Math.Floor(
+                (GetOrLoadGlyph(right, characterSize).LeftBuffer 
+                - GetOrLoadGlyph(left, characterSize).RightBuffer + kerning + 32) / 32f);
+        }
+
         public float GetLineSpacing(uint characterSize)
         {
-            _face.SetCharSize(0, (float)characterSize, 0, 96);
+            SetCharacterSize(characterSize);
             return (float)_face.Size.Metrics.Height;
         }
 
@@ -79,6 +105,11 @@ namespace Cardamom.Graphics
         public float GetWhitespace(uint characterSize)
         {
             return GetOrLoadGlyph(' ', characterSize).Advance;
+        }
+
+        private void SetCharacterSize(uint characterSize)
+        {
+            _face.SetCharSize(0, (float)characterSize, 0, 96);
         }
 
         private static byte[] TranslateBitmap(FTBitmap bitmap)

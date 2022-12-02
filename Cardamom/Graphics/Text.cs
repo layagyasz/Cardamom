@@ -19,6 +19,7 @@ namespace Cardamom.Graphics
 
         private bool _update = true;
         private Vector2 _cursor;
+        private char _lastCharacter;
 
         public void Initialize() { }
 
@@ -101,6 +102,9 @@ namespace Cardamom.Graphics
 
         private void AppendInternal(char character)
         {
+            _cursor.X += _font!.GetKerning(_lastCharacter, character, _characterSize);
+            _lastCharacter = character;
+
             if (character == '\r')
             {
                 return;
