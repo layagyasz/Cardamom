@@ -13,7 +13,7 @@ namespace Cardamom
         {
             var window = new RenderWindow("Cardamom - Example", new Vector2i(800, 600));
             var ui = new UiWindow(window);
-            var uiElementFactory = 
+            var uiElementFactory =
                 new UiElementFactory(
                     new ClassLibrary.Builder()
                                     .ReadTextures("Example/Textures.json")
@@ -22,13 +22,14 @@ namespace Cardamom
                                     .ReadClasses("Example", "Style.json")
                                     .Build());
             var pane = uiElementFactory.CreatePane("example-base-class");
-            var button = 
-                uiElementFactory.CreateTextButton("example-child-class", "Riesling Test Hello World", new(100, 100));
-            if (button.Controller is ButtonController controller)
+            var rows = new List<IUiElement>();
+            for (int i = 0; i < 20; ++i)
             {
-                controller.Clicked += (s, e) => Console.WriteLine($"{e.Button} {e.Action} {e.Modifiers}");
+                rows.Add(uiElementFactory.CreateTextButton("example-row-class", $"Button #{i}"));
             }
-            pane.Add(button);
+            var table = 
+                uiElementFactory.CreateTable("example-child-class", rows, 5f);
+            pane.Add(table);
             var screen = 
                 new Screen(
                     new Planar.Rectangle(new(), new(800, 600)), 

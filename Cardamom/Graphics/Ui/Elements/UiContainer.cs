@@ -1,5 +1,6 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Planar;
+using OpenTK.Graphics.OpenGL;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
@@ -38,10 +39,12 @@ namespace Cardamom.Graphics.Ui.Elements
             {
                 base.Draw(target);
                 target.PushTranslation(Position + LeftMargin + LeftPadding);
+                target.PushScissor(new(new(), InternalSize));
                 foreach (var element in _elements)
                 {
                     element.Draw(target);
                 }
+                target.PopScissor();
                 target.PopTransform();
             }
         }
@@ -50,7 +53,9 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             base.Update(context, delta);
             context.PushTranslation(Position + LeftMargin + LeftPadding);
+            context.PushScissor(new(new(), InternalSize));
             _elements.ForEach(x => x.Update(context, delta));
+            context.PopScissor();
             context.PopTransform();
         }
     }

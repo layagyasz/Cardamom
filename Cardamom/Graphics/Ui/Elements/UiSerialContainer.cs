@@ -1,23 +1,32 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
-using Cardamom.Planar;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
     public class UiSerialContainer : SimpleUiElement, IEnumerable<IUiElement>
     {
-        public uint Index { get; set; }
-
         private readonly List<IUiElement> _elements = new();
-        private uint _endIndex;
+        private Vector2 _offset;
+        private float _maxOffset;
 
         public UiSerialContainer(Class @class, IController controller)
             : base(@class, controller) { }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            _elements.ForEach(x => x.Initialize());
+        }
 
         public void Add(IUiElement element)
         {
             _elements.Add(element);
             element.Parent = this;
+        }
+
+        public void TryAdjustOffset(float Amount)
+        {
+            _offset = new(0, Math.Min(Math.Max(_offset.Y + Amount, _maxOffset), 0));
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
@@ -34,10 +43,14 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             base.Draw(target);
             target.PushTranslation(Position + LeftMargin + LeftPadding);
-            for (int i=(int)Index; i<_endIndex; ++i)
+            target.PushScissor(new(new(), InternalSize));
+            target.PushTranslation(_offset);
+            foreach (var element in _elements)
             {
-                _elements[i].Draw(target);
+                element.Draw(target);
             }
+            target.PopTransform();
+            target.PopScissor();
             target.PopTransform();
         }
 
@@ -45,41 +58,19 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             base.Update(context, delta);
             context.PushTranslation(Position + LeftMargin + LeftPadding);
-            ComputeShownElements();
-            for (int i = (int)Index; i < _endIndex; ++i)
+            context.PushScissor(new(new(), InternalSize));
+            context.PushTranslation(_offset);
+            float offset = 0;
+            foreach (var element in _elements)
             {
-                _elements[i].Update(context, delta);
+                element.Position = new(0, offset);
+                _maxOffset = -offset;
+                offset += element.Size.Y;
+                element.Update(context, delta);
             }
             context.PopTransform();
-        }
-        
-        private void ComputeShownElements()
-        {
-            float total = 0;
-            bool ended = false;
-            for (uint i=0; i<_elements.Count; ++i)
-            {
-                if (!ended && i >= Index)
-                {
-                    _elements[(int)i].Position = new Vector2(0, total);
-                    total += _elements[(int)i].Size.Y;
-                    if (total + LeftPadding.Y + RightPadding.Y > Size.Y)
-                    {
-                        _endIndex = i;
-                        _elements[(int)i].Visible = false;
-                        ended = true;
-                    }
-                    else
-                    {
-                        _elements[(int)i].Visible = true;
-                    }
-                }
-                else
-                {
-                    _elements[(int)i].Visible = false;
-                }
-            }
-            _endIndex = (uint)_elements.Count;
+            context.PopScissor();
+            context.PopTransform();
         }
     }
 }

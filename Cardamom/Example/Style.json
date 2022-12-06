@@ -3,7 +3,7 @@
     "$id": "example-base-class",
     "Default": {
       "Size": [ 500, 500 ],
-      "Padding": [ 16, 12, 16, 4 ],
+      "Padding": [ 16, 16, 16, 16 ],
       "BackgroundColor": [ "#0000ff88" ],
       "BorderColor": [ "#ffffff88" ],
       "BorderWidth": [ 1 ],
@@ -16,7 +16,7 @@
       "FontFace": {
         "$ref": "font-riesling"
       },
-      "FontSize": 40,
+      "FontSize": 16,
       "Color": "#ffffff",
       "Shader": {
         "$ref": "shader-default-planar"
@@ -45,11 +45,22 @@
       "$ref": "example-base-class"
     },
     "Default": {
-      "Size": [ 256, 64 ],
+      "Size": [ 256, 468 ],
       "BackgroundColor": [ "#ffffff" ],
       "Texture": {
         "$ref": "texture-example"
       }
+    }
+  },
+  {
+    "$id": "example-row-class",
+    "Parent": {
+      "$ref": "example-child-class"
+    },
+    "Default": {
+      "Size": [ 224, 32 ],
+      "Padding": [ 16, 4, 16, 2 ],
+      "Margin": [ 0, 2, 0, 2 ]
     }
   }
 ]

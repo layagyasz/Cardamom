@@ -18,27 +18,27 @@
         public void SetDisable(bool value)
         {
             _disable = value;
-            _element?.SetState(GetClassState());
+            _element!.SetState(GetClassState());
         }
 
         public void SetHover(bool value)
         {
             _hover = value;
-            _element?.SetState(GetClassState());
+            _element!.SetState(GetClassState());
 
         }
 
         public void SetFocus(bool value)
         {
             _focus = value;
-            _element?.SetState(GetClassState());
+            _element!.SetState(GetClassState());
 
         }
 
         public void SetToggle(bool value)
         {
             _toggle = value;
-            _element?.SetState(GetClassState());
+            _element!.SetState(GetClassState());
         }
     }
 }

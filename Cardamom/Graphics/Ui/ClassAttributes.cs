@@ -35,7 +35,7 @@ namespace Cardamom.Graphics.Ui
             public float[]? BorderWidth { get; set; }
             public Vector2[]? CornerRadius { get; set; }
             public KeyedWrapper<Shader>? BackgroundShader { get; set; }
-            public TextureSegment Texture { get; set; } = new(string.Empty, null, new(new(), new(1, 1)));
+            public TextureSegment? Texture { get; set; }
 
             public KeyedWrapper<Font>? FontFace { get; set; }
             public uint? FontSize { get; set; }
@@ -57,7 +57,9 @@ namespace Cardamom.Graphics.Ui
                 CornerRadius = ExpandOrThrow(
                     Inherit(ancestors.Select(x => x.CornerRadius), CornerRadius) ?? new Vector2[4]),
                 BackgroundShader = Inherit(ancestors.Select(x => x.BackgroundShader), BackgroundShader)!,
-                Texture = Inherit(ancestors.Select(x => x.Texture), Texture),
+                Texture = 
+                    Inherit(ancestors.Select(x => x.Texture), Texture) 
+                        ?? new(string.Empty, null, new(new(), new(1, 1))),
 
                 FontFace = Inherit(ancestors.Select(x => x.FontFace), FontFace),
                 FontSize = Inherit(ancestors.Select(x => x.FontSize), FontSize) ?? 12,
@@ -67,7 +69,7 @@ namespace Cardamom.Graphics.Ui
 
             private static T Inherit<T>(IEnumerable<T> ancestors, T child)
             {
-                return ancestors.Aggregate((left, right) => right ?? left) ?? child;
+                return ancestors.Aggregate((left, right) => left ?? right) ?? child;
             }
 
             private static T[] ExpandOrThrow<T>(T[] data)

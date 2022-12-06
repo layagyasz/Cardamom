@@ -11,8 +11,6 @@ namespace Cardamom.Graphics.Ui.Elements
         private readonly RectangleComponent _rectComponent = new();
         private readonly TextComponent _textComponent = new();
 
-        public override Vector2 Size => _rectComponent.Size + LeftMargin + RightMargin;
-
         public TextUiElement(Class @class, IController controller)
             : base(@class, controller)
         {
@@ -26,7 +24,7 @@ namespace Cardamom.Graphics.Ui.Elements
                 target.PushTranslation(Position + LeftMargin);
                 _rectComponent.Draw(target);
                 target.PushTranslation(LeftPadding);
-                target.PushScissor(new(new(0, 0), _rectComponent.Size - (LeftPadding + RightPadding)));
+                target.PushScissor(new(new(), InternalSize));
                 _textComponent.Draw(target);
                 target.PopScissor();
                 target.PopTransform();

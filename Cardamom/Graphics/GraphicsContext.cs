@@ -27,7 +27,8 @@ namespace Cardamom.Graphics
         {
             var currentScissor = GetScissor();
             var transformed = Combine(scissor, GetTransform());
-            _scissorStack.Push(currentScissor == null ? transformed : currentScissor.Value.GetIntersection(transformed));
+            _scissorStack.Push(
+                currentScissor == null ? transformed : currentScissor.Value.GetIntersection(transformed));
         }
 
         public void PopTransform()

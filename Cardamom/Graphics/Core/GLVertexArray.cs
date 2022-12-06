@@ -72,6 +72,7 @@ namespace Cardamom.Graphics.Core
         public void SetData(Vertex2[] data)
         {
             _buffer.SetData(data);
+            Error.LogGLError("set vertex array data");
         }
 
         protected override void DisposeImpl()

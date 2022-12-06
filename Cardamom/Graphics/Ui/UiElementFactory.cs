@@ -36,6 +36,23 @@ namespace Cardamom.Graphics.Ui
             };
         }
 
+        public IUiElement CreateTable(
+            string className, IEnumerable<IUiElement> rows, float scrollSpeed = 0, Vector2 position = new())
+        {
+            var table =
+                new UiSerialContainer(
+                    _classLibrary.GetClass(className),
+                    scrollSpeed > 0 ? new ScrollingTableController(scrollSpeed) : new StaticTableController())
+                {
+                    Position = position
+                };
+            foreach (var row in rows)
+            {
+                table.Add(row);
+            }
+            return table;
+        }
+
         public IUiElement CreateTextButton(string className, string text, Vector2 position = new())
         {
             var button =

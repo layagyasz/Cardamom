@@ -25,7 +25,7 @@ namespace Cardamom.Graphics.Ui
 
         public void Register(IUiInteractiveElement element)
         {
-            if (GetScissor() == null || GetScissor().Value.Contains(_mouseListener.GetMousePosition()))
+            if (GetScissor() == null || GetScissor()!.Value.Contains(_mouseListener.GetMousePosition()))
             {
                 if (element.IsPointWithinBounds(GetTransform().GetInverse() * _mouseListener.GetMousePosition()))
                 {

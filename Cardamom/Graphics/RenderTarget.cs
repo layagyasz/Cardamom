@@ -60,6 +60,7 @@ namespace Cardamom.Graphics
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
             }
+            Error.LogGLError("bind context");
 
             shader.Bind();
             shader.SetMatrix3("projection", Transform2.CreateViewportOrthographicProjection(_viewPort).GetMatrix());
@@ -72,6 +73,7 @@ namespace Cardamom.Graphics
                 BlendingFactorDest.OneMinusSrcAlpha, 
                 BlendingFactorSrc.One, 
                 BlendingFactorDest.OneMinusSrcAlpha);
+            Error.LogGLError("set blend");
 
             var scissor = GetScissor();
             if (scissor == null)
@@ -80,12 +82,17 @@ namespace Cardamom.Graphics
             }
             else
             {
+                if (scissor.Value.Size.X < 0 || scissor.Value.Size.Y < 0)
+                {
+                    return;
+                }
                 GL.Enable(EnableCap.ScissorTest);
                 GL.Scissor(
                     (int)scissor.Value.TopLeft.X, 
                     (int)(_viewPort.Bottom - scissor.Value.TopLeft.Y - scissor.Value.Size.Y), 
                     (int)scissor.Value.Size.X,
                     (int)scissor.Value.Size.Y);
+                Error.LogGLError($"set scissor {scissor}");
             }
 
             _vertexArray.Draw(primitiveType, start, count);

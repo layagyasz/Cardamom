@@ -54,19 +54,16 @@ namespace Cardamom.Graphics.Ui
                     Precondition.IsNull(attributesForStates[i]);
 
                     var ancestors = new List<ClassAttributes.Builder>();
-                    if (Parent != null)
+                    var p = this;
+                    while (p != null)
                     {
-                        if (Parent.Default != null)
+                        ancestors.AddRange(GetAncestry((State)i, p.States));
+                        if (p.Default != null)
                         {
-                            ancestors.Add(Parent.Default);
+                            ancestors.Add(p.Default);
                         }
-                        ancestors.AddRange(GetAncestry((State)i, Parent.States));
+                        p = p.Parent;
                     }
-                    if (Default != null)
-                    {
-                        ancestors.Add(Default);
-                    }
-                    ancestors.AddRange(GetAncestry((State)i, States));
                     attributesForStates[i] = builder.Attributes.Build(ancestors);
                 }
                 return new Class(Precondition.IsNotEmpty<string, char>(Key), attributesForStates);
