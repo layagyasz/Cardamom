@@ -7,13 +7,13 @@ namespace Cardamom.Graphics.Ui.Controller
     {
         void Bind(object @object);
         void Unbind();
-        void HandleKeyPressed(KeyboardKeyEventArgs e);
-        void HandleMouseEntered();
-        void HandleMouseLeft();
-        void HandleMouseButtonClicked(MouseButtonEventArgs e);
-        void HandleMouseButtonDragged(MouseButtonDragEventArgs e);
-        void HandleMouseWheelScrolled(MouseWheelEventArgs e);
-        void HandleFocusEntered();
-        void HandleFocusLeft();
+        bool HandleKeyPressed(KeyboardKeyEventArgs e);
+        bool HandleMouseEntered();
+        bool HandleMouseLeft();
+        bool HandleMouseButtonClicked(MouseButtonEventArgs e);
+        bool HandleMouseButtonDragged(MouseButtonDragEventArgs e);
+        bool HandleMouseWheelScrolled(MouseWheelEventArgs e);
+        bool HandleFocusEntered();
+        bool HandleFocusLeft();
     }
 }

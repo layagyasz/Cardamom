@@ -23,20 +23,44 @@ namespace Cardamom.Graphics.Ui.Controller
             return _element!;
         }
 
-        public void HandleKeyPressed(KeyboardKeyEventArgs e) { }
+        public bool HandleKeyPressed(KeyboardKeyEventArgs e) 
+        {
+            return false;
+        }
 
-        public void HandleMouseEntered() { }
+        public bool HandleMouseEntered() 
+        {
+            return false;
+        }
 
-        public void HandleMouseLeft() { }
+        public bool HandleMouseLeft()
+        {
+            return false;
+        }
 
-        public void HandleMouseButtonClicked(MouseButtonEventArgs e) { }
+        public bool HandleMouseButtonClicked(MouseButtonEventArgs e)
+        {
+            return false;
+        }
 
-        public void HandleMouseButtonDragged(MouseButtonDragEventArgs e) { }
+        public bool HandleMouseButtonDragged(MouseButtonDragEventArgs e)
+        {
+            return false;
+        }
 
-        public void HandleMouseWheelScrolled(MouseWheelEventArgs e) { }
+        public bool HandleMouseWheelScrolled(MouseWheelEventArgs e) 
+        {
+            return false;
+        }
 
-        public void HandleFocusEntered() { }
+        public bool HandleFocusEntered() 
+        {
+            return false;
+        }
 
-        public void HandleFocusLeft() { }
+        public bool HandleFocusLeft()
+        {
+            return false;
+        }
     }
 }

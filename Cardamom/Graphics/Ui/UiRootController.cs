@@ -82,12 +82,20 @@ namespace Cardamom.Graphics.Ui
 
         private void HandleMouseButtonDragged(object? sender, MouseButtonDragEventArgs e)
         {
-            _mouseOver?.Controller?.HandleMouseButtonDragged(e);
+            Consume(_mouseOver, x => x.Controller?.HandleMouseButtonDragged(e) ?? false);
         }
 
         private void HandleMouseWheelScrolled(object? sender, MouseWheelEventArgs e)
         {
-            _mouseOver?.Controller?.HandleMouseWheelScrolled(e);
+            Consume(_mouseOver, x => x.Controller?.HandleMouseWheelScrolled(e) ?? false);
+        }
+
+        private static void Consume(IControlled? root, Func<IControlled, bool> consumer)
+        {
+            while (root != null && !consumer(root))
+            {
+                root = root.Parent;
+            }
         }
 
         private static HashSet<IControlled> GetAncestry(IControlled? element)

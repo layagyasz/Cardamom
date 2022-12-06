@@ -11,9 +11,10 @@ namespace Cardamom.Graphics.Ui.Controller
             ScrollSpeed = scrollSpeed;
         }
 
-        public override void HandleMouseWheelScrolled(MouseWheelEventArgs e)
+        public override bool HandleMouseWheelScrolled(MouseWheelEventArgs e)
         {
             _element!.TryAdjustOffset(ScrollSpeed * e.OffsetY);
+            return true;
         }
     }
 }

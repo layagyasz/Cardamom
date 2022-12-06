@@ -28,7 +28,7 @@ namespace Cardamom
                 rows.Add(uiElementFactory.CreateTextButton("example-row-class", $"Button #{i}"));
             }
             var table = 
-                uiElementFactory.CreateTable("example-child-class", rows, 5f);
+                uiElementFactory.CreateTable("example-child-class", rows, 16f);
             pane.Add(table);
             var screen = 
                 new Screen(

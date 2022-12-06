@@ -1,6 +1,5 @@
 ﻿using Cardamom.Window;
 using OpenTK.Windowing.Common;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Graphics.Ui.Controller
 {
@@ -26,26 +25,46 @@ namespace Cardamom.Graphics.Ui.Controller
             return _element!;
         }
 
-        public virtual void HandleKeyPressed(KeyboardKeyEventArgs e) { }
+        public virtual bool HandleKeyPressed(KeyboardKeyEventArgs e)
+        {
+            return false;
+        }
 
-        public virtual void HandleMouseEntered() { }
+        public virtual bool HandleMouseEntered() 
+        {
+            return false;
+        }
 
-        public virtual void HandleMouseLeft() { }
+        public virtual bool HandleMouseLeft() 
+        {
+            return false;
+        }
 
-        public virtual void HandleMouseButtonClicked(MouseButtonEventArgs e)
+        public virtual bool HandleMouseButtonClicked(MouseButtonEventArgs e)
         {
             Clicked?.Invoke(this, e);
+            return true;
         }
 
-        public virtual void HandleMouseButtonDragged(MouseButtonDragEventArgs e) { }
+        public virtual bool HandleMouseButtonDragged(MouseButtonDragEventArgs e) 
+        {
+            return false;
+        }
 
-        public virtual void HandleMouseWheelScrolled(MouseWheelEventArgs e) { }
+        public virtual bool HandleMouseWheelScrolled(MouseWheelEventArgs e) 
+        {
+            return false;
+        }
 
-        public virtual void HandleFocusEntered()
+        public virtual bool HandleFocusEntered()
         {
             Focused?.Invoke(this, EventArgs.Empty);
+            return true;
         }
 
-        public virtual void HandleFocusLeft() { }
+        public virtual bool HandleFocusLeft() 
+        {
+            return false;
+        }
     }
 }

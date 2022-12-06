@@ -4,24 +4,28 @@ namespace Cardamom.Graphics.Ui.Controller
 {
     public class TableController : ClassedUiElementController<UiSerialContainer>
     {
-        public override void HandleMouseEntered()
+        public override bool HandleMouseEntered()
         {
             SetHover(true);
+            return true;
         }
 
-        public override void HandleMouseLeft()
+        public override bool HandleMouseLeft()
         {
             SetHover(false);
+            return true;
         }
 
-        public override void HandleFocusEntered()
+        public override bool HandleFocusEntered()
         {
             SetFocus(true);
+            return true;
         }
 
-        public override void HandleFocusLeft()
+        public override bool HandleFocusLeft()
         {
             SetFocus(false);
+            return true;
         }
     }
 }

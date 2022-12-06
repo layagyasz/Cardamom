@@ -2,14 +2,16 @@
 {
     public class ButtonController : ClassedUiElementController<ClassedUiElement>
     {
-        public override void HandleMouseEntered()
+        public override bool HandleMouseEntered()
         {
             SetHover(true);
+            return true;
         }
 
-        public override void HandleMouseLeft()
+        public override bool HandleMouseLeft()
         {
             SetHover(false);
+            return true;
         }
     }
 }
