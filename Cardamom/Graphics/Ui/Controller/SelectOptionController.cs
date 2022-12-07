@@ -5,6 +5,8 @@ namespace Cardamom.Graphics.Ui.Controller
     public class SelectOptionController<T> 
         : ClassedUiElementController<TextUiElement>, IFormElementController<T, bool>
     {
+        public EventHandler<ValueChangedEventArgs<T, bool>>? ValueChanged { get; set; }
+
         public T Key { get; }
 
         private bool _value;
@@ -28,6 +30,7 @@ namespace Cardamom.Graphics.Ui.Controller
         {
             _value = selected;
             SetToggle(selected);
+            ValueChanged?.Invoke(this, new ValueChangedEventArgs<T, bool>(Key, _value));
         }
 
         public override bool HandleMouseEntered()

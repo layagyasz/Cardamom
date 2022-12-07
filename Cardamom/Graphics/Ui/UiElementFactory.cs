@@ -13,51 +13,56 @@ namespace Cardamom.Graphics.Ui
             _classLibrary = classLibrary;
         }
 
-        public static UiLayer CreatePaneLayer(IEnumerable<IRenderable> panes)
+        public static (UiLayer, PaneLayerController) CreatePaneLayer(IEnumerable<IRenderable> panes)
         {
-            var layer = new UiLayer(new PaneLayerController());
+            var controller = new PaneLayerController();
+            var layer = new UiLayer(controller);
             foreach (var pane in panes)
             {
                 layer.Add(pane);
             }
-            return layer;
+            return (layer, controller);
         }
 
-        public UiContainer CreatePane(string className)
+        public (UiContainer, PaneController) CreatePane(string className)
         {
-            return new UiContainer(_classLibrary.GetClass(className), new PaneController());
+            var controller = new PaneController();
+            return (new UiContainer(_classLibrary.GetClass(className), controller), controller);
         }
 
-        public IUiElement CreateSelect<T>(string className, string dropBoxClassName, IEnumerable<IUiElement> options)
+        public (IUiElement, SelectController<T>) CreateSelect<T>(
+            string className, string dropBoxClassName, IEnumerable<IUiElement> options)
         {
-            return new Select(
+            var controller = new SelectController<T>("select");
+            return (new Select(
                 _classLibrary.GetClass(className), 
-                new SelectController<T>("select"),
-                CreateTable(dropBoxClassName, options));
+                controller,
+                CreateTable(dropBoxClassName, options).Item1), controller);
         }
 
-        public IUiElement CreateSelectOption<T>(string className, T value, string text)
+        public (IUiElement, SelectOptionController<T>) CreateSelectOption<T>(string className, T value, string text)
         {
-            var option = new TextUiElement(_classLibrary.GetClass(className), new SelectOptionController<T>(value));
+            var controller = new SelectOptionController<T>(value);
+            var option = new TextUiElement(_classLibrary.GetClass(className), controller);
             option.SetText(text);
-            return option;
+            return (option, controller);
         }
 
-        public IUiElement CreateSimpleButton(string className, Vector2 position = new())
+        public (IUiElement, ButtonController) CreateSimpleButton(string className, Vector2 position = new())
         {
-            return new SimpleUiElement(_classLibrary.GetClass(className), new ButtonController()) 
-            { 
-                Position = position
-            };
+            var controller = new ButtonController();
+            return 
+                (new SimpleUiElement(_classLibrary.GetClass(className), controller) { Position = position },
+                controller);
         }
 
-        public UiSerialContainer CreateTable(
+        public (UiSerialContainer, TableController) CreateTable(
             string className, IEnumerable<IUiElement> rows, float scrollSpeed = 0, Vector2 position = new())
         {
-            var table =
-                new UiSerialContainer(
-                    _classLibrary.GetClass(className),
-                    scrollSpeed > 0 ? new ScrollingTableController(scrollSpeed) : new StaticTableController())
+            TableController controller = 
+                scrollSpeed > 0 ? new ScrollingTableController(scrollSpeed) : new StaticTableController();
+            var table = 
+                new UiSerialContainer(_classLibrary.GetClass(className), controller)
                 {
                     Position = position
                 };
@@ -65,18 +70,19 @@ namespace Cardamom.Graphics.Ui
             {
                 table.Add(row);
             }
-            return table;
+            return (table, controller);
         }
 
-        public IUiElement CreateTextButton(string className, string text, Vector2 position = new())
+        public (IUiElement, ButtonController) CreateTextButton(string className, string text, Vector2 position = new())
         {
+            var controller = new ButtonController();
             var button =
-                new TextUiElement(_classLibrary.GetClass(className), new ButtonController())
+                new TextUiElement(_classLibrary.GetClass(className), controller)
                 {
                     Position = position
                 };
             button.SetText(text);
-            return button;
+            return (button, controller);
         }
     }
 }

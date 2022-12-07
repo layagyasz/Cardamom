@@ -4,6 +4,8 @@ namespace Cardamom.Graphics.Ui.Controller
 {
     public class SelectController<T> : ClassedUiElementController<Select>, IFormElementController<string, T>
     {
+        public EventHandler<ValueChangedEventArgs<string, T>>? ValueChanged { get; set; }
+
         public string Key { get; }
 
         private SelectOptionController<T>? _selected;
@@ -21,7 +23,22 @@ namespace Cardamom.Graphics.Ui.Controller
 
         public void SetValue(T? value)
         {
-            _value = value;
+            foreach (var element in _element!.GetDropBox())
+            {
+                if (element.Controller is SelectOptionController<T> controller)
+                {
+                    if (Equals(controller.GetValue(), value))
+                    {
+                        SetSelected(controller);
+                        return;
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("Selects may only contain SelectOptions.");
+                }
+            }
+            throw new ArgumentException("No SelectOption found for value.");
         }
 
         public override void Bind(object @object)
@@ -74,7 +91,7 @@ namespace Cardamom.Graphics.Ui.Controller
                 _element!.SetText(controller.GetText());
                 _selected = controller;
                 _value = controller.Key;
-                Console.WriteLine(_value);
+                ValueChanged?.Invoke(this, new ValueChangedEventArgs<string, T>(Key, _value));
             }
             else
             {
