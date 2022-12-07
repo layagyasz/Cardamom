@@ -9,8 +9,22 @@
 
         public T this[uint index]
         {
-            get => _values[index];
-            set => _values[index] = value;
+            get
+            {
+                if (index >= Count)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+                return _values[index];
+            }
+            set
+            {
+                if (index >= Count)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+                _values[index] = value;
+            }
         }
 
         public ArrayList()

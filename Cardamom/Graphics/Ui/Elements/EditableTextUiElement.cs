@@ -7,11 +7,14 @@ namespace Cardamom.Graphics.Ui.Elements
     public class EditableTextUiElement : TextUiElement
     {
         private static readonly Texture BLANK = Texture.Create(new(1, 1), Color4.White);
+        private static readonly float LEFT_CURSOR_BUFFER = 1;
+        private static readonly float RIGHT_CURSOR_BUFFER = 20;
+        private static readonly int CURSOR_PERIOD = 1000;
 
         private readonly VertexArray _cursor = new(PrimitiveType.Triangles, 6);
         private Vector2 _offset;
         private bool _cursorActive;
-        private int _cursorIndex;
+        private int _cursorPeriod;
         private Vector2 _cursorPosition;
         private Shader? _cursorShader;
 
@@ -39,8 +42,15 @@ namespace Cardamom.Graphics.Ui.Elements
 
         public void SetCursor(int index)
         {
-            _cursorIndex = index;
             _cursorPosition = new(_textComponent.GetCharacterPosition(index).X, 0);
+            _cursorPeriod = 0;
+
+            var windowMin = -_offset.X + RIGHT_CURSOR_BUFFER;
+            var windowMax = InternalSize.X - _offset.X - LEFT_CURSOR_BUFFER;
+            if (_cursorPosition.X < windowMin || _cursorPosition.X > windowMax)
+            {
+                _offset = new(Math.Min(InternalSize.X - _cursorPosition.X - LEFT_CURSOR_BUFFER, 0), 0);
+            }
         }
 
         public override void Draw(RenderTarget target)
@@ -53,7 +63,7 @@ namespace Cardamom.Graphics.Ui.Elements
                 target.PushScissor(new(new(), InternalSize));
                 target.PushTranslation(_offset);
                 _textComponent.Draw(target);
-                if (_cursorActive)
+                if (_cursorActive && _cursorPeriod < CURSOR_PERIOD >> 1)
                 {
                     target.PushTranslation(_cursorPosition);
                     target.Draw(_cursor, 0, _cursor.Length, _cursorShader!, BLANK);
@@ -64,6 +74,12 @@ namespace Cardamom.Graphics.Ui.Elements
                 target.PopTransform();
                 target.PopTransform();
             }
+        }
+
+        public override void Update(UiContext context, long delta)
+        {
+            base.Update(context, delta);
+            _cursorPeriod = (_cursorPeriod + (int)delta) % CURSOR_PERIOD;
         }
     }
 }

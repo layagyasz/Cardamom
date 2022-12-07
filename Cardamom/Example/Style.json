@@ -16,7 +16,7 @@
       "FontFace": {
         "$ref": "font-riesling"
       },
-      "FontSize": 16,
+      "FontSize": 18,
       "Color": "#ffffff",
       "Shader": {
         "$ref": "shader-default-planar"
@@ -59,7 +59,7 @@
     },
     "Default": {
       "Size": [ 224, 32 ],
-      "Padding": [ 16, 4, 16, 2 ],
+      "Padding": [ 16, 8, 16, 2 ],
       "Margin": [ 0, 2, 0, 2 ]
     }
   },

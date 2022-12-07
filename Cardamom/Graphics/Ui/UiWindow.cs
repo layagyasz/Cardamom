@@ -34,21 +34,23 @@ namespace Cardamom.Graphics.Ui
         public void Start()
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
+            long elapsed = 0;
             while (_run)
             {
                 RenderWindow.DispatchEvents();
                 RenderWindow.Clear();
                 _context.Clear();
 
+                long frameElapsed = stopwatch.ElapsedMilliseconds;
                 if (UiRoot != null)
                 {
-                    UiRoot.Update(_context, stopwatch.ElapsedMilliseconds);
+                    UiRoot.Update(_context, frameElapsed - elapsed);
                     UiRoot.Draw(RenderWindow);
                 }
+                elapsed = frameElapsed;
 
                 _controller.DispatchEvents();
                 RenderWindow.Display();
-                stopwatch.Restart();
             }
         }
 

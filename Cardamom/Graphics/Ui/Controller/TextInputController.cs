@@ -1,5 +1,6 @@
 ﻿using Cardamom.Collections;
 using Cardamom.Graphics.Ui.Elements;
+using Cardamom.Trackers;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -82,6 +83,7 @@ namespace Cardamom.Graphics.Ui.Controller
         {
             SetFocus(true);
             _element!.SetCursorActive(true);
+            SetCursor(0);
             return true;
         }
 
@@ -89,6 +91,7 @@ namespace Cardamom.Graphics.Ui.Controller
         {
             SetFocus(false);
             _element!.SetCursorActive(false);
+            SetCursor(0);
             return true;
         }
 
@@ -101,6 +104,14 @@ namespace Cardamom.Graphics.Ui.Controller
             else if (e.Key == Keys.Right)
             {
                 MoveCursor(1);
+            }
+            else if (e.Key == Keys.Up)
+            {
+                SetCursor(_value.Length);
+            }
+            else if (e.Key == Keys.Down)
+            {
+                SetCursor(0);
             }
             else if (e.Key == Keys.Backspace)
             {
@@ -125,7 +136,12 @@ namespace Cardamom.Graphics.Ui.Controller
 
         private void MoveCursor(int amount)
         {
-            _cursor = Math.Min(Math.Max(_cursor + amount, 0), _value.Length);
+            SetCursor(_cursor + amount);
+        }
+
+        private void SetCursor(int index)
+        {
+            _cursor = Math.Min(Math.Max(index, 0), _value.Length);
             _element!.SetCursor(_cursor);
         }
 

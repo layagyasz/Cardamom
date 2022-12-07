@@ -2,6 +2,7 @@
 using Cardamom.Graphics.Ui;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using SharpFont;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Cardamom.Graphics
@@ -38,16 +39,51 @@ namespace Cardamom.Graphics
 
         public Vector2 GetCharacterPosition(int index)
         {
-            ForceUpdate();
+            Vector2 cursor = new(0, _characterSize);
             if (index == 0)
             {
-                return new(0, _characterSize);
+                return cursor;
             }
-            if (6 * index == _vertices.Count)
+            char lastCharacter = (char)0x0u;
+            Glyph? lastGlyph = null;
+            for (int i=0; i<index; ++i)
             {
-                return _cursor;
+                char character = _text[i];
+                cursor.X += _font!.GetKerning(lastCharacter, character, _characterSize);
+                lastCharacter = character;
+
+                if (character == '\r')
+                {
+                    lastGlyph = null;
+                    continue;
+                }
+                if (character == '\n')
+                {
+                    lastGlyph = null;
+                    cursor = new(0, cursor.Y + _font!.GetLineSpacing(_characterSize));
+                    continue;
+                }
+                if (character == '\t')
+                {
+                    lastGlyph = null;
+                    cursor.X += 4 * _font!.GetWhitespace(_characterSize);
+                    continue;
+                }
+                if (character == ' ')
+                {
+                    lastGlyph = null;
+                    cursor.X += _font!.GetWhitespace(_characterSize);
+                    continue;
+                }
+
+                var glyph = _font!.GetOrLoadGlyph(character, _characterSize);
+                lastGlyph = glyph;
+                if (i < index - 1)
+                {
+                    cursor.X += glyph.Advance;
+                }
             }
-            return _vertices[(uint)(6 * index - 1)].Position;
+            return cursor + (lastGlyph?.Bounds.TopLeft + lastGlyph?.Bounds.Size ?? new());
         }
 
         public void SetCharacterSize(uint characterSize)

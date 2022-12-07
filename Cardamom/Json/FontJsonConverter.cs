@@ -8,7 +8,7 @@ namespace Cardamom.Json
     {
         public override Font Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return new Font(reader.GetString());
+            return new Font(reader.GetString()!);
         }
 
         public override void Write(Utf8JsonWriter writer, Font @object, JsonSerializerOptions options)
