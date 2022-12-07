@@ -62,5 +62,41 @@
       "Padding": [ 16, 4, 16, 2 ],
       "Margin": [ 0, 2, 0, 2 ]
     }
+  },
+  {
+    "$id": "example-select-class",
+    "Parent": {
+      "$ref": "example-child-class"
+    },
+    "Default": {
+      "Size": [ 224, 32 ],
+      "Padding": [ 16, 4, 16, 2 ]
+    }
+  },
+  {
+    "$id": "example-select-drop-box-class",
+    "Parent": {
+      "$ref": "example-child-class"
+    },
+    "Default": {
+      "Size": [ 224, 500 ]
+    }
+  },
+  {
+    "$id": "example-select-option-class",
+    "Parent": {
+      "$ref": "example-select-class"
+    },
+    "Default": {
+      "Size": [ 192, 32 ]
+    },
+    "States": [
+      {
+        "State": [ "TOGGLE" ],
+        "Attributes": {
+          "BackgroundColor": [ "#00ff00" ]
+        }
+      }
+    ]
   }
 ]

@@ -20,11 +20,6 @@ namespace Cardamom.Graphics.Ui.Controller
             }
         }
 
-        public override void Unbind()
-        {
-            base.Unbind();
-        }
-
         public void Add(IUiElement pane)
         {
             if (pane.Controller is PaneController controller)

@@ -22,14 +22,13 @@ namespace Cardamom
                                     .ReadClasses("Example", "Style.json")
                                     .Build());
             var pane = uiElementFactory.CreatePane("example-base-class");
-            var rows = new List<IUiElement>();
+            var options = new List<IUiElement>();
             for (int i = 0; i < 20; ++i)
             {
-                rows.Add(uiElementFactory.CreateTextButton("example-row-class", $"Button #{i}"));
+                options.Add(uiElementFactory.CreateSelectOption("example-select-option-class", i, $"Button #{i}"));
             }
-            var table = 
-                uiElementFactory.CreateTable("example-child-class", rows, 16f);
-            pane.Add(table);
+            pane.Add(uiElementFactory.CreateSelect<int>(
+                "example-select-class", "example-select-drop-box-class", options));
             var screen = 
                 new Screen(
                     new Planar.Rectangle(new(), new(800, 600)), 

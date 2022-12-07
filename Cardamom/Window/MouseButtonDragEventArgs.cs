@@ -3,7 +3,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Window
 {
-    public struct MouseButtonDragEventArgs
+    public readonly struct MouseButtonDragEventArgs
     {
         public MouseButton Button { get; }
         public Vector2 Start { get; }

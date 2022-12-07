@@ -5,6 +5,9 @@ namespace Cardamom.Graphics.Ui.Controller
 {
     public class SecondaryController<T> : IController
     {
+        public EventHandler<MouseButtonEventArgs>? Clicked { get; set; }
+        public EventHandler<EventArgs>? Focused { get; set; }
+
 
         protected T? _element;
 

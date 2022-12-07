@@ -1,8 +1,6 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Graphics.Ui.Elements.Components;
-using Cardamom.Planar;
 using OpenTK.Mathematics;
-using System.Formats.Tar;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
@@ -10,6 +8,8 @@ namespace Cardamom.Graphics.Ui.Elements
     {
         private readonly RectangleComponent _rectComponent = new();
         private readonly TextComponent _textComponent = new();
+
+        private string _text = string.Empty;
 
         public TextUiElement(Class @class, IController controller)
             : base(@class, controller)
@@ -53,7 +53,13 @@ namespace Cardamom.Graphics.Ui.Elements
 
         public void SetText(string text)
         {
+            _text = text;
             _textComponent.SetText(text);
+        }
+
+        public string GetText()
+        {
+            return _text;
         }
     }
 }

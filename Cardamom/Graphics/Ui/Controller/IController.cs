@@ -5,6 +5,9 @@ namespace Cardamom.Graphics.Ui.Controller
 {
     public interface IController
     {
+        EventHandler<MouseButtonEventArgs>? Clicked { get; set; }
+        EventHandler<EventArgs>? Focused { get; set; }
+
         void Bind(object @object);
         void Unbind();
         bool HandleKeyPressed(KeyboardKeyEventArgs e);

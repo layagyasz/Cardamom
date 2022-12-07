@@ -10,7 +10,7 @@ namespace Cardamom.Graphics.Ui.Controller
 
         protected T? _element;
 
-        public void Bind(object @object)
+        public virtual void Bind(object @object)
         {
             _element = (T)@object;
         }

@@ -28,6 +28,21 @@ namespace Cardamom.Graphics.Ui
             return new UiContainer(_classLibrary.GetClass(className), new PaneController());
         }
 
+        public IUiElement CreateSelect<T>(string className, string dropBoxClassName, IEnumerable<IUiElement> options)
+        {
+            return new Select(
+                _classLibrary.GetClass(className), 
+                new SelectController<T>("select"),
+                CreateTable(dropBoxClassName, options));
+        }
+
+        public IUiElement CreateSelectOption<T>(string className, T value, string text)
+        {
+            var option = new TextUiElement(_classLibrary.GetClass(className), new SelectOptionController<T>(value));
+            option.SetText(text);
+            return option;
+        }
+
         public IUiElement CreateSimpleButton(string className, Vector2 position = new())
         {
             return new SimpleUiElement(_classLibrary.GetClass(className), new ButtonController()) 
@@ -36,7 +51,7 @@ namespace Cardamom.Graphics.Ui
             };
         }
 
-        public IUiElement CreateTable(
+        public UiSerialContainer CreateTable(
             string className, IEnumerable<IUiElement> rows, float scrollSpeed = 0, Vector2 position = new())
         {
             var table =
