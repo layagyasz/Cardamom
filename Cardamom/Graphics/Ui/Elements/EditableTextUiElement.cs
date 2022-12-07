@@ -1,0 +1,69 @@
+﻿using Cardamom.Graphics.Ui.Controller;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
+
+namespace Cardamom.Graphics.Ui.Elements
+{
+    public class EditableTextUiElement : TextUiElement
+    {
+        private static readonly Texture BLANK = Texture.Create(new(1, 1), Color4.White);
+
+        private readonly VertexArray _cursor = new(PrimitiveType.Triangles, 6);
+        private Vector2 _offset;
+        private bool _cursorActive;
+        private int _cursorIndex;
+        private Vector2 _cursorPosition;
+        private Shader? _cursorShader;
+
+        public EditableTextUiElement(Class @class, IController controller)
+            : base(@class, controller) 
+        {
+        }
+
+        public override void SetAttributes(ClassAttributes attributes)
+        {
+            base.SetAttributes(attributes);
+            _cursorShader = attributes.Shader!.Element;
+            _cursor[0] = new(new(), attributes.Color, new());
+            _cursor[1] = new(new(1, 0), attributes.Color, new(1, 0));
+            _cursor[2] = new(new(0, attributes.FontSize), attributes.Color, new(0, 1));
+            _cursor[3] = _cursor[2];
+            _cursor[4] = _cursor[1];
+            _cursor[5] = new(new(1, attributes.FontSize), attributes.Color, new(1, 1));
+        }
+
+        public void SetCursorActive(bool active)
+        {
+            _cursorActive = active;
+        }
+
+        public void SetCursor(int index)
+        {
+            _cursorIndex = index;
+            _cursorPosition = new(_textComponent.GetCharacterPosition(index).X, 0);
+        }
+
+        public override void Draw(RenderTarget target)
+        {
+            if (Visible)
+            {
+                target.PushTranslation(Position + LeftMargin);
+                _rectComponent.Draw(target);
+                target.PushTranslation(LeftPadding);
+                target.PushScissor(new(new(), InternalSize));
+                target.PushTranslation(_offset);
+                _textComponent.Draw(target);
+                if (_cursorActive)
+                {
+                    target.PushTranslation(_cursorPosition);
+                    target.Draw(_cursor, 0, _cursor.Length, _cursorShader!, BLANK);
+                    target.PopTransform();
+                }
+                target.PopTransform();
+                target.PopScissor();
+                target.PopTransform();
+                target.PopTransform();
+            }
+        }
+    }
+}

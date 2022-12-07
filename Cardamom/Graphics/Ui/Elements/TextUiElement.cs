@@ -6,8 +6,8 @@ namespace Cardamom.Graphics.Ui.Elements
 {
     public class TextUiElement : ClassedUiElement
     {
-        private readonly RectangleComponent _rectComponent = new();
-        private readonly TextComponent _textComponent = new();
+        protected readonly RectangleComponent _rectComponent = new();
+        protected readonly TextComponent _textComponent = new();
 
         private string _text = string.Empty;
 

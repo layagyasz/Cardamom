@@ -1,10 +1,9 @@
-﻿using Cardamom.Planar;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements.Components
 {
-    internal class RectangleComponent
+    public class RectangleComponent
     {
         private Shader? _shader;
         private float[]? _borderWidth;

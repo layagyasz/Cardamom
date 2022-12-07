@@ -2,6 +2,7 @@
 using Cardamom.Graphics.Ui;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Cardamom.Graphics
 {
@@ -24,6 +25,29 @@ namespace Cardamom.Graphics
         {
             _text += character;
             AppendInternal(character);
+        }
+
+        public void Append(string text)
+        {
+            _text += text;
+            foreach (char c in text)
+            {
+                AppendInternal(c);
+            }
+        }
+
+        public Vector2 GetCharacterPosition(int index)
+        {
+            ForceUpdate();
+            if (index == 0)
+            {
+                return new(0, _characterSize);
+            }
+            if (6 * index == _vertices.Count)
+            {
+                return _cursor;
+            }
+            return _vertices[(uint)(6 * index - 1)].Position;
         }
 
         public void SetCharacterSize(uint characterSize)
@@ -71,12 +95,7 @@ namespace Cardamom.Graphics
 
         public void Draw(RenderTarget target)
         {
-            if (_update)
-            {
-                UpdateMesh();
-                _update = false;
-            }
-
+            ForceUpdate();
             target.Draw(
                 _vertices.GetData(),
                 PrimitiveType.Triangles,
@@ -84,6 +103,15 @@ namespace Cardamom.Graphics
                 _vertices.Count, 
                 _shader!,
                 _font!.GetTexure(_characterSize));
+        }
+
+        private void ForceUpdate()
+        {
+            if (_update)
+            {
+                UpdateMesh();
+                _update = false;
+            }
         }
 
         private void UpdateMesh()

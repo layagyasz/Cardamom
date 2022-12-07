@@ -28,10 +28,16 @@ namespace Cardamom
                 options.Add(
                     uiElementFactory.CreateSelectOption("example-select-option-class", i, $"Button #{i}").Item1);
             }
+
             var select = 
                 uiElementFactory.CreateSelect<int>("example-select-class", "example-select-drop-box-class", options);
             select.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(select.Item1);
+
+            var text = uiElementFactory.CreateTextInput("example-row-class", new(0, select.Item1.Size.Y));
+            text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
+            pane.Add(text.Item1);
+
             var screen = 
                 new Screen(
                     new Planar.Rectangle(new(), new(800, 600)), 

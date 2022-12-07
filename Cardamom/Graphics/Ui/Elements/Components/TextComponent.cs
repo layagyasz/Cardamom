@@ -1,8 +1,8 @@
-﻿using Cardamom.Planar;
+﻿using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements.Components
 {
-    internal class TextComponent
+    public class TextComponent
     {
         private readonly Text _text = new();
 
@@ -12,6 +12,16 @@ namespace Cardamom.Graphics.Ui.Elements.Components
             _text.SetCharacterSize(attributes.FontSize);
             _text.SetColor(attributes.Color);
             _text.SetShader(attributes.Shader!.Element!);
+        }
+
+        public void AppendText(string text)
+        {
+            _text.Append(text);
+        }
+
+        public Vector2 GetCharacterPosition(int index)
+        {
+            return _text.GetCharacterPosition(index);
         }
 
         public void SetText(string text)

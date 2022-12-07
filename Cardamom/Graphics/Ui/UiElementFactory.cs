@@ -84,5 +84,13 @@ namespace Cardamom.Graphics.Ui
             button.SetText(text);
             return (button, controller);
         }
+
+        public (IUiElement, TextInputController) CreateTextInput(string className, Vector2 position = new())
+        {
+            var controller = new TextInputController("text");
+            return (
+                new EditableTextUiElement(_classLibrary.GetClass(className), controller){ Position = position },
+                controller);
+        }
     }
 }

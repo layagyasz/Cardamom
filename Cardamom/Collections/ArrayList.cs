@@ -1,6 +1,4 @@
-﻿using Cardamom.Graphics;
-
-namespace Cardamom.Collections
+﻿namespace Cardamom.Collections
 {
     public class ArrayList<T> : ICollection<T>
     {

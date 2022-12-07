@@ -25,7 +25,7 @@ namespace Cardamom.Collections
 
         public EnumMap()
         {
-            _values = new TValue[Enum.GetValues(typeof(TKey)).Length];
+            _values = new TValue[Enum.GetValues(typeof(TKey)).Cast<TKey>().Max(x => (int)(object)x)];
         }
 
         public EnumMap(EnumMap<TKey, TValue> copy) : this()
