@@ -6,7 +6,7 @@ namespace Cardamom.Graphics
     public abstract class GraphicsContext
     {
         private readonly Stack<Transform2> _transformStack = new();
-        private readonly Stack<FloatRect> _scissorStack = new();
+        private readonly Stack<FloatRect?> _scissorStack = new();
 
         public FloatRect? GetScissor()
         {
@@ -21,6 +21,11 @@ namespace Cardamom.Graphics
         public void PopScissor()
         {
             _scissorStack.Pop();
+        }
+
+        public void PushEmptyScissor()
+        {
+            _scissorStack.Push(null);
         }
 
         public void PushScissor(FloatRect scissor)

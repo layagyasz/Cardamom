@@ -35,7 +35,9 @@ namespace Cardamom.Graphics.Ui.Elements
             base.Draw(target);
             if (_open)
             {
+                target.PushEmptyScissor();
                 _dropBox.Draw(target);
+                target.PopScissor();
             }
         }
 
@@ -44,8 +46,10 @@ namespace Cardamom.Graphics.Ui.Elements
             base.Update(context, delta);
             if (_open)
             {
+                context.PushEmptyScissor();
                 _dropBox.Position = new(0, TrueSize.Y);
                 _dropBox.Update(context, delta);
+                context.PopScissor();
             }
         }
     }
