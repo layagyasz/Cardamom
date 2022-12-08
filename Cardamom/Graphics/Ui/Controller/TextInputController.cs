@@ -1,6 +1,7 @@
 ﻿using Cardamom.Collections;
 using Cardamom.Graphics.Ui.Elements;
 using Cardamom.Trackers;
+using Cardamom.Window;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -9,50 +10,19 @@ namespace Cardamom.Graphics.Ui.Controller
     public class TextInputController 
         : ClassedUiElementController<EditableTextUiElement>, IFormElementController<string, string>
     {
-        private static readonly EnumMap<Keys, char> KEY_MAP =
-            new()
-            {
-                {Keys.A, 'a' },
-                {Keys.B, 'b' },
-                {Keys.C, 'c' },
-                {Keys.D, 'd' },
-                {Keys.E, 'e' },
-                {Keys.F, 'f' },
-                {Keys.G, 'g' },
-                {Keys.H, 'h' },
-                {Keys.I, 'i' },
-                {Keys.J, 'j' },
-                {Keys.J, 'k' },
-                {Keys.K, 'k' },
-                {Keys.L, 'l' },
-                {Keys.M, 'm' },
-                {Keys.N, 'n' },
-                {Keys.O, 'o' },
-                {Keys.P, 'p' },
-                {Keys.Q, 'q' },
-                {Keys.R, 'r' },
-                {Keys.S, 's' },
-                {Keys.T, 't' },
-                {Keys.U, 'u' },
-                {Keys.V, 'v' },
-                {Keys.W, 'w' },
-                {Keys.X, 'x' },
-                {Keys.Y, 'y' },
-                {Keys.Z, 'z' },
-                {Keys.Space, ' ' },
-                {Keys.D1, '1' }
-            };
-
         public EventHandler<ValueChangedEventArgs<string, string>>? ValueChanged { get; set; }
 
         public string Key { get; }
 
+        private readonly IKeyMapper _keyMapper;
+
         private string _value = string.Empty;
         private int _cursor = 0;
 
-        public TextInputController(string key)
+        public TextInputController(string key, IKeyMapper keyMapper)
         {
             Key = key;
+            _keyMapper = keyMapper;
         }
 
         public string? GetValue()
@@ -123,7 +93,7 @@ namespace Cardamom.Graphics.Ui.Controller
             }
             else
             {
-                string text = ToText(e);
+                string text = _keyMapper.Map(e);
                 if (text.Length > 0)
                 {
                     string newValue = _value[.._cursor] + text + _value[_cursor..];
@@ -143,20 +113,6 @@ namespace Cardamom.Graphics.Ui.Controller
         {
             _cursor = Math.Min(Math.Max(index, 0), _value.Length);
             _element!.SetCursor(_cursor);
-        }
-
-        private static string ToText(KeyboardKeyEventArgs e)
-        {
-            if (!KEY_MAP.ContainsKey(e.Key))
-            {
-                return string.Empty;
-            }
-            char c = KEY_MAP[e.Key];
-            if (e.Shift)
-            {
-                return char.ToUpper(c).ToString();
-            }
-            return c.ToString();
         }
     }
 }

@@ -95,7 +95,7 @@ namespace Cardamom.Collections
         public bool TryGetValue(TKey key, out TValue value)
         {
             value = this[key];
-            return value?.Equals(default) ?? false;
+            return !value?.Equals(default(TValue)) ?? false;
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] values, int index)

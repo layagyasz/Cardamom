@@ -20,7 +20,8 @@ namespace Cardamom
                                     .ReadFonts("Example/Fonts.json")
                                     .ReadShaders("Example/Shaders.json")
                                     .ReadClasses("Example", "Style.json")
-                                    .Build());
+                                    .Build(),
+                    SimpleKeyMapper.US);
             var pane = uiElementFactory.CreatePane("example-base-class").Item1;
             var options = new List<IUiElement>();
             for (int i = 0; i < 20; ++i)
