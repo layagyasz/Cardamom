@@ -73,29 +73,23 @@ namespace Cardamom.Graphics
             return new Texture(handle, size);
         }
 
-        private static void SetParameters()
-        {
-            GL.TexParameter(
-                TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(
-                TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-        }
-
         public void Bind(TextureUnit unit)
         {
             GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, Handle);
         }
 
-        public void Update(Texture other)
+        public Image CopyToImage()
         {
-            Update(new(), other.Size, other.GetBytes());
+            return Image.FromData(Size, GetData(), /* invertYAxis= */ true);
         }
 
-        public byte[] GetBytes()
+        public void Update(Texture other)
+        {
+            Update(new(), other.Size, other.GetData());
+        }
+
+        public byte[] GetData()
         {
             Bind(TextureUnit.Texture0);
             var bytes = new byte[4 * Size.X * Size.Y];
@@ -121,6 +115,17 @@ namespace Cardamom.Graphics
         protected override void DisposeImpl()
         {
             GL.DeleteTexture(Handle);
+        }
+
+        private static void SetParameters()
+        {
+            GL.TexParameter(
+                TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(
+                TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
         }
     }
 }
