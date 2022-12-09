@@ -17,15 +17,17 @@ namespace Cardamom.Collections
                 return Enum.GetValues(typeof(TKey)).Cast<TKey>().Where(ContainsKey).ToList();
             }
         }
+
         public ICollection<TValue> Values { 
             get { return _values.Where(x => !x?.Equals(default) ?? false).Select(x => x!).ToList(); }
         }
+
         public int Count { get { return _values.Length; } }
         public bool IsReadOnly { get; } = false;
 
         public EnumMap()
         {
-            _values = new TValue[Enum.GetValues(typeof(TKey)).Cast<TKey>().Max(x => (int)(object)x)];
+            _values = new TValue[Enum.GetValues(typeof(TKey)).Cast<TKey>().Max(x => (int)(object)x) + 1];
         }
 
         public EnumMap(EnumMap<TKey, TValue> copy) : this()

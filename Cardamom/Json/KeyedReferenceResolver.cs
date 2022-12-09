@@ -21,8 +21,8 @@ namespace Cardamom.Json
         {
             if (value is IKeyed keyed)
             {
-                alreadyExists = _objects.ContainsKey(keyed.Key);
-                return keyed.Key;
+                alreadyExists = _objects.ContainsKey(keyed.Key!);
+                return keyed.Key!;
             }
             throw new JsonException("Type must be derived from IKeyed.");
         }
@@ -31,7 +31,7 @@ namespace Cardamom.Json
         {
             if (value is IKeyed keyed)
             {
-                if (keyed.Key != string.Empty && keyed.Key != referenceId)
+                if (Equals(keyed.Key, referenceId))
                 {
                     throw new JsonException("Key and $id have conflicting values.");
                 }

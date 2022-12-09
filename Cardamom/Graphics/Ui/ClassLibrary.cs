@@ -13,8 +13,8 @@ namespace Cardamom.Graphics.Ui
             TextureLibrary textures, IEnumerable<KeyedWrapper<Shader>> shaders, IEnumerable<Class> classes)
         {
             _textures = textures;
-            _shaders = shaders.ToDictionary(x => x.Key, x => x.Element!);
-            _classes = classes.ToDictionary(x => x.Key, x => x);
+            _shaders = shaders.ToDictionary(x => x.Key!, x => x.Element!);
+            _classes = classes.ToDictionary(x => x.Key!, x => x);
         }
 
         public Class GetClass(string key)
@@ -54,7 +54,7 @@ namespace Cardamom.Graphics.Ui
                         File.ReadAllText(path), options)!)
                 {
                     _shaders.Add(
-                        shader.Key, 
+                        shader.Key!, 
                         new KeyedWrapper<Shader>() 
                         {
                             Key = shader.Key, 
@@ -71,7 +71,7 @@ namespace Cardamom.Graphics.Ui
                 foreach (var font in 
                     JsonSerializer.Deserialize<List<KeyedWrapper<Font>>>(File.ReadAllText(path), options)!)
                 {
-                    _fonts.Add(font.Key, font);
+                    _fonts.Add(font.Key!, font);
                 }
                 return this;
             }
@@ -85,7 +85,7 @@ namespace Cardamom.Graphics.Ui
                 }
                 foreach (var texture in _textures.GetSegments())
                 {
-                    objects.Add(texture.Key, texture);
+                    objects.Add(texture.Key!, texture);
                 }
                 foreach (var shader in _shaders)
                 {
@@ -107,7 +107,7 @@ namespace Cardamom.Graphics.Ui
                     foreach (var @class in 
                         JsonSerializer.Deserialize<List<Class.Builder>>(File.ReadAllText(file), options)!)
                     {
-                        _classes.Add(@class.Key, @class.Build());
+                        _classes.Add(@class.Key!, @class.Build());
                     }
                 }
                 return this;

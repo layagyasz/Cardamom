@@ -1,42 +1,59 @@
 namespace Cardamom.Collections
 {
-    public class WeightedVector<T> : ICollection<KeyValuePair<T, double>>
+    public class WeightedVector<T> : IDictionary<T, float>
     {
-        double[] _values;
-        T[] _keys;
-        int _alloc;
+        private float[] _values;
+        private T[] _keys;
 
-        public double Total { get; private set; }
+        public float Total { get; private set; }
         public int Count { get; private set; }
         public bool IsReadOnly => false;
+
+        public float this[T key]
+        {
+            get => throw new NotImplementedException();
+            set
+            {
+                if (ContainsKey(key))
+                {
+                    throw new ArgumentException("Key already exists.");
+                }
+                Add(key, value);
+            }
+        }
+
+        public ICollection<T> Keys
+        {
+            get => _keys.Take(Count).ToList();
+        }
+
+        public ICollection<float> Values
+        {
+            get => _values.Take(Count).ToList();
+        }
 
         public WeightedVector()
         {
             Count = 0;
-            _alloc = 1;
-            _values = new double[1];
+            _values = new float[1];
             _keys = new T[1];
         }
 
         public WeightedVector(WeightedVector<T> copy)
         {
             Count = copy.Count;
-            _alloc = copy._alloc;
-            _values = new double[_alloc];
-            _keys = new T[_alloc];
+            _values = new float[copy._values.Length];
+            _keys = new T[copy._keys.Length];
             Total = copy.Total;
-            for (int i = 0; i < _alloc; i++)
-            {
-                _keys[i] = copy._keys[i];
-                _values[i] = copy._values[i];
-            }
+            Array.Copy(copy._values, _values, copy.Count);
+            Array.Copy(copy._keys, _keys, copy.Count);
         }
 
-        public IEnumerator<KeyValuePair<T, double>> GetEnumerator()
+        public IEnumerator<KeyValuePair<T, float>> GetEnumerator()
         {
             for (int i = 0; i < Count; ++i)
             {
-                yield return new KeyValuePair<T, double>(_keys[i], _values[i]);
+                yield return new KeyValuePair<T, float>(_keys[i], _values[i]);
             }
         }
 
@@ -45,27 +62,73 @@ namespace Cardamom.Collections
             return GetEnumerator();
         }
 
-        public void Add(double weight, T value)
+        public void Add(T key, float value)
         {
-            if (Count + 1 == _alloc)
+            if (Count + 1 == _values.Length)
             {
-                _alloc *= 2;
-                T[] newK = new T[_alloc];
-                double[] newA = new double[_alloc];
+                T[] newK = new T[2 * _values.Length];
+                float[] newA = new float[2 * _values.Length];
                 Array.Copy(_keys, newK, _keys.Length);
                 Array.Copy(_values, newA, _keys.Length);
                 _values = newA;
                 _keys = newK;
             }
-            Total += weight;
-            _keys[Count] = value;
-            _values[Count + 1] = _values[Count] + weight;
+            Total += value;
+            _keys[Count] = key;
+            _values[Count + 1] = _values[Count] + value;
             ++Count;
         }
 
-        public void Add(KeyValuePair<T, double> value)
+        public void Add(KeyValuePair<T, float> value)
         {
-            Add(value.Value, value.Key);
+            Add(value.Key, value.Value);
+        }
+
+        public T Get(float x)
+        {
+            return _keys[IndexOf(x)];
+        }
+
+        public bool ContainsKey(T key)
+        {
+            return Array.IndexOf(_keys, key, 0, Count) >= 0;
+        }
+
+        public void Clear()
+        {
+            Count = 0;
+        }
+
+        public bool Contains(KeyValuePair<T, float> value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CopyTo(KeyValuePair<T, float>[] values, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(T key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(KeyValuePair<T, float> value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetValue(T key, out float value)
+        {
+            int index = Array.IndexOf(_keys, key, 0, Count);
+            if (index < 0)
+            {
+                value = default;
+                return false;
+            }
+            value = _values[index];
+            return true;
         }
 
         private int IndexOf(double interval)
@@ -104,41 +167,6 @@ namespace Cardamom.Collections
                 c++;
             }
             return c;
-        }
-
-        public T this[double interval]
-        {
-            get
-            {
-                return _keys[IndexOf(interval * Total)];
-            }
-            set
-            {
-                _keys[IndexOf(interval * Total)] = value;
-            }
-        }
-
-        public void Clear()
-        {
-            Count = 0;
-            _alloc = 1;
-            _values = new double[1];
-            _keys = new T[1];
-        }
-
-        public bool Contains(KeyValuePair<T, double> value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(KeyValuePair<T, double> value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CopyTo(KeyValuePair<T, double>[] values, int index)
-        {
-            throw new NotImplementedException();
         }
     }
 }

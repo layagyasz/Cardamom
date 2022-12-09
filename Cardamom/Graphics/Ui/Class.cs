@@ -16,7 +16,7 @@ namespace Cardamom.Graphics.Ui
             TOGGLE = 8,
         }
 
-        public string Key { get; set; }
+        public string? Key { get; set; }
 
         private readonly ClassAttributes[] _attributes;
 
@@ -40,7 +40,7 @@ namespace Cardamom.Graphics.Ui
                 public ClassAttributes.Builder Attributes { get; set; } = new();
             }
 
-            public string Key { get; set; } = string.Empty;
+            public string? Key { get; set; } = string.Empty;
             public Builder? Parent { get; set; }
             public ClassAttributes.Builder? Default { get; set; }
             public List<ClassAttributesBuilderWithState> States { get; set; } = new();
@@ -66,7 +66,7 @@ namespace Cardamom.Graphics.Ui
                     }
                     attributesForStates[i] = builder.Attributes.Build(ancestors);
                 }
-                return new Class(Precondition.IsNotEmpty<string, char>(Key), attributesForStates);
+                return new Class(Precondition.IsNotEmpty<string, char>(Key!), attributesForStates);
             }
 
             private static IEnumerable<ClassAttributes.Builder> GetAncestry(
