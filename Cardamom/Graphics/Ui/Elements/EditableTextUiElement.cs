@@ -19,9 +19,7 @@ namespace Cardamom.Graphics.Ui.Elements
         private Shader? _cursorShader;
 
         public EditableTextUiElement(Class @class, IController controller)
-            : base(@class, controller) 
-        {
-        }
+            : base(@class, controller) { }
 
         public override void SetAttributes(ClassAttributes attributes)
         {

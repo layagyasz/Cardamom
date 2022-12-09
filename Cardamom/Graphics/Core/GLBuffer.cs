@@ -5,30 +5,30 @@ namespace Cardamom.Graphics.Core
 {
     public class GLBuffer<T> : GLObject where T : struct
     {
-        public BufferTarget BufferTarget { get; }
-        public BufferUsageHint BufferUsageHint { get; }
+        public BufferTarget Target { get; }
+        public BufferUsageHint UsageHint { get; }
         public int ElementSize { get; }
 
         public GLBuffer(
-            BufferTarget bufferTarget = BufferTarget.ArrayBuffer,
-            BufferUsageHint bufferUsageHint = BufferUsageHint.StaticDraw)
+            BufferTarget target = BufferTarget.ArrayBuffer,
+            BufferUsageHint usageHint = BufferUsageHint.StaticDraw)
             : base(GL.GenBuffer())
         {
-            BufferTarget = bufferTarget;
-            BufferUsageHint = bufferUsageHint;
+            Target = target;
+            UsageHint = usageHint;
             ElementSize = Marshal.SizeOf(typeof(T));
         }
 
         public void Bind()
         {
-            GL.BindBuffer(BufferTarget, Handle);
+            GL.BindBuffer(Target, Handle);
             Error.LogGLError("bind buffer");
         }
 
         public void SetData(T[] data)
         {
             Bind();
-            GL.BufferData(BufferTarget, ElementSize * data.Length, data, BufferUsageHint);
+            GL.BufferData(Target, ElementSize * data.Length, data, UsageHint);
             Error.LogGLError("buffer data");
         }
 

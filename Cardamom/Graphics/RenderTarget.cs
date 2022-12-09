@@ -11,23 +11,24 @@ namespace Cardamom.Graphics
         private ViewPort _viewPort;
         private GLVertexArray? _vertexArray;
 
-        public abstract IGLFWGraphicsContext GetContext();
-
         protected RenderTarget(ViewPort viewPort)
         {
             _viewPort = viewPort;
         }
 
+        public abstract void SetActive(bool active);
+        public abstract void Display();
+
         public void Clear()
         {
-            GetContext().MakeCurrent();
+            SetActive(true);
             GL.Disable(EnableCap.ScissorTest);
             GL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
-        public void Display()
+        public ViewPort GetViewPort()
         {
-            GetContext().SwapBuffers();
+            return _viewPort;
         }
 
         public void Draw(
@@ -46,8 +47,11 @@ namespace Cardamom.Graphics
         {
             _vertexArray ??= new(new());
 
-            GetContext().MakeCurrent();
+            SetActive(true);
             Error.LogGLError("bind context");
+
+            GL.Viewport(_viewPort.Left, _viewPort.Top, _viewPort.Right, _viewPort.Bottom);
+            Error.LogGLError("set view port");
 
             _vertexArray.SetData(vertices);
 
@@ -57,8 +61,7 @@ namespace Cardamom.Graphics
             }
             else
             {
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, 0);
+                Texture.Unbind(TextureUnit.Texture0);
             }
             Error.LogGLError("bind context");
 
@@ -96,12 +99,12 @@ namespace Cardamom.Graphics
             }
 
             _vertexArray.Draw(primitiveType, start, count);
+
+            SetActive(false);
         }
 
         public void Resize(Vector2i size)
         {
-            GetContext().MakeCurrent();
-            GL.Viewport(0, 0, size.X, size.Y);
             _viewPort.Right = size.X;
             _viewPort.Bottom = size.Y;
         }

@@ -4,10 +4,10 @@ namespace Cardamom.Graphics
 {
     public struct ViewPort
     {
-        public float Left { get; set; }
-        public float Right { get; set; }
-        public float Top { get; set; }
-        public float Bottom { get; set; }
+        public int Left { get; set; }
+        public int Right { get; set; }
+        public int Top { get; set; }
+        public int Bottom { get; set; }
 
         public ViewPort(Vector2i size)
         {

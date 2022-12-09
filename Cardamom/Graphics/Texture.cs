@@ -79,6 +79,19 @@ namespace Cardamom.Graphics
             GL.BindTexture(TextureTarget.Texture2D, Handle);
         }
 
+        public static void Unbind(TextureUnit unit)
+        {
+            GL.ActiveTexture(unit);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        public Texture Copy()
+        {
+            var texture = Texture.Create(Size);
+            texture.Update(this);
+            return texture;
+        }
+
         public Image CopyToImage()
         {
             return Image.FromData(Size, GetData(), /* invertYAxis= */ true);

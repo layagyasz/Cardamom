@@ -1,4 +1,5 @@
 ﻿using Cardamom.Graphics;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -44,9 +45,18 @@ namespace Cardamom.Window
             NativeWindow.ProcessWindowEvents(/* waitForEvents= */ false);
         }
 
-        public override IGLFWGraphicsContext GetContext()
+        public override void SetActive(bool active)
         {
-            return _window.Context;
+            if (active)
+            {
+                var viewPort = GetViewPort();
+                GL.Viewport(viewPort.Left, viewPort.Top, viewPort.Right, viewPort.Bottom);
+            }
+        }
+
+        public override void Display()
+        {
+            _window.Context.SwapBuffers();
         }
 
         public Vector2 GetMousePosition()
