@@ -1,12 +1,13 @@
 #version 430 core
 
-#define HASH_SPACE 128
+#define HASH_SPACE 256
+#define KERNEL_SIZE 64
 
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D out_texture;
 
 uniform int hash_lookup[HASH_SPACE];
-uniform vec3 vector[HASH_SPACE];
+uniform vec3 kernel[KERNEL_SIZE];
 uniform float frequency;
 uniform float lacunarity;
 uniform int octaves;
@@ -29,7 +30,8 @@ float gradient(vec2 u, vec3 v) {
 }
 
 int hash(ivec2 v) {
-	return hash_lookup[(hash_lookup[v.x & (HASH_SPACE - 1)] + (v.y & (HASH_SPACE - 1))) % HASH_SPACE] % HASH_SPACE;
+	return (KERNEL_SIZE - 1) 
+		& hash_lookup[(hash_lookup[v.x & (HASH_SPACE - 1)] + (v.y & (HASH_SPACE - 1))) % HASH_SPACE];
 }
 
 float generate_octave(vec2 position) {
@@ -40,10 +42,10 @@ float generate_octave(vec2 position) {
 	float a = fade(dx);
 	float b = fade(dy);
 
-	float s = linear(vec2(a, b)) * gradient(vec2(dx, dy), vector[hash(ivec2(gx, gy))]);
-	float t = linear(vec2(1 - a, b)) * gradient(vec2(dx - 1, dy), vector[hash(ivec2(gx + 1, gy))]);
-	float u = linear(vec2(a, 1 - b)) * gradient(vec2(dx, dy - 1), vector[hash(ivec2(gx, gy + 1))]);
-	float v = linear(vec2(1 - a, 1 - b)) * gradient(vec2(dx - 1, dy - 1), vector[hash(ivec2(gx + 1, gy + 1))]);
+	float s = linear(vec2(a, b)) * gradient(vec2(dx, dy), kernel[hash(ivec2(gx, gy))]);
+	float t = linear(vec2(1 - a, b)) * gradient(vec2(dx - 1, dy), kernel[hash(ivec2(gx + 1, gy))]);
+	float u = linear(vec2(a, 1 - b)) * gradient(vec2(dx, dy - 1), kernel[hash(ivec2(gx, gy + 1))]);
+	float v = linear(vec2(1 - a, 1 - b)) * gradient(vec2(dx - 1, dy - 1), kernel[hash(ivec2(gx + 1, gy + 1))]);
 
 	return mix(mix(s, t, dx), mix(u, v, dx), dy);
 }

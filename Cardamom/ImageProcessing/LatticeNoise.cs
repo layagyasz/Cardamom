@@ -20,13 +20,13 @@ namespace Cardamom.ImageProcessing
         }
 
         private readonly int[] _hashLookup;
-        private readonly Vector3[] _vectors;
+        private readonly Vector3[] _kernel;
         private readonly Settings _settings;
 
-        private LatticeNoise(int[] hashLookup, Vector3[] vectors, Settings settings)
+        private LatticeNoise(int[] hashLookup, Vector3[] kernel, Settings settings)
         {
             _hashLookup = hashLookup;
-            _vectors = vectors;
+            _kernel = kernel;
             _settings = settings;
         }
 
@@ -37,7 +37,10 @@ namespace Cardamom.ImageProcessing
             for (int i=0; i<_hashLookup.Length; i++)
             {
                 LATTICE_NOISE_SHADER.SetInt32($"hash_lookup[{i}]", _hashLookup[i]);
-                LATTICE_NOISE_SHADER.SetVector3($"vector[{i}]", _vectors[i]);
+            }
+            for (int i=0; i<_kernel.Length; ++i)
+            {
+                LATTICE_NOISE_SHADER.SetVector3($"kernel[{i}]", _kernel[i]);
             }
             LATTICE_NOISE_SHADER.SetFloat("frequency", _settings.Frequency);
             LATTICE_NOISE_SHADER.SetFloat("lacunarity", _settings.Lacunarity);
@@ -55,7 +58,8 @@ namespace Cardamom.ImageProcessing
 
         public class Builder
         {
-            private int _hashSpace = 128;
+            private int _hashSpace = 256;
+            private int _kernelSize = 64;
             private Random? _generator;
             private Settings _settings = new();
 
@@ -116,28 +120,28 @@ namespace Cardamom.ImageProcessing
             public LatticeNoise Build()
             {
                 var lookup = new int[_hashSpace];
-                var vectors = new Vector3[_hashSpace];
+                var kernel = new Vector3[_kernelSize];
                 Random generator = _generator!;
                 for (int i = 0; i < _hashSpace; ++i)
                 {
                     lookup[i] = i;
                 }
-                for (int i=0; i<_hashSpace;++i)
+                for (int i = 0; i < _hashSpace; ++i)
                 {
-                    // Shuffle lookup
                     var index = generator.Next(0, _hashSpace);
                     (lookup[index], lookup[i]) = (lookup[i], lookup[index]);
-
-                    // Generate random unit vector
+                }
+                for (int i = 0; i < _kernelSize; ++i)
+                { 
                     var z = 2 * generator.NextSingle() - 1;
                     var theta = 2 * Math.PI * generator.NextSingle();
-                    vectors[i] = 
+                    kernel[i] = 
                         new(
                             (float)(Math.Sqrt(1 - z * z) * Math.Cos(theta)),
                             (float)(Math.Sqrt(1 - z * z) * Math.Sin(theta)),
                             z);
                 }
-                return new(lookup, vectors, _settings);
+                return new(lookup, kernel, _settings);
             }
         }
     }
