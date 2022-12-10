@@ -31,7 +31,7 @@ namespace Cardamom.Graphics
             GL.TexImage2D(
                 TextureTarget.Texture2D,
                 0,
-                PixelInternalFormat.Rgba,
+                PixelInternalFormat.Rgba32f,
                 size.X,
                 size.Y,
                 0,
@@ -59,7 +59,7 @@ namespace Cardamom.Graphics
                 GL.TexImage2D(
                     TextureTarget.Texture2D,
                     0, 
-                    PixelInternalFormat.Rgba,
+                    PixelInternalFormat.Rgba32f,
                     image.Width,
                     image.Height,
                     0, 
@@ -83,6 +83,16 @@ namespace Cardamom.Graphics
         {
             GL.ActiveTexture(unit);
             GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        public void BindImage()
+        {
+            GL.BindImageTexture(0, Handle, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.Rgba32f);
+        }
+
+        public static void UnbindImage()
+        {
+            GL.BindImageTexture(0, 0, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.Rgba32f);
         }
 
         public Texture Copy()

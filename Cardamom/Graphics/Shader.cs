@@ -15,6 +15,13 @@ namespace Cardamom.Graphics
             Error.LogGLError("bind shader");
         }
 
+        public void DoCompute(Vector2i size)
+        {
+            Bind();
+            GL.DispatchCompute(size.X, size.Y, 1);
+            GL.MemoryBarrier(MemoryBarrierFlags.AllBarrierBits);
+        }
+
         public int GetAttributeLocation(string name)
         {
             return GL.GetAttribLocation(Handle, name);
@@ -187,7 +194,8 @@ namespace Cardamom.Graphics
                 GL.GetProgram(program, GetProgramParameterName.LinkStatus, out var code);
                 if (code != (int)All.True)
                 {
-                    throw new Exception("Error linking Shader Program");
+                    var infoLog = GL.GetProgramInfoLog(program);
+                    throw new Exception($"Error linking Shader Program.\n\n{infoLog}");
                 }
             }
         }

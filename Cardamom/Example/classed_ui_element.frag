@@ -1,4 +1,4 @@
-﻿#version 330 core
+﻿#version 430 core
 
 #define MODE_BACKGROUND 0
 #define MODE_TEXTURE 1
