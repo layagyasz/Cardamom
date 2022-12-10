@@ -1,0 +1,39 @@
+#version 430 core
+
+#define CHANNEL_RED 1
+#define CHANNEL_GREEN 2
+#define CHANNEL_BLUE 4
+#define CHANNEL_ALPHA 8
+
+#define WAVE_TYPE_SINE 0
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(rgba32f, binding = 0) uniform image2D out_texture;
+
+uniform int wave_type;
+uniform float amplitude;
+uniform float bias;
+uniform vec2 periodicity;
+uniform vec2 turbulence;
+uniform int channel;
+
+float generate(vec2 position, float v_turbulence) {
+	float w = dot(periodicity, position + turbulence * (2 * v_turbulence - 1));
+	if (wave_type == WAVE_TYPE_SINE)
+	{
+		return amplitude * sin(w) + bias;
+	}
+	return amplitude * cos(w) + bias;
+}
+
+void main() {
+    ivec2 position = ivec2(gl_GlobalInvocationID.xy);
+    vec4 current = imageLoad(out_texture, position);
+	vec4 new = 
+		vec4(
+			(channel & CHANNEL_RED) != 0 ? clamp(generate(gl_GlobalInvocationID.xy, current.r), 0, 1) : current.r,
+			(channel & CHANNEL_GREEN) != 0 ? clamp(generate(gl_GlobalInvocationID.xy, current.g), 0, 1) : current.g,
+			(channel & CHANNEL_BLUE) != 0 ? clamp(generate(gl_GlobalInvocationID.xy, current.b), 0, 1) : current.b,
+			(channel & CHANNEL_ALPHA) != 0 ? clamp(generate(gl_GlobalInvocationID.xy, current.a), 0, 1) : current.a);
+    imageStore(out_texture, position, new);
+}

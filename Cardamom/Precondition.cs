@@ -2,6 +2,14 @@
 {
     public static class Precondition
     {
+        public static void Check(bool condition)
+        {
+            if (!condition)
+            {
+                throw new ArgumentException();
+            }
+        }
+
         public static void IsNull<T>(T? @object)
         {
             if (@object != null)
