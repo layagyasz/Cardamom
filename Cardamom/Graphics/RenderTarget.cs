@@ -8,10 +8,10 @@ namespace Cardamom.Graphics
 {
     public abstract class RenderTarget : GraphicsContext
     {
-        private ViewPort _viewPort;
+        private IntRect _viewPort;
         private GLVertexArray? _vertexArray;
 
-        protected RenderTarget(ViewPort viewPort)
+        protected RenderTarget(IntRect viewPort)
         {
             _viewPort = viewPort;
         }
@@ -26,7 +26,7 @@ namespace Cardamom.Graphics
             GL.Clear(ClearBufferMask.ColorBufferBit);
         }
 
-        public ViewPort GetViewPort()
+        public IntRect GetViewPort()
         {
             return _viewPort;
         }
@@ -49,9 +49,6 @@ namespace Cardamom.Graphics
 
             SetActive(true);
             Error.LogGLError("bind context");
-
-            GL.Viewport(_viewPort.Left, _viewPort.Top, _viewPort.Right, _viewPort.Bottom);
-            Error.LogGLError("set view port");
 
             _vertexArray.SetData(vertices);
 
@@ -92,7 +89,7 @@ namespace Cardamom.Graphics
                 GL.Enable(EnableCap.ScissorTest);
                 GL.Scissor(
                     (int)scissor.Value.TopLeft.X, 
-                    (int)(_viewPort.Bottom - scissor.Value.TopLeft.Y - scissor.Value.Size.Y), 
+                    (int)(_viewPort.Size.Y - scissor.Value.TopLeft.Y - scissor.Value.Size.Y), 
                     (int)scissor.Value.Size.X,
                     (int)scissor.Value.Size.Y);
                 Error.LogGLError($"set scissor {scissor}");
@@ -105,8 +102,7 @@ namespace Cardamom.Graphics
 
         public void Resize(Vector2i size)
         {
-            _viewPort.Right = size.X;
-            _viewPort.Bottom = size.Y;
+            _viewPort.Size = size;
         }
     }
 }

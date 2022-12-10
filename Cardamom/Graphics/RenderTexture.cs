@@ -13,7 +13,7 @@ namespace Cardamom.Graphics
         private readonly GLFrameBuffer _frameBuffer;
 
         public RenderTexture(Vector2i size)
-            : base(new(size))
+            : base(new(new(), size))
         {
             Size = size;
 
@@ -34,7 +34,7 @@ namespace Cardamom.Graphics
             {
                 _frameBuffer.Bind();
                 var viewPort = GetViewPort();
-                GL.Viewport(viewPort.Left, viewPort.Top, viewPort.Right, viewPort.Bottom);
+                GL.Viewport(viewPort.TopLeft.X, viewPort.TopLeft.Y, viewPort.Size.X, viewPort.Size.Y);
             }
             else
             {

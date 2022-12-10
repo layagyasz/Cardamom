@@ -20,7 +20,7 @@ namespace Cardamom.Window
         private readonly NativeWindow _window;
 
         public RenderWindow(string title, Vector2i size)
-            : base(new ViewPort(size))
+            : base(new(new(), size))
         {
             _window = new NativeWindow(
                 new NativeWindowSettings()
@@ -50,7 +50,7 @@ namespace Cardamom.Window
             if (active)
             {
                 var viewPort = GetViewPort();
-                GL.Viewport(viewPort.Left, viewPort.Top, viewPort.Right, viewPort.Bottom);
+                GL.Viewport(viewPort.TopLeft.X, viewPort.TopLeft.Y, viewPort.Size.X, viewPort.Size.Y);
             }
         }
 

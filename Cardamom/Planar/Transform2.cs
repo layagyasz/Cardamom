@@ -33,9 +33,13 @@ namespace Cardamom.Planar
                     translation.X, translation.Y, 1));
         }
 
-        public static Transform2 CreateViewportOrthographicProjection(ViewPort viewPort)
+        public static Transform2 CreateViewportOrthographicProjection(IntRect viewPort)
         {
-            return CreateViewportOrthographicProjection(viewPort.Left, viewPort.Right, viewPort.Top, viewPort.Bottom);
+            return CreateViewportOrthographicProjection(
+                viewPort.TopLeft.X, 
+                viewPort.TopLeft.X + viewPort.Size.X,
+                viewPort.TopLeft.Y,
+                viewPort.TopLeft.Y + viewPort.Size.Y);
         }
 
         public static Transform2 CreateViewportOrthographicProjection(float left, float right, float top, float bottom)
