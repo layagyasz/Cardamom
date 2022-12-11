@@ -7,6 +7,7 @@ using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.Window;
 using OpenTK.Mathematics;
+using System.Diagnostics;
 
 namespace Cardamom
 {
@@ -65,17 +66,22 @@ namespace Cardamom
                             .SetInput("input", "wave-form-b")
                             .SetParameter("Seed", gSeed))
                     .Build();
+            var pipelineTime = new Stopwatch();
+            var canvases = new CachingCanvasProvider(new(512, 512), Color4.Black);
             for (int i = 0; i < 100; ++i)
             {
                 rSeed.Value = random.Next();
                 gSeed.Value = random.Next();
                 bSeed.Value = random.Next();
-                var canvases = new CachingCanvasProvider(new(512, 512), Color4.Black);
+
+                pipelineTime.Start();
                 var output = pipeline.Run(canvases);
+                pipelineTime.Stop();
+
                 output.GetTexture().CopyToImage().SaveToFile($"example-out-{i}.png");
                 canvases.Return(output);
             }
-
+            Console.WriteLine(pipelineTime.ElapsedMilliseconds);
 
             var ui = new UiWindow(window);
             var uiElementFactory =

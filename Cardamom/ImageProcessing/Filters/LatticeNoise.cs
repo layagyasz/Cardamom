@@ -1,11 +1,22 @@
 ﻿using Cardamom.Graphics;
 using OpenTK.Mathematics;
+using System.Diagnostics;
 
 namespace Cardamom.ImageProcessing.Filters
 {
     public class LatticeNoise : IFilter
     {
         private static Shader? LATTICE_NOISE_SHADER;
+        private static readonly int FREQUENCY_LOCATION = 0;
+        private static readonly int LACUNARITY_LOCATION = 1;
+        private static readonly int OCTAVES_LOCATION = 2;
+        private static readonly int PERSISTENCE_LOCATION = 3;
+        private static readonly int BIAS_LOCATION = 4;
+        private static readonly int AMPLITUDE_LOCATION = 5;
+        private static readonly int OFFSET_LOCATION = 6;
+        private static readonly int CHANNEL_LOCATION = 7;
+        private static readonly int HASH_LOOKUP_LOCATION = 8;
+        private static readonly int KERNEL_LOCATION = 264;
 
         public struct Settings
         {
@@ -39,23 +50,18 @@ namespace Cardamom.ImageProcessing.Filters
 
             LATTICE_NOISE_SHADER ??= new Shader.Builder().SetCompute("Resources/lattice_noise.comp").Build();
 
-            for (int i = 0; i < _hashLookup.Length; i++)
-            {
-                LATTICE_NOISE_SHADER.SetInt32($"hash_lookup[{i}]", _hashLookup[i]);
-            }
-            for (int i = 0; i < _kernel.Length; ++i)
-            {
-                LATTICE_NOISE_SHADER.SetVector3($"kernel[{i}]", _kernel[i]);
-            }
-            LATTICE_NOISE_SHADER.SetFloat("frequency", _settings.Frequency);
-            LATTICE_NOISE_SHADER.SetFloat("lacunarity", _settings.Lacunarity);
-            LATTICE_NOISE_SHADER.SetInt32("octaves", _settings.Octaves);
-            LATTICE_NOISE_SHADER.SetFloat("persistence", _settings.Persistence);
-            LATTICE_NOISE_SHADER.SetFloat("bias", _settings.Bias);
-            LATTICE_NOISE_SHADER.SetFloat("amplitude", _settings.Amplitude);
-            LATTICE_NOISE_SHADER.SetVector2("offset", _settings.Offset);
+            LATTICE_NOISE_SHADER.SetFloat(FREQUENCY_LOCATION, _settings.Frequency);
+            LATTICE_NOISE_SHADER.SetFloat(LACUNARITY_LOCATION, _settings.Lacunarity);
+            LATTICE_NOISE_SHADER.SetInt32(OCTAVES_LOCATION, _settings.Octaves);
+            LATTICE_NOISE_SHADER.SetFloat(PERSISTENCE_LOCATION, _settings.Persistence);
+            LATTICE_NOISE_SHADER.SetFloat(BIAS_LOCATION, _settings.Bias);
+            LATTICE_NOISE_SHADER.SetFloat(AMPLITUDE_LOCATION, _settings.Amplitude);
+            LATTICE_NOISE_SHADER.SetVector2(OFFSET_LOCATION, _settings.Offset);
+            LATTICE_NOISE_SHADER.SetInt32Array(HASH_LOOKUP_LOCATION, _hashLookup);
+            LATTICE_NOISE_SHADER.SetVector3Array(KERNEL_LOCATION, _kernel);
 
-            LATTICE_NOISE_SHADER.SetInt32("channel", (int)channel);
+            LATTICE_NOISE_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
+
             LATTICE_NOISE_SHADER.DoCompute(output.GetTexture());
         }
 

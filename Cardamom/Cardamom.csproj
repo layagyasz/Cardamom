@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <StartupObject>Cardamom.Example</StartupObject>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

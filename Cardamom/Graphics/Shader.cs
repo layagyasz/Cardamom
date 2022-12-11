@@ -1,6 +1,7 @@
 ﻿using Cardamom.Graphics.Core;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using System.Xml.Linq;
 
 namespace Cardamom.Graphics
 {
@@ -40,22 +41,46 @@ namespace Cardamom.Graphics
             GL.Uniform1(GetUniformLocation(name), data);
         }
 
+        public void SetInt32(int location, int data)
+        {
+            Bind();
+            GL.Uniform1(location, data);
+        }
+
+        public void SetInt32Array(string name, int[] data)
+        {
+            Bind();
+            GL.Uniform1(GetUniformLocation(name), data.Length, data);
+        }
+
+        public void SetInt32Array(int location, int[] data)
+        {
+            Bind();
+            GL.Uniform1(location, data.Length, data);
+        }
+
         public void SetFloat(string name, float data)
         {
             Bind();
             GL.Uniform1(GetUniformLocation(name), data);
         }
 
-        public void SetMatrix3(string name, Matrix3 data)
+        public void SetFloat(int location, float data)
         {
             Bind();
-            GL.UniformMatrix3(GetUniformLocation(name), true, ref data);
+            GL.Uniform1(location, data);
         }
 
-        public void SetMatrix4(string name, Matrix4 data)
+        public void SetFloatArray(string name, float[] data)
         {
             Bind();
-            GL.UniformMatrix4(GetUniformLocation(name), true, ref data);
+            GL.Uniform1(GetUniformLocation(name), data.Length, data);
+        }
+
+        public void SetFloatArray(int location, float[] data)
+        {
+            Bind();
+            GL.Uniform1(location, data.Length, data);
         }
 
         public void SetVector2(string name, Vector2 data)
@@ -64,10 +89,22 @@ namespace Cardamom.Graphics
             GL.Uniform2(GetUniformLocation(name), data);
         }
 
+        public void SetVector2(int location, Vector2 data)
+        {
+            Bind();
+            GL.Uniform2(location, data);
+        }
+
         public void SetVector3(string name, Vector3 data)
         {
             Bind();
             GL.Uniform3(GetUniformLocation(name), data);
+        }
+
+        public void SetVector3(int location, Vector3 data)
+        {
+            Bind();
+            GL.Uniform3(location, data);
         }
 
         public void SetVector4(string name, Vector4 data)
@@ -76,10 +113,118 @@ namespace Cardamom.Graphics
             GL.Uniform4(GetUniformLocation(name), data);
         }
 
+        public void SetVector4(int location, Vector4 data)
+        {
+            Bind();
+            GL.Uniform4(location, data);
+        }
+
         public void SetColor(string name, Color4 data)
         {
             Bind();
             GL.Uniform4(GetUniformLocation(name), data);
+        }
+
+        public void SetColor(int location, Color4 data)
+        {
+            Bind();
+            GL.Uniform4(location, data);
+        }
+
+        public unsafe void SetVector2Array(string name, Vector2[] data)
+        {
+            Bind();
+            fixed (Vector2* p = &data[0])
+            {
+                GL.Uniform2(GetUniformLocation(name), data.Length, (float*)p);
+            }
+        }
+
+        public unsafe void SetVector2Array(int location, Vector2[] data)
+        {
+            Bind();
+            fixed (Vector2* p = &data[0])
+            {
+                GL.Uniform2(location, data.Length, (float*)p);
+            }
+        }
+
+        public unsafe void SetVector3Array(string name, Vector3[] data)
+        {
+            Bind();
+            fixed (Vector3* p = &data[0])
+            {
+                GL.Uniform3(GetUniformLocation(name), data.Length, (float*)p);
+            }
+        }
+
+        public unsafe void SetVector3Array(int location, Vector3[] data)
+        {
+            Bind();
+            fixed (Vector3* p = &data[0])
+            {
+                GL.Uniform3(location, data.Length, (float*)p);
+            }
+        }
+
+        public unsafe void SetVector4Array(string name, Vector4[] data)
+        {
+            Bind();
+            fixed (Vector4* p = &data[0])
+            {
+                GL.Uniform4(GetUniformLocation(name), data.Length, (float*)p);
+            }
+        }
+
+        public unsafe void SetVector4Array(int location, Vector4[] data)
+        {
+            Bind();
+            fixed (Vector4* p = &data[0])
+            {
+                GL.Uniform4(location, data.Length, (float*)p);
+            }
+        }
+
+        public unsafe void SetColorArray(string name, Color4[] data)
+        {
+            Bind();
+            fixed (Color4* p = &data[0])
+            {
+                GL.Uniform4(GetUniformLocation(name), data.Length, (float*)p);
+            }
+        }
+
+        public unsafe void SetColorArray(int location, Color4[] data)
+        {
+            Bind();
+            fixed (Color4* p = &data[0])
+            {
+                GL.Uniform4(location, data.Length, (float*)p);
+            }
+        }
+
+        public void SetMatrix3(string name, Matrix3 data)
+        {
+            Bind();
+            GL.UniformMatrix3(GetUniformLocation(name), true, ref data);
+        }
+
+        public void SetMatrix3(int location, Matrix3 data)
+        {
+            Bind();
+            GL.UniformMatrix3(location, true, ref data);
+        }
+
+        public void SetMatrix4(string name, Matrix4 data)
+        {
+            Bind();
+            GL.UniformMatrix4(GetUniformLocation(name), true, ref data);
+        }
+
+        public void SetMatrix4(int location, Matrix4 data)
+        {
+            Bind();
+            GL.UniformMatrix4(location, true, ref data);
         }
 
         protected override void DisposeImpl()

@@ -6,6 +6,12 @@ namespace Cardamom.ImageProcessing.Filters
     public class WaveForm : IFilter
     {
         private static Shader? WAVE_FORM_SHADER;
+        private static readonly int WAVE_TYPE_LOCATION = 0;
+        private static readonly int AMPLITITUDE_LOCATION = 1;
+        private static readonly int BIAS_LOCATION = 2;
+        private static readonly int PERIODICITY_LOCATION = 3;
+        private static readonly int TURBULENCE_LOCATION = 4;
+        private static readonly int CHANNEL_LOCATION = 5;
 
         public enum WaveType
         {
@@ -39,13 +45,13 @@ namespace Cardamom.ImageProcessing.Filters
 
             WAVE_FORM_SHADER ??= new Shader.Builder().SetCompute("Resources/wave_form.comp").Build();
 
-            WAVE_FORM_SHADER.SetInt32("wave_type", (int)_settings.WaveType);
-            WAVE_FORM_SHADER.SetFloat("amplitude", _settings.Amplitude);
-            WAVE_FORM_SHADER.SetFloat("bias", _settings.Bias);
-            WAVE_FORM_SHADER.SetVector2("periodicity", _settings.Periodicity);
-            WAVE_FORM_SHADER.SetVector2("turbulence", _settings.Turbulence);
+            WAVE_FORM_SHADER.SetInt32(WAVE_TYPE_LOCATION, (int)_settings.WaveType);
+            WAVE_FORM_SHADER.SetFloat(AMPLITITUDE_LOCATION, _settings.Amplitude);
+            WAVE_FORM_SHADER.SetFloat(BIAS_LOCATION, _settings.Bias);
+            WAVE_FORM_SHADER.SetVector2(PERIODICITY_LOCATION, _settings.Periodicity);
+            WAVE_FORM_SHADER.SetVector2(TURBULENCE_LOCATION, _settings.Turbulence);
 
-            WAVE_FORM_SHADER.SetInt32("channel", (int)channel);
+            WAVE_FORM_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
             WAVE_FORM_SHADER.DoCompute(output.GetTexture());
         }
 

@@ -109,7 +109,8 @@ namespace Cardamom.Graphics
 
         public void Update(Texture other)
         {
-            Update(new(), other.Size, other.GetData());
+            other.Bind(TextureUnit.Texture0);
+            GL.CopyTextureSubImage2D(Handle, 0, 0, 0, 0, 0, other.Size.X, other.Size.Y);
         }
 
         public byte[] GetData()
