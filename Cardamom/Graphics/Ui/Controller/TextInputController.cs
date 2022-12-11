@@ -1,6 +1,5 @@
 ﻿using Cardamom.Collections;
 using Cardamom.Graphics.Ui.Elements;
-using Cardamom.Trackers;
 using Cardamom.Window;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -10,6 +9,8 @@ namespace Cardamom.Graphics.Ui.Controller
     public class TextInputController 
         : ClassedUiElementController<EditableTextUiElement>, IFormElementController<string, string>
     {
+        private static readonly EnumSet<Keys> DISREGARD_KEYS = new() { Keys.Enter, Keys.Tab };
+
         public EventHandler<ValueChangedEventArgs<string, string>>? ValueChanged { get; set; }
 
         public string Key { get; }
@@ -91,7 +92,7 @@ namespace Cardamom.Graphics.Ui.Controller
                     MoveCursor(-1);
                 }
             }
-            else
+            else if(!DISREGARD_KEYS.Contains(e.Key))
             {
                 string text = _keyMapper.Map(e);
                 if (text.Length > 0)
