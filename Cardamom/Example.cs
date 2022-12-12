@@ -86,13 +86,7 @@ namespace Cardamom
             var ui = new UiWindow(window);
             var uiElementFactory =
                 new UiElementFactory(
-                    new ClassLibrary.Builder()
-                                    .ReadTextures("Example/Textures.json")
-                                    .ReadFonts("Example/Fonts.json")
-                                    .ReadShaders("Example/Shaders.json")
-                                    .ReadClasses("Example", "Style.json")
-                                    .Build(),
-                    SimpleKeyMapper.US);
+                    GraphicsResources.Builder.ReadFrom("Example/GraphicsResources.json").Build(), SimpleKeyMapper.US);
             var pane = uiElementFactory.CreatePane("example-base-class").Item1;
             var options = new List<IUiElement>();
             for (int i = 0; i < 20; ++i)

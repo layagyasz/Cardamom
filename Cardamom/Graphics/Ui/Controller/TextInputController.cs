@@ -92,7 +92,7 @@ namespace Cardamom.Graphics.Ui.Controller
                     MoveCursor(-1);
                 }
             }
-            else if(!DISREGARD_KEYS.Contains(e.Key))
+            else if (!DISREGARD_KEYS.Contains(e.Key))
             {
                 string text = _keyMapper.Map(e);
                 if (text.Length > 0)

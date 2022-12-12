@@ -7,12 +7,12 @@ namespace Cardamom.Graphics.Ui
 {
     public class UiElementFactory
     {
-        private readonly ClassLibrary _classLibrary;
+        private readonly GraphicsResources _classLibrary;
         private readonly IKeyMapper _keyMapper;
 
-        public UiElementFactory(ClassLibrary classLibrary, IKeyMapper keyMapper)
+        public UiElementFactory(GraphicsResources resources, IKeyMapper keyMapper)
         {
-            _classLibrary = classLibrary;
+            _classLibrary = resources;
             _keyMapper = keyMapper;
         }
 

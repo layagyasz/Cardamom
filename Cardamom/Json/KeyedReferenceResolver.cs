@@ -31,7 +31,7 @@ namespace Cardamom.Json
         {
             if (value is IKeyed keyed)
             {
-                if (Equals(keyed.Key, referenceId))
+                if (keyed.Key != null && keyed.Key != string.Empty && !Equals(keyed.Key, referenceId))
                 {
                     throw new JsonException("Key and $id have conflicting values.");
                 }

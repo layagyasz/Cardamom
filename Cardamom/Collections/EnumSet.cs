@@ -9,7 +9,7 @@ namespace Cardamom.Collections
 
         public EnumSet()
         {
-            _values = new bool[Enum.GetValues(typeof(T)).Length];
+            _values = new bool[Enum.GetValues(typeof(T)).Cast<T>().Max(x => (int)(object)x) + 1];
         }
 
         public EnumSet(IEnumerable<T> items)
