@@ -10,8 +10,7 @@ namespace Cardamom.Graphics.Core
             var code = GL.GetError();
             if (code != ErrorCode.NoError)
             {
-                Console.WriteLine($"({callPoint}): {code}");
-                Console.ReadLine();
+                throw new InvalidProgramException($"({callPoint}): {code}");
             }
 # endif
         }

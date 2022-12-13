@@ -19,7 +19,7 @@
       "FontSize": 18,
       "Color": "#ffffff",
       "Shader": {
-        "$ref": "shader-default-planar"
+        "$ref": "shader-default"
       }
     },
     "States": [

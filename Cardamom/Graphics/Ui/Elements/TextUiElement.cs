@@ -39,9 +39,9 @@ namespace Cardamom.Graphics.Ui.Elements
             context.PopTransform();
         }
 
-        public override bool IsPointWithinBounds(Vector2 point)
+        public override bool IntersectsRay(Vector3 origin, Vector3 direction)
         {
-            return _rectComponent.IsPointWithinBounds(point);
+            return _rectComponent.IntersectsRay(origin, direction);
         }
 
         public override void SetAttributes(ClassAttributes attributes)

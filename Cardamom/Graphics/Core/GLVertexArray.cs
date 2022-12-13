@@ -9,9 +9,9 @@ namespace Cardamom.Graphics.Core
         private static readonly int COLOR_ATTRIBUTE_INDEX = 1;
         private static readonly int TEX_COORDS_ATTRIBUTE_INDEX = 2;
 
-        private readonly GLBuffer<Vertex2> _buffer;
+        private readonly GLBuffer<Vertex3> _buffer;
 
-        public GLVertexArray(GLBuffer<Vertex2> buffer)
+        public GLVertexArray(GLBuffer<Vertex3> buffer)
             : base(GL.GenVertexArray())
         {
             _buffer = buffer;
@@ -21,10 +21,10 @@ namespace Cardamom.Graphics.Core
 
             GL.VertexAttribPointer(
                 POSITION_ATTRIBUTE_INDEX, 
-                2, 
+                3, 
                 VertexAttribPointerType.Float, 
                 /* normalized= */ false, 
-                8 * sizeof(float),
+                9 * sizeof(float),
                 0);
             Error.LogGLError("link position attribute");
 
@@ -36,8 +36,8 @@ namespace Cardamom.Graphics.Core
                 4, 
                 VertexAttribPointerType.Float,
                 /* normalized= */ false, 
-                8 * sizeof(float), 
-                2 * sizeof(float));
+                9 * sizeof(float), 
+                3 * sizeof(float));
             Error.LogGLError("link color attribute");
 
             GL.EnableVertexAttribArray(COLOR_ATTRIBUTE_INDEX);
@@ -48,8 +48,8 @@ namespace Cardamom.Graphics.Core
                 2,
                 VertexAttribPointerType.Float,
                 /* normalized= */ false,
-                8 * sizeof(float),
-                6 * sizeof(float));
+                9 * sizeof(float),
+                7 * sizeof(float));
             Error.LogGLError("link tex coord attribute");
 
             GL.EnableVertexAttribArray(TEX_COORDS_ATTRIBUTE_INDEX);
@@ -69,7 +69,7 @@ namespace Cardamom.Graphics.Core
             Error.LogGLError($"draw {primitiveType} vertex array");
         }
 
-        public void SetData(Vertex2[] data)
+        public void SetData(Vertex3[] data)
         {
             _buffer.SetData(data);
             Error.LogGLError("set vertex array data");

@@ -47,7 +47,7 @@ namespace Cardamom.Graphics.Ui.Elements
             if (_open)
             {
                 context.PushEmptyScissor();
-                _dropBox.Position = new(0, TrueSize.Y);
+                _dropBox.Position = new(0, TrueSize.Y, Position.Z + 1);
                 _dropBox.Update(context, delta);
                 context.PopScissor();
             }

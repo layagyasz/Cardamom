@@ -6,7 +6,7 @@ namespace Cardamom.Graphics.Ui
     public interface IUiElement : IRenderable, IControlled
     {
         bool Visible { get; set; }
-        Vector2 Position { get; set; }
-        Vector2 Size { get; }
+        Vector3 Position { get; set; }
+        Vector3 Size { get; }
     }
 }

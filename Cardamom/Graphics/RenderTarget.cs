@@ -23,7 +23,7 @@ namespace Cardamom.Graphics
         {
             SetActive(true);
             GL.Disable(EnableCap.ScissorTest);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
         public IntRect GetViewPort()
@@ -38,7 +38,7 @@ namespace Cardamom.Graphics
         }
 
         public void Draw(
-            Vertex2[] vertices, 
+            Vertex3[] vertices, 
             PrimitiveType primitiveType,
             int start,
             int count,
@@ -63,8 +63,13 @@ namespace Cardamom.Graphics
             Error.LogGLError("bind context");
 
             shader.Bind();
-            shader.SetMatrix3("projection", Transform2.CreateViewportOrthographicProjection(_viewPort).GetMatrix());
-            shader.SetMatrix3("view", GetTransform().GetMatrix());
+            shader.SetMatrix4(
+                "projection", 
+                Matrix4.CreateOrthographicOffCenter(0, _viewPort.Size.X, _viewPort.Size.Y, 0, -10, 10));
+            shader.SetMatrix4("view", GetTransform());
+
+            GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Lequal);
 
             GL.Enable(EnableCap.Blend);
             GL.BlendEquation(BlendEquationMode.FuncAdd);

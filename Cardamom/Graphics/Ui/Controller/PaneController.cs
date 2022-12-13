@@ -1,4 +1,5 @@
 ﻿using Cardamom.Window;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Graphics.Ui.Controller
@@ -23,7 +24,7 @@ namespace Cardamom.Graphics.Ui.Controller
         {
             if (e.Button == MouseButton.Left && _element != null)
             {
-                _element.Position += e.Delta;
+                _element.Position += new Vector3(e.Delta.X, e.Delta.Y, 0f);
             }
             return true;
         }

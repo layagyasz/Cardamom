@@ -43,10 +43,10 @@
     <None Update="Example\classed_ui_element.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Example\default_planar.frag">
+    <None Update="Example\default.frag">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Example\default_planar.vert">
+    <None Update="Example\default.vert">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Example\texture-example.png">

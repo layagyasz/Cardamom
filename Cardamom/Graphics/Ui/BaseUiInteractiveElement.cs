@@ -7,8 +7,8 @@ namespace Cardamom.Graphics.Ui
     {
         public bool Visible { get; set; } = true;
         public IController Controller { get; }
-        public Vector2 Position { get; set; }
-        public abstract Vector2 Size { get; }
+        public Vector3 Position { get; set; }
+        public abstract Vector3 Size { get; }
         public IControlled? Parent { get; set; }
 
         public BaseUiInteractiveElement(IController controller)
@@ -21,7 +21,7 @@ namespace Cardamom.Graphics.Ui
             Controller.Bind(this);
         }
 
-        public abstract bool IsPointWithinBounds(Vector2 point);
+        public abstract bool IntersectsRay(Vector3 origin, Vector3 direction);
 
         public abstract void Draw(RenderTarget target);
 

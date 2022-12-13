@@ -13,14 +13,14 @@ namespace Cardamom.Graphics.Ui.Elements.Components
 
         private readonly VertexArray _vertices = new(PrimitiveType.Triangles, 6);
 
-        public Vector2 Size => _vertices[5].Position - _vertices[0].Position;
+        public Vector2 Size => (_vertices[5].Position - _vertices[0].Position).Xy;
 
-        public bool IsPointWithinBounds(Vector2 point)
+        public bool IntersectsRay(Vector3 origin, Vector3 direction)
         {
-            return point.X >= _vertices[0].Position.X
-                && point.Y >= _vertices[0].Position.Y
-                && point.X <= _vertices[5].Position.X
-                && point.Y <= _vertices [5].Position.Y;
+            return origin.X >= _vertices[0].Position.X
+                && origin.Y >= _vertices[0].Position.Y
+                && origin.X <= _vertices[5].Position.X
+                && origin.Y <= _vertices [5].Position.Y;
         }
 
         public void SetAttributes(ClassAttributes attributes)
@@ -33,16 +33,21 @@ namespace Cardamom.Graphics.Ui.Elements.Components
 
             Vector2 topLeft = attributes.Texture.TextureView.TopLeft;
             Vector2 bottomRight = attributes.Texture.TextureView.TopLeft + attributes.Texture.TextureView.Size;
-            _vertices[0] = new Vertex2(new(), attributes.BackgroundColor[0], topLeft);
+            _vertices[0] = new Vertex3(new(), attributes.BackgroundColor[0], topLeft);
             _vertices[1] = 
-                new Vertex2(new(attributes.Size.X, 0), attributes.BackgroundColor[1], new(bottomRight.X, topLeft.Y));
+                new Vertex3(
+                    new(attributes.Size.X, 0, 0), attributes.BackgroundColor[1], new(bottomRight.X, topLeft.Y));
             _vertices[2] = 
-                new Vertex2(new(0, attributes.Size.Y), attributes.BackgroundColor[3], new(topLeft.X, bottomRight.Y));
+                new Vertex3(
+                    new(0, attributes.Size.Y, 0), attributes.BackgroundColor[3], new(topLeft.X, bottomRight.Y));
             _vertices[3] = 
-                new Vertex2(new(attributes.Size.X, 0), attributes.BackgroundColor[1], new(bottomRight.X, topLeft.Y));
+                new Vertex3(
+                    new(attributes.Size.X, 0, 0), attributes.BackgroundColor[1], new(bottomRight.X, topLeft.Y));
             _vertices[4] = 
-                new Vertex2(new(0, attributes.Size.Y), attributes.BackgroundColor[3], new(topLeft.X, bottomRight.Y));
-            _vertices[5] = new Vertex2(attributes.Size, attributes.BackgroundColor[2], bottomRight);
+                new Vertex3(
+                    new(0, attributes.Size.Y, 0), attributes.BackgroundColor[3], new(topLeft.X, bottomRight.Y));
+            _vertices[5] = 
+                new Vertex3(new(attributes.Size.X, attributes.Size.Y, 0), attributes.BackgroundColor[2], bottomRight);
         }
 
         public void Draw(RenderTarget target)

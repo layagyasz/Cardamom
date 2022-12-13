@@ -7,8 +7,8 @@ namespace Cardamom.Graphics.Ui.Elements
     public class Screen : IUiInteractiveElement
     {
         public bool Visible { get; set; } = true;
-        public Vector2 Size => _bounds.Size;
-        public Vector2 Position { get; set; }
+        public Vector3 Size => new(_bounds.Size.X, _bounds.Size.Y, 0);
+        public Vector3 Position { get; set; }
         public IController Controller { get; set; }
         public IControlled? Parent { get; set; }
 
@@ -32,9 +32,9 @@ namespace Cardamom.Graphics.Ui.Elements
             Controller.Bind(this);
         }
 
-        public bool IsPointWithinBounds(Vector2 point)
+        public bool IntersectsRay(Vector3 origin, Vector3 direction)
         {
-            return _bounds.ContainsPoint(point);
+            return true;
         }
 
         public void Draw(RenderTarget target)

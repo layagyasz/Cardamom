@@ -4,6 +4,6 @@ namespace Cardamom.Graphics.Ui
 {
     public interface IUiInteractiveElement : IUiElement
     {
-        bool IsPointWithinBounds(Vector2 point);
+        bool IntersectsRay(Vector3 origin, Vector3 direction);
     }
 }

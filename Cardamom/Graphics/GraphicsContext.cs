@@ -5,7 +5,7 @@ namespace Cardamom.Graphics
 {
     public abstract class GraphicsContext
     {
-        private readonly Stack<Transform2> _transformStack = new();
+        private readonly Stack<Matrix4> _transformStack = new();
         private readonly Stack<FloatRect?> _scissorStack = new();
 
         public FloatRect? GetScissor()
@@ -13,9 +13,9 @@ namespace Cardamom.Graphics
             return _scissorStack.Count == 0 ? null : _scissorStack.Peek();
         }
 
-        public Transform2 GetTransform()
+        public Matrix4 GetTransform()
         {
-            return _transformStack.Count == 0 ? Transform2.Identity : _transformStack.Peek();
+            return _transformStack.Count == 0 ? Matrix4.Identity : _transformStack.Peek();
         }
 
         public void PopScissor()
@@ -28,7 +28,7 @@ namespace Cardamom.Graphics
             _scissorStack.Push(null);
         }
 
-        public void PushScissor(FloatRect scissor)
+        public void PushScissor(FloatCube scissor)
         {
             var currentScissor = GetScissor();
             var transformed = Combine(scissor, GetTransform());
@@ -41,20 +41,26 @@ namespace Cardamom.Graphics
             _transformStack.Pop();
         }
 
-        public void PushTransform(Transform2 transform)
+        public void PushTransform(Matrix4 transform)
         {
             _transformStack.Push(transform * GetTransform());
         }
 
-        public void PushTranslation(Vector2 translation)
+        public void PushTranslation(Vector3 translation)
         {
-            PushTransform(Transform2.CreateTranslation(translation));
+            PushTransform(Matrix4.CreateTranslation(translation));
         }
 
-        private static FloatRect Combine(FloatRect rect, Transform2 transform)
+        private static FloatRect Combine(FloatCube rect, Matrix4 transform)
         {
-            var topLeft = transform * rect.TopLeft;
-            var bottomRight = transform * (rect.TopLeft + rect.Size);
+            var topLeft = new Vector4(rect.FrontTopLeft.X, rect.FrontTopLeft.Y, rect.FrontTopLeft.Z, 1f) * transform;
+            var bottomRight =
+                new Vector4(
+                    rect.FrontTopLeft.X + rect.Size.X,
+                    rect.FrontTopLeft.Y + rect.Size.Y,
+                    rect.FrontTopLeft.Z + rect.Size.Z,
+                    1f)
+                * transform;
 
             var top = Math.Min(topLeft.Y, bottomRight.Y);
             var left = Math.Min(topLeft.X, bottomRight.X);

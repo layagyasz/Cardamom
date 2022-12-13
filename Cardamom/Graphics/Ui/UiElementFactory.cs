@@ -51,7 +51,7 @@ namespace Cardamom.Graphics.Ui
             return (option, controller);
         }
 
-        public (IUiElement, ButtonController) CreateSimpleButton(string className, Vector2 position = new())
+        public (IUiElement, ButtonController) CreateSimpleButton(string className, Vector3 position = new())
         {
             var controller = new ButtonController();
             return 
@@ -60,7 +60,7 @@ namespace Cardamom.Graphics.Ui
         }
 
         public (UiSerialContainer, TableController) CreateTable(
-            string className, IEnumerable<IUiElement> rows, float scrollSpeed = 0, Vector2 position = new())
+            string className, IEnumerable<IUiElement> rows, float scrollSpeed = 0, Vector3 position = new())
         {
             TableController controller = 
                 scrollSpeed > 0 ? new ScrollingTableController(scrollSpeed) : new StaticTableController();
@@ -76,7 +76,7 @@ namespace Cardamom.Graphics.Ui
             return (table, controller);
         }
 
-        public (IUiElement, ButtonController) CreateTextButton(string className, string text, Vector2 position = new())
+        public (IUiElement, ButtonController) CreateTextButton(string className, string text, Vector3 position = new())
         {
             var controller = new ButtonController();
             var button =
@@ -88,7 +88,7 @@ namespace Cardamom.Graphics.Ui
             return (button, controller);
         }
 
-        public (IUiElement, TextInputController) CreateTextInput(string className, Vector2 position = new())
+        public (IUiElement, TextInputController) CreateTextInput(string className, Vector3 position = new())
         {
             var controller = new TextInputController("text", _keyMapper);
             return (

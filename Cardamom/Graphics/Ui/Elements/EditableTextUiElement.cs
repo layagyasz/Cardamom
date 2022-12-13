@@ -12,10 +12,10 @@ namespace Cardamom.Graphics.Ui.Elements
         private static readonly int CURSOR_PERIOD = 1000;
 
         private readonly VertexArray _cursor = new(PrimitiveType.Triangles, 6);
-        private Vector2 _offset;
+        private Vector3 _offset;
         private bool _cursorActive;
         private int _cursorPeriod;
-        private Vector2 _cursorPosition;
+        private Vector3 _cursorPosition;
         private Shader? _cursorShader;
 
         public EditableTextUiElement(Class @class, IController controller)
@@ -26,11 +26,11 @@ namespace Cardamom.Graphics.Ui.Elements
             base.SetAttributes(attributes);
             _cursorShader = attributes.Shader!.Element;
             _cursor[0] = new(new(), attributes.Color, new());
-            _cursor[1] = new(new(1, 0), attributes.Color, new(1, 0));
-            _cursor[2] = new(new(0, attributes.FontSize), attributes.Color, new(0, 1));
+            _cursor[1] = new(new(1, 0, 0), attributes.Color, new(1, 0));
+            _cursor[2] = new(new(0, attributes.FontSize, 0), attributes.Color, new(0, 1));
             _cursor[3] = _cursor[2];
             _cursor[4] = _cursor[1];
-            _cursor[5] = new(new(1, attributes.FontSize), attributes.Color, new(1, 1));
+            _cursor[5] = new(new(1, attributes.FontSize, 0), attributes.Color, new(1, 1));
         }
 
         public void SetCursorActive(bool active)
@@ -40,14 +40,14 @@ namespace Cardamom.Graphics.Ui.Elements
 
         public void SetCursor(int index)
         {
-            _cursorPosition = new(_textComponent.GetCharacterPosition(index).X, 0);
+            _cursorPosition = new(_textComponent.GetCharacterPosition(index).X, 0, 0);
             _cursorPeriod = 0;
 
             var windowMin = -_offset.X + RIGHT_CURSOR_BUFFER;
             var windowMax = InternalSize.X - _offset.X - LEFT_CURSOR_BUFFER;
             if (_cursorPosition.X < windowMin || _cursorPosition.X > windowMax)
             {
-                _offset = new(Math.Min(InternalSize.X - _cursorPosition.X - LEFT_CURSOR_BUFFER, 0), 0);
+                _offset = new(Math.Min(InternalSize.X - _cursorPosition.X - LEFT_CURSOR_BUFFER, 0), 0, 0);
             }
         }
 

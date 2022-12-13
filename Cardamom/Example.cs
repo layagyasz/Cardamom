@@ -68,7 +68,7 @@ namespace Cardamom
                     .Build();
             var pipelineTime = new Stopwatch();
             var canvases = new CachingCanvasProvider(new(512, 512), Color4.Black);
-            for (int i = 0; i < 100; ++i)
+            for (int i = 0; i < 0; ++i)
             {
                 rSeed.Value = random.Next();
                 gSeed.Value = random.Next();
@@ -100,7 +100,7 @@ namespace Cardamom
             select.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(select.Item1);
 
-            var text = uiElementFactory.CreateTextInput("example-row-class", new(0, select.Item1.Size.Y));
+            var text = uiElementFactory.CreateTextInput("example-row-class", new(0, select.Item1.Size.Y, 0));
             text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(text.Item1);
 

@@ -6,9 +6,9 @@ namespace Cardamom.Graphics
     {
         public PrimitiveType PrimitiveType { get; }
         public int Length => Vertices.Length;
-        public Vertex2[] Vertices { get; }
+        public Vertex3[] Vertices { get; }
 
-        public Vertex2 this[uint index]
+        public Vertex3 this[uint index]
         {
             get => Vertices[index];
             set => Vertices[index] = value;
@@ -17,7 +17,7 @@ namespace Cardamom.Graphics
         public VertexArray(PrimitiveType primitiveType, int size)
         {
             PrimitiveType = primitiveType;
-            Vertices = new Vertex2[size];
+            Vertices = new Vertex3[size];
         }
     }
 }

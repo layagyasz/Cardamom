@@ -1,4 +1,5 @@
 ﻿using Cardamom.Window;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
 {
@@ -25,11 +26,22 @@ namespace Cardamom.Graphics.Ui
 
         public void Register(IUiInteractiveElement element)
         {
-            if (GetScissor() == null || GetScissor()!.Value.Contains(_mouseListener.GetMousePosition()))
+            if (_topElement == null || element.Position.Z >= _topElement.Position.Z)
             {
-                if (element.IsPointWithinBounds(GetTransform().GetInverse() * _mouseListener.GetMousePosition()))
+                if (GetScissor() == null || GetScissor()!.Value.Contains(_mouseListener.GetMousePosition()))
                 {
-                    _topElement = element;
+                    var inverted = GetTransform().Inverted();
+                    var mouse = _mouseListener.GetMousePosition();
+                    var origin =
+                        new Vector3(
+                            inverted.Row0.X * mouse.X + inverted.Row1.X * mouse.Y + inverted.Row3.X,
+                            inverted.Row0.Y * mouse.X + inverted.Row1.Y * mouse.Y + inverted.Row3.Y,
+                            inverted.Row0.Z * mouse.X + inverted.Row1.Z * mouse.Y + inverted.Row3.Z);
+                    var dz = new Vector3(inverted.Row2.X, inverted.Row2.Y, inverted.Row2.Z);
+                    if (element.IntersectsRay(origin, dz))
+                    {
+                        _topElement = element;
+                    }
                 }
             }
         }

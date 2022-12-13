@@ -14,7 +14,7 @@ namespace Cardamom.Graphics
         private Color4 _color;
         private Shader? _shader;
         private string _text = string.Empty;
-        private readonly ArrayList<Vertex2> _vertices = new(48);
+        private readonly ArrayList<Vertex3> _vertices = new(48);
 
         private bool _update = true;
         private Vector2 _cursor;
@@ -197,12 +197,12 @@ namespace Cardamom.Graphics
             float texLeft = glyph.TextureView.TopLeft.X;
             float texRight = glyph.TextureView.TopLeft.X + glyph.TextureView.Size.X;
 
-            _vertices.Add(new(new(left, top), _color, new(texLeft, texTop)));
-            _vertices.Add(new(new(right, top), _color, new(texRight, texTop)));
-            _vertices.Add(new(new(left, bottom), _color, new(texLeft, texBottom)));
-            _vertices.Add(new(new(right, top), _color, new(texRight, texTop)));
-            _vertices.Add(new(new(left, bottom), _color, new(texLeft, texBottom)));
-            _vertices.Add(new(new(right, bottom), _color, new(texRight, texBottom)));
+            _vertices.Add(new(new(left, top, 0), _color, new(texLeft, texTop)));
+            _vertices.Add(new(new(right, top, 0), _color, new(texRight, texTop)));
+            _vertices.Add(new(new(left, bottom, 0), _color, new(texLeft, texBottom)));
+            _vertices.Add(new(new(right, top, 0), _color, new(texRight, texTop)));
+            _vertices.Add(new(new(left, bottom, 0), _color, new(texLeft, texBottom)));
+            _vertices.Add(new(new(right, bottom, 0), _color, new(texRight, texBottom)));
 
             _cursor.X += glyph.Advance;
         }
