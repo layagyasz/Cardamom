@@ -4,7 +4,7 @@ using System.Threading.Channels;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
-    public class LatticeNoiseNode : BaseFilterPipelineNode<LatticeNoiseNode.Parameters>
+    public class LatticeNoiseNode : BaseFilterPipelineNode
     {
         public class Parameters
         {
@@ -85,7 +85,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             return builder.Build();
         }
 
-        public class Builder : BaseFilterPipelineNode<Parameters>.BaseFilterPipelineNodeBuilder
+        public class Builder : BaseFilterPipelineNodeBuilder<Parameters>
         {
             public override IPipelineNode Build()
             {

@@ -32,50 +32,55 @@ namespace Cardamom
                             .SetInput("input", "new")
                             .SetParameters(new() { Seed = rSeed }))
                     .AddNode(
+                        new LatticeNoiseNode.Builder()
+                            .SetKey("lattice-noise-b")
+                            .SetChannel(Channel.BLUE)
+                            .SetInput("input", "lattice-noise-r")
+                            .SetParameters(new() { Seed = bSeed }))
+                    .AddNode(
+                        new LatticeNoiseNode.Builder()
+                            .SetKey("lattice-noise-g")
+                            .SetChannel(Channel.GREEN)
+                            .SetInput("input", "lattice-noise-b")
+                            .SetParameters(new() { Seed = gSeed }))
+                    .AddNode(
+                        new DenormalizeNode.Builder()
+                            .SetKey("denormalize")
+                            .SetChannel(Channel.RED | Channel.GREEN | Channel.BLUE)
+                            .SetInput("input", "lattice-noise-g"))
+                    .AddNode(
                         new WaveFormNode.Builder()
                             .SetKey("wave-form-r")
                             .SetChannel(Channel.RED)
-                            .SetInput("input", "lattice-noise-r")
+                            .SetInput("input", "denormalize")
                             .SetParameters(
                                 new()
                                 {
                                     WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
                                     Amplitude = ConstantValue.Create(-0.5f),
                                     Periodicity = ConstantValue.Create(new Vector2(0, 0.0122f)),
-                                    Turbulence = ConstantValue.Create(new Vector2(512, 512))
+                                    Turbulence = ConstantValue.Create(new Vector2(178, 178))
                                 }))
-                    .AddNode(
-                        new LatticeNoiseNode.Builder()
-                                .SetKey("lattice-noise-b")
-                                .SetChannel(Channel.BLUE)
-                                .SetInput("input", "wave-form-r")
-                                .SetParameters(new() { Seed = bSeed }))
                     .AddNode(
                         new WaveFormNode.Builder()
                             .SetKey("wave-form-b")
                             .SetChannel(Channel.BLUE)
-                            .SetInput("input", "lattice-noise-b")
+                            .SetInput("input", "wave-form-r")
                             .SetParameters(
                                 new()
                                 {
                                     WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
                                     Amplitude = ConstantValue.Create(-0.5f),
                                     Periodicity = ConstantValue.Create(new Vector2(0, .0244f)),
-                                    Turbulence = ConstantValue.Create(new Vector2(768, 768))
+                                    Turbulence = ConstantValue.Create(new Vector2(256, 256))
                                 }))
-                    .AddNode(
-                        new LatticeNoiseNode.Builder()
-                            .SetKey("lattice-noise-g")
-                            .SetChannel(Channel.GREEN)
-                            .SetInput("input", "wave-form-b")
-                            .SetParameters(new() { Seed = gSeed }))
                     .AddNode(
                         new SobelNode.Builder()
                             .SetKey("sobel")
                             .SetChannel(Channel.ALL)
-                            .SetInput("input", "lattice-noise-g")
+                            .SetInput("input", "denormalize")
                             .SetParameters(new() { Channel = ConstantValue.Create(Channel.GREEN) }))
-                    .AddOutput("lattice-noise-g")
+                    .AddOutput("wave-form-b")
                     .AddOutput("sobel")
                     .Build();
             var pipelineTime = new Stopwatch();
@@ -96,6 +101,7 @@ namespace Cardamom
                     output[1].GetTexture().CopyToImage().SaveToFile($"example-out-height-{i}.png");
                 }
                 canvases.Return(output[0]);
+                canvases.Return(output[1]);
             }
             Console.WriteLine(pipelineTime.ElapsedMilliseconds);
 

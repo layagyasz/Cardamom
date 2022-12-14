@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
-    public class WaveFormNode : BaseFilterPipelineNode<WaveFormNode.Parameters>
+    public class WaveFormNode : BaseFilterPipelineNode
     {
         public class Parameters
         {
@@ -55,7 +55,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             return builder.Build();
         }
 
-        public class Builder : BaseFilterPipelineNode<Parameters>.BaseFilterPipelineNodeBuilder
+        public class Builder : BaseFilterPipelineNodeBuilder<Parameters>
         {
             public override IPipelineNode Build()
             {

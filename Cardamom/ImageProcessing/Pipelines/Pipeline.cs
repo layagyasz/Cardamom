@@ -8,7 +8,7 @@ namespace Cardamom.ImageProcessing.Pipelines
         {
             internal IPipelineNode Step { get; }
             internal List<Edge> Incoming { get; set; } = new();
-            internal Edge? Outgoing { get; set; }
+            internal List<Edge> Outgoing { get; set; } = new();
 
             internal Node(IPipelineNode step)
             {
@@ -92,8 +92,7 @@ namespace Cardamom.ImageProcessing.Pipelines
                         var source = nodes[edge.Value];
                         var e = new Edge(source, edge.Key);
                         node.Incoming.Add(e);
-                        Precondition.IsNull(source.Outgoing);
-                        source.Outgoing = e;
+                        source.Outgoing.Add(e);
                     }
                 }
                 return new Pipeline(output);

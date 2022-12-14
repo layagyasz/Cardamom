@@ -1,9 +1,8 @@
 ﻿using Cardamom.ImageProcessing.Filters;
-using System.Threading.Channels;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
-    public abstract class BaseFilterPipelineNode<TParameters> : IPipelineNode where TParameters : new()
+    public abstract class BaseFilterPipelineNode : IPipelineNode
     {
         public string? Key { get; set; }
         public Channel Channel { get; }
@@ -25,32 +24,33 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             return outCanvas;
         }
 
-        public abstract class BaseFilterPipelineNodeBuilder : IPipelineNode.IBuilder
+        public abstract class BaseFilterPipelineNodeBuilder<TParameters>
+            : IPipelineNode.IBuilder where TParameters : new()
         {
             public string? Key { get; set; }
             public Channel Channel { get; set; } = Channel.ALL;
             public Dictionary<string, string> Inputs { get; set; } = new();
             public TParameters Parameters { get; set; } = new();
 
-            public BaseFilterPipelineNodeBuilder SetKey(string key)
+            public BaseFilterPipelineNodeBuilder<TParameters> SetKey(string key)
             {
                 Key = key;
                 return this;
             }
 
-            public BaseFilterPipelineNodeBuilder SetChannel(Channel channel)
+            public BaseFilterPipelineNodeBuilder<TParameters> SetChannel(Channel channel)
             {
                 Channel = channel;
                 return this;
             }
 
-            public BaseFilterPipelineNodeBuilder SetInput(string inputName, string stepKey)
+            public BaseFilterPipelineNodeBuilder<TParameters> SetInput(string inputName, string stepKey)
             {
                 Inputs.Add(inputName, stepKey);
                 return this;
             }
 
-            public BaseFilterPipelineNodeBuilder SetParameters(TParameters parameters)
+            public BaseFilterPipelineNodeBuilder<TParameters> SetParameters(TParameters parameters)
             {
                 Parameters = parameters;
                 return this;
