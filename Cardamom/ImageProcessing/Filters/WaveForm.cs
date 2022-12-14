@@ -52,7 +52,11 @@ namespace Cardamom.ImageProcessing.Filters
             WAVE_FORM_SHADER.SetVector2(TURBULENCE_LOCATION, _settings.Turbulence);
 
             WAVE_FORM_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
-            WAVE_FORM_SHADER.DoCompute(output.GetTexture());
+
+            var tex = output.GetTexture();
+            tex.BindImage(0);
+            WAVE_FORM_SHADER.DoCompute(tex.Size);
+            Texture.UnbindImage(0);
         }
 
         public class Builder : IFilter.IFilterBuilder

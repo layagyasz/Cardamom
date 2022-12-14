@@ -16,13 +16,11 @@ namespace Cardamom.Graphics
             Error.LogGLError("bind shader");
         }
 
-        public void DoCompute(Texture texture)
+        public void DoCompute(Vector2i size)
         {
             Bind();
-            texture.BindImage();
-            GL.DispatchCompute(texture.Size.X, texture.Size.Y, 1);
+            GL.DispatchCompute(size.X, size.Y, 1);
             GL.MemoryBarrier(MemoryBarrierFlags.AllBarrierBits);
-            Texture.UnbindImage();
         }
 
         public int GetAttributeLocation(string name)

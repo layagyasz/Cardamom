@@ -62,7 +62,10 @@ namespace Cardamom.ImageProcessing.Filters
 
             LATTICE_NOISE_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
 
-            LATTICE_NOISE_SHADER.DoCompute(output.GetTexture());
+            var tex = output.GetTexture();
+            tex.BindImage(0);
+            LATTICE_NOISE_SHADER.DoCompute(tex.Size);
+            Texture.UnbindImage(0);
         }
 
         public class Builder : IFilter.IFilterBuilder

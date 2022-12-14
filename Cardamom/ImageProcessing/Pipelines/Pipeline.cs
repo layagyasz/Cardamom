@@ -20,14 +20,7 @@ namespace Cardamom.ImageProcessing.Pipelines
                 var inputs = new Dictionary<string, Canvas>();
                 foreach (var edge in Incoming)
                 {
-                    if (edge.Source == null)
-                    {
-                        inputs.Add(edge.InputName, canvasProvider.Get());
-                    }
-                    else
-                    {
-                        inputs.Add(edge.InputName, edge.Source.Run(canvasProvider));
-                    }
+                    inputs.Add(edge.InputName, edge.Source.Run(canvasProvider));
                 }
                 var outCanvas = Step.Run(inputs, canvasProvider);
                 foreach (var canvas in inputs.Values)
@@ -43,36 +36,41 @@ namespace Cardamom.ImageProcessing.Pipelines
 
         private class Edge
         {
-            internal Node? Source { get; }
+            internal Node Source { get; }
             internal string InputName { get; }
 
-            internal Edge(Node? source, string inputName)
+            internal Edge(Node source, string inputName)
             {
                 Source = source;
                 InputName = inputName;
             }
         }
 
-        private Node _root;
+        private List<Node> _roots;
 
-        private Pipeline(Node root)
+        private Pipeline(List<Node> roots)
         {
-            _root = root;
+            _roots = roots;
         }
 
-        public Canvas Run(ICanvasProvider canvasProvider)
+        public Canvas[] Run(ICanvasProvider canvasProvider)
         {
-            return _root.Run(canvasProvider);
+            var outs = new Canvas[_roots.Count];
+            for (int i=0; i<_roots.Count;++i)
+            {
+                outs[i] = _roots[i].Run(canvasProvider);
+            }
+            return outs;
         }
 
         public class Builder
         {
             public List<IPipelineNode.IBuilder> Steps { get; set; } = new();
-            public string Output { get; set; } = string.Empty;
+            public List<string> Outputs { get; set; } = new();
 
-            public Builder SetOutput(string stepKey)
+            public Builder AddOutput(string stepKey)
             {
-                Output = stepKey;
+                Outputs.Add(stepKey);
                 return this;
             }
 
@@ -86,23 +84,16 @@ namespace Cardamom.ImageProcessing.Pipelines
             {
                 var steps = Steps.Select(x => x.Build()).ToList();
                 var nodes = steps.Select(x => new Node(x)).ToDictionary(x => x.Step.Key!, x => x);
-                var output = nodes[Output];
+                var output = Outputs.Select(x => nodes[x]).ToList();
                 foreach (var node in nodes.Values)
                 {
                     foreach (var edge in node.Step.GetInputs())
                     {
-                        if (edge.Value == "$new")
-                        {
-                            node.Incoming.Add(new Edge(null, edge.Key));
-                        }
-                        else
-                        {
-                            var source = nodes[edge.Value];
-                            var e = new Edge(source, edge.Key);
-                            node.Incoming.Add(e);
-                            Precondition.IsNull(source.Outgoing);
-                            source.Outgoing = e;
-                        }
+                        var source = nodes[edge.Value];
+                        var e = new Edge(source, edge.Key);
+                        node.Incoming.Add(e);
+                        Precondition.IsNull(source.Outgoing);
+                        source.Outgoing = e;
                     }
                 }
                 return new Pipeline(output);

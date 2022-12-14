@@ -85,14 +85,14 @@ namespace Cardamom.Graphics
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
-        public void BindImage()
+        public void BindImage(int unit)
         {
-            GL.BindImageTexture(0, Handle, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.Rgba32f);
+            GL.BindImageTexture(unit, Handle, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.Rgba32f);
         }
 
-        public static void UnbindImage()
+        public static void UnbindImage(int unit)
         {
-            GL.BindImageTexture(0, 0, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.Rgba32f);
+            GL.BindImageTexture(unit, 0, 0, false, 0, TextureAccess.ReadWrite, SizedInternalFormat.Rgba32f);
         }
 
         public Texture Copy()

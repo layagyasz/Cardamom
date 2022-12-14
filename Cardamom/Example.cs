@@ -24,12 +24,12 @@ namespace Cardamom
             var bSeed = ConstantValue.Create(0);
             var pipeline =
                 new Pipeline.Builder()
-                    .SetOutput("lattice-noise-g")
+                    .AddNode(new GeneratorNode.Builder().SetKey("new"))
                     .AddNode(
                         new LatticeNoiseNode.Builder()
                             .SetKey("lattice-noise-r")
                             .SetChannel(Channel.RED)
-                            .SetInput("input", "$new")
+                            .SetInput("input", "new")
                             .SetParameters(new() { Seed = rSeed }))
                     .AddNode(
                         new WaveFormNode.Builder()
@@ -69,6 +69,14 @@ namespace Cardamom
                             .SetChannel(Channel.GREEN)
                             .SetInput("input", "wave-form-b")
                             .SetParameters(new() { Seed = gSeed }))
+                    .AddNode(
+                        new SobelNode.Builder()
+                            .SetKey("sobel")
+                            .SetChannel(Channel.ALL)
+                            .SetInput("input", "lattice-noise-g")
+                            .SetParameters(new() { Channel = ConstantValue.Create(Channel.GREEN) }))
+                    .AddOutput("lattice-noise-g")
+                    .AddOutput("sobel")
                     .Build();
             var pipelineTime = new Stopwatch();
             var canvases = new CachingCanvasProvider(new(512, 512), Color4.Black);
@@ -84,9 +92,10 @@ namespace Cardamom
 
                 if (i == 0)
                 {
-                    output.GetTexture().CopyToImage().SaveToFile($"example-out-{i}.png");
+                    output[0].GetTexture().CopyToImage().SaveToFile($"example-out-{i}.png");
+                    output[1].GetTexture().CopyToImage().SaveToFile($"example-out-height-{i}.png");
                 }
-                canvases.Return(output);
+                canvases.Return(output[0]);
             }
             Console.WriteLine(pipelineTime.ElapsedMilliseconds);
 
