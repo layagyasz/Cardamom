@@ -1,26 +1,26 @@
 ﻿using Cardamom.ImageProcessing.Filters;
 
-namespace Cardamom.ImageProcessing.Pipelines
+namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
-    public class PipelineStep : IKeyed
+    public class GenericPipelineNode : IPipelineNode
     {
         public string? Key { get; set; }
+        public Channel Channel { get; }
 
         private readonly Type _type;
-        private readonly Channel _channel;
         private readonly Dictionary<string, string> _inputs;
         private readonly Dictionary<string, IParameterValue> _parameters;
 
-        public PipelineStep(
+        public GenericPipelineNode(
             string key,
+            Channel channel,
             Type type,
-            Channel channel, 
-            Dictionary<string, string> inputs, 
+            Dictionary<string, string> inputs,
             Dictionary<string, IParameterValue> parameters)
         {
             Key = key;
+            Channel = channel;
             _type = type;
-            _channel = channel;
             _inputs = inputs;
             _parameters = parameters;
         }
@@ -39,11 +39,11 @@ namespace Cardamom.ImageProcessing.Pipelines
             }
             var filter = builder.Build();
             var outCanvas = filter.InPlace ? inputs.First().Value : canvasProvider.Get();
-            filter.Apply(outCanvas, _channel, inputs);
+            filter.Apply(outCanvas, Channel, inputs);
             return outCanvas;
         }
 
-        public class Builder : IKeyed
+        public class Builder : IPipelineNode.IBuilder
         {
             public string? Key { get; set; }
             public Type? Type { get; set; }
@@ -62,7 +62,7 @@ namespace Cardamom.ImageProcessing.Pipelines
                 Type = type;
                 return this;
             }
-            
+
             public Builder SetChannel(Channel channel)
             {
                 Channel = channel;
@@ -75,15 +75,15 @@ namespace Cardamom.ImageProcessing.Pipelines
                 return this;
             }
 
-            public Builder SetParameter(string parameterName,  IParameterValue value) 
+            public Builder SetParameter(string parameterName, IParameterValue value)
             {
                 Parameters.Add(parameterName, value);
                 return this;
             }
 
-            public PipelineStep Build()
+            public IPipelineNode Build()
             {
-                return new PipelineStep(Key!, Type, Channel, Inputs, Parameters);
+                return new GenericPipelineNode(Key!, Channel, Type!, Inputs, Parameters);
             }
         }
     }

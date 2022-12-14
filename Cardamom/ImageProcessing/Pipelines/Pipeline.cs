@@ -1,14 +1,16 @@
-﻿namespace Cardamom.ImageProcessing.Pipelines
+﻿using Cardamom.ImageProcessing.Pipelines.Nodes;
+
+namespace Cardamom.ImageProcessing.Pipelines
 {
     public class Pipeline
     {
         private class Node
         {
-            internal PipelineStep Step { get; }
+            internal IPipelineNode Step { get; }
             internal List<Edge> Incoming { get; set; } = new();
             internal Edge? Outgoing { get; set; }
 
-            internal Node(PipelineStep step)
+            internal Node(IPipelineNode step)
             {
                 Step = step;
             }
@@ -65,7 +67,7 @@
 
         public class Builder
         {
-            public List<PipelineStep.Builder> Steps { get; set; } = new();
+            public List<IPipelineNode.IBuilder> Steps { get; set; } = new();
             public string Output { get; set; } = string.Empty;
 
             public Builder SetOutput(string stepKey)
@@ -74,7 +76,7 @@
                 return this;
             }
 
-            public Builder AddStep(PipelineStep.Builder step)
+            public Builder AddNode(IPipelineNode.IBuilder step)
             {
                 Steps.Add(step);
                 return this;

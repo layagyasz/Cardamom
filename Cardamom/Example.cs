@@ -5,6 +5,7 @@ using Cardamom.Graphics.Ui.Elements;
 using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
+using Cardamom.ImageProcessing.Pipelines.Nodes;
 using Cardamom.Window;
 using OpenTK.Mathematics;
 using System.Diagnostics;
@@ -24,51 +25,54 @@ namespace Cardamom
             var pipeline =
                 new Pipeline.Builder()
                     .SetOutput("lattice-noise-g")
-                    .AddStep(
-                        new PipelineStep.Builder()
+                    .AddNode(
+                        new LatticeNoiseNode.Builder()
                             .SetKey("lattice-noise-r")
                             .SetChannel(Channel.RED)
-                            .SetType(typeof(LatticeNoise.Builder))
                             .SetInput("input", "$new")
-                            .SetParameter("Seed", rSeed))
-                    .AddStep(
-                        new PipelineStep.Builder()
+                            .SetParameters(new() { Seed = rSeed }))
+                    .AddNode(
+                        new WaveFormNode.Builder()
                             .SetKey("wave-form-r")
                             .SetChannel(Channel.RED)
-                            .SetType(typeof(WaveForm.Builder))
                             .SetInput("input", "lattice-noise-r")
-                            .SetParameter("WaveType", ConstantValue.Create(WaveForm.WaveType.COSINE))
-                            .SetParameter("Amplitude", ConstantValue.Create(-0.5f))
-                            .SetParameter("Periodicity", ConstantValue.Create(new Vector2(0, 0.0122f)))
-                            .SetParameter("Turbulence", ConstantValue.Create(new Vector2(512, 512))))
-                    .AddStep(
-                        new PipelineStep.Builder()
+                            .SetParameters(
+                                new()
+                                {
+                                    WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
+                                    Amplitude = ConstantValue.Create(-0.5f),
+                                    Periodicity = ConstantValue.Create(new Vector2(0, 0.0122f)),
+                                    Turbulence = ConstantValue.Create(new Vector2(512, 512))
+                                }))
+                    .AddNode(
+                        new LatticeNoiseNode.Builder()
                                 .SetKey("lattice-noise-b")
                                 .SetChannel(Channel.BLUE)
-                                .SetType(typeof(LatticeNoise.Builder))
                                 .SetInput("input", "wave-form-r")
-                                .SetParameter("Seed", bSeed))
-                    .AddStep(
-                        new PipelineStep.Builder()
+                                .SetParameters(new() { Seed = bSeed }))
+                    .AddNode(
+                        new WaveFormNode.Builder()
                             .SetKey("wave-form-b")
                             .SetChannel(Channel.BLUE)
-                            .SetType(typeof(WaveForm.Builder))
                             .SetInput("input", "lattice-noise-b")
-                            .SetParameter("WaveType", ConstantValue.Create(WaveForm.WaveType.COSINE))
-                            .SetParameter("Amplitude", ConstantValue.Create(-0.5f))
-                            .SetParameter("Periodicity", ConstantValue.Create(new Vector2(0, 0.0244f)))
-                            .SetParameter("Turbulence", ConstantValue.Create(new Vector2(768, 768))))
-                    .AddStep(
-                        new PipelineStep.Builder()
+                            .SetParameters(
+                                new()
+                                {
+                                    WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
+                                    Amplitude = ConstantValue.Create(-0.5f),
+                                    Periodicity = ConstantValue.Create(new Vector2(0, .0244f)),
+                                    Turbulence = ConstantValue.Create(new Vector2(768, 768))
+                                }))
+                    .AddNode(
+                        new LatticeNoiseNode.Builder()
                             .SetKey("lattice-noise-g")
                             .SetChannel(Channel.GREEN)
-                            .SetType(typeof(LatticeNoise.Builder))
                             .SetInput("input", "wave-form-b")
-                            .SetParameter("Seed", gSeed))
+                            .SetParameters(new() { Seed = gSeed }))
                     .Build();
             var pipelineTime = new Stopwatch();
             var canvases = new CachingCanvasProvider(new(512, 512), Color4.Black);
-            for (int i = 0; i < 0; ++i)
+            for (int i = 0; i < 100; ++i)
             {
                 rSeed.Value = random.Next();
                 gSeed.Value = random.Next();
@@ -78,7 +82,10 @@ namespace Cardamom
                 var output = pipeline.Run(canvases);
                 pipelineTime.Stop();
 
-                output.GetTexture().CopyToImage().SaveToFile($"example-out-{i}.png");
+                if (i == 0)
+                {
+                    output.GetTexture().CopyToImage().SaveToFile($"example-out-{i}.png");
+                }
                 canvases.Return(output);
             }
             Console.WriteLine(pipelineTime.ElapsedMilliseconds);
