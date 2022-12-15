@@ -22,6 +22,7 @@ namespace Cardamom
             var rSeed = ConstantValue.Create(0);
             var gSeed = ConstantValue.Create(0);
             var bSeed = ConstantValue.Create(0);
+            var adjustment = ConstantValue.Create(new Vector4(0,0,0,0));
             var pipeline =
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
@@ -75,12 +76,64 @@ namespace Cardamom
                                     Turbulence = ConstantValue.Create(new Vector2(256, 256))
                                 }))
                     .AddNode(
+                        new AdjustNode.Builder()
+                            .SetKey("adjusted")
+                            .SetChannel(Channel.ALL)
+                            .SetInput("input", "wave-form-b")
+                            .SetParameters(
+                                new()
+                                {
+                                    Adjustment = adjustment
+                                }))
+                    .AddNode(
+                        new ClassifyNode.Builder()
+                            .SetKey("classified")
+                            .SetChannel(Channel.ALL)
+                            .SetInput("input", "adjusted")
+                            .SetParameters(
+                                new()
+                                {
+                                    Classifications =
+                                        ConstantValue.Create(
+                                            new List<Classify.Classification>()
+                                            {
+                                                new Classify.Classification()
+                                                {
+                                                    Color = Color4.White,
+                                                    Conditions = new List<Classify.Condition>()
+                                                    {
+                                                        new Classify.Condition()
+                                                        {
+                                                            Channel = Channel.RED,
+                                                            Maximum = 0.25f
+                                                        }
+                                                    }
+                                                },
+                                                new Classify.Classification()
+                                                {
+                                                    Color = Color4.Blue,
+                                                    Conditions = new List<Classify.Condition>()
+                                                    {
+                                                        new Classify.Condition()
+                                                        {
+                                                            Channel = Channel.GREEN,
+                                                            Maximum = 0.5f
+                                                        }
+                                                    }
+                                                },
+                                                new Classify.Classification()
+                                                {
+                                                    Color = Color4.Lime,
+                                                }
+                                            })
+                                }))
+                    .AddNode(
                         new SobelNode.Builder()
                             .SetKey("sobel")
                             .SetChannel(Channel.ALL)
                             .SetInput("input", "denormalize")
                             .SetParameters(new() { Channel = ConstantValue.Create(Channel.GREEN) }))
-                    .AddOutput("wave-form-b")
+                    .AddOutput("classified")
                     .AddOutput("sobel")
                     .Build();
             var pipelineTime = new Stopwatch();

@@ -23,7 +23,7 @@ namespace Cardamom.ImageProcessing.Filters
 
             SOBEL_SHADER ??= new Shader.Builder().SetCompute("Resources/sobel.comp").Build();
 
-            SOBEL_SHADER.SetInt32(CHANNEL_INDEX_LOCATION, GetChannelIndex(_channel));
+            SOBEL_SHADER.SetInt32(CHANNEL_INDEX_LOCATION, _channel.GetIndex());
             SOBEL_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
 
             var inTex = inputs.First().Value.GetTexture();
@@ -33,22 +33,6 @@ namespace Cardamom.ImageProcessing.Filters
             SOBEL_SHADER.DoCompute(inTex.Size);
             Texture.UnbindImage(0);
             Texture.UnbindImage(1);
-        }
-
-        private static int GetChannelIndex(Channel channel)
-        {
-            switch (channel)
-            {
-                case Channel.RED:
-                    return 0;
-                case Channel.GREEN:
-                    return 1;
-                case Channel.BLUE:
-                    return 2;
-                case Channel.ALPHA: 
-                    return 3;
-            }
-            throw new ArgumentException("Only one input channel supported.");
         }
 
         public class Builder : IFilter.IFilterBuilder

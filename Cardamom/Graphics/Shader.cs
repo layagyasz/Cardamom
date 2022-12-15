@@ -93,6 +93,18 @@ namespace Cardamom.Graphics
             GL.Uniform2(location, data);
         }
 
+        public void SetVector2i(string name, Vector2i data)
+        {
+            Bind();
+            GL.Uniform2(GetUniformLocation(name), data);
+        }
+
+        public void SetVector2i(int location, Vector2i data)
+        {
+            Bind();
+            GL.Uniform2(location, data);
+        }
+
         public void SetVector3(string name, Vector3 data)
         {
             Bind();
@@ -144,6 +156,24 @@ namespace Cardamom.Graphics
             fixed (Vector2* p = &data[0])
             {
                 GL.Uniform2(location, data.Length, (float*)p);
+            }
+        }
+
+        public unsafe void SetVector2iArray(string name, Vector2i[] data)
+        {
+            Bind();
+            fixed (Vector2i* p = &data[0])
+            {
+                GL.Uniform2(GetUniformLocation(name), data.Length, (int*)p);
+            }
+        }
+
+        public unsafe void SetVector2iArray(int location, Vector2i[] data)
+        {
+            Bind();
+            fixed (Vector2i* p = &data[0])
+            {
+                GL.Uniform2(location, data.Length, (int*)p);
             }
         }
 
