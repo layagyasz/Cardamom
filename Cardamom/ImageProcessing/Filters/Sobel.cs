@@ -2,13 +2,12 @@
 
 namespace Cardamom.ImageProcessing.Filters
 {
+    [FilterBuilder(typeof(Builder))]
     public class Sobel : IFilter
     {
         private static Shader? SOBEL_SHADER;
         private static readonly int CHANNEL_INDEX_LOCATION = 0;
         private static readonly int CHANNEL_LOCATION = 1;
-
-        public bool InPlace => false;
 
         private readonly Channel _channel;
 

@@ -3,6 +3,8 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Filters
 {
+    [FilterBuilder(typeof(Builder))]
+    [FilterInline]
     public class Classify : IFilter
     {
         private static Shader? CLASSIFY_SHADER;
@@ -29,8 +31,6 @@ namespace Cardamom.ImageProcessing.Filters
 
             public Condition() { }
         }
-
-        public bool InPlace => true;
 
         private readonly Color4[] _colors;
         private readonly Vector2i[] _classificationPositions;

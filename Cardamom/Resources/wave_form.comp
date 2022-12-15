@@ -8,7 +8,8 @@
 #define WAVE_TYPE_SINE 0
 
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
-layout(rgba32f, binding = 0) uniform image2D out_texture;
+layout(rgba32f, binding = 0) uniform image2D in_texture;
+layout(rgba32f, binding = 1) uniform image2D out_texture;
 
 layout(location=0) uniform int wave_type;
 layout(location=1) uniform float amplitude;
@@ -28,7 +29,7 @@ float generate(vec2 position, float v_turbulence) {
 
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
-    vec4 current = imageLoad(out_texture, position);
+    vec4 current = imageLoad(in_texture, position);
 	vec4 new = 
 		vec4(
 			(channel & CHANNEL_RED) != 0 ? clamp(generate(gl_GlobalInvocationID.xy, current.r), 0, 1) : current.r,

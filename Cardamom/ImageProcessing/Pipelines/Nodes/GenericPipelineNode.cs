@@ -6,12 +6,14 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public string? Key { get; set; }
         public Channel Channel { get; }
+        public bool Inline { get; }
 
         private readonly Type _type;
+        private readonly Type _builderType;
         private readonly Dictionary<string, string> _inputs;
         private readonly Dictionary<string, IParameterValue> _parameters;
 
-        public GenericPipelineNode(
+        private GenericPipelineNode(
             string key,
             Channel channel,
             Type type,
@@ -23,6 +25,14 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             _type = type;
             _inputs = inputs;
             _parameters = parameters;
+
+            var builderAttr =
+                (FilterBuilderAttribute)type.GetCustomAttributes(/* inherit= */ false)
+                    .First(x => x.GetType() == typeof(FilterBuilderAttribute));
+            _builderType = builderAttr.Type;
+
+            Inline = 
+                type.GetCustomAttributes(/* inherit= */ false).Any(x => x.GetType() == typeof(FilterInlineAttribute));
         }
 
         public Dictionary<string, string> GetInputs()
@@ -30,17 +40,14 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             return _inputs;
         }
 
-        public Canvas Run(Dictionary<string, Canvas> inputs, ICanvasProvider canvasProvider)
+        public void Run(Canvas output, Dictionary<string, Canvas> inputs)
         {
-            var builder = (IFilter.IFilterBuilder)Activator.CreateInstance(_type)!;
+            var builder = (IFilter.IFilterBuilder)Activator.CreateInstance(_builderType)!;
             foreach (var param in _parameters)
             {
                 _type.GetMethod("Set" + param.Key)!.Invoke(builder, new object?[] { param.Value.Get() });
             }
-            var filter = builder.Build();
-            var outCanvas = filter.InPlace ? inputs.First().Value : canvasProvider.Get();
-            filter.Apply(outCanvas, Channel, inputs);
-            return outCanvas;
+            builder.Build().Apply(output, Channel, inputs);
         }
 
         public class Builder : IPipelineNode.IBuilder

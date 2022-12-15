@@ -9,6 +9,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public IParameterValue? Classifications { get; set; }
         }
 
+        public override bool Inline => true;
+
         private readonly Dictionary<string, string> _inputs;
         private readonly Parameters _parameters;
 

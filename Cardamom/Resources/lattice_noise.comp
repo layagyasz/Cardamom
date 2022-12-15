@@ -9,7 +9,8 @@
 #define CHANNEL_ALPHA 8
 
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
-layout(rgba32f, binding = 0) uniform image2D out_texture;
+layout(rgba32f, binding = 0) uniform image2D in_texture;
+layout(rgba32f, binding = 1) uniform image2D out_texture;
 
 layout(location=0) uniform float frequency;
 layout(location=1) uniform float lacunarity;
@@ -74,7 +75,7 @@ float generate(vec2 position) {
 
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
-    vec4 current = imageLoad(out_texture, position);
+    vec4 current = imageLoad(in_texture, position);
 	float v = clamp(generate(gl_GlobalInvocationID.xy + offset), 0, 1);
 	vec4 new = 
 		vec4(

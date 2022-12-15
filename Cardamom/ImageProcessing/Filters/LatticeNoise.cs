@@ -1,9 +1,10 @@
 ﻿using Cardamom.Graphics;
 using OpenTK.Mathematics;
-using System.Diagnostics;
 
 namespace Cardamom.ImageProcessing.Filters
 {
+    [FilterBuilder(typeof(Builder))]
+    [FilterInline]
     public class LatticeNoise : IFilter
     {
         private static Shader? LATTICE_NOISE_SHADER;
@@ -31,8 +32,6 @@ namespace Cardamom.ImageProcessing.Filters
             public Settings() { }
         }
 
-        public bool InPlace => true;
-
         private readonly int[] _hashLookup;
         private readonly Vector3[] _kernel;
         private readonly Settings _settings;
@@ -46,7 +45,7 @@ namespace Cardamom.ImageProcessing.Filters
 
         public void Apply(Canvas output, Channel channel, Dictionary<string, Canvas> inputs)
         {
-            Precondition.Check(inputs.Count == 1 && inputs.First().Value == output);
+            Precondition.Check(inputs.Count == 1);
 
             LATTICE_NOISE_SHADER ??= new Shader.Builder().SetCompute("Resources/lattice_noise.comp").Build();
 
@@ -62,10 +61,13 @@ namespace Cardamom.ImageProcessing.Filters
 
             LATTICE_NOISE_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
 
-            var tex = output.GetTexture();
-            tex.BindImage(0);
-            LATTICE_NOISE_SHADER.DoCompute(tex.Size);
+            var inTex = inputs.First().Value.GetTexture();
+            var outTex = output.GetTexture();
+            inTex.BindImage(0);
+            outTex.BindImage(1);
+            LATTICE_NOISE_SHADER.DoCompute(inTex.Size);
             Texture.UnbindImage(0);
+            Texture.UnbindImage(1);
         }
 
         public class Builder : IFilter.IFilterBuilder

@@ -9,48 +9,84 @@ namespace Cardamom.ImageProcessing.Pipelines
             internal IPipelineNode Step { get; }
             internal List<Edge> Incoming { get; set; } = new();
             internal List<Edge> Outgoing { get; set; } = new();
+            public bool IsOutput { get; }
 
-            internal Node(IPipelineNode step)
+            private Canvas? _cachedOutput;
+            private int _outstanding;
+
+            internal Node(IPipelineNode step, bool isOutput)
             {
                 Step = step;
+                IsOutput = isOutput;
+            }
+
+            internal bool IsDone()
+            {
+                return _outstanding == 0;
+            }
+
+            internal void Return(ICanvasProvider canvasProvider)
+            {
+                if (_cachedOutput != null && !IsOutput)
+                {
+                    canvasProvider.Return(_cachedOutput);
+                    _cachedOutput = null;
+                }
             }
 
             internal Canvas Run(ICanvasProvider canvasProvider)
             {
-                var inputs = new Dictionary<string, Canvas>();
-                foreach (var edge in Incoming)
+                Canvas? result = null;
+                if (_cachedOutput != null)
                 {
-                    inputs.Add(edge.InputName, edge.Source.Run(canvasProvider));
+                    result = _cachedOutput;
                 }
-                var outCanvas = Step.Run(inputs, canvasProvider);
-                foreach (var canvas in inputs.Values)
+                else
                 {
-                    if (canvas != outCanvas)
+                    var inputs = new Dictionary<string, Canvas>();
+                    foreach (var edge in Incoming)
                     {
-                        canvasProvider.Return(canvas);
+                        var o = edge.Source.Run(canvasProvider);
+                        inputs.Add(edge.InputName, o);
                     }
+                    result = canvasProvider.Get();
+                    Step.Run(result, inputs);
+                    _cachedOutput = result;
+                    foreach (var edge in Incoming)
+                    {
+                        if (edge.Source.IsDone())
+                        {
+                            edge.Source.Return(canvasProvider);
+                        }
+                    }
+                    _outstanding = Outgoing.Count + (IsOutput ? 1 : 0);
                 }
-                return outCanvas;
+                _outstanding--;
+                return result;
             }
         }
 
         private class Edge
         {
             internal Node Source { get; }
+            internal Node Sink { get; }
             internal string InputName { get; }
 
-            internal Edge(Node source, string inputName)
+            internal Edge(Node source, Node sink, string inputName)
             {
                 Source = source;
+                Sink = sink;
                 InputName = inputName;
             }
         }
 
-        private List<Node> _roots;
+        private readonly List<Node> _roots;
+        private readonly List<Node> _nodes;
 
-        private Pipeline(List<Node> roots)
+        private Pipeline(List<Node> roots, List<Node> nodes)
         {
             _roots = roots;
+            _nodes = nodes;
         }
 
         public Canvas[] Run(ICanvasProvider canvasProvider)
@@ -83,19 +119,20 @@ namespace Cardamom.ImageProcessing.Pipelines
             public Pipeline Build()
             {
                 var steps = Steps.Select(x => x.Build()).ToList();
-                var nodes = steps.Select(x => new Node(x)).ToDictionary(x => x.Step.Key!, x => x);
+                var nodes =
+                    steps.Select(x => new Node(x, Outputs.Contains(x.Key!))).ToDictionary(x => x.Step.Key!, x => x);
                 var output = Outputs.Select(x => nodes[x]).ToList();
                 foreach (var node in nodes.Values)
                 {
                     foreach (var edge in node.Step.GetInputs())
                     {
                         var source = nodes[edge.Value];
-                        var e = new Edge(source, edge.Key);
+                        Edge e = new(source, node, edge.Key);
                         node.Incoming.Add(e);
                         source.Outgoing.Add(e);
                     }
                 }
-                return new Pipeline(output);
+                return new Pipeline(output, nodes.Values.ToList());
             }
         }
     }

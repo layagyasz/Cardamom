@@ -2,8 +2,10 @@
 {
     public interface IPipelineNode : IKeyed
     {
+        bool Inline { get; }
+
         Dictionary<string, string> GetInputs();
-        Canvas Run(Dictionary<string, Canvas> inputs, ICanvasProvider canvasProvider);
+        void Run(Canvas output, Dictionary<string, Canvas> inputs);
 
         public interface IBuilder : IKeyed
         {

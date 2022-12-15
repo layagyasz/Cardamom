@@ -3,6 +3,8 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Filters
 {
+    [FilterBuilder(typeof(Builder))]
+    [FilterInline]
     public class Adjust : IFilter
     {
         private static Shader? ADJUST_SHADER;
@@ -16,8 +18,6 @@ namespace Cardamom.ImageProcessing.Filters
             CLAMP = 1,
             MODULUS = 2
         }
-
-        public bool InPlace => true;
 
         private readonly OverflowBehavior _overflowBehavior;
         private readonly Vector4 _adjustment;

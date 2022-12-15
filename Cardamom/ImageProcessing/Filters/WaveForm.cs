@@ -3,6 +3,8 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Filters
 {
+    [FilterBuilder(typeof(Builder))]
+    [FilterInline]
     public class WaveForm : IFilter
     {
         private static Shader? WAVE_FORM_SHADER;
@@ -30,8 +32,6 @@ namespace Cardamom.ImageProcessing.Filters
             public Settings() { }
         }
 
-        public bool InPlace => true;
-
         private readonly Settings _settings;
 
         public WaveForm(Settings settings)
@@ -41,7 +41,7 @@ namespace Cardamom.ImageProcessing.Filters
 
         public void Apply(Canvas output, Channel channel, Dictionary<string, Canvas> inputs)
         {
-            Precondition.Check(inputs.Count == 1 && inputs.First().Value == output);
+            Precondition.Check(inputs.Count == 1);
 
             WAVE_FORM_SHADER ??= new Shader.Builder().SetCompute("Resources/wave_form.comp").Build();
 
@@ -53,10 +53,13 @@ namespace Cardamom.ImageProcessing.Filters
 
             WAVE_FORM_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
 
-            var tex = output.GetTexture();
-            tex.BindImage(0);
-            WAVE_FORM_SHADER.DoCompute(tex.Size);
+            var inTex = inputs.First().Value.GetTexture();
+            var outTex = output.GetTexture();
+            inTex.BindImage(0);
+            outTex.BindImage(1);
+            WAVE_FORM_SHADER.DoCompute(inTex.Size);
             Texture.UnbindImage(0);
+            Texture.UnbindImage(1);
         }
 
         public class Builder : IFilter.IFilterBuilder

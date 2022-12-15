@@ -3,14 +3,14 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Filters
 {
+    [FilterBuilder(typeof(Builder))]
+    [FilterInline]
     public class Denormalize : IFilter
     {
         private static Shader? DENORMALIZE_SHADER;
         private static readonly int MEAN_LOCATION = 0;
         private static readonly int STANDARD_DEVIATION_LOCATION = 1;
         private static readonly int CHANNEL_LOCATION = 2;
-
-        public bool InPlace => true;
 
         private readonly Vector4 _mean;
         private readonly Vector4 _standardDeviation;

@@ -3,6 +3,7 @@
     public class GeneratorNode : IPipelineNode
     {
         public string? Key { get; set; }
+        public bool Inline => false;
 
         public GeneratorNode(string? key)
         {
@@ -14,9 +15,9 @@
             return new();
         }
 
-        public Canvas Run(Dictionary<string, Canvas> inputs, ICanvasProvider canvasProvider)
+        public void Run(Canvas output, Dictionary<string, Canvas> inputs) 
         {
-            return canvasProvider.Get();
+            Precondition.Check(inputs.Count == 0);
         }
 
         public class Builder : IPipelineNode.IBuilder

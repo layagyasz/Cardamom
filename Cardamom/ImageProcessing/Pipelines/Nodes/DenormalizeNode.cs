@@ -11,6 +11,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public IParameterValue? StandardDeviation { get; set; }
         }
 
+        public override bool Inline => true;
+
         private readonly Dictionary<string, string> _inputs;
         private readonly Parameters _parameters;
 
