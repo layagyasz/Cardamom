@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Pipelines.Nodes;
+using OpenTK.Graphics.OpenGL4;
 
 namespace Cardamom.ImageProcessing.Pipelines
 {
@@ -30,13 +31,13 @@ namespace Cardamom.ImageProcessing.Pipelines
                 if (_cachedOutput != null && !IsOutput)
                 {
                     canvasProvider.Return(_cachedOutput);
-                    _cachedOutput = null;
                 }
+                _cachedOutput = null;
             }
 
             internal Canvas Run(ICanvasProvider canvasProvider)
             {
-                Canvas? result = null;
+                Canvas? result;
                 if (_cachedOutput != null)
                 {
                     result = _cachedOutput;
@@ -81,12 +82,10 @@ namespace Cardamom.ImageProcessing.Pipelines
         }
 
         private readonly List<Node> _roots;
-        private readonly List<Node> _nodes;
 
-        private Pipeline(List<Node> roots, List<Node> nodes)
+        private Pipeline(List<Node> roots)
         {
             _roots = roots;
-            _nodes = nodes;
         }
 
         public Canvas[] Run(ICanvasProvider canvasProvider)
@@ -95,7 +94,9 @@ namespace Cardamom.ImageProcessing.Pipelines
             for (int i=0; i<_roots.Count;++i)
             {
                 outs[i] = _roots[i].Run(canvasProvider);
+                _roots[i].Return(canvasProvider);
             }
+            GL.Finish();
             return outs;
         }
 
@@ -132,7 +133,7 @@ namespace Cardamom.ImageProcessing.Pipelines
                         source.Outgoing.Add(e);
                     }
                 }
-                return new Pipeline(output, nodes.Values.ToList());
+                return new Pipeline(output);
             }
         }
     }

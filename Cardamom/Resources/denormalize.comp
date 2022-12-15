@@ -5,6 +5,9 @@
 #define CHANNEL_BLUE 4
 #define CHANNEL_ALPHA 8
 
+#define PI 3.1415926535f
+#define SQRT2 1.41421356237f
+
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D in_texture;
 layout(rgba32f, binding = 1) uniform image2D out_texture;
@@ -13,7 +16,6 @@ layout(location=0) uniform vec4 mean;
 layout(location=1) uniform vec4 standard_deviation;
 layout(location=2) uniform int channel;
 
-const float PI = 3.1415926535f;
 const float A = 8f * (PI - 3f) / (3f * PI * (4f - PI));
 
 float erf_internal(float x) {
@@ -39,7 +41,7 @@ float erfc(float x) {
 }
 
 float generate(float v, float v_mean, float v_standard_deviation) {
-	return 0.5f * erfc((v_mean - v)/(v_standard_deviation * sqrt(2f)));
+	return 0.5f * erfc((v_mean - v)/(v_standard_deviation * SQRT2));
 }
 
 void main() {

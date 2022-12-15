@@ -138,8 +138,13 @@ namespace Cardamom
                     .Build();
             var pipelineTime = new Stopwatch();
             var canvases = new CachingCanvasProvider(new(512, 512), Color4.Black);
-            for (int i = 0; i < 100; ++i)
+            for (int i = 0; i < 10000; ++i)
             {
+                if (i % 100 == 0)
+                {
+                    Console.WriteLine($"### {i}");
+                    Console.WriteLine(pipelineTime.ElapsedMilliseconds);
+                }
                 rSeed.Value = random.Next();
                 gSeed.Value = random.Next();
                 bSeed.Value = random.Next();
@@ -150,9 +155,10 @@ namespace Cardamom
 
                 if (i == 0)
                 {
-                    output[0].GetTexture().CopyToImage().SaveToFile($"example-out-{i}.png");
-                    output[1].GetTexture().CopyToImage().SaveToFile($"example-out-height-{i}.png");
+                    output[0].GetTexture().CopyToImage();
+                    output[1].GetTexture().CopyToImage();
                 }
+
                 canvases.Return(output[0]);
                 canvases.Return(output[1]);
             }
