@@ -1,0 +1,28 @@
+# Geometry
+Rename Planar to Geometry
+Generate icosphere
+Spherical coordinate system
+
+#Graphics
+Split ComputeShader from Shader
+Use VertexBuffer for models
+TexturePage based TextureLibrary
+
+#Graphics.Ui
+Z,Y sort elements
+Flatten render targets to allow drawing overlays on 3d scenes
+Accept user defined projection matrices
+UiContext to work with user defined projections
+
+# Pipeline
+Remove dictionaries to passing arguments
+Define both input and output channels on pipeline nodes?
+
+#Window
+Translate mouse events to NDC
+Separate events for text entered and key pressed
+- Current event only suitable for text entered
+- Move KeyMapper closer to event origination
+
+#General
+Make IKeyed.Key non nullable
