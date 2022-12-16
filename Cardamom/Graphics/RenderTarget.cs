@@ -65,8 +65,7 @@ namespace Cardamom.Graphics
             shader.Bind();
             shader.SetMatrix4(
                 "projection", 
-                Matrix4.CreateOrthographicOffCenter(
-                    0, _viewPort.Size.X, _viewPort.Size.Y, 0, float.MinValue, float.MaxValue));
+                Matrix4.CreateOrthographicOffCenter(0, _viewPort.Size.X, _viewPort.Size.Y, 0, -10000, 10000));
             shader.SetMatrix4("view", GetTransform());
 
             GL.Enable(EnableCap.DepthTest);

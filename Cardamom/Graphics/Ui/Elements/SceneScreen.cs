@@ -5,23 +5,23 @@ namespace Cardamom.Graphics.Ui.Elements
 {
     public class SceneScreen : Screen
     {
-        private readonly Scene _scene;
+        public Scene Scene { get; }
 
         public SceneScreen(Rectangle bounds, IController controller, IEnumerable<IUiLayer> uiLayers, Scene scene)
             : base(bounds, controller, uiLayers)
         {
-            _scene = scene;
+            Scene = scene;
         }
 
         public override void Draw(RenderTarget target)
         {
-            _scene.Draw(target);
+            Scene.Draw(target);
             base.Draw(target);
         }
 
         public override void Update(UiContext context, long delta)
         {
-            _scene.Update(context, delta);
+            Scene.Update(context, delta);
             base.Update(context, delta);
         }
     }

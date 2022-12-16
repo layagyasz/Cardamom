@@ -49,6 +49,7 @@ namespace Cardamom.Graphics.Ui.Elements
 
         public  virtual void Update(UiContext context, long delta)
         {
+            context.Register(this);
             context.PushTranslation(Position);
             foreach (var layer in _uiLayers)
             {

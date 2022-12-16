@@ -4,8 +4,8 @@ namespace Cardamom.Graphics.Camera
 {
     public abstract class BaseCamera3d : ICamera
     {
-        public float Pitch { get; private set; }
-        public float Yaw { get; private set; } = -MathHelper.PiOver2;
+        public float Pitch { get; private set; } = MathHelper.PiOver2;
+        public float Yaw { get; private set; } = 0;
         public float AspectRatio { get; private set; }
         public float FieldOfView { get; private set; } = MathHelper.PiOver2;
 
@@ -36,13 +36,13 @@ namespace Cardamom.Graphics.Camera
 
         public void SetPitch(float pitch)
         {
-            Pitch = MathHelper.Clamp(Pitch + pitch, -MathHelper.PiOver2, MathHelper.PiOver2);
+            Pitch = pitch;
             _updateView = true;
         }
 
         public void SetYaw(float yaw)
         {
-            Yaw += yaw;
+            Yaw = yaw;
             _updateView = true;
         }
 

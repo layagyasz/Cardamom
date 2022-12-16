@@ -7,6 +7,7 @@ using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
+using Cardamom.Planar;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -199,16 +200,26 @@ namespace Cardamom
             }
             var cubeModel = new Model(vertices, resources.GetShader("shader-default-no-texture"));
 
+            var camera = new SubjectiveCamera3d(1.5f, new(), 10);
+            var sceneController =
+                new PassthroughController(
+                    new SubjectiveCamera3dController(camera)
+                    {
+                        KeySensitivity = 0.05f,
+                        MouseWheelSensitivity = 1f,
+                        PitchRange = new FloatRange(0, MathHelper.Pi),
+                        DistanceRange = new FloatRange(2, 20)
+                    });
             var scene = 
                 new Scene(
-                    new SecondaryController<Scene>(),
-                    new SubjectiveCamera3d(1.5f, new(), 10), 
+                    sceneController,
+                    camera, 
                     new List<IRenderable>() { cubeModel });
 
             var screen = 
                 new SceneScreen(
-                    new Planar.Rectangle(new(), new(800, 600)), 
-                    new SecondaryController<Screen>(),
+                    new Planar.Rectangle(new(), new(800, 600)),
+                    new SceneScreenController(),
                     new List<UiGroupLayer>()
                     {
                         UiElementFactory.CreatePaneLayer(new List<IRenderable>() { pane }).Item1
