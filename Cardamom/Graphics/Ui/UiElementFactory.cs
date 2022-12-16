@@ -16,10 +16,10 @@ namespace Cardamom.Graphics.Ui
             _keyMapper = keyMapper;
         }
 
-        public static (UiLayer, PaneLayerController) CreatePaneLayer(IEnumerable<IRenderable> panes)
+        public static (UiGroupLayer, PaneLayerController) CreatePaneLayer(IEnumerable<IRenderable> panes)
         {
             var controller = new PaneLayerController();
-            var layer = new UiLayer(controller);
+            var layer = new UiGroupLayer(controller);
             foreach (var pane in panes)
             {
                 layer.Add(pane);

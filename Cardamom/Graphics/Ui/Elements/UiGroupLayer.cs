@@ -2,12 +2,12 @@
 
 namespace Cardamom.Graphics.Ui.Elements
 {
-    public class UiLayer : UiGroup, IControlled
+    public class UiGroupLayer : UiGroup, IUiLayer
     {
         public IController Controller { get; }
         public IControlled? Parent { get; set; }
 
-        public UiLayer(IController controller)
+        public UiGroupLayer(IController controller)
         {
             Controller = controller;
         }

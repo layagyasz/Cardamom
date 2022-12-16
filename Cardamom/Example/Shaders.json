@@ -7,6 +7,13 @@
     }
   },
   {
+    "$id": "shader-default-no-texture",
+    "Element": {
+      "Vertex": "Example/default.vert",
+      "Fragment": "Example/default_no_texture.frag"
+    }
+  },
+  {
     "$id": "shader-default-classed-ui-element",
     "Element": {
       "Vertex": "Example/default.vert",

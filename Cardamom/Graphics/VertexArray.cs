@@ -8,7 +8,7 @@ namespace Cardamom.Graphics
         public int Length => Vertices.Length;
         public Vertex3[] Vertices { get; }
 
-        public Vertex3 this[uint index]
+        public Vertex3 this[int index]
         {
             get => Vertices[index];
             set => Vertices[index] = value;

@@ -1,4 +1,5 @@
 ﻿using Cardamom.Graphics;
+using Cardamom.Graphics.Camera;
 using Cardamom.Graphics.Ui;
 using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Graphics.Ui.Elements;
@@ -7,6 +8,7 @@ using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
 using Cardamom.Window;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using System.Diagnostics;
 
@@ -138,7 +140,7 @@ namespace Cardamom
                     .Build();
             var pipelineTime = new Stopwatch();
             var canvases = new CachingCanvasProvider(new(512, 512), Color4.Black);
-            for (int i = 0; i < 10000; ++i)
+            for (int i = 0; i < 0; ++i)
             {
                 if (i % 100 == 0)
                 {
@@ -165,9 +167,8 @@ namespace Cardamom
             Console.WriteLine(pipelineTime.ElapsedMilliseconds);
 
             var ui = new UiWindow(window);
-            var uiElementFactory =
-                new UiElementFactory(
-                    GraphicsResources.Builder.ReadFrom("Example/GraphicsResources.json").Build(), SimpleKeyMapper.US);
+            var resources = GraphicsResources.Builder.ReadFrom("Example/GraphicsResources.json").Build();
+            var uiElementFactory = new UiElementFactory(resources, SimpleKeyMapper.US);
             var pane = uiElementFactory.CreatePane("example-base-class").Item1;
             var options = new List<IUiElement>();
             for (int i = 0; i < 20; ++i)
@@ -185,14 +186,34 @@ namespace Cardamom
             text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(text.Item1);
 
+            var cubeSolid = Solid.GenerateCube(100);
+            var faceColors = 
+                new Color4[] { Color4.Red, Color4.Lime, Color4.Blue, Color4.Yellow, Color4.Magenta, Color4.Cyan };
+            VertexArray vertices = new(PrimitiveType.Triangles, 36);
+            for (int i=0; i<6; ++i)
+            {
+                for (int j=0; j<6; ++j)
+                {
+                    vertices[6 * i + j] = new(cubeSolid.Faces[i].Vertices[j], faceColors[i], new());
+                }
+            }
+            var cubeModel = new Model(vertices, resources.GetShader("shader-default-no-texture"));
+
+            var scene = 
+                new Scene(
+                    new SecondaryController<Scene>(),
+                    new SubjectiveCamera3d(1.5f, new(), 10), 
+                    new List<IRenderable>() { cubeModel });
+
             var screen = 
-                new Screen(
+                new SceneScreen(
                     new Planar.Rectangle(new(), new(800, 600)), 
                     new SecondaryController<Screen>(),
-                    new List<UiLayer>()
+                    new List<UiGroupLayer>()
                     {
                         UiElementFactory.CreatePaneLayer(new List<IRenderable>() { pane }).Item1
-                    });
+                    },
+                    scene);
             screen.Initialize();
             ui.UiRoot = screen;
             ui.Start();

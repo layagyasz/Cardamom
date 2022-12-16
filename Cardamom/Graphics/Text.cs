@@ -2,8 +2,6 @@
 using Cardamom.Graphics.Ui;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using SharpFont;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Cardamom.Graphics
 {

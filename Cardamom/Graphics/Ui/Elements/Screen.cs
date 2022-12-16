@@ -12,15 +12,15 @@ namespace Cardamom.Graphics.Ui.Elements
         public IController Controller { get; set; }
         public IControlled? Parent { get; set; }
 
-        private readonly UiLayer[] _uiLayers;
+        private readonly IUiLayer[] _uiLayers;
 
         private readonly Rectangle _bounds;
 
-        public Screen(Rectangle bounds, IController controller, IEnumerable<UiLayer> UiLayers)
+        public Screen(Rectangle bounds, IController controller, IEnumerable<IUiLayer> uiLayers)
         {
             Controller = controller;
             _bounds = bounds;
-            _uiLayers = UiLayers.ToArray();
+            _uiLayers = uiLayers.ToArray();
         }
 
         public void Initialize()
@@ -37,7 +37,7 @@ namespace Cardamom.Graphics.Ui.Elements
             return true;
         }
 
-        public void Draw(RenderTarget target)
+        public virtual void Draw(RenderTarget target)
         {
             target.PushTranslation(Position);
             foreach (var layer in _uiLayers)
@@ -47,7 +47,7 @@ namespace Cardamom.Graphics.Ui.Elements
             target.PopTransform();
         }
 
-        public  void Update(UiContext context, long delta)
+        public  virtual void Update(UiContext context, long delta)
         {
             context.PushTranslation(Position);
             foreach (var layer in _uiLayers)
