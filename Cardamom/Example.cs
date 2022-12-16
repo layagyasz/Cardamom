@@ -200,7 +200,7 @@ namespace Cardamom
             }
             var cubeModel = new Model(vertices, resources.GetShader("shader-default-no-texture"));
 
-            var camera = new SubjectiveCamera3d(1.5f, new(), 10);
+            var camera = new SubjectiveCamera3d(1.5f, new(), new(400, 300, 0), 10);
             var sceneController =
                 new PassthroughController(
                     new SubjectiveCamera3dController(camera)
@@ -210,10 +210,11 @@ namespace Cardamom
                         PitchRange = new FloatRange(0, MathHelper.Pi),
                         DistanceRange = new FloatRange(0, 200)
                     });
-            var scene = 
+            var scene =
                 new Scene(
+                    new Vector3(800, 600, 0),
                     sceneController,
-                    camera, 
+                    camera,
                     new List<IRenderable>() { cubeModel });
 
             var screen = 

@@ -1,19 +1,23 @@
 ﻿using Cardamom.Graphics.Camera;
 using Cardamom.Graphics.Ui.Controller;
-using System.Net.Mime;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
-    public class Scene : IRenderable, IControlled
+    public class Scene : IUiElement
     {
         public IController Controller { get; }
         public IControlled? Parent { get; set; }
         public ICamera Camera { get; }
+        public Vector3 Position { get; set; }
+        public Vector3 Size { get; }
+        public bool Visible { get; set; } = true;
 
         private List<IRenderable> _elements;
 
-        public Scene(IController controller, ICamera camera, IEnumerable<IRenderable> elements)
+        public Scene(Vector3 size, IController controller, ICamera camera, IEnumerable<IRenderable> elements)
         {
+            Size = size;
             Controller = controller;
             Camera = camera;
             _elements = elements.ToList();
@@ -26,22 +30,32 @@ namespace Cardamom.Graphics.Ui.Elements
 
         public void Draw(RenderTarget target)
         {
-            target.PushTransform(Camera.GetViewMatrix());
-            foreach (var element in _elements)
+            if (Visible)
             {
-                element.Draw(target);
+                target.PushTranslation(Position);
+                target.PushTransform(Camera.GetViewMatrix());
+                foreach (var element in _elements)
+                {
+                    element.Draw(target);
+                }
+                target.PopTransform();
+                target.PopTransform();
             }
-            target.PopTransform();
         }
 
         public void Update(UiContext context, long delta)
         {
-            context.PushTransform(Camera.GetViewMatrix());
-            foreach (var element in _elements)
+            if (Visible)
             {
-                element.Update(context, delta);
+                context.PushTranslation(Position);
+                context.PushTransform(Camera.GetViewMatrix());
+                foreach (var element in _elements)
+                {
+                    element.Update(context, delta);
+                }
+                context.PopTransform();
+                context.PopTransform();
             }
-            context.PopTransform();
         }
     }
 }
