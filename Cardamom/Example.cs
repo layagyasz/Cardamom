@@ -208,7 +208,7 @@ namespace Cardamom
                         KeySensitivity = 0.05f,
                         MouseWheelSensitivity = 1f,
                         PitchRange = new FloatRange(0, MathHelper.Pi),
-                        DistanceRange = new FloatRange(2, 20)
+                        DistanceRange = new FloatRange(0, 200)
                     });
             var scene = 
                 new Scene(

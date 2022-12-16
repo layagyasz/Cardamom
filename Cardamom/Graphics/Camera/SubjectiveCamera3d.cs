@@ -28,7 +28,10 @@ namespace Cardamom.Graphics.Camera
 
         protected override Matrix4 GetViewMatrixImpl()
         {
-            return Matrix4.CreateTranslation(Focus) * Matrix4.CreateRotationZ(Yaw) * Matrix4.CreateRotationX(Pitch);
+            return Matrix4.CreateTranslation(Focus) 
+                * Matrix4.CreateRotationZ(Roll) 
+                * Matrix4.CreateRotationX(Pitch)
+                * Matrix4.CreateTranslation(new Vector3(0, 0, -Distance));
         }
 
         protected override Matrix4 GetProjectionMatrixImpl()

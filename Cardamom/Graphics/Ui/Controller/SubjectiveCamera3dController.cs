@@ -14,7 +14,7 @@ namespace Cardamom.Graphics.Ui.Controller
         public float KeySensitivity { get; set; } = 1f;
         public float MouseWheelSensitivity { get; set; } = 1f;
         public FloatRange PitchRange { get; set; } = FloatRange.UNBOUNDED;
-        public FloatRange YawRange { get; set; } = FloatRange.UNBOUNDED;
+        public FloatRange RollRange { get; set; } = FloatRange.UNBOUNDED;
         public FloatRange DistanceRange { get; set; } = FloatRange.UNBOUNDED;
 
         private SubjectiveCamera3d? _camera;
@@ -33,10 +33,10 @@ namespace Cardamom.Graphics.Ui.Controller
             switch (e.Key)
             {
                 case Keys.Left:
-                    _camera!.SetYaw(YawRange.Clamp(_camera.Yaw - KeySensitivity));
+                    _camera!.SetRoll(RollRange.Clamp(_camera.Roll - KeySensitivity));
                     return true;
                 case Keys.Right:
-                    _camera!.SetYaw(YawRange.Clamp(_camera.Yaw + KeySensitivity));
+                    _camera!.SetRoll(RollRange.Clamp(_camera.Roll + KeySensitivity));
                     return true;
                 case Keys.Up:
                     _camera!.SetPitch(PitchRange.Clamp(_camera.Pitch + KeySensitivity));
