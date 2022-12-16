@@ -1,5 +1,5 @@
-﻿using Cardamom.Graphics.Ui.Controller;
-using Cardamom.Planar;
+﻿using Cardamom.Geometry;
+using Cardamom.Graphics.Ui.Controller;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements

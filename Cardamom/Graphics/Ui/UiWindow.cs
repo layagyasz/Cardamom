@@ -1,5 +1,4 @@
-﻿using Cardamom.Planar;
-using Cardamom.Window;
+﻿using Cardamom.Window;
 using System.Diagnostics;
 
 namespace Cardamom.Graphics.Ui

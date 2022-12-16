@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Graphics
+namespace Cardamom.Geometry
 {
     public struct FloatRect
     {
@@ -15,8 +15,8 @@ namespace Cardamom.Graphics
 
         public bool Contains(Vector2 point)
         {
-            return point.X > TopLeft.X 
-                && point.Y > TopLeft.Y 
+            return point.X > TopLeft.X
+                && point.Y > TopLeft.Y
                 && point.X < TopLeft.X + Size.X
                 && point.Y < TopLeft.Y + Size.Y;
         }
@@ -24,7 +24,7 @@ namespace Cardamom.Graphics
         public FloatRect GetIntersection(FloatRect other)
         {
             Vector2 topLeft = new(Math.Max(TopLeft.X, other.TopLeft.X), Math.Max(TopLeft.Y, other.TopLeft.Y));
-            Vector2 bottomRight = 
+            Vector2 bottomRight =
                 new(
                     Math.Min(TopLeft.X + Size.X, other.TopLeft.X + other.Size.X),
                     Math.Min(TopLeft.Y + Size.Y, other.TopLeft.Y + other.Size.Y));

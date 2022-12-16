@@ -1,6 +1,4 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
-using Cardamom.Planar;
-using OpenTK.Graphics.OpenGL;
 
 namespace Cardamom.Graphics.Ui.Elements
 {

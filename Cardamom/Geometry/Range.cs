@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Planar
+namespace Cardamom.Geometry
 {
     public struct FloatRange
     {

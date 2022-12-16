@@ -1,5 +1,5 @@
-﻿using Cardamom.Graphics.Camera;
-using Cardamom.Planar;
+﻿using Cardamom.Geometry;
+using Cardamom.Graphics.Camera;
 using Cardamom.Window;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;

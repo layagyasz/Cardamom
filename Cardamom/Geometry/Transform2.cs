@@ -1,7 +1,6 @@
-﻿using Cardamom.Graphics;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Planar
+namespace Cardamom.Geometry
 {
     public struct Transform2
     {

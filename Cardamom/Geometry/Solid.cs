@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Graphics
+namespace Cardamom.Geometry
 {
     public class Solid
     {
@@ -27,18 +27,18 @@ namespace Cardamom.Graphics
 
         public SolidFace[] Faces { get; }
 
-        public Solid(SolidFace[] faces) 
-        { 
-            Faces = faces; 
+        public Solid(SolidFace[] faces)
+        {
+            Faces = faces;
         }
 
         public static Solid GenerateCube(float scale)
         {
             SolidFace[] faces = new SolidFace[6];
-            for (int i=0; i<6; ++i)
+            for (int i = 0; i < 6; ++i)
             {
                 var face = new Vector3[6];
-                for (int j=0; j<6; ++j)
+                for (int j = 0; j < 6; ++j)
                 {
                     face[j] = scale * CUBE_VERTICES[CUBE_FACES[i][j]];
                 }

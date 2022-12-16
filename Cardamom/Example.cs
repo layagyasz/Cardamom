@@ -1,4 +1,5 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Geometry;
+using Cardamom.Graphics;
 using Cardamom.Graphics.Camera;
 using Cardamom.Graphics.Ui;
 using Cardamom.Graphics.Ui.Controller;
@@ -7,7 +8,6 @@ using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
-using Cardamom.Planar;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -219,7 +219,7 @@ namespace Cardamom
 
             var screen = 
                 new SceneScreen(
-                    new Planar.Rectangle(new(), new(800, 600)),
+                    new Geometry.Rectangle(new(), new(800, 600)),
                     new SceneScreenController(),
                     new List<UiGroupLayer>()
                     {

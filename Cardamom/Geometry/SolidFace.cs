@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Graphics
+namespace Cardamom.Geometry
 {
     public class SolidFace
     {

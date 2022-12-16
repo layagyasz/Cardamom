@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Graphics
+namespace Cardamom.Geometry
 {
     public struct IntRect
     {
@@ -9,7 +9,7 @@ namespace Cardamom.Graphics
 
         public IntRect(Vector2i topLeft, Vector2i size)
         {
-            TopLeft=  topLeft;
+            TopLeft = topLeft;
             Size = size;
         }
 

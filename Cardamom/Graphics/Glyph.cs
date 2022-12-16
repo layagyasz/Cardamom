@@ -1,4 +1,6 @@
-﻿namespace Cardamom.Graphics
+﻿using Cardamom.Geometry;
+
+namespace Cardamom.Graphics
 {
     public struct Glyph
     {

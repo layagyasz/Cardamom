@@ -1,8 +1,7 @@
-﻿using Cardamom.Graphics.Core;
-using Cardamom.Planar;
+﻿using Cardamom.Geometry;
+using Cardamom.Graphics.Core;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.Desktop;
 
 namespace Cardamom.Graphics
 {
