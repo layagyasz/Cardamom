@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Geometry
+namespace Cardamom.Mathematics.Geometry
 {
     public interface IPolygon
     {

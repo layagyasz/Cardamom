@@ -1,5 +1,5 @@
-﻿using Cardamom.Geometry;
-using Cardamom.Graphics.Ui.Controller;
+﻿using Cardamom.Graphics.Ui.Controller;
+using Cardamom.Mathematics.Geometry;
 
 namespace Cardamom.Graphics.Ui.Elements
 {

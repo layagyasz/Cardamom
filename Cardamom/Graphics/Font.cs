@@ -34,6 +34,7 @@ namespace Cardamom.Graphics
 
             var page = GetOrLoadPage(characterSize);
             var bitmap = _face.Glyph.Bitmap;
+            var topLeft = new Vector2i(_face.Glyph.BitmapLeft, -_face.Glyph.BitmapTop);
             var size = new Vector2i(bitmap.Width, bitmap.Rows);
             var textureView = page.Add(size, TranslateBitmap(bitmap));
 
@@ -41,7 +42,7 @@ namespace Cardamom.Graphics
                 new Glyph()
                 {
                     Advance = (float)_face.Glyph.Advance.X,
-                    Bounds = new(new(_face.Glyph.BitmapLeft, -_face.Glyph.BitmapTop), size),
+                    Bounds = new(topLeft, topLeft + size),
                     TextureView = textureView,
                     LeftBuffer = _face.Glyph.DeltaLsb,
                     RightBuffer = _face.Glyph.DeltaRsb

@@ -1,5 +1,4 @@
-﻿using Cardamom.Geometry;
-using Cardamom.Graphics;
+﻿using Cardamom.Graphics;
 using Cardamom.Graphics.Camera;
 using Cardamom.Graphics.Ui;
 using Cardamom.Graphics.Ui.Controller;
@@ -8,6 +7,8 @@ using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
+using Cardamom.Mathematics;
+using Cardamom.Mathematics.Geometry;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
@@ -208,8 +209,8 @@ namespace Cardamom
                     {
                         KeySensitivity = 0.05f,
                         MouseWheelSensitivity = 1f,
-                        PitchRange = new FloatRange(-MathHelper.Pi, 0),
-                        DistanceRange = new FloatRange(2, 10)
+                        PitchRange = new(-MathHelper.Pi, 0),
+                        DistanceRange = new(2, 10)
                     });
             var scene =
                 new Scene(
@@ -220,7 +221,7 @@ namespace Cardamom
 
             var screen = 
                 new SceneScreen(
-                    new Geometry.Rectangle(new(), new(800, 600)),
+                    new Mathematics.Geometry.Rectangle(new(), new(800, 600)),
                     new SceneScreenController(),
                     new List<UiGroupLayer>()
                     {

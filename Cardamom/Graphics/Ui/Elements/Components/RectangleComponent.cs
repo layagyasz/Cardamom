@@ -31,8 +31,8 @@ namespace Cardamom.Graphics.Ui.Elements.Components
             _cornerRadius = attributes.CornerRadius;
             _texture = attributes.Texture.Texture;
 
-            Vector2 topLeft = attributes.Texture.TextureView.TopLeft;
-            Vector2 bottomRight = attributes.Texture.TextureView.TopLeft + attributes.Texture.TextureView.Size;
+            Vector2 topLeft = attributes.Texture.TextureView.Min;
+            Vector2 bottomRight = attributes.Texture.TextureView.Max;
             _vertices[0] = new Vertex3(new(), attributes.BackgroundColor[0], topLeft);
             _vertices[1] = 
                 new Vertex3(

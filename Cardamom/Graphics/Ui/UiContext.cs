@@ -1,4 +1,4 @@
-﻿using Cardamom.Geometry;
+﻿using Cardamom.Mathematics.Geometry;
 using Cardamom.Window;
 using OpenTK.Mathematics;
 
@@ -11,7 +11,7 @@ namespace Cardamom.Graphics.Ui
         private IUiInteractiveElement? _topElement;
         private float _topZ;
 
-        public UiContext(IntRect viewPort, MouseListener mouseListener)
+        public UiContext(Box2i viewPort, MouseListener mouseListener)
             : base(viewPort)
         {
             _mouseListener = mouseListener;
@@ -37,7 +37,7 @@ namespace Cardamom.Graphics.Ui
         {
             if (_topElement == null || element.Position.Z >= _topZ)
             {
-                if (GetScissor() == null || GetScissor()!.Value.Contains(_mouseListener.GetMousePosition()))
+                if (GetScissor() == null || GetScissor()!.Value.ContainsInclusive(_mouseListener.GetMousePosition()))
                 {
                     var inverted = GetViewMatrix().Inverted();
                     var mouse = _mouseListener.GetMousePosition();

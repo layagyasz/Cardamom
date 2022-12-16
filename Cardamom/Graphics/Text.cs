@@ -81,7 +81,7 @@ namespace Cardamom.Graphics
                     cursor.X += glyph.Advance;
                 }
             }
-            return cursor + (lastGlyph?.Bounds.TopLeft + lastGlyph?.Bounds.Size ?? new());
+            return cursor + new Vector2(lastGlyph?.Bounds.Max.X ?? 0, 0);
         }
 
         public void SetCharacterSize(uint characterSize)
@@ -185,15 +185,15 @@ namespace Cardamom.Graphics
 
             var glyph = _font!.GetOrLoadGlyph(character, _characterSize);
 
-            float top = _cursor.Y + glyph.Bounds.TopLeft.Y;
-            float bottom = _cursor.Y + glyph.Bounds.TopLeft.Y + glyph.Bounds.Size.Y;
-            float left = _cursor.X + glyph.Bounds.TopLeft.X;
-            float right = _cursor.X + glyph.Bounds.TopLeft.X + glyph.Bounds.Size.X;
+            float top = _cursor.Y + glyph.Bounds.Min.Y;
+            float bottom = _cursor.Y + glyph.Bounds.Max.Y;
+            float left = _cursor.X + glyph.Bounds.Min.X;
+            float right = _cursor.X + glyph.Bounds.Max.X;
 
-            float texTop = glyph.TextureView.TopLeft.Y;
-            float texBottom = glyph.TextureView.TopLeft.Y + glyph.TextureView.Size.Y;
-            float texLeft = glyph.TextureView.TopLeft.X;
-            float texRight = glyph.TextureView.TopLeft.X + glyph.TextureView.Size.X;
+            float texTop = glyph.TextureView.Min.Y;
+            float texBottom = glyph.TextureView.Max.Y;
+            float texLeft = glyph.TextureView.Min.X;
+            float texRight = glyph.TextureView.Max.X;
 
             _vertices.Add(new(new(left, top, 0), _color, new(texLeft, texTop)));
             _vertices.Add(new(new(right, top, 0), _color, new(texRight, texTop)));

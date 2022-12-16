@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Geometry
+namespace Cardamom.Mathematics.Geometry
 {
     public class Rectangle : IPolygon
     {
@@ -18,8 +18,8 @@ namespace Cardamom.Geometry
         public bool ContainsPoint(Vector2 point)
         {
             return point.X >= _topLeft.X
-                && point.X <= _topLeft.X + Size.X 
-                && point.Y >= _topLeft.Y 
+                && point.X <= _topLeft.X + Size.X
+                && point.Y >= _topLeft.Y
                 && point.Y <= _topLeft.Y + Size.Y;
         }
 

@@ -1,5 +1,5 @@
-﻿using Cardamom.Geometry;
-using Cardamom.Graphics.Core;
+﻿using Cardamom.Graphics.Core;
+using Cardamom.Mathematics.Geometry;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
@@ -9,7 +9,7 @@ namespace Cardamom.Graphics
     {
         private GLVertexArray? _vertexArray;
 
-        protected RenderTarget(IntRect viewPort)
+        protected RenderTarget(Box2i viewPort)
             : base(viewPort) { }
 
         public abstract void SetActive(bool active);
@@ -89,8 +89,8 @@ namespace Cardamom.Graphics
                 }
                 GL.Enable(EnableCap.ScissorTest);
                 GL.Scissor(
-                    (int)scissor.Value.TopLeft.X, 
-                    (int)(GetViewPort().Size.Y - scissor.Value.TopLeft.Y - scissor.Value.Size.Y), 
+                    (int)scissor.Value.Min.X, 
+                    (int)(GetViewPort().Size.Y - scissor.Value.Min.Y - scissor.Value.Size.Y), 
                     (int)scissor.Value.Size.X,
                     (int)scissor.Value.Size.Y);
                 Error.LogGLError($"set scissor {scissor}");

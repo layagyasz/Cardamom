@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Geometry
+namespace Cardamom.Mathematics.Geometry
 {
     public class Ngon : IPolygon
     {
@@ -22,8 +22,8 @@ namespace Cardamom.Geometry
             {
                 var left = GetVertex(i);
                 var right = GetVertex(j);
-                if (((left.Y > point.Y) != (right.Y > point.Y)) 
-                    && (point.X < (right.X - left.X) * (point.Y - left.Y) / (right.Y - left.Y) + left.X))
+                if (left.Y > point.Y != right.Y > point.Y
+                    && point.X < (right.X - left.X) * (point.Y - left.Y) / (right.Y - left.Y) + left.X)
                 {
                     c = !c;
                 }

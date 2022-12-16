@@ -1,4 +1,4 @@
-﻿using Cardamom.Geometry;
+﻿using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics
 {
@@ -6,9 +6,9 @@ namespace Cardamom.Graphics
     {
         public string? Key { get; set; }
         public Texture? Texture { get; set; }
-        public IntRect TextureView { get; set; }
+        public Box2i TextureView { get; set; }
 
-        public TextureSegment(string key, Texture? texture, IntRect textureView)
+        public TextureSegment(string key, Texture? texture, Box2i textureView)
         {
             Key = key;
             Texture = texture;

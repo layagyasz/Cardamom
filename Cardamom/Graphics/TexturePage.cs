@@ -1,5 +1,4 @@
-﻿using Cardamom.Geometry;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics
 {
@@ -33,7 +32,7 @@ namespace Cardamom.Graphics
             return _texture;
         }
 
-        public IntRect Add(Vector2i size, byte[] bitmap)
+        public Box2i Add(Vector2i size, byte[] bitmap)
         {
             Vector2i paddedSize = size + 2 * Padding;
             Row? selectedRow = null;
@@ -58,8 +57,9 @@ namespace Cardamom.Graphics
             }
 
             selectedRow ??= AddRow(paddedSize.X, (int)(RowHeightRatio * paddedSize.Y));
-            var rect = new IntRect(Padding + new Vector2i(selectedRow.Width, selectedRow.Top), size);
-            _texture.Update(rect.TopLeft, rect.Size, bitmap);
+            var topLeft = Padding + new Vector2i(selectedRow.Width, selectedRow.Top);
+            var rect = new Box2i(topLeft, topLeft + size);
+            _texture.Update(topLeft, size, bitmap);
             selectedRow.Width += paddedSize.X;
             return rect;
         }

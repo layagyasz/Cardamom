@@ -51,7 +51,7 @@ namespace Cardamom.Window
             if (active)
             {
                 var viewPort = GetViewPort();
-                GL.Viewport(viewPort.TopLeft.X, viewPort.TopLeft.Y, viewPort.Size.X, viewPort.Size.Y);
+                GL.Viewport(viewPort.Min.X, viewPort.Min.Y, viewPort.Size.X, viewPort.Size.Y);
             }
         }
 
