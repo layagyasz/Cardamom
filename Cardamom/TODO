@@ -6,16 +6,20 @@ Spherical coordinate system
 Split ComputeShader from Shader
 Use VertexBuffer for models
 TexturePage based TextureLibrary
+Support custom VertexArray attributes
 
 #Graphics.Ui
 Z,Y sort elements
-Flatten render targets to allow drawing overlays on 3d scenes
-Accept user defined projection matrices
 UiContext to work with user defined projections
 
 # Pipeline
 Remove dictionaries to passing arguments
 Define both input and output channels on pipeline nodes?
+LatticeNoise evaluator functions
+LatticeNoise interpolator functions
+LatticeNoise treatment functions
+Add resolution argument to LatticeNoise and WaveForm filters
+-Used as multiplier for Frequency/Periodicity
 
 #Window
 Translate mouse events to NDC

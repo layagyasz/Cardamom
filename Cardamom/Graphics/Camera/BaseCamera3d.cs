@@ -4,9 +4,10 @@ namespace Cardamom.Graphics.Camera
 {
     public abstract class BaseCamera3d : ICamera
     {
-        public float Pitch { get; private set; } = MathHelper.PiOver2;
+        public float Pitch { get; private set; } = 0;
         public float Roll { get; private set; } = 0;
         public float AspectRatio { get; private set; }
+        public float FarPlane { get; }
         public float FieldOfView { get; private set; } = MathHelper.PiOver2;
 
         private bool _updateView = true;
@@ -15,9 +16,10 @@ namespace Cardamom.Graphics.Camera
         private bool _updateProjection = true;
         private Matrix4 _projection;
 
-        protected BaseCamera3d(float aspectRatio)
+        protected BaseCamera3d(float aspectRatio, float farPlane)
         {
             AspectRatio = aspectRatio;
+            FarPlane = farPlane;
         }
 
         protected abstract Matrix4 GetViewMatrixImpl();

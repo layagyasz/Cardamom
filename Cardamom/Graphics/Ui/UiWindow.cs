@@ -1,4 +1,5 @@
 ﻿using Cardamom.Window;
+using OpenTK.Windowing.Common;
 using System.Diagnostics;
 
 namespace Cardamom.Graphics.Ui
@@ -18,11 +19,12 @@ namespace Cardamom.Graphics.Ui
         {
             RenderWindow = renderWindow;
             RenderWindow.Closed += HandleClose;
+            RenderWindow.Resized += HandleResize;
 
             _mouseListener = new();
             _mouseListener.Bind(renderWindow);
 
-            _context = new(_mouseListener);
+            _context = new(renderWindow.GetViewPort(), _mouseListener);
 
             _controller = new();
             _controller.Bind(renderWindow);
@@ -56,6 +58,12 @@ namespace Cardamom.Graphics.Ui
         private void HandleClose(object? sender, EventArgs e)
         {
             _run = false;
+        }
+
+        private void HandleResize(object? sender, ResizeEventArgs e)
+        {
+            RenderWindow.SetViewPort(new(new(), e.Size));
+            _context.SetViewPort(new(new(), e.Size));
         }
     }
 }

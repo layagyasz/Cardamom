@@ -16,6 +16,7 @@ namespace Cardamom.Window
         public EventHandler<MouseMoveEventArgs>? MouseMoved { get; set; }
         public EventHandler<KeyboardKeyEventArgs>? KeyReleased { get; set; }
         public EventHandler<KeyboardKeyEventArgs>? KeyPressed { get; set; }
+        public EventHandler<ResizeEventArgs>? Resized { get; set; }
 
         private readonly NativeWindow _window;
 
@@ -101,7 +102,7 @@ namespace Cardamom.Window
 
         private void HandleResize(ResizeEventArgs e)
         {
-            Resize(e.Size);
+            Resized?.Invoke(this, e);
         }
     }
 }

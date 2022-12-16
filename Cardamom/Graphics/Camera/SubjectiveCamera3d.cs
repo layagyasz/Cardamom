@@ -8,8 +8,8 @@ namespace Cardamom.Graphics.Camera
         public Vector3 Center { get; private set; }
         public float Distance { get; private set; }
 
-        public SubjectiveCamera3d(float aspectRatio, Vector3 focus, Vector3 center, float distance)
-            : base(aspectRatio)
+        public SubjectiveCamera3d(float aspectRatio, float farPlane, Vector3 focus, Vector3 center, float distance)
+            : base(aspectRatio, farPlane)
         {
             Focus = focus;
             Center = center;
@@ -45,7 +45,7 @@ namespace Cardamom.Graphics.Camera
 
         protected override Matrix4 GetProjectionMatrixImpl()
         {
-            return Matrix4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, 0.01f, 100f);
+            return Matrix4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, 0.01f, FarPlane);
         }
     }
 }

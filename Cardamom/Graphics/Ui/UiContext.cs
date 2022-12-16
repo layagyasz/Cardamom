@@ -1,4 +1,5 @@
-﻿using Cardamom.Window;
+﻿using Cardamom.Geometry;
+using Cardamom.Window;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
@@ -8,15 +9,23 @@ namespace Cardamom.Graphics.Ui
         private readonly MouseListener _mouseListener;
 
         private IUiInteractiveElement? _topElement;
+        private float _topZ;
 
-        public UiContext(MouseListener mouseListener)
+        public UiContext(IntRect viewPort, MouseListener mouseListener)
+            : base(viewPort)
         {
             _mouseListener = mouseListener;
         }
 
-        public void Clear()
+        public override void Clear()
         {
             _topElement = null;
+            _topZ = float.MinValue;
+        }
+
+        public override void Flatten()
+        {
+            _topZ = float.MinValue;
         }
 
         public IUiInteractiveElement? GetTopElement()
@@ -26,11 +35,11 @@ namespace Cardamom.Graphics.Ui
 
         public void Register(IUiInteractiveElement element)
         {
-            if (_topElement == null || element.Position.Z >= _topElement.Position.Z)
+            if (_topElement == null || element.Position.Z >= _topZ)
             {
                 if (GetScissor() == null || GetScissor()!.Value.Contains(_mouseListener.GetMousePosition()))
                 {
-                    var inverted = GetTransform().Inverted();
+                    var inverted = GetViewMatrix().Inverted();
                     var mouse = _mouseListener.GetMousePosition();
                     var origin =
                         new Vector3(
@@ -41,6 +50,7 @@ namespace Cardamom.Graphics.Ui
                     if (element.IntersectsRay(origin, dz))
                     {
                         _topElement = element;
+                        _topZ = element.Position.Z;
                     }
                 }
             }

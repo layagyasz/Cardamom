@@ -49,9 +49,9 @@ namespace Cardamom.Graphics.Ui.Elements
             {
                 element.Draw(target);
             }
-            target.PopTransform();
+            target.PopViewMatrix();
             target.PopScissor();
-            target.PopTransform();
+            target.PopViewMatrix();
         }
 
         public override void Update(UiContext context, long delta)
@@ -68,9 +68,9 @@ namespace Cardamom.Graphics.Ui.Elements
                 offset += element.Size.Y;
                 element.Update(context, delta);
             }
-            context.PopTransform();
+            context.PopViewMatrix();
             context.PopScissor();
-            context.PopTransform();
+            context.PopViewMatrix();
         }
     }
 }

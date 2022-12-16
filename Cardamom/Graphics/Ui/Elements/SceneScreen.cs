@@ -17,7 +17,7 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             target.PushTranslation(Position);
             Scene.Draw(target);
-            target.PopTransform();
+            target.PopViewMatrix();
             base.Draw(target);
         }
 
@@ -25,7 +25,7 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             context.PushTranslation(Position);
             Scene.Update(context, delta);
-            context.PopTransform();
+            context.PopViewMatrix();
             base.Update(context, delta);
         }
     }

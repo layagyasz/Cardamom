@@ -27,8 +27,8 @@ namespace Cardamom.Graphics.Ui.Elements
                 target.PushScissor(new(new(), InternalSize));
                 _textComponent.Draw(target);
                 target.PopScissor();
-                target.PopTransform();
-                target.PopTransform();
+                target.PopViewMatrix();
+                target.PopViewMatrix();
             }
         }
 
@@ -36,7 +36,7 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             context.PushTranslation(Position + LeftMargin);
             base.Update(context, delta);
-            context.PopTransform();
+            context.PopViewMatrix();
         }
 
         public override bool IntersectsRay(Vector3 origin, Vector3 direction)

@@ -65,12 +65,12 @@ namespace Cardamom.Graphics.Ui.Elements
                 {
                     target.PushTranslation(_cursorPosition);
                     target.Draw(_cursor, 0, _cursor.Length, _cursorShader!, BLANK);
-                    target.PopTransform();
+                    target.PopViewMatrix();
                 }
-                target.PopTransform();
+                target.PopViewMatrix();
                 target.PopScissor();
-                target.PopTransform();
-                target.PopTransform();
+                target.PopViewMatrix();
+                target.PopViewMatrix();
             }
         }
 

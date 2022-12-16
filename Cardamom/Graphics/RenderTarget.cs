@@ -7,27 +7,26 @@ namespace Cardamom.Graphics
 {
     public abstract class RenderTarget : GraphicsContext
     {
-        private IntRect _viewPort;
         private GLVertexArray? _vertexArray;
 
         protected RenderTarget(IntRect viewPort)
-        {
-            _viewPort = viewPort;
-        }
+            : base(viewPort) { }
 
         public abstract void SetActive(bool active);
         public abstract void Display();
 
-        public void Clear()
+        public override void Clear()
         {
             SetActive(true);
             GL.Disable(EnableCap.ScissorTest);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
 
-        public IntRect GetViewPort()
+        public override void Flatten()
         {
-            return _viewPort;
+            SetActive(true);
+            GL.Disable(EnableCap.ScissorTest);
+            GL.Clear(ClearBufferMask.DepthBufferBit);
         }
 
         public void Draw(
@@ -62,10 +61,8 @@ namespace Cardamom.Graphics
             Error.LogGLError("bind context");
 
             shader.Bind();
-            shader.SetMatrix4(
-                "projection", 
-                Matrix4.CreateOrthographicOffCenter(0, _viewPort.Size.X, _viewPort.Size.Y, 0, -10000, 10000));
-            shader.SetMatrix4("view", GetTransform());
+            shader.SetMatrix4("projection", GetProjectionMatrix());
+            shader.SetMatrix4("view", GetViewMatrix());
 
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
@@ -93,7 +90,7 @@ namespace Cardamom.Graphics
                 GL.Enable(EnableCap.ScissorTest);
                 GL.Scissor(
                     (int)scissor.Value.TopLeft.X, 
-                    (int)(_viewPort.Size.Y - scissor.Value.TopLeft.Y - scissor.Value.Size.Y), 
+                    (int)(GetViewPort().Size.Y - scissor.Value.TopLeft.Y - scissor.Value.Size.Y), 
                     (int)scissor.Value.Size.X,
                     (int)scissor.Value.Size.Y);
                 Error.LogGLError($"set scissor {scissor}");
@@ -102,11 +99,6 @@ namespace Cardamom.Graphics
             _vertexArray.Draw(primitiveType, start, count);
 
             SetActive(false);
-        }
-
-        public void Resize(Vector2i size)
-        {
-            _viewPort.Size = size;
         }
     }
 }

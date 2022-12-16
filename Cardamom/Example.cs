@@ -187,7 +187,7 @@ namespace Cardamom
             text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(text.Item1);
 
-            var cubeSolid = Solid.GenerateCube(100);
+            var cubeSolid = Solid.GenerateCube(1);
             var faceColors = 
                 new Color4[] { Color4.Red, Color4.Lime, Color4.Blue, Color4.Yellow, Color4.Magenta, Color4.Cyan };
             VertexArray vertices = new(PrimitiveType.Triangles, 36);
@@ -200,15 +200,16 @@ namespace Cardamom
             }
             var cubeModel = new Model(vertices, resources.GetShader("shader-default-no-texture"));
 
-            var camera = new SubjectiveCamera3d(1.5f, new(), new(400, 300, 0), 10);
+            var camera = new SubjectiveCamera3d(1.5f, 1000, new(), new(), 10);
+            camera.SetPitch(-MathHelper.PiOver2);
             var sceneController =
                 new PassthroughController(
                     new SubjectiveCamera3dController(camera)
                     {
                         KeySensitivity = 0.05f,
                         MouseWheelSensitivity = 1f,
-                        PitchRange = new FloatRange(0, MathHelper.Pi),
-                        DistanceRange = new FloatRange(0, 200)
+                        PitchRange = new FloatRange(-MathHelper.Pi, 0),
+                        DistanceRange = new FloatRange(2, 10)
                     });
             var scene =
                 new Scene(

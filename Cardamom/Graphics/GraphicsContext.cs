@@ -5,17 +5,38 @@ namespace Cardamom.Graphics
 {
     public abstract class GraphicsContext
     {
-        private readonly Stack<Matrix4> _transformStack = new();
+        private IntRect _viewPort;
+        private Matrix4 _defaultProjection;
+        private readonly Stack<Matrix4> _projectionStack = new();
+        private readonly Stack<Matrix4> _viewStack = new();
         private readonly Stack<FloatRect?> _scissorStack = new();
+
+        protected GraphicsContext(IntRect viewPort) 
+        {
+            SetViewPort(viewPort);
+        }
+
+        public abstract void Clear();
+        public abstract void Flatten();
+
+        public Matrix4 GetProjectionMatrix()
+        {
+            return _projectionStack.Count == 0 ? _defaultProjection : _projectionStack.Peek();
+        }
 
         public FloatRect? GetScissor()
         {
             return _scissorStack.Count == 0 ? null : _scissorStack.Peek();
         }
 
-        public Matrix4 GetTransform()
+        public Matrix4 GetViewMatrix()
         {
-            return _transformStack.Count == 0 ? Matrix4.Identity : _transformStack.Peek();
+            return _viewStack.Count == 0 ? Matrix4.Identity : _viewStack.Peek();
+        }
+
+        public IntRect GetViewPort()
+        {
+            return _viewPort;
         }
 
         public void PopScissor()
@@ -28,27 +49,44 @@ namespace Cardamom.Graphics
             _scissorStack.Push(null);
         }
 
+        public void PushProjectionMatrix(Matrix4 projection)
+        {
+            _projectionStack.Push(projection);
+        }
+
         public void PushScissor(FloatCube scissor)
         {
             var currentScissor = GetScissor();
-            var transformed = Combine(scissor, GetTransform());
+            var transformed = Combine(scissor, GetViewMatrix());
             _scissorStack.Push(
                 currentScissor == null ? transformed : currentScissor.Value.GetIntersection(transformed));
         }
 
-        public void PopTransform()
+        public void PopProjectionMatrix()
         {
-            _transformStack.Pop();
+            _projectionStack.Pop();
         }
 
-        public void PushTransform(Matrix4 transform)
+        public void PopViewMatrix()
         {
-            _transformStack.Push(transform * GetTransform());
+            _viewStack.Pop();
+        }
+
+        public void PushViewMatrix(Matrix4 transform)
+        {
+            _viewStack.Push(transform * GetViewMatrix());
         }
 
         public void PushTranslation(Vector3 translation)
         {
-            PushTransform(Matrix4.CreateTranslation(translation));
+            PushViewMatrix(Matrix4.CreateTranslation(translation));
+        }
+
+        public void SetViewPort(IntRect viewPort)
+        {
+            _viewPort = viewPort;
+            _defaultProjection = 
+                Matrix4.CreateOrthographicOffCenter(0, _viewPort.Size.X, _viewPort.Size.Y, 0, -10000, 10000);
         }
 
         private static FloatRect Combine(FloatCube rect, Matrix4 transform)

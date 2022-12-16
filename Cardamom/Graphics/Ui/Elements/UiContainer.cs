@@ -43,7 +43,7 @@ namespace Cardamom.Graphics.Ui.Elements
                     element.Draw(target);
                 }
                 target.PopScissor();
-                target.PopTransform();
+                target.PopViewMatrix();
             }
         }
 
@@ -54,7 +54,7 @@ namespace Cardamom.Graphics.Ui.Elements
             context.PushScissor(new(new(), InternalSize));
             _elements.ForEach(x => x.Update(context, delta));
             context.PopScissor();
-            context.PopTransform();
+            context.PopViewMatrix();
         }
     }
 }
