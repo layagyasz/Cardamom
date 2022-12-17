@@ -141,11 +141,9 @@ namespace Cardamom.Mathematics.Geometry
                     {
                         if (j > 1)
                         {
-                            Console.WriteLine($"obverse face {k} at ({i},{j})");
                             faces[k++] =
                                 new SolidFace(points[i][j - 1], points[i - 1][j - 1], points[i - 1][j - 2]);
                         }
-                        Console.WriteLine($"face {k} at ({i},{j})");
                         faces[k++] = new SolidFace(points[i - 1][j - 1], points[i][j - 1], points[i][j]);
                     }
                 }

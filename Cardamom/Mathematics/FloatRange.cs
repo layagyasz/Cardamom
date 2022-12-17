@@ -17,9 +17,20 @@ namespace Cardamom.Mathematics
             Maximum = maximum;
         }
 
+        public void Bound(float value)
+        {
+            Minimum = Math.Min(Minimum, value);
+            Maximum = Math.Max(Maximum, value);
+        }
+
         public float Clamp(float value)
         {
             return MathHelper.Clamp(value, Minimum, Maximum);
+        }
+
+        public override string ToString()
+        {
+            return string.Format($"[{Minimum}, {Maximum}]");
         }
     }
 }

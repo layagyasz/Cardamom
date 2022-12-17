@@ -7,18 +7,20 @@ namespace Cardamom.Graphics
     {
         private readonly VertexArray _vertices;
         private readonly Shader _shader;
+        private readonly Texture _texture;
 
-        public Model(VertexArray vertices, Shader shader)
+        public Model(VertexArray vertices, Shader shader, Texture texture)
         {
             _vertices = vertices;
             _shader = shader;
+            _texture = texture;
         }
 
         public void Initialize() { }
 
         public void Draw(RenderTarget target)
         {
-            target.Draw(_vertices, 0, _vertices.Length, _shader, /* texture= */ null);
+            target.Draw(_vertices, 0, _vertices.Length, _shader, _texture);
         }
 
         public void Update(UiContext context, long delta) { }

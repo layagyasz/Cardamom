@@ -7,6 +7,7 @@ using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
+using Cardamom.Mathematics;
 using Cardamom.Mathematics.Geometry;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
@@ -140,33 +141,14 @@ namespace Cardamom
                     .AddOutput("classified")
                     .AddOutput("sobel")
                     .Build();
-            var pipelineTime = new Stopwatch();
-            var canvases = new CachingCanvasProvider(new(512, 512), Color4.Black);
-            for (int i = 0; i < 0; ++i)
-            {
-                if (i % 100 == 0)
-                {
-                    Console.WriteLine($"### {i}");
-                    Console.WriteLine(pipelineTime.ElapsedMilliseconds);
-                }
-                rSeed.Value = random.Next();
-                gSeed.Value = random.Next();
-                bSeed.Value = random.Next();
+            var resolution = 512;
+            var canvases = new CachingCanvasProvider(new(resolution, resolution), Color4.Black);
+            rSeed.Value = random.Next();
+            gSeed.Value = random.Next();
+            bSeed.Value = random.Next();
 
-                pipelineTime.Start();
-                var output = pipeline.Run(canvases);
-                pipelineTime.Stop();
-
-                if (i == 0)
-                {
-                    output[0].GetTexture().CopyToImage();
-                    output[1].GetTexture().CopyToImage();
-                }
-
-                canvases.Return(output[0]);
-                canvases.Return(output[1]);
-            }
-            Console.WriteLine(pipelineTime.ElapsedMilliseconds);
+            var output = pipeline.Run(canvases);
+            output[0].GetTexture().CopyToImage().SaveToFile("example-out.png");
 
             var ui = new UiWindow(window);
             ui.Bind(new MouseListener());
@@ -191,26 +173,32 @@ namespace Cardamom
             text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(text.Item1);
 
-            var icosphereSolid = Solid.GenerateIcosphere(1, 5);
+            var icosphereSolid = Solid.GenerateIcosphere(1, 12);
             VertexArray vertices = new(PrimitiveType.Triangles, 3 * icosphereSolid.Faces.Length);
             for (int i=0; i<icosphereSolid.Faces.Length; ++i)
             {
-                var color = new Color4(random.NextSingle(), random.NextSingle(), random.NextSingle(), 1);
                 for (int j=0; j<3; ++j)
                 {
-                    vertices[3 * i + j] = new(icosphereSolid.Faces[i].Vertices[j], color, new());
+                    var vert = icosphereSolid.Faces[i].Vertices[j];
+                    float p = (float)(Math.Sqrt(vert.X * vert.X + vert.Y * vert.Y) * Math.Atan2(vert.Y, vert.X));
+                    float z = vert.Z;
+                    vertices[3 * i + j] =
+                        new(
+                            vert,
+                            Color4.White, 
+                            new((float)(resolution * ((p + Math.PI) / Math.Tau)), resolution * 0.5f * (z + 1)));
                 }
             }
-            var cubeModel = new Model(vertices, resources.GetShader("shader-default-no-texture"));
+            var cubeModel = new Model(vertices, resources.GetShader("shader-default"), output[0].GetTexture());
 
-            var camera = new SubjectiveCamera3d(1.5f, 1000, new(), new(), 10);
+            var camera = new SubjectiveCamera3d(1.5f, 1000, new(), new(), 2);
             camera.SetPitch(-MathHelper.PiOver2);
             var sceneController =
                 new PassthroughController(
                     new SubjectiveCamera3dController(camera)
                     {
                         KeySensitivity = 0.0005f,
-                        MouseWheelSensitivity = 1f,
+                        MouseWheelSensitivity = 0.1f,
                         PitchRange = new(-MathHelper.Pi, 0),
                         DistanceRange = new(2, 10)
                     });

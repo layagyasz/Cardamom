@@ -1,6 +1,6 @@
 # Geometry
-demonstrate wrapping texture onto icosphere
-foral cylindrical coordinates
+try to fix texture tearing on sphere
+formal cylindrical coordinates
 
 #Graphics
 Split ComputeShader from Shader
