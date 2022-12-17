@@ -6,7 +6,7 @@ namespace Cardamom.Mathematics.Geometry
     {
         public Vector3[] Vertices { get; }
 
-        public SolidFace(Vector3[] vertices)
+        public SolidFace(params Vector3[] vertices)
         {
             Vertices = vertices;
         }

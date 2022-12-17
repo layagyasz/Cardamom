@@ -1,6 +1,6 @@
 # Geometry
-Generate icosphere
-Spherical coordinate system
+demonstrate wrapping texture onto icosphere
+foral cylindrical coordinates
 
 #Graphics
 Split ComputeShader from Shader

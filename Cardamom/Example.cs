@@ -191,15 +191,14 @@ namespace Cardamom
             text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(text.Item1);
 
-            var cubeSolid = Solid.GenerateCube(1);
-            var faceColors = 
-                new Color4[] { Color4.Red, Color4.Lime, Color4.Blue, Color4.Yellow, Color4.Magenta, Color4.Cyan };
-            VertexArray vertices = new(PrimitiveType.Triangles, 36);
-            for (int i=0; i<6; ++i)
+            var icosphereSolid = Solid.GenerateIcosphere(1, 5);
+            VertexArray vertices = new(PrimitiveType.Triangles, 3 * icosphereSolid.Faces.Length);
+            for (int i=0; i<icosphereSolid.Faces.Length; ++i)
             {
-                for (int j=0; j<6; ++j)
+                var color = new Color4(random.NextSingle(), random.NextSingle(), random.NextSingle(), 1);
+                for (int j=0; j<3; ++j)
                 {
-                    vertices[6 * i + j] = new(cubeSolid.Faces[i].Vertices[j], faceColors[i], new());
+                    vertices[3 * i + j] = new(icosphereSolid.Faces[i].Vertices[j], color, new());
                 }
             }
             var cubeModel = new Model(vertices, resources.GetShader("shader-default-no-texture"));
