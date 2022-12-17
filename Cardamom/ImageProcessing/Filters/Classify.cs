@@ -7,13 +7,13 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Classify : IFilter
     {
-        private static Shader? CLASSIFY_SHADER;
-        private static readonly int CLASSIFICATION_COUNT_LOCATION = 0;
-        private static readonly int COLOR_LOCATION = 1;
-        private static readonly int CONDITION_POSITION_LOCATION = 33;
-        private static readonly int CONDITION_CHANNEL_LOCATION = 65;
-        private static readonly int CONDITION_RANGE_LOCATION = 193;
-        private static readonly int CHANNEL_LOCATION = 321;
+        private static Shader? s_ClassifyShader;
+        private static readonly int s_ClassificationCountLocation = 0;
+        private static readonly int s_ColorLocation = 1;
+        private static readonly int s_ConditionPositionLocation = 33;
+        private static readonly int s_ConditionChannelLocation = 65;
+        private static readonly int s_ConditionRangeLocation = 193;
+        private static readonly int s_ChannelLocation = 321;
 
         public struct Classification
         {
@@ -67,21 +67,21 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            CLASSIFY_SHADER ??= new Shader.Builder().SetCompute("Resources/classify.comp").Build();
+            s_ClassifyShader ??= new Shader.Builder().SetCompute("Resources/classify.comp").Build();
 
-            CLASSIFY_SHADER.SetInt32(CLASSIFICATION_COUNT_LOCATION, _colors.Length);
-            CLASSIFY_SHADER.SetColorArray(COLOR_LOCATION, _colors);
-            CLASSIFY_SHADER.SetVector2iArray(CONDITION_POSITION_LOCATION, _classificationPositions);
-            CLASSIFY_SHADER.SetInt32Array(CONDITION_CHANNEL_LOCATION, _conditionChannels);
-            CLASSIFY_SHADER.SetVector2Array(CONDITION_RANGE_LOCATION, _conditionRanges);
+            s_ClassifyShader.SetInt32(s_ClassificationCountLocation, _colors.Length);
+            s_ClassifyShader.SetColorArray(s_ColorLocation, _colors);
+            s_ClassifyShader.SetVector2iArray(s_ConditionPositionLocation, _classificationPositions);
+            s_ClassifyShader.SetInt32Array(s_ConditionChannelLocation, _conditionChannels);
+            s_ClassifyShader.SetVector2Array(s_ConditionRangeLocation, _conditionRanges);
 
-            CLASSIFY_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
+            s_ClassifyShader.SetInt32(s_ChannelLocation, (int)channel);
 
             var inTex = inputs.First().Value.GetTexture();
             var outTex = output.GetTexture();
             inTex.BindImage(0);
             outTex.BindImage(1);
-            CLASSIFY_SHADER.DoCompute(inTex.Size);
+            s_ClassifyShader.DoCompute(inTex.Size);
             Texture.UnbindImage(0);
             Texture.UnbindImage(1);
         }

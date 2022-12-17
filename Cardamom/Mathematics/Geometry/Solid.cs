@@ -4,7 +4,7 @@ namespace Cardamom.Mathematics.Geometry
 {
     public class Solid
     {
-        private static readonly Vector3[] CUBE_VERTICES =
+        private static readonly Vector3[] s_CubeVertices =
         {
             new(-1, -1, -1),
             new(1, -1, -1),
@@ -15,7 +15,7 @@ namespace Cardamom.Mathematics.Geometry
             new(-1, 1, 1),
             new(1, 1, 1),
         };
-        private static readonly int[][] CUBE_FACES =
+        private static readonly int[][] s_CubeFaces =
         {
             new int[] { 0, 1, 2, 1, 2, 3 },
             new int[] { 4, 5, 6, 5, 6, 7 },
@@ -40,7 +40,7 @@ namespace Cardamom.Mathematics.Geometry
                 var face = new Vector3[6];
                 for (int j = 0; j < 6; ++j)
                 {
-                    face[j] = scale * CUBE_VERTICES[CUBE_FACES[i][j]];
+                    face[j] = scale * s_CubeVertices[s_CubeFaces[i][j]];
                 }
                 faces[i] = new SolidFace(face);
             }

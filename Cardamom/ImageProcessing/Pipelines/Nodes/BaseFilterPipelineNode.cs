@@ -4,7 +4,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
     public abstract class BaseFilterPipelineNode : IPipelineNode
     {
-        public string? Key { get; set; }
+        public string Key { get; set; }
         public Channel Channel { get; }
 
         public abstract bool Inline { get; }
@@ -26,7 +26,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public abstract class BaseFilterPipelineNodeBuilder<TParameters>
             : IPipelineNode.IBuilder where TParameters : new()
         {
-            public string? Key { get; set; }
+            public string Key { get; set; } = string.Empty;
             public Channel Channel { get; set; } = Channel.ALL;
             public Dictionary<string, string> Inputs { get; set; } = new();
             public TParameters Parameters { get; set; } = new();

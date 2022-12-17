@@ -4,7 +4,7 @@ namespace Cardamom.Graphics
 {
     public class TextureSegment : IKeyed
     {
-        public string? Key { get; set; }
+        public string Key { get; set; }
         public Texture? Texture { get; set; }
         public Box2i TextureView { get; set; }
 

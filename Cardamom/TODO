@@ -26,6 +26,3 @@ Translate mouse events to NDC
 Separate events for text entered and key pressed
 - Current event only suitable for text entered
 - Move KeyMapper closer to event origination
-
-#General
-Make IKeyed.Key non nullable

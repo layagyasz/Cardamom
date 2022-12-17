@@ -7,8 +7,6 @@ namespace Cardamom.Graphics
 {
     public class Texture : GLObject
     {
-        private static readonly Color4 CLEAR = new(1, 1, 1, 0);
-
         public Vector2i Size;
 
         private Texture(int Handle, Vector2i size)
@@ -18,11 +16,6 @@ namespace Cardamom.Graphics
         }
 
         public static Texture Create(Vector2i size)
-        {
-            return Create(size, CLEAR);
-        }
-
-        public static Texture Create(Vector2i size, Color4 fill)
         {
             int handle = GL.GenTexture();
             GL.ActiveTexture(TextureUnit.Texture0);
@@ -38,10 +31,16 @@ namespace Cardamom.Graphics
                 PixelFormat.Rgba,
                 PixelType.UnsignedByte,
                 0);
-            GL.ClearTexImage(handle, 0, PixelFormat.Rgba, PixelType.Float, ref fill);
             SetParameters();
 
             return new Texture(handle, size);
+        }
+
+        public static Texture Create(Vector2i size, Color4 fill)
+        {
+            var texture = Create(size);
+            texture.Fill(fill);
+            return texture;
         }
 
         public static Texture FromFile(string path)
@@ -105,6 +104,11 @@ namespace Cardamom.Graphics
         public Image CopyToImage()
         {
             return Image.FromData(Size, GetData(), /* invertYAxis= */ true);
+        }
+
+        public void Fill(Color4 color)
+        {
+            GL.ClearTexImage(Handle, 0, PixelFormat.Rgba, PixelType.Float, ref color);
         }
 
         public void Update(Texture other)

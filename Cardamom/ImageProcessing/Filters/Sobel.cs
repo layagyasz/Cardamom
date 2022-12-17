@@ -5,9 +5,9 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterBuilder(typeof(Builder))]
     public class Sobel : IFilter
     {
-        private static Shader? SOBEL_SHADER;
-        private static readonly int CHANNEL_INDEX_LOCATION = 0;
-        private static readonly int CHANNEL_LOCATION = 1;
+        private static Shader? s_SobelShader;
+        private static readonly int s_ChannelIndexLocation = 0;
+        private static readonly int s_ChannelLocation = 1;
 
         private readonly Channel _channel;
 
@@ -20,16 +20,16 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            SOBEL_SHADER ??= new Shader.Builder().SetCompute("Resources/sobel.comp").Build();
+            s_SobelShader ??= new Shader.Builder().SetCompute("Resources/sobel.comp").Build();
 
-            SOBEL_SHADER.SetInt32(CHANNEL_INDEX_LOCATION, _channel.GetIndex());
-            SOBEL_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
+            s_SobelShader.SetInt32(s_ChannelIndexLocation, _channel.GetIndex());
+            s_SobelShader.SetInt32(s_ChannelLocation, (int)channel);
 
             var inTex = inputs.First().Value.GetTexture();
             var outTex = output.GetTexture();
             inTex.BindImage(0);
             outTex.BindImage(1);
-            SOBEL_SHADER.DoCompute(inTex.Size);
+            s_SobelShader.DoCompute(inTex.Size);
             Texture.UnbindImage(0);
             Texture.UnbindImage(1);
         }

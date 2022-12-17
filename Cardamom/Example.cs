@@ -170,7 +170,7 @@ namespace Cardamom
 
             var ui = new UiWindow(window);
             var resources = GraphicsResources.Builder.ReadFrom("Example/GraphicsResources.json").Build();
-            var uiElementFactory = new UiElementFactory(resources, SimpleKeyMapper.US);
+            var uiElementFactory = new UiElementFactory(resources, SimpleKeyMapper.Us);
             var pane = uiElementFactory.CreatePane("example-base-class").Item1;
             var options = new List<IUiElement>();
             for (int i = 0; i < 20; ++i)

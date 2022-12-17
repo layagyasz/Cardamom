@@ -7,10 +7,10 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Denormalize : IFilter
     {
-        private static Shader? DENORMALIZE_SHADER;
-        private static readonly int MEAN_LOCATION = 0;
-        private static readonly int STANDARD_DEVIATION_LOCATION = 1;
-        private static readonly int CHANNEL_LOCATION = 2;
+        private static Shader? s_DenormalizeShader;
+        private static readonly int s_MeanLocation = 0;
+        private static readonly int s_StandardDeviationLocation = 1;
+        private static readonly int s_ChannelLocation = 2;
 
         private readonly Vector4 _mean;
         private readonly Vector4 _standardDeviation;
@@ -25,17 +25,17 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            DENORMALIZE_SHADER ??= new Shader.Builder().SetCompute("Resources/denormalize.comp").Build();
+            s_DenormalizeShader ??= new Shader.Builder().SetCompute("Resources/denormalize.comp").Build();
 
-            DENORMALIZE_SHADER.SetVector4(MEAN_LOCATION, _mean);
-            DENORMALIZE_SHADER.SetVector4(STANDARD_DEVIATION_LOCATION, _standardDeviation);
-            DENORMALIZE_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
+            s_DenormalizeShader.SetVector4(s_MeanLocation, _mean);
+            s_DenormalizeShader.SetVector4(s_StandardDeviationLocation, _standardDeviation);
+            s_DenormalizeShader.SetInt32(s_ChannelLocation, (int)channel);
 
             var inTex = inputs.First().Value.GetTexture();
             var outTex = output.GetTexture();
             inTex.BindImage(0);
             outTex.BindImage(1);
-            DENORMALIZE_SHADER.DoCompute(inTex.Size);
+            s_DenormalizeShader.DoCompute(inTex.Size);
             Texture.UnbindImage(0);
             Texture.UnbindImage(1);
         }

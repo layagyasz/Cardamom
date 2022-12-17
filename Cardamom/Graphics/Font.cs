@@ -87,7 +87,7 @@ namespace Cardamom.Graphics
             {
                 return page;
             }
-            var newPage = new TexturePage(new(128, 128), new(1, 1), 1.1f);
+            var newPage = new TexturePage(new(128, 128), new(1, 1, 1, 0), new(1, 1), 1.1f);
             _pages.Add(characterSize, newPage);
             return newPage;
         }

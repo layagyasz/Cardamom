@@ -7,13 +7,13 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class WaveForm : IFilter
     {
-        private static Shader? WAVE_FORM_SHADER;
-        private static readonly int WAVE_TYPE_LOCATION = 0;
-        private static readonly int AMPLITITUDE_LOCATION = 1;
-        private static readonly int BIAS_LOCATION = 2;
-        private static readonly int PERIODICITY_LOCATION = 3;
-        private static readonly int TURBULENCE_LOCATION = 4;
-        private static readonly int CHANNEL_LOCATION = 5;
+        private static Shader? s_WaveFormShader;
+        private static readonly int s_WaveTypeLocation = 0;
+        private static readonly int s_AmplitudeLocation = 1;
+        private static readonly int s_BiasLocation = 2;
+        private static readonly int s_PeriodicityLocation = 3;
+        private static readonly int s_TurbulenceLocation = 4;
+        private static readonly int s_ChannelLocation = 5;
 
         public enum WaveType
         {
@@ -43,21 +43,21 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            WAVE_FORM_SHADER ??= new Shader.Builder().SetCompute("Resources/wave_form.comp").Build();
+            s_WaveFormShader ??= new Shader.Builder().SetCompute("Resources/wave_form.comp").Build();
 
-            WAVE_FORM_SHADER.SetInt32(WAVE_TYPE_LOCATION, (int)_settings.WaveType);
-            WAVE_FORM_SHADER.SetFloat(AMPLITITUDE_LOCATION, _settings.Amplitude);
-            WAVE_FORM_SHADER.SetFloat(BIAS_LOCATION, _settings.Bias);
-            WAVE_FORM_SHADER.SetVector2(PERIODICITY_LOCATION, _settings.Periodicity);
-            WAVE_FORM_SHADER.SetVector2(TURBULENCE_LOCATION, _settings.Turbulence);
+            s_WaveFormShader.SetInt32(s_WaveTypeLocation, (int)_settings.WaveType);
+            s_WaveFormShader.SetFloat(s_AmplitudeLocation, _settings.Amplitude);
+            s_WaveFormShader.SetFloat(s_BiasLocation, _settings.Bias);
+            s_WaveFormShader.SetVector2(s_PeriodicityLocation, _settings.Periodicity);
+            s_WaveFormShader.SetVector2(s_TurbulenceLocation, _settings.Turbulence);
 
-            WAVE_FORM_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
+            s_WaveFormShader.SetInt32(s_ChannelLocation, (int)channel);
 
             var inTex = inputs.First().Value.GetTexture();
             var outTex = output.GetTexture();
             inTex.BindImage(0);
             outTex.BindImage(1);
-            WAVE_FORM_SHADER.DoCompute(inTex.Size);
+            s_WaveFormShader.DoCompute(inTex.Size);
             Texture.UnbindImage(0);
             Texture.UnbindImage(1);
         }

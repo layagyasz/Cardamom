@@ -2,10 +2,10 @@
 {
     public class GeneratorNode : IPipelineNode
     {
-        public string? Key { get; set; }
+        public string Key { get; set; }
         public bool Inline => false;
 
-        public GeneratorNode(string? key)
+        public GeneratorNode(string key)
         {
             Key = key;
         }
@@ -22,7 +22,7 @@
 
         public class Builder : IPipelineNode.IBuilder
         {
-            public string? Key { get; set; }
+            public string Key { get; set; } = string.Empty;
 
             public Builder SetKey(string key)
             {

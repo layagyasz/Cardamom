@@ -7,10 +7,10 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Adjust : IFilter
     {
-        private static Shader? ADJUST_SHADER;
-        private static readonly int OVERFLOW_BEHAVIOR_LOCATION = 0;
-        private static readonly int ADJUSTMENT_LOCATION = 1;
-        private static readonly int CHANNEL_LOCATION = 2;
+        private static Shader? s_AdjustShader;
+        private static readonly int s_OverflowBehaviorLocation = 0;
+        private static readonly int s_AdjustmentLocation = 1;
+        private static readonly int s_ChannelLocation = 2;
 
         public enum OverflowBehavior
         {
@@ -32,18 +32,18 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            ADJUST_SHADER ??= new Shader.Builder().SetCompute("Resources/adjust.comp").Build();
+            s_AdjustShader ??= new Shader.Builder().SetCompute("Resources/adjust.comp").Build();
 
-            ADJUST_SHADER.SetInt32(OVERFLOW_BEHAVIOR_LOCATION, (int)_overflowBehavior);
-            ADJUST_SHADER.SetVector4(ADJUSTMENT_LOCATION, _adjustment);
+            s_AdjustShader.SetInt32(s_OverflowBehaviorLocation, (int)_overflowBehavior);
+            s_AdjustShader.SetVector4(s_AdjustmentLocation, _adjustment);
 
-            ADJUST_SHADER.SetInt32(CHANNEL_LOCATION, (int)channel);
+            s_AdjustShader.SetInt32(s_ChannelLocation, (int)channel);
 
             var inTex = inputs.First().Value.GetTexture();
             var outTex = output.GetTexture();
             inTex.BindImage(0);
             outTex.BindImage(1);
-            ADJUST_SHADER.DoCompute(inTex.Size);
+            s_AdjustShader.DoCompute(inTex.Size);
             Texture.UnbindImage(0);
             Texture.UnbindImage(1);
         }

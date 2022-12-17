@@ -6,7 +6,7 @@ namespace Cardamom.Window
 {
     public class SimpleKeyMapper : IKeyMapper
     {
-        public static readonly SimpleKeyMapper US =
+        public static readonly SimpleKeyMapper Us =
             new(
                 new()
                 {

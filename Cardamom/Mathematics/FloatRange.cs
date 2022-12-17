@@ -4,7 +4,7 @@ namespace Cardamom.Mathematics
 {
     public struct FloatRange
     {
-        public static readonly FloatRange UNBOUNDED = new(float.MinValue, float.MaxValue);
+        public static readonly FloatRange Unbounded = new(float.MinValue, float.MaxValue);
 
         public float Minimum { get; set; }
         public float Maximum { get; set; }

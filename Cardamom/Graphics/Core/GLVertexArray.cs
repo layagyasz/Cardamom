@@ -5,9 +5,9 @@ namespace Cardamom.Graphics.Core
 {
     public class GLVertexArray : GLObject
     {
-        private static readonly int POSITION_ATTRIBUTE_INDEX = 0;
-        private static readonly int COLOR_ATTRIBUTE_INDEX = 1;
-        private static readonly int TEX_COORDS_ATTRIBUTE_INDEX = 2;
+        private static readonly int s_PositionAttributeIndex = 0;
+        private static readonly int s_ColorAttributeIndex = 1;
+        private static readonly int s_TexCoordsAttributeIndex = 2;
 
         private readonly GLBuffer<Vertex3> _buffer;
 
@@ -20,7 +20,7 @@ namespace Cardamom.Graphics.Core
             _buffer.Bind();
 
             GL.VertexAttribPointer(
-                POSITION_ATTRIBUTE_INDEX, 
+                s_PositionAttributeIndex, 
                 3, 
                 VertexAttribPointerType.Float, 
                 /* normalized= */ false, 
@@ -28,11 +28,11 @@ namespace Cardamom.Graphics.Core
                 0);
             Error.LogGLError("link position attribute");
 
-            GL.EnableVertexAttribArray(POSITION_ATTRIBUTE_INDEX);
+            GL.EnableVertexAttribArray(s_PositionAttributeIndex);
             Error.LogGLError("enable position attribute");
 
             GL.VertexAttribPointer(
-                COLOR_ATTRIBUTE_INDEX,
+                s_ColorAttributeIndex,
                 4, 
                 VertexAttribPointerType.Float,
                 /* normalized= */ false, 
@@ -40,11 +40,11 @@ namespace Cardamom.Graphics.Core
                 3 * sizeof(float));
             Error.LogGLError("link color attribute");
 
-            GL.EnableVertexAttribArray(COLOR_ATTRIBUTE_INDEX);
+            GL.EnableVertexAttribArray(s_ColorAttributeIndex);
             Error.LogGLError("enable color attribute");
 
             GL.VertexAttribPointer(
-                TEX_COORDS_ATTRIBUTE_INDEX,
+                s_TexCoordsAttributeIndex,
                 2,
                 VertexAttribPointerType.Float,
                 /* normalized= */ false,
@@ -52,7 +52,7 @@ namespace Cardamom.Graphics.Core
                 7 * sizeof(float));
             Error.LogGLError("link tex coord attribute");
 
-            GL.EnableVertexAttribArray(TEX_COORDS_ATTRIBUTE_INDEX);
+            GL.EnableVertexAttribArray(s_TexCoordsAttributeIndex);
             Error.LogGLError("enable tex coord attribute");
         }
 

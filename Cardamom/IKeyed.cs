@@ -2,6 +2,6 @@
 {
     public interface IKeyed
     {
-        string? Key { get; set; }
+        string Key { get; set; }
     }
 }

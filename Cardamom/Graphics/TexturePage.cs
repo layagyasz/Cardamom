@@ -4,7 +4,7 @@ namespace Cardamom.Graphics
 {
     public class TexturePage
     {
-        private static readonly float MAX_ROW_RATIO = 1.4f;
+        private static readonly float s_MaxRowRatio = 1.4f;
 
         class Row
         {
@@ -16,13 +16,15 @@ namespace Cardamom.Graphics
         public Vector2i Padding { get; }
         public float RowHeightRatio { get; }
 
+        private Color4 _fill;
         private readonly List<Row> _rows = new();
         private Texture _texture;
         private int _nextRowTop;
 
-        public TexturePage(Vector2i initialSize, Vector2i padding, float rowHeightRatio)
+        public TexturePage(Vector2i initialSize, Color4 fill, Vector2i padding, float rowHeightRatio)
         {
-            _texture = Texture.Create(initialSize);
+            _fill = fill;
+            _texture = Texture.Create(initialSize, fill);
             Padding = padding; 
             RowHeightRatio = rowHeightRatio;
         }
@@ -40,7 +42,7 @@ namespace Cardamom.Graphics
             foreach (var row in _rows)
             {
                 var ratio = (float)row.Height / paddedSize.Y;
-                if (ratio > MAX_ROW_RATIO || ratio < 1)
+                if (ratio > s_MaxRowRatio || ratio < 1)
                 {
                     continue;
                 }
@@ -87,7 +89,7 @@ namespace Cardamom.Graphics
 
         private void Resize()
         {
-            var newTexture = Texture.Create(2 * _texture.Size);
+            var newTexture = Texture.Create(2 * _texture.Size, _fill);
             newTexture.Update(_texture);
             _texture.Dispose();
             _texture = newTexture;
