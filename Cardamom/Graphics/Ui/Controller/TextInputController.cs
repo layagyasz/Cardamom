@@ -1,7 +1,6 @@
 ﻿using Cardamom.Collections;
 using Cardamom.Graphics.Ui.Elements;
 using Cardamom.Window;
-using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Graphics.Ui.Controller
@@ -15,15 +14,12 @@ namespace Cardamom.Graphics.Ui.Controller
 
         public string Key { get; }
 
-        private readonly IKeyMapper _keyMapper;
-
         private string _value = string.Empty;
         private int _cursor = 0;
 
-        public TextInputController(string key, IKeyMapper keyMapper)
+        public TextInputController(string key)
         {
             Key = key;
-            _keyMapper = keyMapper;
         }
 
         public string? GetValue()
@@ -66,7 +62,7 @@ namespace Cardamom.Graphics.Ui.Controller
             return true;
         }
 
-        public override bool HandleKeyPressed(KeyboardKeyEventArgs e)
+        public override bool HandleTextEntered(TextEnteredEventArgs e)
         {
             if (e.Key == Keys.Left)
             {
@@ -94,12 +90,11 @@ namespace Cardamom.Graphics.Ui.Controller
             }
             else if (!s_DisregardKeys.Contains(e.Key))
             {
-                string text = _keyMapper.Map(e);
-                if (text.Length > 0)
+                if (e.Text.Length > 0)
                 {
-                    string newValue = _value[.._cursor] + text + _value[_cursor..];
+                    string newValue = _value[.._cursor] + e.Text + _value[_cursor..];
                     SetValue(newValue);
-                    MoveCursor(text.Length);
+                    MoveCursor(e.Text.Length);
                 }
             }
             return true;

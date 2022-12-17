@@ -10,8 +10,10 @@ namespace Cardamom.Graphics.Ui
         public IRenderable? UiRoot { get; set; }
 
         private readonly UiRootController _controller;
-        private readonly MouseListener _mouseListener;
         private readonly UiContext _context;
+
+        private MouseListener? _mouseListener;
+        private KeyboardListener? _keyboardListener;
 
         private bool _run = true;
 
@@ -21,15 +23,25 @@ namespace Cardamom.Graphics.Ui
             RenderWindow.Closed += HandleClose;
             RenderWindow.Resized += HandleResize;
 
-            _mouseListener = new();
-            _mouseListener.Bind(renderWindow);
-
-            _context = new(renderWindow.GetViewPort(), _mouseListener);
-
+            _context = new(renderWindow.GetViewPort());
             _controller = new();
-            _controller.Bind(renderWindow);
-            _controller.Bind(_mouseListener);
             _controller.Bind(_context);
+        }
+
+        public void Bind(KeyboardListener keyboardListener)
+        {
+            _keyboardListener = keyboardListener;
+            _keyboardListener.Bind(RenderWindow);
+            _controller.Bind(_keyboardListener);
+        }
+
+        public void Bind(MouseListener mouseListener)
+        {
+            _mouseListener = mouseListener;
+            _mouseListener.Bind(RenderWindow);
+            _context.Bind(mouseListener);
+            _controller.Bind(_mouseListener);
+
         }
 
         public void Start()
@@ -50,6 +62,7 @@ namespace Cardamom.Graphics.Ui
                 }
                 elapsed = frameElapsed;
 
+                _keyboardListener?.DispatchEvents();
                 _controller.DispatchEvents();
                 RenderWindow.Display();
             }

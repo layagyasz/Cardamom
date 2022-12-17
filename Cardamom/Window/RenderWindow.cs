@@ -3,6 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.ComponentModel;
 
 namespace Cardamom.Window
@@ -63,6 +64,16 @@ namespace Cardamom.Window
         public Vector2 GetMousePosition()
         {
             return _window.MousePosition;
+        }
+
+        public bool IsAnyKeyDown()
+        {
+            return _window.IsAnyKeyDown;
+        }
+
+        public bool IsKeyDown(Keys key)
+        {
+            return _window.IsKeyDown(key);
         }
 
         private void HandleClosed(CancelEventArgs e)

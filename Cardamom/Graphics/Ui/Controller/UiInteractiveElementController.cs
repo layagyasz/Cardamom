@@ -3,7 +3,7 @@ using OpenTK.Windowing.Common;
 
 namespace Cardamom.Graphics.Ui.Controller
 {
-    public class UiInteractiveElementController<T> : IController where T : IUiInteractiveElement
+    public abstract class UiInteractiveElementController<T> : IController where T : IUiInteractiveElement
     {
         public EventHandler<MouseButtonEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }
@@ -25,7 +25,12 @@ namespace Cardamom.Graphics.Ui.Controller
             return _element!;
         }
 
-        public virtual bool HandleKeyPressed(KeyboardKeyEventArgs e)
+        public virtual bool HandleKeyDown(KeyboardKeyEventArgs e)
+        {
+            return false;
+        }
+
+        public virtual bool HandleTextEntered(TextEnteredEventArgs e)
         {
             return false;
         }

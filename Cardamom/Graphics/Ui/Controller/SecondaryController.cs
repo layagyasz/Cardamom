@@ -26,7 +26,12 @@ namespace Cardamom.Graphics.Ui.Controller
             return _element!;
         }
 
-        public bool HandleKeyPressed(KeyboardKeyEventArgs e) 
+        public bool HandleKeyDown(KeyboardKeyEventArgs e)
+        {
+            return false;
+        }
+
+        public bool HandleTextEntered(TextEnteredEventArgs e) 
         {
             return false;
         }

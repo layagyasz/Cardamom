@@ -7,11 +7,11 @@ using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
-using Cardamom.Mathematics;
 using Cardamom.Mathematics.Geometry;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 
 namespace Cardamom
@@ -169,8 +169,11 @@ namespace Cardamom
             Console.WriteLine(pipelineTime.ElapsedMilliseconds);
 
             var ui = new UiWindow(window);
+            ui.Bind(new MouseListener());
+            ui.Bind(
+                new KeyboardListener(SimpleKeyMapper.Us, new Keys[] { Keys.Left, Keys.Right, Keys.Up, Keys.Down }));
             var resources = GraphicsResources.Builder.ReadFrom("Example/GraphicsResources.json").Build();
-            var uiElementFactory = new UiElementFactory(resources, SimpleKeyMapper.Us);
+            var uiElementFactory = new UiElementFactory(resources);
             var pane = uiElementFactory.CreatePane("example-base-class").Item1;
             var options = new List<IUiElement>();
             for (int i = 0; i < 20; ++i)
@@ -207,7 +210,7 @@ namespace Cardamom
                 new PassthroughController(
                     new SubjectiveCamera3dController(camera)
                     {
-                        KeySensitivity = 0.05f,
+                        KeySensitivity = 0.0005f,
                         MouseWheelSensitivity = 1f,
                         PitchRange = new(-MathHelper.Pi, 0),
                         DistanceRange = new(2, 10)

@@ -15,9 +15,10 @@ namespace Cardamom.Graphics.Ui
         private IControlled? _mouseOver;
         private HashSet<IControlled> _mouseOverAncestry = new();
 
-        public void Bind(RenderWindow window)
+        public void Bind(KeyboardListener keyboardListener)
         {
-            window.KeyPressed += HandleKeyPressed;
+            keyboardListener.TextEntered += HandleTextEntered;
+            keyboardListener.KeyDown += HandleKeyDown;
         }
 
         public void Bind(MouseListener mouseListener)
@@ -51,9 +52,14 @@ namespace Cardamom.Graphics.Ui
             }
         }
 
-        private void HandleKeyPressed(object? sender, KeyboardKeyEventArgs e)
+        private void HandleKeyDown(object? sender, KeyboardKeyEventArgs e)
         {
-            _focus?.Controller?.HandleKeyPressed(e);
+            Consume(_mouseOver, x => x.Controller?.HandleKeyDown(e) ?? false);
+        }
+
+        private void HandleTextEntered(object? sender, TextEnteredEventArgs e)
+        {
+            _focus?.Controller?.HandleTextEntered(e);
         }
 
         private void HandleMouseButtonClicked(object? sender, MouseButtonEventArgs e)

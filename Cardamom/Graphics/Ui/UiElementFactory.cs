@@ -1,6 +1,5 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Graphics.Ui.Elements;
-using Cardamom.Window;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
@@ -8,12 +7,10 @@ namespace Cardamom.Graphics.Ui
     public class UiElementFactory
     {
         private readonly GraphicsResources _classLibrary;
-        private readonly IKeyMapper _keyMapper;
 
-        public UiElementFactory(GraphicsResources resources, IKeyMapper keyMapper)
+        public UiElementFactory(GraphicsResources resources)
         {
             _classLibrary = resources;
-            _keyMapper = keyMapper;
         }
 
         public static (UiGroupLayer, PaneLayerController) CreatePaneLayer(IEnumerable<IRenderable> panes)
@@ -90,7 +87,7 @@ namespace Cardamom.Graphics.Ui
 
         public (IUiElement, TextInputController) CreateTextInput(string className, Vector3 position = new())
         {
-            var controller = new TextInputController("text", _keyMapper);
+            var controller = new TextInputController("text");
             return (
                 new EditableTextUiElement(_classLibrary.GetClass(className), controller){ Position = position },
                 controller);

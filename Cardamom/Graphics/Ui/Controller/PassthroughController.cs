@@ -42,9 +42,14 @@ namespace Cardamom.Graphics.Ui.Controller
             }
         }
 
-        public bool HandleKeyPressed(KeyboardKeyEventArgs e)
+        public bool HandleKeyDown(KeyboardKeyEventArgs e)
         {
-            return _subcontroller!.HandleKeyPressed(e);
+            return _subcontroller!.HandleKeyDown(e);
+        }
+
+        public bool HandleTextEntered(TextEnteredEventArgs e)
+        {
+            return _subcontroller!.HandleTextEntered(e);
         }
 
         public bool HandleMouseEntered()

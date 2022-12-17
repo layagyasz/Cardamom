@@ -10,7 +10,8 @@ namespace Cardamom.Graphics.Ui.Controller
 
         void Bind(object @object);
         void Unbind();
-        bool HandleKeyPressed(KeyboardKeyEventArgs e);
+        bool HandleKeyDown(KeyboardKeyEventArgs e);
+        bool HandleTextEntered(TextEnteredEventArgs e);
         bool HandleMouseEntered();
         bool HandleMouseLeft();
         bool HandleMouseButtonClicked(MouseButtonEventArgs e);

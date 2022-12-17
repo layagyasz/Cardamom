@@ -17,7 +17,7 @@ namespace Cardamom.Graphics.Ui.Controller
         public FloatRange RollRange { get; set; } = FloatRange.Unbounded;
         public FloatRange DistanceRange { get; set; } = FloatRange.Unbounded;
 
-        private SubjectiveCamera3d? _camera;
+        private readonly SubjectiveCamera3d? _camera;
 
         public SubjectiveCamera3dController(SubjectiveCamera3d camera)
         {
@@ -28,7 +28,7 @@ namespace Cardamom.Graphics.Ui.Controller
 
         public void Unbind() { }
 
-        public bool HandleKeyPressed(KeyboardKeyEventArgs e)
+        public bool HandleKeyDown(KeyboardKeyEventArgs e)
         {
             switch (e.Key)
             {
@@ -45,6 +45,11 @@ namespace Cardamom.Graphics.Ui.Controller
                     _camera!.SetPitch(PitchRange.Clamp(_camera.Pitch - KeySensitivity));
                     return true;
             }
+            return false;
+        }
+
+        public bool HandleTextEntered(TextEnteredEventArgs e)
+        {
             return false;
         }
 
