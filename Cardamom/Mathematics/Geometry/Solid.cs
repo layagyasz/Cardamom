@@ -88,6 +88,92 @@ namespace Cardamom.Mathematics.Geometry
             return new Solid(faces);
         }
 
+        public static Solid GenerateUvSphere(float scale, int subdivisions)
+        {
+            Precondition.Check(subdivisions > 0);
+            var longitudesSin = new float[2 * subdivisions + 2];
+            var longitudesCos = new float[2 * subdivisions + 2];
+            for (int i=0; i<longitudesSin.Length; ++i)
+            {
+                var angle = i * Math.Tau / longitudesSin.Length;
+                longitudesSin[i] = (float)Math.Sin(angle);
+                longitudesCos[i] = (float)Math.Cos(angle);
+            }
+            var faces = new SolidFace[(subdivisions + 2) * longitudesSin.Length];
+            int k = 0;
+            float lastRowSin = 0;
+            float lastRowCos = 0;
+            for (int i = 0; i <= subdivisions + 1; ++i)
+            {
+                float angle = (i + 1) * MathHelper.Pi / (subdivisions + 2);
+                float rowSin = (float)Math.Sin(angle);
+                float rowCos = (float)Math.Cos(angle);
+                for (int j = 0; j < longitudesSin.Length; ++j)
+                {
+                    // Positive pole
+                    if (i == 0)
+                    {
+                        faces[k++] =
+                            new SolidFace(
+                                new(
+                                    scale * longitudesCos[j] * rowSin,
+                                    scale * longitudesSin[j] * rowSin,
+                                    scale * rowCos),
+                                new(
+                                    scale * longitudesCos[(j + 1) % longitudesCos.Length] * rowSin,
+                                    scale * longitudesSin[(j + 1) % longitudesSin.Length] * rowSin,
+                                    scale * rowCos),
+                                new Vector3(0, 0, scale));
+                    }
+                    // Negative pole
+                    else if (i == subdivisions + 1)
+                    {
+                        faces[k++] =
+                            new SolidFace(
+                                new(
+                                    scale * longitudesCos[j] * lastRowSin,
+                                    scale * longitudesSin[j] * lastRowSin,
+                                    scale * lastRowCos),
+                                new(
+                                    scale * longitudesCos[(j + 1) % longitudesCos.Length] * lastRowSin,
+                                    scale * longitudesSin[(j + 1) % longitudesSin.Length] * lastRowSin,
+                                    scale * lastRowCos),
+                                new Vector3(0, 0, -scale));
+                    }
+                    // Body
+                    else
+                    {
+                        var b = 
+                            new Vector3(
+                                scale * longitudesCos[(j + 1) % longitudesCos.Length] * lastRowSin,
+                                scale * longitudesSin[(j + 1) % longitudesSin.Length] * lastRowSin,
+                                scale * lastRowCos);
+                        var c = new Vector3(
+                                scale * longitudesCos[j] * rowSin,
+                                scale * longitudesSin[j] * rowSin,
+                                scale * rowCos);
+                        faces[k++] =
+                            new SolidFace(
+                                new(
+                                    scale * longitudesCos[j] * lastRowSin,
+                                    scale * longitudesSin[j] * lastRowSin,
+                                    scale * lastRowCos),
+                                b,
+                                c,
+                                c,
+                                b,
+                                new(
+                                    scale * longitudesCos[(j + 1) % longitudesCos.Length] * rowSin,
+                                    scale * longitudesSin[(j + 1) % longitudesSin.Length] * rowSin,
+                                    scale * rowCos));
+                    }
+                }
+                lastRowCos = rowCos;
+                lastRowSin = rowSin;
+            }
+            return new Solid(faces);
+        }
+
         public static Solid GenerateIcosphere(float scale, int subdivisions)
         {
             Precondition.Check(subdivisions > 0);
@@ -97,12 +183,12 @@ namespace Cardamom.Mathematics.Geometry
                 var face = new Vector3[3];
                 for (int j = 0; j < 3; ++j)
                 {
-                    face[j] = scale * s_IcosphereVertices[s_IcosphereFaces[i][j]];
+                    face[j] = scale * s_IcosphereVertices[s_IcosphereFaces[i][j]].Normalized();
                 }
                 if (subdivisions > 1)
                 {
                     Array.Copy(
-                        Subdivide(new SolidFace(face), subdivisions),
+                        Subdivide(new SolidFace(face), subdivisions, scale),
                         0,
                         faces,
                         i * subdivisions * subdivisions,
@@ -116,7 +202,7 @@ namespace Cardamom.Mathematics.Geometry
             return new Solid(faces);
         }
 
-        private static SolidFace[] Subdivide(SolidFace face, int subdivisions)
+        private static SolidFace[] Subdivide(SolidFace face, int subdivisions, float scale)
         {
             var faces = new SolidFace[subdivisions * subdivisions];
             var points = new Vector3[subdivisions + 1][];
@@ -136,7 +222,7 @@ namespace Cardamom.Mathematics.Geometry
                     {
                         points[i][j] = left + (1f * j / i) * (right - left);
                     }
-                    points[i][j].Normalize();
+                    points[i][j] = scale * points[i][j].Normalized();
                     if (i > 0 && j > 0)
                     {
                         if (j > 1)

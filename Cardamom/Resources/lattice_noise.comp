@@ -3,6 +3,10 @@
 #define HASH_SPACE 256
 #define KERNEL_SIZE 64
 
+#define SURFACE_PLANE 0
+#define SURFACE_CYLINDER 1
+#define SURFACE_SPHERE 2
+
 #define CHANNEL_RED 1
 #define CHANNEL_GREEN 2
 #define CHANNEL_BLUE 4
@@ -18,46 +22,64 @@ layout(location=2) uniform int octaves;
 layout(location=3) uniform float persistence;
 layout(location=4) uniform float bias;
 layout(location=5) uniform float amplitude;
-layout(location=6) uniform vec2 offset;
-layout(location=7) uniform int channel;
+layout(location=6) uniform vec3 offset;
+layout(location=7) uniform int surface;
+layout(location=8) uniform vec3 scale;
+layout(location=9) uniform int channel;
 
-layout(location=8) uniform int hash_lookup[HASH_SPACE];
-layout(location=264) uniform vec3 kernel[KERNEL_SIZE];
+layout(location=10) uniform int hash_lookup[HASH_SPACE];
+layout(location=266) uniform vec3 kernel[KERNEL_SIZE];
 
 float fade(float x) {
 	return x * x * x * (x * (x * 6 - 15) + 10); 
 }
 
-float linear(vec2 u) {
-	return (1 - u.x) * (1 - u.y);
+float linear(vec3 u) {
+	return (1 - u.x) * (1 - u.y) * (1 - u.z);
 }
 
-float gradient(vec2 u, vec3 v) {
-	return dot(u, v.xy);
+float gradient(vec3 u, vec3 v) {
+	return dot(u, v);
 }
 
-int hash(ivec2 v) {
+int hash(int x, int y, int z) {
 	return (KERNEL_SIZE - 1) 
-		& hash_lookup[(hash_lookup[v.x & (HASH_SPACE - 1)] + (v.y & (HASH_SPACE - 1))) % HASH_SPACE];
+		& hash_lookup[
+			(hash_lookup[
+				(hash_lookup[
+					x & (HASH_SPACE - 1)
+				] + (y & (HASH_SPACE - 1))) % HASH_SPACE
+			] + (z & (HASH_SPACE - 1))) % HASH_SPACE
+		];
 }
 
-float generate_octave(vec2 position) {
+float generate_octave(vec3 position) {
 	int gx = int(floor(position.x));
 	int gy = int(floor(position.y));
+	int gz = int(floor(position.z));
 	float dx = position.x - gx;
 	float dy = position.y - gy;
+	float dz = position.z - gz;
 	float a = fade(dx);
 	float b = fade(dy);
+	float c = fade(dz);
 
-	float s = linear(vec2(a, b)) * gradient(vec2(dx, dy), kernel[hash(ivec2(gx, gy))]);
-	float t = linear(vec2(1 - a, b)) * gradient(vec2(dx - 1, dy), kernel[hash(ivec2(gx + 1, gy))]);
-	float u = linear(vec2(a, 1 - b)) * gradient(vec2(dx, dy - 1), kernel[hash(ivec2(gx, gy + 1))]);
-	float v = linear(vec2(1 - a, 1 - b)) * gradient(vec2(dx - 1, dy - 1), kernel[hash(ivec2(gx + 1, gy + 1))]);
+	float o = linear(vec3(a, b, c)) * gradient(vec3(dx, dy, dz), kernel[hash(gx, gy, gz)]);
+	float p = linear(vec3(1 - a, b, c)) * gradient(vec3(dx - 1, dy, dz), kernel[hash(gx + 1, gy, gz)]);
+	float q = linear(vec3(a, 1 - b, c)) * gradient(vec3(dx, dy - 1, dz), kernel[hash(gx, gy + 1, gz)]);
+	float r = linear(vec3(1 - a, 1 - b, c)) * gradient(vec3(dx - 1, dy - 1, dz), kernel[hash(gx + 1, gy + 1, gz)]);
 
-	return mix(mix(s, t, dx), mix(u, v, dx), dy);
+	float s = linear(vec3(a, b, 1 - c)) * gradient(vec3(dx, dy, dz - 1), kernel[hash(gx, gy, gz + 1)]);
+	float t = linear(vec3(1 - a, b, 1 - c)) * gradient(vec3(dx - 1, dy, dz - 1), kernel[hash(gx + 1, gy, gz + 1)]);
+	float u = linear(vec3(a, 1 - b, 1 - c)) * gradient(vec3(dx, dy - 1, dz - 1), kernel[hash(gx, gy + 1, gz + 1)]);
+	float v = 
+		linear(vec3(1 - a, 1 - b, 1 - c))
+		* gradient(vec3(dx - 1, dy - 1, dz - 1), kernel[hash(gx + 1, gy + 1, gz + 1)]);
+
+	return o + p + q + r + s + t + u + v;
 }
 
-float generate(vec2 position) {
+float generate(vec3 position) {
 	float total = 0;
     float a = amplitude;
     float max = 0;
@@ -73,10 +95,24 @@ float generate(vec2 position) {
     return total / max + bias;
 }
 
+vec3 map(vec2 pixel) {
+	switch (surface) {
+		case SURFACE_CYLINDER:
+			float t = scale.x * (pixel.x + offset.x);
+			return vec3(scale.z * cos(t), scale.z * sin(t), scale.y * (pixel.y + offset.y));
+		case SURFACE_SPHERE:
+			vec2 angle = scale.xy * (pixel + offset.xy);
+			float sinTheta = sin(angle.y);
+			return scale.z * vec3(cos(angle.x) * sinTheta, sin(angle.x) * sinTheta, cos(angle.y));
+		default:
+			return scale * (vec3(pixel, 0) + offset);
+	}
+}
+
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     vec4 current = imageLoad(in_texture, position);
-	float v = clamp(generate(gl_GlobalInvocationID.xy + offset), 0, 1);
+	float v = clamp(generate(map(gl_GlobalInvocationID.xy)), 0, 1);
 	vec4 new = 
 		vec4(
 			(channel & CHANNEL_RED) != 0 ? v : current.r,

@@ -18,6 +18,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public IParameterValue? Bias { get; set; }
             public IParameterValue? Amplitude { get; set; }
             public IParameterValue? Offset { get; set; }
+            public IParameterValue? Surface { get; set; }
+            public IParameterValue? Scale { get; set; }
         }
 
         public override bool Inline => true;
@@ -82,7 +84,15 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             }
             if (_parameters.Offset != null)
             {
-                builder.SetOffset((Vector2)_parameters.Offset.Get());
+                builder.SetOffset((Vector3)_parameters.Offset.Get());
+            }
+            if (_parameters.Surface != null)
+            {
+                builder.SetSurface((LatticeNoise.Surface)_parameters.Surface.Get());
+            }
+            if (_parameters.Scale != null)
+            {
+                builder.SetScale((Vector3)_parameters.Scale.Get());
             }
             return builder.Build();
         }

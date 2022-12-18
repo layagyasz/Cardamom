@@ -7,13 +7,11 @@ using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
-using Cardamom.Mathematics;
 using Cardamom.Mathematics.Geometry;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using System.Diagnostics;
 
 namespace Cardamom
 {
@@ -27,6 +25,9 @@ namespace Cardamom
             var rSeed = ConstantValue.Create(0);
             var gSeed = ConstantValue.Create(0);
             var bSeed = ConstantValue.Create(0);
+            var noiseFrequency = ConstantValue.Create(0.01f);
+            var noiseScale = ConstantValue.Create(new Vector3(0.01227f, 0.006136f, 256));
+            var noiseSurface = ConstantValue.Create(LatticeNoise.Surface.SPHERE);
             var adjustment = ConstantValue.Create(new Vector4(0,0,0,0));
             var pipeline =
                 new Pipeline.Builder()
@@ -36,19 +37,40 @@ namespace Cardamom
                             .SetKey("lattice-noise-r")
                             .SetChannel(Channel.RED)
                             .SetInput("input", "new")
-                            .SetParameters(new() { Seed = rSeed }))
+                            .SetParameters(
+                                new() 
+                                { 
+                                    Seed = rSeed,
+                                    Frequency = noiseFrequency,
+                                    Scale = noiseScale,
+                                    Surface = noiseSurface
+                                }))
                     .AddNode(
                         new LatticeNoiseNode.Builder()
                             .SetKey("lattice-noise-b")
                             .SetChannel(Channel.BLUE)
                             .SetInput("input", "lattice-noise-r")
-                            .SetParameters(new() { Seed = bSeed }))
+                            .SetParameters(
+                                new()
+                                {
+                                    Seed = bSeed,
+                                    Frequency = noiseFrequency,
+                                    Scale = noiseScale,
+                                    Surface = noiseSurface
+                                }))
                     .AddNode(
                         new LatticeNoiseNode.Builder()
                             .SetKey("lattice-noise-g")
                             .SetChannel(Channel.GREEN)
                             .SetInput("input", "lattice-noise-b")
-                            .SetParameters(new() { Seed = gSeed }))
+                            .SetParameters(
+                                new()
+                                {
+                                    Seed = gSeed,
+                                    Frequency = noiseFrequency,
+                                    Scale = noiseScale,
+                                    Surface = noiseSurface
+                                }))
                     .AddNode(
                         new DenormalizeNode.Builder()
                             .SetKey("denormalize")
@@ -65,7 +87,7 @@ namespace Cardamom
                                     WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
                                     Amplitude = ConstantValue.Create(-0.5f),
                                     Periodicity = ConstantValue.Create(new Vector2(0, 0.0122f)),
-                                    Turbulence = ConstantValue.Create(new Vector2(178, 178))
+                                    Turbulence = ConstantValue.Create(new Vector2(88, 88))
                                 }))
                     .AddNode(
                         new WaveFormNode.Builder()
@@ -78,7 +100,7 @@ namespace Cardamom
                                     WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
                                     Amplitude = ConstantValue.Create(-0.5f),
                                     Periodicity = ConstantValue.Create(new Vector2(0, .0244f)),
-                                    Turbulence = ConstantValue.Create(new Vector2(256, 256))
+                                    Turbulence = ConstantValue.Create(new Vector2(128, 128))
                                 }))
                     .AddNode(
                         new AdjustNode.Builder()
@@ -140,6 +162,7 @@ namespace Cardamom
                             .SetParameters(new() { Channel = ConstantValue.Create(Channel.GREEN) }))
                     .AddOutput("classified")
                     .AddOutput("sobel")
+                    .AddOutput("lattice-noise-r")
                     .Build();
             var resolution = 512;
             var canvases = new CachingCanvasProvider(new(resolution, resolution), Color4.Black);
@@ -149,6 +172,7 @@ namespace Cardamom
 
             var output = pipeline.Run(canvases);
             output[0].GetTexture().CopyToImage().SaveToFile("example-out.png");
+            output[2].GetTexture().CopyToImage().SaveToFile("example-out-single.png");
 
             var ui = new UiWindow(window);
             ui.Bind(new MouseListener());
@@ -173,23 +197,46 @@ namespace Cardamom
             text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(text.Item1);
 
-            var icosphereSolid = Solid.GenerateIcosphere(1, 12);
-            VertexArray vertices = new(PrimitiveType.Triangles, 3 * icosphereSolid.Faces.Length);
-            for (int i=0; i<icosphereSolid.Faces.Length; ++i)
+            var uvSphereSolid = Solid.GenerateUvSphere(1, 40);
+            VertexArray vertices = new(PrimitiveType.Triangles, 6 * uvSphereSolid.Faces.Length);
+            for (int i=0; i<uvSphereSolid.Faces.Length; ++i)
             {
-                for (int j=0; j<3; ++j)
+                float leftTheta = 0;
+                for (int j=0; j < uvSphereSolid.Faces[i].Vertices.Length; ++j)
                 {
-                    var vert = icosphereSolid.Faces[i].Vertices[j];
-                    float p = (float)(Math.Sqrt(vert.X * vert.X + vert.Y * vert.Y) * Math.Atan2(vert.Y, vert.X));
+                    var vert = uvSphereSolid.Faces[i].Vertices[j];
+                    float theta = (float)Math.Atan2(vert.Y, vert.X);
+                    // Make sure the tex coords don't backtrack
+                    if (j == 0)
+                    {
+                        leftTheta = theta;
+                    }
+                    // ... for the rectangles in main body
+                    else if (uvSphereSolid.Faces[i].Vertices.Length == 6 && leftTheta - theta > 1)
+                    {
+                        theta += MathHelper.TwoPi;
+                    }
+                    // ... for the triangles at the poles
+                    else if (uvSphereSolid.Faces[i].Vertices.Length == 3)
+                    {
+                        if (j == 1 && leftTheta - theta > 1)
+                        {
+                            theta += MathHelper.TwoPi;
+                        }
+                        if (j == 2)
+                        {
+                            theta = leftTheta;
+                        }
+                    }
                     float z = vert.Z;
-                    vertices[3 * i + j] =
+                    vertices[6 * i + j] =
                         new(
                             vert,
                             Color4.White, 
-                            new((float)(resolution * ((p + Math.PI) / Math.Tau)), resolution * 0.5f * (z + 1)));
+                            new((float)(resolution * ((theta + Math.PI) / Math.Tau)), resolution * 0.5f * (z + 1)));
                 }
             }
-            var cubeModel = new Model(vertices, resources.GetShader("shader-default"), output[0].GetTexture());
+            var sphereModel = new Model(vertices, resources.GetShader("shader-default"), output[0].GetTexture());
 
             var camera = new SubjectiveCamera3d(1.5f, 1000, new(), new(), 2);
             camera.SetPitch(-MathHelper.PiOver2);
@@ -200,14 +247,14 @@ namespace Cardamom
                         KeySensitivity = 0.0005f,
                         MouseWheelSensitivity = 0.1f,
                         PitchRange = new(-MathHelper.Pi, 0),
-                        DistanceRange = new(2, 10)
+                        DistanceRange = new(1.1f, 10)
                     });
             var scene =
                 new Scene(
                     new Vector3(800, 600, 0),
                     sceneController,
                     camera,
-                    new List<IRenderable>() { cubeModel });
+                    new List<IRenderable>() { sphereModel });
 
             var screen = 
                 new SceneScreen(

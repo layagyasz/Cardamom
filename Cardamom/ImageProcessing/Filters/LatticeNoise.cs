@@ -15,9 +15,18 @@ namespace Cardamom.ImageProcessing.Filters
         private static readonly int s_BiasLocation = 4;
         private static readonly int s_AmplitudeLocation = 5;
         private static readonly int s_OffsetLocation = 6;
-        private static readonly int s_ChannelLocation = 7;
-        private static readonly int s_HashLookupLocation = 8;
-        private static readonly int s_KernelLocation = 264;
+        private static readonly int s_SurfaceLocation = 7;
+        private static readonly int s_ScaleLocation = 8;
+        private static readonly int s_ChannelLocation = 9;
+        private static readonly int s_HashLookupLocation = 10;
+        private static readonly int s_KernelLocation = 266;
+
+        public enum Surface
+        {
+            PLANE = 0,
+            CYLINDER = 1,
+            SPHERE = 2
+        }
 
         public struct Settings
         {
@@ -27,7 +36,9 @@ namespace Cardamom.ImageProcessing.Filters
             public float Persistence { get; set; } = 0.6f;
             public float Bias { get; set; } = 0.5f;
             public float Amplitude { get; set; } = 1;
-            public Vector2 Offset { get; set; }
+            public Vector3 Offset { get; set; }
+            public Surface Surface { get; set; } = Surface.PLANE;
+            public Vector3 Scale { get; set; } = new(1, 1, 1);
 
             public Settings() { }
         }
@@ -55,7 +66,9 @@ namespace Cardamom.ImageProcessing.Filters
             s_LatticeNoiseShader.SetFloat(s_PersistenceLocation, _settings.Persistence);
             s_LatticeNoiseShader.SetFloat(s_BiasLocation, _settings.Bias);
             s_LatticeNoiseShader.SetFloat(s_AmplitudeLocation, _settings.Amplitude);
-            s_LatticeNoiseShader.SetVector2(s_OffsetLocation, _settings.Offset);
+            s_LatticeNoiseShader.SetVector3(s_OffsetLocation, _settings.Offset);
+            s_LatticeNoiseShader.SetInt32(s_SurfaceLocation, (int)_settings.Surface);
+            s_LatticeNoiseShader.SetVector3(s_ScaleLocation, _settings.Scale);
             s_LatticeNoiseShader.SetInt32Array(s_HashLookupLocation, _hashLookup);
             s_LatticeNoiseShader.SetVector3Array(s_KernelLocation, _kernel);
 
@@ -137,9 +150,21 @@ namespace Cardamom.ImageProcessing.Filters
                 return this;
             }
 
-            public Builder SetOffset(Vector2 offset)
+            public Builder SetOffset(Vector3 offset)
             {
                 _settings.Offset = offset;
+                return this;
+            }
+
+            public Builder SetSurface(Surface surface)
+            {
+                _settings.Surface = surface;
+                return this;
+            }
+
+            public Builder SetScale(Vector3 scale)
+            {
+                _settings.Scale = scale;
                 return this;
             }
 

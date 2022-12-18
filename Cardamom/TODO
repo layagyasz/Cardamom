@@ -1,6 +1,6 @@
 # Geometry
-try to fix texture tearing on sphere
 formal cylindrical coordinates
+texture wrapping utility
 
 #Graphics
 Split ComputeShader from Shader
