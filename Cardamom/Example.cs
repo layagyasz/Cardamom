@@ -21,7 +21,7 @@ namespace Cardamom
         {
             var window = new RenderWindow("Cardamom - Example", new Vector2i(800, 600));
 
-            float resolution = 256;
+            float resolution = 512;
             var random = new Random();
             var rSeed = ConstantValue.Create(0);
             var gSeed = ConstantValue.Create(0);

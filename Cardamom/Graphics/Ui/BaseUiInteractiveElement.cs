@@ -21,7 +21,7 @@ namespace Cardamom.Graphics.Ui
             Controller.Bind(this);
         }
 
-        public abstract bool IntersectsRay(Vector3 origin, Vector3 direction);
+        public abstract float? GetRayIntersection(Vector3 origin, Vector3 direction);
 
         public abstract void Draw(RenderTarget target);
 

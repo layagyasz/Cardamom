@@ -32,9 +32,9 @@ namespace Cardamom.Graphics.Ui.Elements
             Controller.Bind(this);
         }
 
-        public bool IntersectsRay(Vector3 origin, Vector3 direction)
+        public float? GetRayIntersection(Vector3 origin, Vector3 direction)
         {
-            return true;
+            return 1000;
         }
 
         public virtual void Draw(RenderTarget target)

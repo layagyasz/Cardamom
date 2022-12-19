@@ -31,9 +31,9 @@ namespace Cardamom.Graphics.Ui.Elements
             context.PopViewMatrix();
         }
 
-        public override bool IntersectsRay(Vector3 origin, Vector3 direction)
+        public override float? GetRayIntersection(Vector3 origin, Vector3 direction)
         {
-            return _rectComponent.IntersectsRay(origin, direction);
+            return _rectComponent.GetRayIntersection(origin, direction);
         }
 
         public override void SetAttributes(ClassAttributes attributes)

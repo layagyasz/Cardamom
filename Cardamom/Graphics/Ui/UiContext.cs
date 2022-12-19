@@ -1,5 +1,4 @@
-﻿using Cardamom.Mathematics.Geometry;
-using Cardamom.Window;
+﻿using Cardamom.Window;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
@@ -9,7 +8,7 @@ namespace Cardamom.Graphics.Ui
         private MouseListener? _mouseListener;
 
         private IUiInteractiveElement? _topElement;
-        private float _topZ;
+        private float _topD;
 
         public UiContext(Box2i viewPort)
             : base(viewPort) { }
@@ -22,12 +21,12 @@ namespace Cardamom.Graphics.Ui
         public override void Clear()
         {
             _topElement = null;
-            _topZ = float.MinValue;
+            _topD = float.MaxValue;
         }
 
         public override void Flatten()
         {
-            _topZ = float.MinValue;
+            _topD = float.MaxValue;
         }
 
         public IUiInteractiveElement? GetTopElement()
@@ -39,27 +38,33 @@ namespace Cardamom.Graphics.Ui
         {
             if (_mouseListener != null)
             {
-                if (_topElement == null || element.Position.Z >= _topZ)
+                var ndcMouse = WindowToNdc(_mouseListener.GetMousePosition());
+                var mouse = new Vector4(ndcMouse.X, ndcMouse.Y, 0, 1) * GetProjectionMatrix().Inverted();
+                if (GetScissor() == null 
+                    || GetScissor()!.Value.ContainsInclusive(mouse.Xy))
                 {
-                    if (GetScissor() == null 
-                        || GetScissor()!.Value.ContainsInclusive(_mouseListener.GetMousePosition()))
+                    var inverted = GetViewMatrix().Inverted();
+                    var origin =
+                        new Vector3(
+                            inverted.Row0.X * mouse.X + inverted.Row1.X * mouse.Y + inverted.Row3.X,
+                            inverted.Row0.Y * mouse.X + inverted.Row1.Y * mouse.Y + inverted.Row3.Y,
+                            inverted.Row0.Z * mouse.X + inverted.Row1.Z * mouse.Y + inverted.Row3.Z);
+                    var dz = new Vector3(inverted.Row2.X, inverted.Row2.Y, inverted.Row2.Z);
+                    float? d = element.GetRayIntersection(origin, dz);
+                    if (d != null && d <= _topD)
                     {
-                        var inverted = GetViewMatrix().Inverted();
-                        var mouse = _mouseListener.GetMousePosition();
-                        var origin =
-                            new Vector3(
-                                inverted.Row0.X * mouse.X + inverted.Row1.X * mouse.Y + inverted.Row3.X,
-                                inverted.Row0.Y * mouse.X + inverted.Row1.Y * mouse.Y + inverted.Row3.Y,
-                                inverted.Row0.Z * mouse.X + inverted.Row1.Z * mouse.Y + inverted.Row3.Z);
-                        var dz = new Vector3(inverted.Row2.X, inverted.Row2.Y, inverted.Row2.Z);
-                        if (element.IntersectsRay(origin, dz))
-                        {
-                            _topElement = element;
-                            _topZ = element.Position.Z;
-                        }
+                        _topElement = element;
+                        _topD = d.Value;
                     }
                 }
             }
+        }
+
+        private Vector2 WindowToNdc(Vector2 position)
+        {
+            return new(
+                position.X / GetViewPort().HalfSize.X - 1,
+                1 - position.Y / GetViewPort().HalfSize.Y);
         }
     }
 }

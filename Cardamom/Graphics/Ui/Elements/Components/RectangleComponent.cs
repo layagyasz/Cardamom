@@ -15,12 +15,16 @@ namespace Cardamom.Graphics.Ui.Elements.Components
 
         public Vector2 Size => (_vertices[5].Position - _vertices[0].Position).Xy;
 
-        public bool IntersectsRay(Vector3 origin, Vector3 direction)
+        public float? GetRayIntersection(Vector3 origin, Vector3 direction)
         {
-            return origin.X >= _vertices[0].Position.X
+            if (origin.X >= _vertices[0].Position.X
                 && origin.Y >= _vertices[0].Position.Y
                 && origin.X <= _vertices[5].Position.X
-                && origin.Y <= _vertices [5].Position.Y;
+                && origin.Y <= _vertices[5].Position.Y)
+            {
+                return -origin.Z / direction.Z;
+            }
+            return null;
         }
 
         public void SetAttributes(ClassAttributes attributes)

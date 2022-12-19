@@ -11,7 +11,6 @@ Update camera aspect ratio on screen resize
 
 #Graphics.Ui
 Z,Y sort elements
-UiContext to work with user defined projections
 UiSerialContainer can use either horizontal or vertical layout
 
 # Pipeline
@@ -22,5 +21,4 @@ LatticeNoise interpolator functions
 LatticeNoise treatment functions
 
 #Window
-Translate mouse events to NDC
 Pass deltaT to key down events
