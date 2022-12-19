@@ -13,7 +13,9 @@ namespace Cardamom.ImageProcessing.Filters
         private static readonly int s_BiasLocation = 2;
         private static readonly int s_PeriodicityLocation = 3;
         private static readonly int s_TurbulenceLocation = 4;
-        private static readonly int s_ChannelLocation = 5;
+        private static readonly int s_ScaleLocation = 5;
+        private static readonly int s_OffsetLocation = 6;
+        private static readonly int s_ChannelLocation = 7;
 
         public enum WaveType
         {
@@ -28,6 +30,8 @@ namespace Cardamom.ImageProcessing.Filters
             public float Bias { get; set; } = 0.5f;
             public Vector2 Periodicity { get; set; } = new(0.01f, 0.01f);
             public Vector2 Turbulence { get; set; } = new();
+            public Vector2 Scale { get; set; } = new(1, 1);
+            public Vector2 Offset { get; set; } = new();
 
             public Settings() { }
         }
@@ -50,6 +54,8 @@ namespace Cardamom.ImageProcessing.Filters
             s_WaveFormShader.SetFloat(s_BiasLocation, _settings.Bias);
             s_WaveFormShader.SetVector2(s_PeriodicityLocation, _settings.Periodicity);
             s_WaveFormShader.SetVector2(s_TurbulenceLocation, _settings.Turbulence);
+            s_WaveFormShader.SetVector2(s_ScaleLocation, _settings.Scale);
+            s_WaveFormShader.SetVector2(s_OffsetLocation, _settings.Offset);
 
             s_WaveFormShader.SetInt32(s_ChannelLocation, (int)channel);
 
@@ -93,6 +99,18 @@ namespace Cardamom.ImageProcessing.Filters
             public Builder SetTurbulence(Vector2 turbulence)
             {
                 _settings.Turbulence = turbulence;
+                return this;
+            }
+
+            public Builder SetScale(Vector2 scale)
+            {
+                _settings.Scale = scale;
+                return this;
+            }
+
+            public Builder SetOffset(Vector2 offset)
+            {
+                _settings.Offset = offset;
                 return this;
             }
 

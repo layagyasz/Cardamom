@@ -21,12 +21,14 @@ namespace Cardamom
         {
             var window = new RenderWindow("Cardamom - Example", new Vector2i(800, 600));
 
+            float resolution = 256;
             var random = new Random();
             var rSeed = ConstantValue.Create(0);
             var gSeed = ConstantValue.Create(0);
             var bSeed = ConstantValue.Create(0);
             var noiseFrequency = ConstantValue.Create(0.01f);
-            var noiseScale = ConstantValue.Create(new Vector3(0.01227f, 0.006136f, 256));
+            var noiseScale = 
+                ConstantValue.Create(new Vector3(MathHelper.TwoPi / resolution, MathHelper.Pi / resolution, 256));
             var noiseSurface = ConstantValue.Create(LatticeNoise.Surface.SPHERE);
             var adjustment = ConstantValue.Create(new Vector4(0,0,0,0));
             var pipeline =
@@ -86,8 +88,9 @@ namespace Cardamom
                                 {
                                     WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
                                     Amplitude = ConstantValue.Create(-0.5f),
-                                    Periodicity = ConstantValue.Create(new Vector2(0, 0.0122f)),
-                                    Turbulence = ConstantValue.Create(new Vector2(88, 88))
+                                    Periodicity = ConstantValue.Create(new Vector2(0, MathHelper.TwoPi)),
+                                    Turbulence = ConstantValue.Create(new Vector2(0.172f, 0.172f)),
+                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution))
                                 }))
                     .AddNode(
                         new WaveFormNode.Builder()
@@ -99,8 +102,9 @@ namespace Cardamom
                                 {
                                     WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
                                     Amplitude = ConstantValue.Create(-0.5f),
-                                    Periodicity = ConstantValue.Create(new Vector2(0, .0244f)),
-                                    Turbulence = ConstantValue.Create(new Vector2(128, 128))
+                                    Periodicity = ConstantValue.Create(new Vector2(0, 2 * MathHelper.TwoPi)),
+                                    Turbulence = ConstantValue.Create(new Vector2(0.25f, 0.25f)),
+                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution))
                                 }))
                     .AddNode(
                         new AdjustNode.Builder()
@@ -164,8 +168,7 @@ namespace Cardamom
                     .AddOutput("sobel")
                     .AddOutput("lattice-noise-r")
                     .Build();
-            var resolution = 512;
-            var canvases = new CachingCanvasProvider(new(resolution, resolution), Color4.Black);
+            var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
             rSeed.Value = random.Next();
             gSeed.Value = random.Next();
             bSeed.Value = random.Next();

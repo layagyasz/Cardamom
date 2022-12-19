@@ -20,8 +20,6 @@ Define both input and output channels on pipeline nodes?
 LatticeNoise evaluator functions
 LatticeNoise interpolator functions
 LatticeNoise treatment functions
-Add resolution argument to LatticeNoise and WaveForm filters
--Used as multiplier for Frequency/Periodicity
 
 #Window
 Translate mouse events to NDC
