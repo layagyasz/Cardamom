@@ -37,7 +37,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             }
             if (_parameters.StandardDeviation != null)
             {
-                builder.SetMean((Vector4)_parameters.StandardDeviation.Get());
+                builder.SetStandardDeviation((Vector4)_parameters.StandardDeviation.Get());
             }
             return builder.Build();
         }

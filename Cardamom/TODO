@@ -16,9 +16,6 @@ UiSerialContainer can use either horizontal or vertical layout
 # Pipeline
 Remove dictionaries to passing arguments
 Define both input and output channels on pipeline nodes?
-LatticeNoise evaluator functions
-LatticeNoise interpolator functions
-LatticeNoise treatment functions
 
 #Window
 Pass deltaT to key down events

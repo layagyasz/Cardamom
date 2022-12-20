@@ -23,159 +23,44 @@ namespace Cardamom
 
             float resolution = 512;
             var random = new Random();
-            var rSeed = ConstantValue.Create(0);
-            var gSeed = ConstantValue.Create(0);
-            var bSeed = ConstantValue.Create(0);
-            var noiseFrequency = ConstantValue.Create(0.01f);
+            var seed = ConstantValue.Create(random.Next());
+            var noiseFrequency = ConstantValue.Create(0.002f);
             var noiseScale = 
                 ConstantValue.Create(new Vector3(MathHelper.TwoPi / resolution, MathHelper.Pi / resolution, 256));
             var noiseSurface = ConstantValue.Create(LatticeNoise.Surface.SPHERE);
-            var adjustment = ConstantValue.Create(new Vector4(0,0,0,0));
+            var noiseEvaluator = ConstantValue.Create(LatticeNoise.Evaluator.DIVERGENCE);
+            var noiseInterpolator = ConstantValue.Create(LatticeNoise.Interpolator.HERMITE);
+            var noisePreTreatment = ConstantValue.Create(LatticeNoise.Treatment.NONE);
+            var noisePostTreatment = ConstantValue.Create(LatticeNoise.Treatment.RIG);
             var pipeline =
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
                     .AddNode(
                         new LatticeNoiseNode.Builder()
-                            .SetKey("lattice-noise-r")
-                            .SetChannel(Channel.RED)
+                            .SetKey("lattice-noise")
+                            .SetChannel(Channel.RED | Channel.GREEN | Channel.BLUE)
                             .SetInput("input", "new")
                             .SetParameters(
                                 new() 
                                 { 
-                                    Seed = rSeed,
+                                    Seed = seed,
                                     Frequency = noiseFrequency,
                                     Scale = noiseScale,
-                                    Surface = noiseSurface
-                                }))
-                    .AddNode(
-                        new LatticeNoiseNode.Builder()
-                            .SetKey("lattice-noise-b")
-                            .SetChannel(Channel.BLUE)
-                            .SetInput("input", "lattice-noise-r")
-                            .SetParameters(
-                                new()
-                                {
-                                    Seed = bSeed,
-                                    Frequency = noiseFrequency,
-                                    Scale = noiseScale,
-                                    Surface = noiseSurface
-                                }))
-                    .AddNode(
-                        new LatticeNoiseNode.Builder()
-                            .SetKey("lattice-noise-g")
-                            .SetChannel(Channel.GREEN)
-                            .SetInput("input", "lattice-noise-b")
-                            .SetParameters(
-                                new()
-                                {
-                                    Seed = gSeed,
-                                    Frequency = noiseFrequency,
-                                    Scale = noiseScale,
-                                    Surface = noiseSurface
+                                    Surface = noiseSurface,
+                                    Evaluator = noiseEvaluator,
+                                    Interpolator = noiseInterpolator,
+                                    PreTreatment = noisePreTreatment,
+                                    PostTreatment = noisePostTreatment
                                 }))
                     .AddNode(
                         new DenormalizeNode.Builder()
                             .SetKey("denormalize")
                             .SetChannel(Channel.RED | Channel.GREEN | Channel.BLUE)
-                            .SetInput("input", "lattice-noise-g"))
-                    .AddNode(
-                        new WaveFormNode.Builder()
-                            .SetKey("wave-form-r")
-                            .SetChannel(Channel.RED)
-                            .SetInput("input", "denormalize")
-                            .SetParameters(
-                                new()
-                                {
-                                    WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
-                                    Amplitude = ConstantValue.Create(-0.5f),
-                                    Periodicity = ConstantValue.Create(new Vector2(0, MathHelper.TwoPi)),
-                                    Turbulence = ConstantValue.Create(new Vector2(0.172f, 0.172f)),
-                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution))
-                                }))
-                    .AddNode(
-                        new WaveFormNode.Builder()
-                            .SetKey("wave-form-b")
-                            .SetChannel(Channel.BLUE)
-                            .SetInput("input", "wave-form-r")
-                            .SetParameters(
-                                new()
-                                {
-                                    WaveType = ConstantValue.Create(WaveForm.WaveType.COSINE),
-                                    Amplitude = ConstantValue.Create(-0.5f),
-                                    Periodicity = ConstantValue.Create(new Vector2(0, 2 * MathHelper.TwoPi)),
-                                    Turbulence = ConstantValue.Create(new Vector2(0.25f, 0.25f)),
-                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution))
-                                }))
-                    .AddNode(
-                        new AdjustNode.Builder()
-                            .SetKey("adjusted")
-                            .SetChannel(Channel.ALL)
-                            .SetInput("input", "wave-form-b")
-                            .SetParameters(
-                                new()
-                                {
-                                    Adjustment = adjustment
-                                }))
-                    .AddNode(
-                        new ClassifyNode.Builder()
-                            .SetKey("classified")
-                            .SetChannel(Channel.ALL)
-                            .SetInput("input", "adjusted")
-                            .SetParameters(
-                                new()
-                                {
-                                    Classifications =
-                                        ConstantValue.Create(
-                                            new List<Classify.Classification>()
-                                            {
-                                                new Classify.Classification()
-                                                {
-                                                    Color = Color4.White,
-                                                    Conditions = new List<Classify.Condition>()
-                                                    {
-                                                        new Classify.Condition()
-                                                        {
-                                                            Channel = Channel.RED,
-                                                            Maximum = 0.25f
-                                                        }
-                                                    }
-                                                },
-                                                new Classify.Classification()
-                                                {
-                                                    Color = Color4.Blue,
-                                                    Conditions = new List<Classify.Condition>()
-                                                    {
-                                                        new Classify.Condition()
-                                                        {
-                                                            Channel = Channel.GREEN,
-                                                            Maximum = 0.5f
-                                                        }
-                                                    }
-                                                },
-                                                new Classify.Classification()
-                                                {
-                                                    Color = Color4.Lime,
-                                                }
-                                            })
-                                }))
-                    .AddNode(
-                        new SobelNode.Builder()
-                            .SetKey("sobel")
-                            .SetChannel(Channel.ALL)
-                            .SetInput("input", "denormalize")
-                            .SetParameters(new() { Channel = ConstantValue.Create(Channel.GREEN) }))
-                    .AddOutput("classified")
-                    .AddOutput("sobel")
-                    .AddOutput("lattice-noise-r")
+                            .SetInput("input", "lattice-noise"))
+                    .AddOutput("denormalize")
                     .Build();
             var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
-            rSeed.Value = random.Next();
-            gSeed.Value = random.Next();
-            bSeed.Value = random.Next();
-
             var output = pipeline.Run(canvases);
-            output[0].GetTexture().CopyToImage().SaveToFile("example-out.png");
-            output[2].GetTexture().CopyToImage().SaveToFile("example-out-single.png");
 
             var ui = new UiWindow(window);
             ui.Bind(new MouseListener());
@@ -239,7 +124,7 @@ namespace Cardamom
                             new((float)(resolution * ((theta + Math.PI) / Math.Tau)), resolution * 0.5f * (z + 1)));
                 }
             }
-            var sphereModel = new Model(vertices, resources.GetShader("shader-default"), output[0].GetTexture());
+            var sphereModel = new Model(vertices, resources.GetShader("shader-default"), output![0].GetTexture());
 
             var camera = new SubjectiveCamera3d(1.5f, 1000, new(), new(), 2);
             camera.SetPitch(-MathHelper.PiOver2);

@@ -20,6 +20,10 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public IParameterValue? Offset { get; set; }
             public IParameterValue? Surface { get; set; }
             public IParameterValue? Scale { get; set; }
+            public IParameterValue? Evaluator { get; set; }
+            public IParameterValue? Interpolator { get; set; }
+            public IParameterValue? PreTreatment { get; set; }
+            public IParameterValue? PostTreatment { get; set; }
         }
 
         public override bool Inline => true;
@@ -93,6 +97,22 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             if (_parameters.Scale != null)
             {
                 builder.SetScale((Vector3)_parameters.Scale.Get());
+            }
+            if (_parameters.Evaluator != null)
+            {
+                builder.SetEvaluator((LatticeNoise.Evaluator)_parameters.Evaluator.Get());
+            }
+            if (_parameters.Interpolator != null)
+            {
+                builder.SetInterpolator((LatticeNoise.Interpolator)_parameters.Interpolator.Get());
+            }
+            if (_parameters.PreTreatment != null)
+            {
+                builder.SetPreTreatment((LatticeNoise.Treatment)_parameters.PreTreatment.Get());
+            }
+            if (_parameters.PostTreatment != null)
+            {
+                builder.SetPostTreatment((LatticeNoise.Treatment)_parameters.PostTreatment.Get());
             }
             return builder.Build();
         }
