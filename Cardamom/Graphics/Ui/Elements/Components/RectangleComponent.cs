@@ -22,7 +22,7 @@ namespace Cardamom.Graphics.Ui.Elements.Components
                 && origin.X <= _vertices[5].Position.X
                 && origin.Y <= _vertices[5].Position.Y)
             {
-                return -origin.Z / direction.Z;
+                return origin.Z / direction.Z;
             }
             return null;
         }
