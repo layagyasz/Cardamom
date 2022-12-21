@@ -158,9 +158,8 @@ float evaluate_parabolic(vec3 u, vec3 v) {
 }
 
 float evaluate_rejection(vec3 u, vec3 v) {
-	float g = dot(u, v);
-	vec3 d = u - g * v;
-	return dot(d, d);
+	vec3 d = u - dot(u, v) * v;
+	return 0.5f * dot(d, d);
 }
 
 float evaluate_triangular_edge(vec3 u, vec3 v) {
@@ -185,11 +184,11 @@ float evaluate(vec3 u, vec3 v) {
 				+ (u.x / (v.y + 2))
 				- (u.y / (v.x + 2));
 		case EVALUATOR_CURVATURE:
-			return v.x * u.x * u.x + v.y * u.y * u.y + 2 * u.x * u.y * v.z;
+			return dot(cross(u , vec3(0, 0, 1)), v);
 		case EVALUATOR_DIVERGENCE:
 			return (u.x / (v.x + 2)) + (u.y / (v.y + 2)) + (u.z / (v.z + 2));
 		case EVALUATOR_DOUBLE_PLANE:
-			return min(dot(u, v), dot(u, vec3(v.y, v.z, v.y)));
+			return min(dot(u, v), dot(u, vec3(v.y, v.z, v.x)));
 		case EVALUATOR_GRADIENT:
 			return dot(u, v);
 		case EVALUATOR_HILL:
@@ -197,7 +196,7 @@ float evaluate(vec3 u, vec3 v) {
 		case EVALUATOR_HILL_AND_SLOPE:
 			return 0.5f * v.z + dot(u, v);
 		case EVALUATOR_HYPERBOLIC:
-			return 1f / (2 + dot(u, v));
+			return 1f / (16 + dot(u, v));
 		case EVALUATOR_HYPERBOLIC_PLANES:
 			return evaluate_hyperbolic_planes(u, v);
 		case EVALUATOR_HYPERBOLIC_PLANES_DISPLACED:
