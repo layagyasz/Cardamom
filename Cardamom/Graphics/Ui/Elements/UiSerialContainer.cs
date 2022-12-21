@@ -45,7 +45,7 @@ namespace Cardamom.Graphics.Ui.Elements
             target.PushTranslation(Position + LeftMargin + LeftPadding);
             target.PushScissor(new(new(), InternalSize));
             target.PushTranslation(_offset);
-            foreach (var element in _elements)
+            foreach (var element in _elements.Reverse<IUiElement>())
             {
                 element.Draw(target);
             }
@@ -66,6 +66,9 @@ namespace Cardamom.Graphics.Ui.Elements
                 element.Position = new(0, offset, Position.Z);
                 _maxOffset = -offset;
                 offset += element.Size.Y;
+            }
+            foreach (var element in _elements)
+            {
                 element.Update(context, delta);
             }
             context.PopViewMatrix();

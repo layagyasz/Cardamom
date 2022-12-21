@@ -1,10 +1,29 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
     public class UiContainer : SimpleUiElement, IEnumerable<IUiElement>
     {
-        private readonly List<IUiElement> _elements = new();
+        private class UiElementComparer : IComparer<Vector3>
+        {
+            public int Compare(Vector3 left, Vector3 right)
+            {
+                int cz = left.Z.CompareTo(right.Z);
+                if (cz != 0)
+                {
+                    return cz;
+                }
+                int cy = left.Y.CompareTo(right.Y);
+                if (cy != 0)
+                {
+                    return -cy;
+                }
+                return left.X.CompareTo(right.X);
+            }
+        }
+
+        private readonly SortedList<Vector3, IUiElement> _elements = new(new UiElementComparer());
 
         public UiContainer(Class @class, IController controller)
             : base(@class, controller) { }
@@ -12,18 +31,21 @@ namespace Cardamom.Graphics.Ui.Elements
         public override void Initialize()
         {
             base.Initialize();
-            _elements.ForEach(x => x.Initialize());
+            foreach (var element in _elements.Values)
+            {
+                element.Initialize();
+            }
         }
 
         public void Add(IUiElement element)
         {
-            _elements.Add(element);
+            _elements.Add(element.Position, element);
             element.Parent = this;
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
         {
-            return _elements.GetEnumerator();
+            return _elements.Values.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -38,7 +60,7 @@ namespace Cardamom.Graphics.Ui.Elements
                 base.Draw(target);
                 target.PushTranslation(Position + LeftMargin + LeftPadding);
                 target.PushScissor(new(new(), InternalSize));
-                foreach (var element in _elements)
+                foreach (var element in _elements.Values)
                 {
                     element.Draw(target);
                 }
@@ -52,7 +74,10 @@ namespace Cardamom.Graphics.Ui.Elements
             base.Update(context, delta);
             context.PushTranslation(Position + LeftMargin + LeftPadding);
             context.PushScissor(new(new(), InternalSize));
-            _elements.ForEach(x => x.Update(context, delta));
+            foreach (var element in _elements.Values)
+            {
+                element.Update(context, delta);
+            }
             context.PopScissor();
             context.PopViewMatrix();
         }

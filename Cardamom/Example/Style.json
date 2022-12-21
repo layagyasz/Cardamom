@@ -76,7 +76,7 @@
   {
     "$id": "example-select-drop-box-class",
     "Parent": {
-      "$ref": "example-child-class"
+      "$ref": "example-base-class"
     },
     "Default": {
       "Size": [ 224, 500 ]
