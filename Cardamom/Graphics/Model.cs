@@ -1,17 +1,16 @@
 ﻿using Cardamom.Graphics.Ui;
-using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics
 {
-    public class Model : IRenderable
+    public class Model : GraphicsResource, IRenderable
     {
-        private readonly VertexArray _vertices;
+        private readonly VertexBuffer _buffer;
         private readonly Shader _shader;
         private readonly Texture _texture;
 
         public Model(VertexArray vertices, Shader shader, Texture texture)
         {
-            _vertices = vertices;
+            _buffer = new(vertices.Vertices, vertices.PrimitiveType);
             _shader = shader;
             _texture = texture;
         }
@@ -20,9 +19,14 @@ namespace Cardamom.Graphics
 
         public void Draw(RenderTarget target)
         {
-            target.Draw(_vertices, 0, _vertices.Length, _shader, _texture);
+            target.Draw(_buffer, 0, _buffer.Length, _shader, _texture);
         }
 
         public void Update(UiContext context, long delta) { }
+
+        protected override void DisposeImpl()
+        {
+            _buffer.Dispose();
+        }
     }
 }

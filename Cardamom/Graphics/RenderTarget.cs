@@ -7,7 +7,7 @@ namespace Cardamom.Graphics
 {
     public abstract class RenderTarget : GraphicsContext
     {
-        private GLVertexArray? _vertexArray;
+        private VertexBuffer? _defaultBuffer;
 
         protected RenderTarget(Box2i viewPort)
             : base(viewPort) { }
@@ -36,19 +36,28 @@ namespace Cardamom.Graphics
         }
 
         public void Draw(
-            Vertex3[] vertices, 
+            Vertex3[] vertices,
             PrimitiveType primitiveType,
+            int start,
+            int count,
+            Shader shader,
+            Texture? texture)
+        {
+            _defaultBuffer ??= new(new());
+            _defaultBuffer.SetData(vertices);
+            _defaultBuffer.PrimitiveType = primitiveType;
+            Draw(_defaultBuffer, start, count, shader, texture);
+        }
+
+        public void Draw(
+            VertexBuffer buffer,
             int start,
             int count,
             Shader shader, 
             Texture? texture)
         {
-            _vertexArray ??= new(new());
-
             SetActive(true);
             Error.LogGLError("bind context");
-
-            _vertexArray.SetData(vertices);
 
             if (texture != null)
             {
@@ -96,7 +105,7 @@ namespace Cardamom.Graphics
                 Error.LogGLError($"set scissor {scissor}");
             }
 
-            _vertexArray.Draw(primitiveType, start, count);
+            buffer.Draw(start, count);
 
             SetActive(false);
         }

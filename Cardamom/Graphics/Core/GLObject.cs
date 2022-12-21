@@ -1,6 +1,6 @@
 ﻿namespace Cardamom.Graphics.Core
 {
-    public abstract class GLObject : IDisposable
+    public abstract class GLObject : GraphicsResource
     {
         public int Handle { get; }
 
@@ -20,14 +20,5 @@
         {
             return Handle.GetHashCode();
         }
-
-        public void Dispose()
-        {
-            DisposeImpl();
-            GC.SuppressFinalize(this);
-            GC.KeepAlive(this);
-        }
-
-        protected abstract void DisposeImpl();
     }
 }

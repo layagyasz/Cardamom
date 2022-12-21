@@ -1,7 +1,6 @@
 ﻿using Cardamom.Graphics.Core;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System.Xml.Linq;
 
 namespace Cardamom.Graphics
 {

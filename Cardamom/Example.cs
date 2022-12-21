@@ -24,14 +24,14 @@ namespace Cardamom
             float resolution = 512;
             var random = new Random();
             var seed = ConstantValue.Create(random.Next());
-            var noiseFrequency = ConstantValue.Create(0.002f);
+            var noiseFrequency = ConstantValue.Create(0.01f);
             var noiseScale = 
                 ConstantValue.Create(new Vector3(MathHelper.TwoPi / resolution, MathHelper.Pi / resolution, 256));
             var noiseSurface = ConstantValue.Create(LatticeNoise.Surface.SPHERE);
-            var noiseEvaluator = ConstantValue.Create(LatticeNoise.Evaluator.DIVERGENCE);
-            var noiseInterpolator = ConstantValue.Create(LatticeNoise.Interpolator.HERMITE);
-            var noisePreTreatment = ConstantValue.Create(LatticeNoise.Treatment.NONE);
-            var noisePostTreatment = ConstantValue.Create(LatticeNoise.Treatment.RIG);
+            var noiseEvaluator = ConstantValue.Create(LatticeNoise.Evaluator.VERTICAL_EDGE_INVERSE);
+            var noiseInterpolator = ConstantValue.Create(LatticeNoise.Interpolator.LINEAR);
+            var noisePreTreatment = ConstantValue.Create(LatticeNoise.Treatment.SEMIRIG);
+            var noisePostTreatment = ConstantValue.Create(LatticeNoise.Treatment.BILLOW);
             var pipeline =
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
@@ -57,7 +57,7 @@ namespace Cardamom
                             .SetKey("denormalize")
                             .SetChannel(Channel.RED | Channel.GREEN | Channel.BLUE)
                             .SetInput("input", "lattice-noise"))
-                    .AddOutput("denormalize")
+                    .AddOutput("lattice-noise")
                     .Build();
             var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
             var output = pipeline.Run(canvases);
