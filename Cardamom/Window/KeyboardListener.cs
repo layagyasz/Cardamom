@@ -6,7 +6,7 @@ namespace Cardamom.Window
     public class KeyboardListener
     {
         public EventHandler<TextEnteredEventArgs>? TextEntered { get; set; }
-        public EventHandler<KeyboardKeyEventArgs>? KeyDown { get; set; }
+        public EventHandler<KeyDownEventArgs>? KeyDown { get; set; }
 
         private readonly IKeyMapper _keyMapper;
         private readonly Keys[] _keysToCheck;
@@ -25,7 +25,7 @@ namespace Cardamom.Window
             _window.KeyPressed += HandleKeyPressed;
         }
 
-        public void DispatchEvents()
+        public void DispatchEvents(long delta)
         {
             if (!_window!.IsAnyKeyDown())
             {
@@ -37,7 +37,15 @@ namespace Cardamom.Window
             {
                 if (_window!.IsKeyDown(key))
                 {
-                    KeyDown?.Invoke(this, new(key, 0, modifiers, false));
+                    KeyDown?.Invoke(
+                        this, 
+                        new() 
+                        { 
+                            Key = key, 
+                            Modifiers = modifiers, 
+                            ScanCode = 0,
+                            TimeDelta = delta 
+                        });
                 }
             }
         }
@@ -77,14 +85,10 @@ namespace Cardamom.Window
             var args =
                 new TextEnteredEventArgs()
                 {
-                    Alt = e.Alt,
-                    Command = e.Command,
-                    Control = e.Control,
                     IsRepeat = e.IsRepeat,
                     Key = e.Key,
                     Modifiers = e.Modifiers,
                     ScanCode = e.ScanCode,
-                    Shift = e.Shift,
                     Text = _keyMapper.Map(e)
                 };
             TextEntered?.Invoke(this, args);

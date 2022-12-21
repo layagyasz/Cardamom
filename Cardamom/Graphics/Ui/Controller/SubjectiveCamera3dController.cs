@@ -28,21 +28,21 @@ namespace Cardamom.Graphics.Ui.Controller
 
         public void Unbind() { }
 
-        public bool HandleKeyDown(KeyboardKeyEventArgs e)
+        public bool HandleKeyDown(KeyDownEventArgs e)
         {
             switch (e.Key)
             {
                 case Keys.Left:
-                    _camera!.SetRoll(RollRange.Clamp(_camera.Roll - KeySensitivity));
+                    _camera!.SetRoll(RollRange.Clamp(_camera.Roll - KeySensitivity * e.TimeDelta));
                     return true;
                 case Keys.Right:
-                    _camera!.SetRoll(RollRange.Clamp(_camera.Roll + KeySensitivity));
+                    _camera!.SetRoll(RollRange.Clamp(_camera.Roll + KeySensitivity * e.TimeDelta));
                     return true;
                 case Keys.Up:
-                    _camera!.SetPitch(PitchRange.Clamp(_camera.Pitch + KeySensitivity));
+                    _camera!.SetPitch(PitchRange.Clamp(_camera.Pitch + KeySensitivity * e.TimeDelta));
                     return true;
                 case Keys.Down:
-                    _camera!.SetPitch(PitchRange.Clamp(_camera.Pitch - KeySensitivity));
+                    _camera!.SetPitch(PitchRange.Clamp(_camera.Pitch - KeySensitivity * e.TimeDelta));
                     return true;
             }
             return false;

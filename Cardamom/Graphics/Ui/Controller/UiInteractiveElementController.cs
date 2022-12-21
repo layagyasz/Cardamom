@@ -25,7 +25,7 @@ namespace Cardamom.Graphics.Ui.Controller
             return _element!;
         }
 
-        public virtual bool HandleKeyDown(KeyboardKeyEventArgs e)
+        public virtual bool HandleKeyDown(KeyDownEventArgs e)
         {
             return false;
         }

@@ -10,12 +10,8 @@ Support custom VertexArray attributes
 Update camera aspect ratio on screen resize
 
 #Graphics.Ui
-Z,Y sort elements
 UiSerialContainer can use either horizontal or vertical layout
 
 # Pipeline
 Remove dictionaries to passing arguments
 Define both input and output channels on pipeline nodes?
-
-#Window
-Pass deltaT to key down events

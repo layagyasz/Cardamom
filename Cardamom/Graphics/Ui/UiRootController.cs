@@ -52,7 +52,7 @@ namespace Cardamom.Graphics.Ui
             }
         }
 
-        private void HandleKeyDown(object? sender, KeyboardKeyEventArgs e)
+        private void HandleKeyDown(object? sender, KeyDownEventArgs e)
         {
             Consume(_mouseOver, x => x.Controller?.HandleKeyDown(e) ?? false);
         }
