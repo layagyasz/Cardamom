@@ -14,7 +14,7 @@ namespace Cardamom.Graphics.Ui.Elements
         public TextUiElement(Class @class, IController controller)
             : base(@class, controller)
         {
-            SetAttributes(@class.Get(Class.State.NONE));
+            SetAttributes(@class.Get(Class.State.None));
         }
 
         public override void Draw(RenderTarget target)

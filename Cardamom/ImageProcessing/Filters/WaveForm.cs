@@ -19,13 +19,13 @@ namespace Cardamom.ImageProcessing.Filters
 
         public enum WaveType
         {
-            SINE = 0,
-            COSINE = 1
+            Sine = 0,
+            Cosine = 1
         }
 
         public struct Settings
         {
-            public WaveType WaveType { get; set; } = WaveType.SINE;
+            public WaveType WaveType { get; set; } = WaveType.Sine;
             public float Amplitude { get; set; } = 0.5f;
             public float Bias { get; set; } = 0.5f;
             public Vector2 Periodicity { get; set; } = new(0.01f, 0.01f);

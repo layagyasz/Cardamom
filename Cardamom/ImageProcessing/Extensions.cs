@@ -6,13 +6,13 @@
         {
             switch (channel)
             {
-                case Channel.RED:
+                case Channel.Red:
                     return 0;
-                case Channel.GREEN:
+                case Channel.Green:
                     return 1;
-                case Channel.BLUE:
+                case Channel.Blue:
                     return 2;
-                case Channel.ALPHA:
+                case Channel.Alpha:
                     return 3;
             }
             throw new ArgumentException("Only one input channel supported.");

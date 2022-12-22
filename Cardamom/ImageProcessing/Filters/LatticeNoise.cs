@@ -1,6 +1,5 @@
 ﻿using Cardamom.Graphics;
 using OpenTK.Mathematics;
-using System.Runtime.CompilerServices;
 
 namespace Cardamom.ImageProcessing.Filters
 {
@@ -28,60 +27,60 @@ namespace Cardamom.ImageProcessing.Filters
 
         public enum Surface
         {
-            PLANE = 0,
-            CYLINDER = 1,
-            SPHERE = 2
+            Plane = 0,
+            Cylinder = 1,
+            Sphere = 2
         }
 
         public enum Evaluator
         {
-            COSINE = 0,
-            COSINE_INVERSE = 1,
-            CURL = 2,
-            CURVATURE = 3,
-            DIVERGENCE = 4,
-            DOUBLE_PLANE = 5,
-            GRADIENT = 6,
-            HILL = 7,
-            HILL_AND_SLOPE = 8,
-            HYPERBOLIC = 9,
-            HYPERBOLIC_PLANES = 10,
-            HYPERBOLIC_PLANES_DISPLACED = 11,
-            MONKEY_SADDLE = 12,
-            PARABOLIC = 13,
-            PARABOLIC_COMPOSED = 14,
-            PARABOLIC_DISPLACED = 15,
-            PARABOLIC_INVERSE = 16,
-            REJECTION= 17,
-            TRIANGULAR_EDGE = 18,
-            VERTICAL_EDGE = 19,
-            VERTICAL_EDGE_DISPLACED = 20,
-            VERTICAL_EDGE_INVERSE = 21,
-            VERTICAL_EDGE_INVERSE_DISPLACED = 22
+            Cosine = 0,
+            CosineInverse = 1,
+            Curl = 2,
+            Curvature = 3,
+            Divergence = 4,
+            DoublePlane = 5,
+            Gradient = 6,
+            Hill = 7,
+            HillAndSlope = 8,
+            Hyperbolic = 9,
+            HyperbolicPlanes = 10,
+            HyperbolicPlanesDisplaced = 11,
+            MonkeySaddle = 12,
+            Parabolic = 13,
+            ParabolicComposed = 14,
+            ParabolicDisplaced = 15,
+            ParabolicInverse = 16,
+            Rejection= 17,
+            TriangularEdge = 18,
+            VerticalEdge = 19,
+            VerticalEdgeDisplaced = 20,
+            VerticalEdgeInverse = 21,
+            VerticalEdgeInverseDisplaced = 22
         }
 
         public enum Interpolator
         {
-            COSINE = 0,
-            EPANECHNIKOV = 1,
-            HERMITE = 2,
-            HERMITE_DISPLACED = 3,
-            HERMITE_QUINTIC = 4,
-            HERMITE_SIGMOID = 5,
-            LINEAR = 6,
-            PYRAMID = 7,
-            QUARTIC = 8,
-            SIGMOID = 9,
-            TRICUBE = 10,
-            TRIWEIGHT = 11,
+            Cosine = 0,
+            Epanechnikov = 1,
+            Hermite = 2,
+            HermiteDisplaced = 3,
+            HermiteQuintic = 4,
+            HermiteSigmoid = 5,
+            Linear = 6,
+            Pyramid = 7,
+            Quartic = 8,
+            Sigmoid = 9,
+            Tricube = 10,
+            Triweight = 11,
         }
 
         public enum Treatment
         {
-            NONE = 0,
-            BILLOW = 1,
-            RIG = 2,
-            SEMIRIG = 3
+            None = 0,
+            Billow = 1,
+            Rig = 2,
+            SemiRig = 3
         }
 
         public struct Settings
@@ -93,12 +92,12 @@ namespace Cardamom.ImageProcessing.Filters
             public float Bias { get; set; } = 0.5f;
             public float Amplitude { get; set; } = 1;
             public Vector3 Offset { get; set; }
-            public Surface Surface { get; set; } = Surface.PLANE;
+            public Surface Surface { get; set; } = Surface.Plane;
             public Vector3 Scale { get; set; } = new(1, 1, 1);
-            public Evaluator Evaluator { get; set; } = Evaluator.GRADIENT;
-            public Interpolator Interpolator { get; set; } = Interpolator.LINEAR;
-            public Treatment PreTreatment { get; set; } = Treatment.NONE;
-            public Treatment PostTreatment { get; set; } = Treatment.NONE;
+            public Evaluator Evaluator { get; set; } = Evaluator.Gradient;
+            public Interpolator Interpolator { get; set; } = Interpolator.Linear;
+            public Treatment PreTreatment { get; set; } = Treatment.None;
+            public Treatment PostTreatment { get; set; } = Treatment.None;
 
             public Settings() { }
         }

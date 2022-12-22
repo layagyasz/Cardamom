@@ -36,7 +36,7 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
-            private Channel _channel = Channel.ALL;
+            private Channel _channel = Channel.All;
 
             public Builder SetChannel(Channel channel)
             {

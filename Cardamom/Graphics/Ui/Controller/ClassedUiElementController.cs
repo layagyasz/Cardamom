@@ -9,10 +9,10 @@
 
         public Class.State GetClassState()
         {
-            return (_disable ? Class.State.DISABLE : Class.State.NONE)
-                | (_hover ? Class.State.HOVER : Class.State.NONE)
-                | (_focus ? Class.State.FOCUS : Class.State.NONE)
-                | (_toggle ? Class.State.TOGGLE : Class.State.NONE);
+            return (_disable ? Class.State.Disable : Class.State.None)
+                | (_hover ? Class.State.Hover : Class.State.None)
+                | (_focus ? Class.State.Focus : Class.State.None)
+                | (_toggle ? Class.State.Toggle : Class.State.None);
         }
 
         public bool GetDisable()

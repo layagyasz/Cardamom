@@ -9,11 +9,11 @@ namespace Cardamom.Graphics.Ui
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum State
         {
-            NONE = 0,
-            DISABLE = 1,
-            HOVER = 2,
-            FOCUS = 4,
-            TOGGLE = 8,
+            None = 0,
+            Disable = 1,
+            Hover = 2,
+            Focus = 4,
+            Toggle = 8,
         }
 
         public string Key { get; set; }
@@ -84,7 +84,7 @@ namespace Cardamom.Graphics.Ui
             private static bool IsAncestor(State child, State ancestor)
             {
                 return (ancestor & ~child) == 0
-                    || (ancestor < child && (ancestor == State.HOVER || ancestor == State.FOCUS));
+                    || (ancestor < child && (ancestor == State.Hover || ancestor == State.Focus));
             }
         }
     }

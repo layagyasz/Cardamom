@@ -27,18 +27,18 @@ namespace Cardamom
             var noiseFrequency = ConstantValue.Create(0.01f);
             var noiseScale = 
                 ConstantValue.Create(new Vector3(MathHelper.TwoPi / resolution, MathHelper.Pi / resolution, 256));
-            var noiseSurface = ConstantValue.Create(LatticeNoise.Surface.SPHERE);
-            var noiseEvaluator = ConstantValue.Create(LatticeNoise.Evaluator.VERTICAL_EDGE_INVERSE);
-            var noiseInterpolator = ConstantValue.Create(LatticeNoise.Interpolator.LINEAR);
-            var noisePreTreatment = ConstantValue.Create(LatticeNoise.Treatment.SEMIRIG);
-            var noisePostTreatment = ConstantValue.Create(LatticeNoise.Treatment.BILLOW);
+            var noiseSurface = ConstantValue.Create(LatticeNoise.Surface.Sphere);
+            var noiseEvaluator = ConstantValue.Create(LatticeNoise.Evaluator.VerticalEdgeInverse);
+            var noiseInterpolator = ConstantValue.Create(LatticeNoise.Interpolator.Linear);
+            var noisePreTreatment = ConstantValue.Create(LatticeNoise.Treatment.SemiRig);
+            var noisePostTreatment = ConstantValue.Create(LatticeNoise.Treatment.Billow);
             var pipeline =
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
                     .AddNode(
                         new LatticeNoiseNode.Builder()
                             .SetKey("lattice-noise")
-                            .SetChannel(Channel.RED | Channel.GREEN | Channel.BLUE)
+                            .SetChannel(Channel.Red | Channel.Green | Channel.Blue)
                             .SetInput("input", "new")
                             .SetParameters(
                                 new() 
@@ -55,7 +55,7 @@ namespace Cardamom
                     .AddNode(
                         new DenormalizeNode.Builder()
                             .SetKey("denormalize")
-                            .SetChannel(Channel.RED | Channel.GREEN | Channel.BLUE)
+                            .SetChannel(Channel.Red | Channel.Green | Channel.Blue)
                             .SetInput("input", "lattice-noise"))
                     .AddOutput("lattice-noise")
                     .Build();

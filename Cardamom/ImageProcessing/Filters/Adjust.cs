@@ -14,9 +14,9 @@ namespace Cardamom.ImageProcessing.Filters
 
         public enum OverflowBehavior
         {
-            NONE = 0,
-            CLAMP = 1,
-            MODULUS = 2
+            None = 0,
+            Clamp = 1,
+            Modulus = 2
         }
 
         private readonly OverflowBehavior _overflowBehavior;
@@ -50,7 +50,7 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
-            private OverflowBehavior _overflowBehavior = OverflowBehavior.CLAMP;
+            private OverflowBehavior _overflowBehavior = OverflowBehavior.Clamp;
             private Vector4 _adjustment = new(0, 0, 0, 0);
 
             public Builder SetOverflowBehavior(OverflowBehavior overflowBehavior)

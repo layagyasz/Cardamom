@@ -54,7 +54,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         {
             public string Key { get; set; } = string.Empty;
             public Type? Type { get; set; }
-            public Channel Channel { get; set; } = Channel.ALL;
+            public Channel Channel { get; set; } = Channel.All;
             public Dictionary<string, string> Inputs { get; set; } = new();
             public Dictionary<string, IParameterValue> Parameters { get; set; } = new();
 

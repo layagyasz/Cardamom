@@ -27,7 +27,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             : IPipelineNode.IBuilder where TParameters : new()
         {
             public string Key { get; set; } = string.Empty;
-            public Channel Channel { get; set; } = Channel.ALL;
+            public Channel Channel { get; set; } = Channel.All;
             public Dictionary<string, string> Inputs { get; set; } = new();
             public TParameters Parameters { get; set; } = new();
 

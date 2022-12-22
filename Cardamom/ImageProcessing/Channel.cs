@@ -3,11 +3,12 @@
     [Flags]
     public enum Channel
     {
-        NONE = 0,
-        RED = 1,
-        GREEN = 2,
-        BLUE = 4,
-        ALPHA = 8,
-        ALL = 15
+        None = 0,
+        Red = 1,
+        Green = 2,
+        Blue = 4,
+        Color = 7,
+        Alpha = 8,
+        All = 15
     }
 }
