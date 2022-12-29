@@ -13,9 +13,9 @@ namespace Cardamom.Graphics.Ui.Controller
 
         public float KeySensitivity { get; set; } = 1f;
         public float MouseWheelSensitivity { get; set; } = 1f;
-        public FloatRange PitchRange { get; set; } = FloatRange.Unbounded;
-        public FloatRange RollRange { get; set; } = FloatRange.Unbounded;
-        public FloatRange DistanceRange { get; set; } = FloatRange.Unbounded;
+        public Interval PitchRange { get; set; } = Interval.Unbounded;
+        public Interval RollRange { get; set; } = Interval.Unbounded;
+        public Interval DistanceRange { get; set; } = Interval.Unbounded;
 
         private readonly SubjectiveCamera3d? _camera;
 

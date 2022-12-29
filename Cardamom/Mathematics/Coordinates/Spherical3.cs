@@ -2,43 +2,40 @@
 
 namespace Cardamom.Mathematics.Coordinates
 {
-    public class Spherical3
+    public struct Spherical3
     {
         public float Radius { get; set; }
         public float Theta { get; set; }
         public float Phi { get; set; }
 
-        public Spherical3(float Radius, float Theta, float Phi)
+        public Spherical3(float radius, float theta, float phi)
         {
-            this.Radius = Radius;
-            this.Theta = Theta;
-            this.Phi = Phi;
+            Radius = radius;
+            Theta = theta;
+            Phi = phi;
         }
 
-        public Vector3 ToCartesian()
+        public Vector3 AsCartesian()
         {
-            return new Vector3(
-                (float)(Radius * Math.Cos(Phi) * Math.Sin(Theta)),
-                (float)(Radius * Math.Sin(Phi) * Math.Sin(Theta)),
-                (float)(Radius * Math.Cos(Theta)));
+            return new(
+                (float)(Radius * Math.Cos(Theta) * Math.Cos(Phi)),
+                (float)(Radius * Math.Sin(Theta)),
+                (float)(Radius * Math.Cos(Theta) * Math.Sin(Phi)));
         }
 
-        public static Spherical3 FromCartesian(Vector3 Vector)
+        public Cylindrical3 AsCylindrical()
         {
-            return new Spherical3(
-                (float)Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y + Vector.Z * Vector.Z),
-                (float)Math.Atan2(Math.Sqrt(Vector.X * Vector.X + Vector.Y * Vector.Y), Vector.Z),
-                (float)Math.Atan2(Vector.Y, Vector.X));
+            return new(Radius * (float)Math.Cos(Theta), Phi, Radius * (float)Math.Sin(Theta));
         }
 
-        public static Spherical3 operator *(float M, Spherical3 C)
+        public static Spherical3 operator *(float m, Spherical3 c)
         {
-            return new Spherical3(M * C.Radius, C.Theta, C.Phi);
+            return new Spherical3(m * c.Radius, c.Theta, c.Phi);
         }
 
         public override string ToString()
         {
-            return string.Format("[{0}, {1}, {2}]", Radius, Theta, Phi);
+            return string.Format("({0}, {1}rad, {2}rad)", Radius, Theta, Phi);
         }
     }
 }

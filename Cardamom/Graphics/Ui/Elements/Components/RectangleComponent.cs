@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using Cardamom.Mathematics.Geometry;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements.Components
@@ -15,14 +16,14 @@ namespace Cardamom.Graphics.Ui.Elements.Components
 
         public Vector2 Size => (_vertices[5].Position - _vertices[0].Position).Xy;
 
-        public float? GetRayIntersection(Vector3 origin, Vector3 direction)
+        public float? GetRayIntersection(Ray3 ray)
         {
-            if (origin.X >= _vertices[0].Position.X
-                && origin.Y >= _vertices[0].Position.Y
-                && origin.X <= _vertices[5].Position.X
-                && origin.Y <= _vertices[5].Position.Y)
+            if (ray.Point.X >= _vertices[0].Position.X
+                && ray.Point.Y >= _vertices[0].Position.Y
+                && ray.Point.X <= _vertices[5].Position.X
+                && ray.Point.Y <= _vertices[5].Position.Y)
             {
-                return origin.Z / direction.Z;
+                return ray.Point.Z / ray.Direction.Z;
             }
             return null;
         }

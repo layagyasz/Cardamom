@@ -2,16 +2,16 @@
 
 namespace Cardamom.Mathematics
 {
-    public struct FloatRange
+    public struct Interval
     {
-        public static readonly FloatRange Unbounded = new(float.MinValue, float.MaxValue);
+        public static readonly Interval Unbounded = new(float.MinValue, float.MaxValue);
 
         public float Minimum { get; set; }
         public float Maximum { get; set; }
 
-        public FloatRange() { }
+        public Interval() { }
 
-        public FloatRange(float minimum, float maximum)
+        public Interval(float minimum, float maximum)
         {
             Minimum = minimum;
             Maximum = maximum;

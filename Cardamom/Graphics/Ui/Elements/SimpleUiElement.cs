@@ -1,5 +1,6 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Graphics.Ui.Elements.Components;
+using Cardamom.Mathematics.Geometry;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
@@ -31,9 +32,9 @@ namespace Cardamom.Graphics.Ui.Elements
             context.PopViewMatrix();
         }
 
-        public override float? GetRayIntersection(Vector3 origin, Vector3 direction)
+        public override float? GetRayIntersection(Ray3 ray)
         {
-            return _rectComponent.GetRayIntersection(origin, direction);
+            return _rectComponent.GetRayIntersection(ray);
         }
 
         public override void SetAttributes(ClassAttributes attributes)

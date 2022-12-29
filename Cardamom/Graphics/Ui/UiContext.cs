@@ -50,7 +50,7 @@ namespace Cardamom.Graphics.Ui
                             inverted.Row0.Y * mouse.X + inverted.Row1.Y * mouse.Y + inverted.Row3.Y,
                             inverted.Row0.Z * mouse.X + inverted.Row1.Z * mouse.Y + inverted.Row3.Z);
                     var dz = new Vector3(inverted.Row2.X, inverted.Row2.Y, inverted.Row2.Z);
-                    float? d = element.GetRayIntersection(origin, dz);
+                    float? d = element.GetRayIntersection(new(origin, dz));
                     if (d != null && d <= _topD)
                     {
                         _topElement = element;

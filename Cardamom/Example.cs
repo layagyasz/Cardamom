@@ -7,6 +7,7 @@ using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
+using Cardamom.Mathematics.Coordinates;
 using Cardamom.Mathematics.Geometry;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
@@ -85,7 +86,7 @@ namespace Cardamom
             text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(text.Item1);
 
-            var uvSphereSolid = Solid.GenerateUvSphere(1, 40);
+            var uvSphereSolid = Solid.GenerateUvSphere(1, 64);
             VertexArray vertices = new(PrimitiveType.Triangles, 6 * uvSphereSolid.Faces.Length);
             for (int i=0; i<uvSphereSolid.Faces.Length; ++i)
             {

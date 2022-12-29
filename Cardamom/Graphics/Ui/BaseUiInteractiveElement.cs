@@ -1,4 +1,5 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
+using Cardamom.Mathematics.Geometry;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
@@ -21,7 +22,7 @@ namespace Cardamom.Graphics.Ui
             Controller.Bind(this);
         }
 
-        public abstract float? GetRayIntersection(Vector3 origin, Vector3 direction);
+        public abstract float? GetRayIntersection(Ray3 ray);
 
         public abstract void Draw(RenderTarget target);
 
