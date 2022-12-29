@@ -30,7 +30,8 @@ namespace Cardamom.Mathematics.Coordinates.Projections
 
             public Cylindrical3 Wrap(Polar2 coordinate)
             {
-                return new(2 * coordinate.Radius / (1 + coordinate.Radius * coordinate.Radius), coordinate.Azimuth)
+                var r2 = coordinate.Radius * coordinate.Radius;
+                return new(2 * coordinate.Radius / (1 + r2), coordinate.Azimuth, (r2 - 1) / (r2 + 1));
             }
         }
 
@@ -43,7 +44,7 @@ namespace Cardamom.Mathematics.Coordinates.Projections
 
             public Spherical3 Wrap(Polar2 coordinate)
             {
-                return new(1, 2 * Math.Atan2(1, coordinate.Radius), coordinate.Azimuth);
+                return new(1, 2 * (float)Math.Atan2(1, coordinate.Radius), coordinate.Azimuth);
             }
         }
     }

@@ -1,6 +1,3 @@
-# Geometry
-texture wrapping utility
-
 #Graphics
 Split ComputeShader from Shader
 TexturePage based TextureLibrary

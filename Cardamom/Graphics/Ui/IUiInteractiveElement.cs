@@ -1,5 +1,4 @@
 ﻿using Cardamom.Mathematics.Geometry;
-using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
 {

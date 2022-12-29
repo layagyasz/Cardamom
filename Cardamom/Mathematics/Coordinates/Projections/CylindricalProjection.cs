@@ -8,7 +8,7 @@ namespace Cardamom.Mathematics.Coordinates.Projections
 
         public class Cartesian : IProjection<Vector3, Vector2>
         {
-            private readonly Spherical _internalProjection;
+            private readonly Spherical _internalProjection = new();
 
             public Vector2 Project(Vector3 coordinate)
             {
@@ -27,12 +27,12 @@ namespace Cardamom.Mathematics.Coordinates.Projections
             {
                 return new(
                     s_OneOverPi * coordinate.Azimuth, 
-                    2 * s_OneOverPi * (float)Math.Atan2(coordinate.Y, coordinate.Radius));
+                    s_OneOverPi * (float)Math.Atan2(coordinate.Y, coordinate.Radius));
             }
 
             public Cylindrical3 Wrap(Vector2 coordinate)
             {
-                return new(1, (float)(coordinate.X * Math.PI), (float)Math.Tan(coordinate.Y * MathHelper.PiOver2));
+                return new(1, (float)(coordinate.X * Math.PI), (float)Math.Tan(coordinate.Y * MathHelper.Pi));
             }
         }
 
@@ -40,12 +40,12 @@ namespace Cardamom.Mathematics.Coordinates.Projections
         {
             public Vector2 Project(Spherical3 coordinate)
             {
-                return new(s_OneOverPi * coordinate.Azimuth, 2 * s_OneOverPi * coordinate.Zenith);
+                return new(s_OneOverPi * coordinate.Azimuth, s_OneOverPi * coordinate.Zenith);
             }
 
             public Spherical3 Wrap(Vector2 coordinate)
             {
-                return new(1, (float)(coordinate.X * Math.PI), coordinate.Y * MathHelper.PiOver2);
+                return new(1, (float)(coordinate.X * Math.PI), coordinate.Y * MathHelper.Pi);
             }
         }
     }

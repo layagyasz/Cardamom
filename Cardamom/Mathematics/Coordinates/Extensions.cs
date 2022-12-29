@@ -18,7 +18,7 @@ namespace Cardamom.Mathematics.Coordinates
         {
             return new(
                 (float)Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z),
-                (float)Math.Atan2(v.Y, Math.Sqrt(v.X * v.X + v.Z * v.Z)),
+                (float)Math.Atan2(Math.Sqrt(v.X * v.X + v.Z * v.Z), v.Y),
                 (float)Math.Atan2(v.Z, v.X));
         }
     }

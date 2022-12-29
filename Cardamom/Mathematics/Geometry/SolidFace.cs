@@ -2,11 +2,11 @@
 
 namespace Cardamom.Mathematics.Geometry
 {
-    public class SolidFace
+    public class SolidFace<TSystem>
     {
-        public Vector3[] Vertices { get; }
+        public TSystem[] Vertices { get; }
 
-        public SolidFace(params Vector3[] vertices)
+        public SolidFace(params TSystem[] vertices)
         {
             Vertices = vertices;
         }

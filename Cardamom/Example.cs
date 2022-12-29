@@ -7,7 +7,9 @@ using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
+using Cardamom.Mathematics;
 using Cardamom.Mathematics.Coordinates;
+using Cardamom.Mathematics.Coordinates.Projections;
 using Cardamom.Mathematics.Geometry;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
@@ -86,58 +88,28 @@ namespace Cardamom
             text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(text.Item1);
 
-            var uvSphereSolid = Solid.GenerateUvSphere(1, 64);
+            var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(1, 64);
             VertexArray vertices = new(PrimitiveType.Triangles, 6 * uvSphereSolid.Faces.Length);
+            var projection = new CylindricalProjection.Spherical();
             for (int i=0; i<uvSphereSolid.Faces.Length; ++i)
             {
-                float leftTheta = 0;
                 for (int j=0; j < uvSphereSolid.Faces[i].Vertices.Length; ++j)
                 {
                     var vert = uvSphereSolid.Faces[i].Vertices[j];
-                    float theta = (float)Math.Atan2(vert.Y, vert.X);
-                    // Make sure the tex coords don't backtrack
-                    if (j == 0)
-                    {
-                        leftTheta = theta;
-                    }
-                    // ... for the rectangles in main body
-                    else if (uvSphereSolid.Faces[i].Vertices.Length == 6 && leftTheta - theta > 1)
-                    {
-                        theta += MathHelper.TwoPi;
-                    }
-                    // ... for the triangles at the poles
-                    else if (uvSphereSolid.Faces[i].Vertices.Length == 3)
-                    {
-                        if (j == 1 && leftTheta - theta > 1)
-                        {
-                            theta += MathHelper.TwoPi;
-                        }
-                        if (j == 2)
-                        {
-                            theta = leftTheta;
-                        }
-                    }
-                    float z = (float)Math.Atan2(vert.Z, Math.Sqrt(vert.X * vert.X + vert.Y * vert.Y));
-                    vertices[6 * i + j] =
-                        new(
-                            vert,
-                            Color4.White, 
-                            new(
-                                (float)(resolution * ((theta + Math.PI) / Math.Tau)), 
-                                (float)(resolution * ((z + MathHelper.PiOver2) / Math.PI))));
+                    var texCoords = resolution * new Vector2(0.5f, 1) * projection.Project(vert);
+                    vertices[6 * i + j] = new(vert.AsCartesian(), Color4.White, texCoords);
                 }
             }
             var sphereModel = new Model(vertices, resources.GetShader("shader-default"), output![0].GetTexture());
 
-            var camera = new SubjectiveCamera3d(1.5f, 1000, new(), new(), 2);
-            camera.SetPitch(-MathHelper.PiOver2);
+            var camera = new SubjectiveCamera3d(1.5f, 1000, new(), 2);
             var sceneController =
                 new PassthroughController(
                     new SubjectiveCamera3dController(camera)
                     {
                         KeySensitivity = 0.0005f,
                         MouseWheelSensitivity = 0.1f,
-                        PitchRange = new(-MathHelper.Pi, 0),
+                        PitchRange = new(-MathHelper.PiOver2 + 0.01f, MathHelper.PiOver2 - 0.01f),
                         DistanceRange = new(1.1f, 10)
                     });
             var scene =

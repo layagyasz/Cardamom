@@ -18,9 +18,9 @@ namespace Cardamom.Mathematics.Coordinates
         public Vector3 AsCartesian()
         {
             return new(
-                (float)(Radius * Math.Cos(Zenith) * Math.Cos(Azimuth)),
-                (float)(Radius * Math.Sin(Zenith)),
-                (float)(Radius * Math.Cos(Zenith) * Math.Sin(Azimuth)));
+                (float)(Radius * Math.Sin(Zenith) * Math.Cos(Azimuth)),
+                (float)(Radius * Math.Cos(Zenith)),
+                (float)(Radius * Math.Sin(Zenith) * Math.Sin(Azimuth)));
         }
 
         public Cylindrical3 AsCylindrical()

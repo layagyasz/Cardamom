@@ -33,10 +33,10 @@ namespace Cardamom.Graphics.Ui.Controller
             switch (e.Key)
             {
                 case Keys.Left:
-                    _camera!.SetRoll(RollRange.Clamp(_camera.Roll - KeySensitivity * e.TimeDelta));
+                    _camera!.SetYaw(RollRange.Clamp(_camera.Yaw - KeySensitivity * e.TimeDelta));
                     return true;
                 case Keys.Right:
-                    _camera!.SetRoll(RollRange.Clamp(_camera.Roll + KeySensitivity * e.TimeDelta));
+                    _camera!.SetYaw(RollRange.Clamp(_camera.Yaw + KeySensitivity * e.TimeDelta));
                     return true;
                 case Keys.Up:
                     _camera!.SetPitch(PitchRange.Clamp(_camera.Pitch + KeySensitivity * e.TimeDelta));
