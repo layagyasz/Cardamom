@@ -117,12 +117,14 @@ namespace Cardamom
                             theta = leftTheta;
                         }
                     }
-                    float z = vert.Z;
+                    float z = (float)Math.Atan2(vert.Z, Math.Sqrt(vert.X * vert.X + vert.Y * vert.Y));
                     vertices[6 * i + j] =
                         new(
                             vert,
                             Color4.White, 
-                            new((float)(resolution * ((theta + Math.PI) / Math.Tau)), resolution * 0.5f * (z + 1)));
+                            new(
+                                (float)(resolution * ((theta + Math.PI) / Math.Tau)), 
+                                (float)(resolution * ((z + MathHelper.PiOver2) / Math.PI))));
                 }
             }
             var sphereModel = new Model(vertices, resources.GetShader("shader-default"), output![0].GetTexture());
