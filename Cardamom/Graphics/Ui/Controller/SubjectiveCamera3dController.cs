@@ -8,7 +8,7 @@ namespace Cardamom.Graphics.Ui.Controller
 {
     public class SubjectiveCamera3dController : IController
     {
-        public EventHandler<MouseButtonEventArgs>? Clicked { get; set; }
+        public EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }
 
         public float KeySensitivity { get; set; } = 1f;
@@ -63,7 +63,7 @@ namespace Cardamom.Graphics.Ui.Controller
             return false;
         }
 
-        public bool HandleMouseButtonClicked(MouseButtonEventArgs e)
+        public bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
             return false;
         }

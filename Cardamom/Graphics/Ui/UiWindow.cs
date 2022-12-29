@@ -1,4 +1,5 @@
 ﻿using Cardamom.Window;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using System.Diagnostics;
 
@@ -26,6 +27,10 @@ namespace Cardamom.Graphics.Ui
             _context = new(renderWindow.GetViewPort());
             _controller = new();
             _controller.Bind(_context);
+
+            var projection = GetDefaultProjection();
+            RenderWindow.PushProjectionMatrix(projection);
+            _context.PushProjectionMatrix(projection);
         }
 
         public void Bind(KeyboardListener keyboardListener)
@@ -77,6 +82,18 @@ namespace Cardamom.Graphics.Ui
         {
             RenderWindow.SetViewPort(new(new(), e.Size));
             _context.SetViewPort(new(new(), e.Size));
+
+            Matrix4 projection = GetDefaultProjection();
+            RenderWindow.PopProjectionMatrix();
+            RenderWindow.PushProjectionMatrix(projection);
+            _context.PopProjectionMatrix();
+            _context.PushProjectionMatrix(projection);
+        }
+
+        private Matrix4 GetDefaultProjection()
+        {
+            var viewPort = RenderWindow.GetViewPort();
+            return Matrix4.CreateOrthographicOffCenter(0, viewPort.Size.X, viewPort.Size.Y, 0, -10, 10);
         }
     }
 }

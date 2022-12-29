@@ -100,7 +100,12 @@ namespace Cardamom
                     vertices[6 * i + j] = new(vert.AsCartesian(), Color4.White, texCoords);
                 }
             }
-            var sphereModel = new Model(vertices, resources.GetShader("shader-default"), output![0].GetTexture());
+            var sphereModel =
+                new InteractiveModel(
+                    new(vertices, resources.GetShader("shader-default"), output![0].GetTexture()), 
+                    new Sphere(new(), 1),
+                    new DebugController());
+            sphereModel.Controller.Clicked += (s, e) => Console.WriteLine(e.Position.Length);
 
             var camera = new SubjectiveCamera3d(1.5f, 1000, new(), 2);
             var sceneController =

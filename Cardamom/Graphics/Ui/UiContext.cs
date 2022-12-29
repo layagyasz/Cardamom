@@ -7,8 +7,9 @@ namespace Cardamom.Graphics.Ui
     {
         private MouseListener? _mouseListener;
 
-        private IUiInteractiveElement? _topElement;
-        private float _topD;
+        private IInteractive? _topElement;
+        private float _topDistance;
+        private Vector3 _topIntersection;
 
         public UiContext(Box2i viewPort)
             : base(viewPort) { }
@@ -21,20 +22,26 @@ namespace Cardamom.Graphics.Ui
         public override void Clear()
         {
             _topElement = null;
-            _topD = float.MaxValue;
+            _topDistance = float.MaxValue;
+            _topIntersection = Vector3.Zero;
         }
 
         public override void Flatten()
         {
-            _topD = float.MaxValue;
+            _topDistance = float.MaxValue;
         }
 
-        public IUiInteractiveElement? GetTopElement()
+        public IInteractive? GetTopElement()
         {
             return _topElement;
         }
 
-        public void Register(IUiInteractiveElement element)
+        public Vector3 GetTopIntersection()
+        {
+            return _topIntersection;
+        }
+
+        public void Register(IInteractive element)
         {
             if (_mouseListener != null)
             {
@@ -49,12 +56,13 @@ namespace Cardamom.Graphics.Ui
                             inverted.Row0.X * mouse.X + inverted.Row1.X * mouse.Y + inverted.Row3.X,
                             inverted.Row0.Y * mouse.X + inverted.Row1.Y * mouse.Y + inverted.Row3.Y,
                             inverted.Row0.Z * mouse.X + inverted.Row1.Z * mouse.Y + inverted.Row3.Z);
-                    var dz = new Vector3(inverted.Row2.X, inverted.Row2.Y, inverted.Row2.Z);
+                    var dz = -new Vector3(inverted.Row2.X, inverted.Row2.Y, inverted.Row2.Z);
                     float? d = element.GetRayIntersection(new(origin, dz));
-                    if (d != null && d <= _topD)
+                    if (d != null && !(d < 0) && d <= _topDistance)
                     {
                         _topElement = element;
-                        _topD = d.Value;
+                        _topDistance = d.Value;
+                        _topIntersection = origin + dz * d.Value;
                     }
                 }
             }

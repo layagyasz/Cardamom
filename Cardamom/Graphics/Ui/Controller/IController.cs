@@ -5,7 +5,7 @@ namespace Cardamom.Graphics.Ui.Controller
 {
     public interface IController
     {
-        EventHandler<MouseButtonEventArgs>? Clicked { get; set; }
+        EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         EventHandler<EventArgs>? Focused { get; set; }
 
         void Bind(object @object);
@@ -14,7 +14,7 @@ namespace Cardamom.Graphics.Ui.Controller
         bool HandleTextEntered(TextEnteredEventArgs e);
         bool HandleMouseEntered();
         bool HandleMouseLeft();
-        bool HandleMouseButtonClicked(MouseButtonEventArgs e);
+        bool HandleMouseButtonClicked(MouseButtonClickEventArgs e);
         bool HandleMouseButtonDragged(MouseButtonDragEventArgs e);
         bool HandleMouseWheelScrolled(MouseWheelEventArgs e);
         bool HandleFocusEntered();

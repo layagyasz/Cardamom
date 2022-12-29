@@ -46,7 +46,7 @@ namespace Cardamom.Graphics.Ui.Controller
             return true;
         }
 
-        private void HandleElementClicked(object? sender, MouseButtonEventArgs e)
+        private void HandleElementClicked(object? sender, MouseButtonClickEventArgs e)
         {
             ElementClicked?.Invoke(this, new ElementEventArgs((IController)sender!, e));
         }

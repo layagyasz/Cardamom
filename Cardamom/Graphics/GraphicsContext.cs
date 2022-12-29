@@ -6,7 +6,6 @@ namespace Cardamom.Graphics
     public abstract class GraphicsContext
     {
         private Box2i _viewPort;
-        private Matrix4 _defaultProjection;
         private readonly Stack<Matrix4> _projectionStack = new();
         private readonly Stack<Matrix4> _viewStack = new();
         private readonly Stack<Box2?> _scissorStack = new();
@@ -21,7 +20,7 @@ namespace Cardamom.Graphics
 
         public Matrix4 GetProjectionMatrix()
         {
-            return _projectionStack.Count == 0 ? _defaultProjection : _projectionStack.Peek();
+            return _projectionStack.Peek();
         }
 
         public Box2? GetScissor()
@@ -85,8 +84,6 @@ namespace Cardamom.Graphics
         public void SetViewPort(Box2i viewPort)
         {
             _viewPort = viewPort;
-            _defaultProjection = 
-                Matrix4.CreateOrthographicOffCenter(0, _viewPort.Size.X, _viewPort.Size.Y, 0, -10000, 10000);
         }
 
         private static Box2 Combine(Box3 rect, Matrix4 transform)

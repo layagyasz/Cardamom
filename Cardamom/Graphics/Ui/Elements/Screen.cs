@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
-    public class Screen : IUiInteractiveElement
+    public class Screen : IInteractive, IUiElement
     {
         public bool Visible { get; set; } = true;
         public Vector3 Size => new(_bounds.Size.X, _bounds.Size.Y, 0);
@@ -12,9 +12,9 @@ namespace Cardamom.Graphics.Ui.Elements
         public IController Controller { get; set; }
         public IControlled? Parent { get; set; }
 
-        private readonly IUiLayer[] _uiLayers;
+        protected readonly IUiLayer[] _uiLayers;
 
-        private readonly Rectangle _bounds;
+        protected readonly Rectangle _bounds;
 
         public Screen(Rectangle bounds, IController controller, IEnumerable<IUiLayer> uiLayers)
         {
@@ -23,7 +23,7 @@ namespace Cardamom.Graphics.Ui.Elements
             _uiLayers = uiLayers.ToArray();
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             foreach (var layer in _uiLayers)
             {

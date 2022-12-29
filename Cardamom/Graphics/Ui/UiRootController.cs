@@ -82,8 +82,15 @@ namespace Cardamom.Graphics.Ui
                     _focusAncestry = newAncestry;
                 }
             }
-            // Translate into component relative coordinates.
-            _mouseOver?.Controller?.HandleMouseButtonClicked(e);
+            _mouseOver?.Controller?.HandleMouseButtonClicked(
+                new() 
+                { 
+                    Action = e.Action,
+                    Button = e.Button,
+                    Modifiers = e.Modifiers,
+                    IsPressed = e.IsPressed, 
+                    Position = _context!.GetTopIntersection()
+                });
         }
 
         private void HandleMouseButtonDragged(object? sender, MouseButtonDragEventArgs e)

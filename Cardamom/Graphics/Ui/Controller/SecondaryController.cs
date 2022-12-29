@@ -5,7 +5,7 @@ namespace Cardamom.Graphics.Ui.Controller
 {
     public class SecondaryController<T> : IController
     {
-        public EventHandler<MouseButtonEventArgs>? Clicked { get; set; }
+        public EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }
 
 
@@ -46,7 +46,7 @@ namespace Cardamom.Graphics.Ui.Controller
             return false;
         }
 
-        public bool HandleMouseButtonClicked(MouseButtonEventArgs e)
+        public bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
             return false;
         }

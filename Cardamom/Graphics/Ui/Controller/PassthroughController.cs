@@ -6,7 +6,7 @@ namespace Cardamom.Graphics.Ui.Controller
 {
     public class PassthroughController : IController
     {
-        public EventHandler<MouseButtonEventArgs>? Clicked { get; set; }
+        public EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }
 
         private object? _object;
@@ -62,7 +62,7 @@ namespace Cardamom.Graphics.Ui.Controller
             return _subcontroller!.HandleMouseLeft();
         }
 
-        public bool HandleMouseButtonClicked(MouseButtonEventArgs e)
+        public bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
             return _subcontroller!.HandleMouseButtonClicked(e);
         }

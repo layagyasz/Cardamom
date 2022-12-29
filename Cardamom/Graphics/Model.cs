@@ -22,7 +22,7 @@ namespace Cardamom.Graphics
             target.Draw(_buffer, 0, _buffer.Length, _shader, _texture);
         }
 
-        public void Update(UiContext context, long delta) { }
+        public virtual void Update(UiContext context, long delta) { }
 
         protected override void DisposeImpl()
         {

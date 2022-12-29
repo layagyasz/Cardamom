@@ -1,7 +1,6 @@
 ﻿using Cardamom.Graphics.Camera;
 using Cardamom.Graphics.Ui.Controller;
 using OpenTK.Mathematics;
-using System.Formats.Tar;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
@@ -26,6 +25,7 @@ namespace Cardamom.Graphics.Ui.Elements
 
         public void Initialize()
         {
+            _elements.ForEach(x => x.Initialize());
             Controller.Bind(this);
         }
 
@@ -43,7 +43,6 @@ namespace Cardamom.Graphics.Ui.Elements
                 target.PopProjectionMatrix();
                 target.PopViewMatrix();
                 target.PopViewMatrix();
-                target.Flatten();
             }
         }
 
@@ -61,7 +60,6 @@ namespace Cardamom.Graphics.Ui.Elements
                 context.PopViewMatrix();
                 context.PopViewMatrix();
                 context.PopProjectionMatrix();
-                context.Flatten();
             }
         }
     }

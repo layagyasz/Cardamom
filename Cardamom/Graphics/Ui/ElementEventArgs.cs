@@ -6,9 +6,9 @@ namespace Cardamom.Graphics.Ui
     public readonly struct ElementEventArgs
     {
         public IController Element { get; }
-        public MouseButtonEventArgs MouseEvent { get; }
+        public MouseButtonClickEventArgs MouseEvent { get; }
 
-        public ElementEventArgs(IController element, MouseButtonEventArgs mouseEvent)
+        public ElementEventArgs(IController element, MouseButtonClickEventArgs mouseEvent)
         {
             Element = element;
             MouseEvent = mouseEvent;

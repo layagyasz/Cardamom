@@ -13,20 +13,34 @@ namespace Cardamom.Graphics.Ui.Elements
             Scene = scene;
         }
 
+        public override void Initialize()
+        {
+            base.Initialize();
+            Scene.Initialize();
+        }
+
         public override void Draw(RenderTarget target)
         {
             target.PushTranslation(Position);
             Scene.Draw(target);
             target.PopViewMatrix();
+            target.Flatten();
             base.Draw(target);
         }
 
         public override void Update(UiContext context, long delta)
         {
+            context.Register(this);
+
             context.PushTranslation(Position);
             Scene.Update(context, delta);
+            context.Flatten();
+
+            foreach (var layer in _uiLayers)
+            {
+                layer.Update(context, delta);
+            }
             context.PopViewMatrix();
-            base.Update(context, delta);
         }
     }
 }

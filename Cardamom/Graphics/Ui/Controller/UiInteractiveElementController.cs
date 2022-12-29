@@ -3,9 +3,9 @@ using OpenTK.Windowing.Common;
 
 namespace Cardamom.Graphics.Ui.Controller
 {
-    public abstract class UiInteractiveElementController<T> : IController where T : IUiInteractiveElement
+    public abstract class UiInteractiveElementController<T> : IController where T : IInteractive
     {
-        public EventHandler<MouseButtonEventArgs>? Clicked { get; set; }
+        public EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }
 
         protected T? _element;
@@ -45,7 +45,7 @@ namespace Cardamom.Graphics.Ui.Controller
             return false;
         }
 
-        public virtual bool HandleMouseButtonClicked(MouseButtonEventArgs e)
+        public virtual bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
             Clicked?.Invoke(this, e);
             return true;
