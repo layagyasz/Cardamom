@@ -24,14 +24,8 @@ namespace Cardamom.Graphics.Ui
 
         public abstract float? GetRayIntersection(Ray3 ray);
 
-        public abstract void Draw(RenderTarget target);
+        public abstract void Draw(RenderTarget target, UiContext context);
 
-        public virtual void Update(UiContext context, long delta)
-        {
-            if (Visible)
-            {
-                context.Register(this);
-            }
-        }
+        public abstract void Update(long delta);
     }
 }

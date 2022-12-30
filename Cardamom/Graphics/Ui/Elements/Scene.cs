@@ -29,7 +29,7 @@ namespace Cardamom.Graphics.Ui.Elements
             Controller.Bind(this);
         }
 
-        public void Draw(RenderTarget target)
+        public void Draw(RenderTarget target, UiContext context)
         {
             if (Visible)
             {
@@ -38,7 +38,7 @@ namespace Cardamom.Graphics.Ui.Elements
                 target.PushProjection(Camera.GetProjection());
                 foreach (var element in _elements)
                 {
-                    element.Draw(target);
+                    element.Draw(target, context);
                 }
                 target.PopProjectionMatrix();
                 target.PopViewMatrix();
@@ -46,20 +46,14 @@ namespace Cardamom.Graphics.Ui.Elements
             }
         }
 
-        public void Update(UiContext context, long delta)
+        public void Update(long delta)
         {
             if (Visible)
             {
-                context.PushTranslation(Position);
-                context.PushViewMatrix(Camera.GetViewMatrix());
-                context.PushProjection(Camera.GetProjection());
                 foreach (var element in _elements)
                 {
-                    element.Update(context, delta);
+                    element.Update(delta);
                 }
-                context.PopViewMatrix();
-                context.PopViewMatrix();
-                context.PopProjectionMatrix();
             }
         }
     }

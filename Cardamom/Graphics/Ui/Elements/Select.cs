@@ -30,26 +30,24 @@ namespace Cardamom.Graphics.Ui.Elements
             _open = value;
         }
 
-        public override void Draw(RenderTarget target)
+        public override void Draw(RenderTarget target, UiContext context)
         {
-            base.Draw(target);
+            base.Draw(target, context);
             if (_open)
             {
                 target.PushEmptyScissor();
-                _dropBox.Draw(target);
+                _dropBox.Position = new(0, TrueSize.Y, Position.Z + 1);
+                _dropBox.Draw(target, context);
                 target.PopScissor();
             }
         }
 
-        public override void Update(UiContext context, long delta)
+        public override void Update(long delta)
         {
-            base.Update(context, delta);
+            base.Update(delta);
             if (_open)
             {
-                context.PushEmptyScissor();
-                _dropBox.Position = new(0, TrueSize.Y, Position.Z + 1);
-                _dropBox.Update(context, delta);
-                context.PopScissor();
+                _dropBox.Update(delta);
             }
         }
     }

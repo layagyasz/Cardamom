@@ -125,9 +125,9 @@ namespace Cardamom.Graphics
             _update = true;
         }
 
-        public void Update(UiContext context, long delta) { }
+        public void Update(long delta) { }
 
-        public void Draw(RenderTarget target)
+        public void Draw(RenderTarget target, UiContext context)
         {
             ForceUpdate();
             target.Draw(

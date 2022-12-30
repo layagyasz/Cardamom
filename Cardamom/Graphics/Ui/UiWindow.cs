@@ -24,13 +24,13 @@ namespace Cardamom.Graphics.Ui
             RenderWindow.Closed += HandleClose;
             RenderWindow.Resized += HandleResize;
 
-            _context = new(renderWindow.GetViewPort());
+            _context = new();
+            _context.Bind(RenderWindow);
             _controller = new();
             _controller.Bind(_context);
 
             var projection = GetDefaultProjection();
             RenderWindow.PushProjection(projection);
-            _context.PushProjection(projection);
         }
 
         public void Bind(KeyboardListener keyboardListener)
@@ -62,8 +62,8 @@ namespace Cardamom.Graphics.Ui
                 long frameElapsed = stopwatch.ElapsedMilliseconds;
                 if (UiRoot != null)
                 {
-                    UiRoot.Update(_context, frameElapsed - elapsed);
-                    UiRoot.Draw(RenderWindow);
+                    UiRoot.Update(frameElapsed - elapsed);
+                    UiRoot.Draw(RenderWindow, _context);
                 }
                 _keyboardListener?.DispatchEvents(frameElapsed - elapsed);
                 _controller.DispatchEvents();
@@ -81,13 +81,10 @@ namespace Cardamom.Graphics.Ui
         private void HandleResize(object? sender, ResizeEventArgs e)
         {
             RenderWindow.SetViewPort(new(new(), e.Size));
-            _context.SetViewPort(new(new(), e.Size));
 
             var projection = GetDefaultProjection();
             RenderWindow.PopProjectionMatrix();
             RenderWindow.PushProjection(projection);
-            _context.PopProjectionMatrix();
-            _context.PushProjection(projection);
         }
 
         private Projection GetDefaultProjection()

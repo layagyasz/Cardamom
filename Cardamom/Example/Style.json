@@ -88,7 +88,8 @@
       "$ref": "example-select-class"
     },
     "Default": {
-      "Size": [ 192, 32 ]
+      "Size": [ 192, 32 ],
+      "Margin": [ 0, 2, 0, 2 ]
     },
     "States": [
       {

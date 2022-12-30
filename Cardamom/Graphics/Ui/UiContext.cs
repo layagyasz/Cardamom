@@ -5,30 +5,33 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
 {
-    public class UiContext : GraphicsContext
+    public class UiContext
     {
         private MouseListener? _mouseListener;
+        private GraphicsContext? _context;
 
         private IInteractive? _topElement;
         private float _topDistance;
         private Vector3 _topIntersection;
-
-        public UiContext(Box2i viewPort)
-            : base(viewPort) { }
 
         public void Bind(MouseListener mouseListener)
         {
             _mouseListener = mouseListener;
         }
 
-        public override void Clear()
+        public void Bind(GraphicsContext context)
+        {
+            _context = context;
+        }
+
+        public void Clear()
         {
             _topElement = null;
             _topDistance = float.MaxValue;
             _topIntersection = Vector3.Zero;
         }
 
-        public override void Flatten()
+        public void Flatten()
         {
             _topDistance = float.MaxValue;
         }
@@ -45,16 +48,16 @@ namespace Cardamom.Graphics.Ui
 
         public void Register(IInteractive element)
         {
-            if (_mouseListener != null)
+            if (_mouseListener != null && _context != null)
             {
                 var ndcMouse = WindowToNdc(_mouseListener.GetMousePosition());
-                var projection = GetProjection();
+                var projection = _context.GetProjection();
                 var frustrumMouse = new Vector4(ndcMouse.X, ndcMouse.Y, projection.NearPlane, 1);
                 var projectedMouse = frustrumMouse * projection.Matrix.Inverted();
-                if (GetScissor() == null 
-                    || GetScissor()!.Value.ContainsInclusive(projectedMouse.Xy))
+                var scissor = _context!.GetScissor();
+                if (scissor == null || scissor.Value.ContainsInclusive(projectedMouse.Xy))
                 {
-                    var transform = GetViewMatrix() * projection.Matrix;
+                    var transform = _context.GetViewMatrix() * projection.Matrix;
                     var inverted = transform.Inverted();
                     var worldMouse = frustrumMouse * inverted;
                     var front = 
@@ -76,8 +79,8 @@ namespace Cardamom.Graphics.Ui
         private Vector2 WindowToNdc(Vector2 position)
         {
             return new(
-                position.X / GetViewPort().HalfSize.X - 1,
-                1 - position.Y / GetViewPort().HalfSize.Y);
+                position.X / _context!.GetViewPort().HalfSize.X - 1,
+                1 - position.Y / _context!.GetViewPort().HalfSize.Y);
         }
     }
 }

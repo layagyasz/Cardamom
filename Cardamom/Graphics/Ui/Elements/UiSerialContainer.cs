@@ -39,41 +39,32 @@ namespace Cardamom.Graphics.Ui.Elements
             return GetEnumerator();
         }
 
-        public override void Draw(RenderTarget target)
+        public override void Draw(RenderTarget target, UiContext context)
         {
-            base.Draw(target);
+            base.Draw(target, context);
             target.PushTranslation(Position + LeftMargin + LeftPadding);
             target.PushScissor(new(new(), InternalSize));
             target.PushTranslation(_offset);
-            foreach (var element in _elements.Reverse<IUiElement>())
-            {
-                element.Draw(target);
-            }
-            target.PopViewMatrix();
-            target.PopScissor();
-            target.PopViewMatrix();
-        }
-
-        public override void Update(UiContext context, long delta)
-        {
-            base.Update(context, delta);
-            context.PushTranslation(Position + LeftMargin + LeftPadding);
-            context.PushScissor(new(new(), InternalSize));
-            context.PushTranslation(_offset);
             float offset = 0;
             foreach (var element in _elements)
             {
                 element.Position = new(0, offset, Position.Z);
                 _maxOffset = -offset;
                 offset += element.Size.Y;
+                element.Draw(target, context);
             }
+            target.PopViewMatrix();
+            target.PopScissor();
+            target.PopViewMatrix();
+        }
+
+        public override void Update(long delta)
+        {
+            base.Update(delta);
             foreach (var element in _elements)
             {
-                element.Update(context, delta);
+                element.Update(delta);
             }
-            context.PopViewMatrix();
-            context.PopScissor();
-            context.PopViewMatrix();
         }
     }
 }

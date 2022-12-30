@@ -34,28 +34,26 @@ namespace Cardamom.Graphics.Ui.Elements
 
         public float? GetRayIntersection(Ray3 ray)
         {
-            return 1000;
+            return float.MaxValue;
         }
 
-        public virtual void Draw(RenderTarget target)
+        public virtual void Draw(RenderTarget target, UiContext context)
         {
+            context.Register(this);
             target.PushTranslation(Position);
             foreach (var layer in _uiLayers)
             {
-                layer.Draw(target);
+                layer.Draw(target, context);
             }
             target.PopViewMatrix();
         }
 
-        public  virtual void Update(UiContext context, long delta)
+        public  virtual void Update(long delta)
         {
-            context.Register(this);
-            context.PushTranslation(Position);
             foreach (var layer in _uiLayers)
             {
-                layer.Update(context, delta);
+                layer.Update(delta);
             }
-            context.PopViewMatrix();
         }
     }
 }

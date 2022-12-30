@@ -29,15 +29,15 @@ namespace Cardamom.Graphics.Ui.Elements
             return _collider.GetRayIntersection(ray);
         }
 
-        public void Draw(RenderTarget target)
-        {
-            _model.Draw(target);
-        }
-
-        public virtual void Update(UiContext context, long delta)
+        public void Draw(RenderTarget target, UiContext context)
         {
             context.Register(this);
-            _model.Update(context, delta);
+            _model.Draw(target, context);
+        }
+
+        public virtual void Update(long delta)
+        {
+            _model.Update(delta);
         }
     }
 }

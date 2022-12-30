@@ -29,17 +29,17 @@
             return GetEnumerator();
         }
 
-        public virtual void Draw(RenderTarget target)
+        public virtual void Draw(RenderTarget target, UiContext context)
         {
             foreach (var element in _elements)
             {
-                element.Draw(target);
+                element.Draw(target, context);
             }
         }
 
-        public virtual void Update(UiContext context, long delta)
+        public virtual void Update(long delta)
         {
-            _elements.ForEach(x => x.Update(context, delta));
+            _elements.ForEach(x => x.Update(delta));
         }
     }
 }

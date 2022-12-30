@@ -53,33 +53,30 @@ namespace Cardamom.Graphics.Ui.Elements
             return GetEnumerator();
         }
 
-        public override void Draw(RenderTarget target)
+        public override void Draw(RenderTarget target, UiContext context)
         {
             if (Visible)
             {
-                base.Draw(target);
-                target.PushTranslation(Position + LeftMargin + LeftPadding);
+                base.Draw(target, context);
+                target.PushTranslation(Position + LeftMargin);
+                target.PushTranslation(LeftPadding);
                 target.PushScissor(new(new(), InternalSize));
                 foreach (var element in _elements.Values)
                 {
-                    element.Draw(target);
+                    element.Draw(target, context);
                 }
                 target.PopScissor();
+                target.PopViewMatrix();
                 target.PopViewMatrix();
             }
         }
 
-        public override void Update(UiContext context, long delta)
+        public override void Update(long delta)
         {
-            base.Update(context, delta);
-            context.PushTranslation(Position + LeftMargin + LeftPadding);
-            context.PushScissor(new(new(), InternalSize));
             foreach (var element in _elements.Values)
             {
-                element.Update(context, delta);
+                element.Update(delta);
             }
-            context.PopScissor();
-            context.PopViewMatrix();
         }
     }
 }

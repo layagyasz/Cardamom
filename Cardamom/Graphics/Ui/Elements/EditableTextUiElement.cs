@@ -51,16 +51,17 @@ namespace Cardamom.Graphics.Ui.Elements
             }
         }
 
-        public override void Draw(RenderTarget target)
+        public override void Draw(RenderTarget target, UiContext context)
         {
             if (Visible)
             {
                 target.PushTranslation(Position + LeftMargin);
+                context.Register(this);
                 _rectComponent.Draw(target);
                 target.PushTranslation(LeftPadding);
                 target.PushScissor(new(new(), InternalSize));
                 target.PushTranslation(_offset);
-                _textComponent.Draw(target);
+                _textComponent.Draw(target, context);
                 if (_cursorActive && _cursorPeriod < s_CursorPeriod >> 1)
                 {
                     target.PushTranslation(_cursorPosition);
@@ -74,9 +75,9 @@ namespace Cardamom.Graphics.Ui.Elements
             }
         }
 
-        public override void Update(UiContext context, long delta)
+        public override void Update(long delta)
         {
-            base.Update(context, delta);
+            base.Update(delta);
             _cursorPeriod = (_cursorPeriod + (int)delta) % s_CursorPeriod;
         }
     }

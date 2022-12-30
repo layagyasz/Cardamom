@@ -29,9 +29,9 @@ namespace Cardamom.Graphics.Ui.Elements.Components
             _text.SetText(text);
         }
 
-        public void Draw(RenderTarget target)
+        public void Draw(RenderTarget target, UiContext context)
         {
-            _text.Draw(target);
+            _text.Draw(target, context);
         }
     }
 }

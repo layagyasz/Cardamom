@@ -17,12 +17,12 @@ namespace Cardamom.Graphics
 
         public void Initialize() { }
 
-        public void Draw(RenderTarget target)
+        public void Draw(RenderTarget target, UiContext context)
         {
             target.Draw(_buffer, 0, _buffer.Length, _shader, _texture);
         }
 
-        public virtual void Update(UiContext context, long delta) { }
+        public virtual void Update(long delta) { }
 
         protected override void DisposeImpl()
         {
