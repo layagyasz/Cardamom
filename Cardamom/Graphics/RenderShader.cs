@@ -15,7 +15,6 @@ namespace Cardamom.Graphics
             public string? Geometry { get; set; }
             public string? TesselationControl { get; set; }
             public string? TesselationEvaluation { get; set; }
-            public string? Compute { get; set; }
 
             public Builder SetVertex(string path)
             {
@@ -47,12 +46,6 @@ namespace Cardamom.Graphics
                 return this;
             }
 
-            public Builder SetCompute(string path)
-            {
-                Compute = path;
-                return this;
-            }
-
             public RenderShader Build()
             {
                 var handles = new List<int>();
@@ -75,10 +68,6 @@ namespace Cardamom.Graphics
                 if (TesselationEvaluation != null)
                 {
                     handles.Add(CompileShader(TesselationEvaluation, ShaderType.TessEvaluationShader));
-                }
-                if (Compute != null)
-                {
-                    handles.Add(CompileShader(Compute, ShaderType.ComputeShader));
                 }
 
                 int program = GL.CreateProgram();
