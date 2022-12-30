@@ -49,18 +49,19 @@ namespace Cardamom.Graphics.Ui
             {
                 var ndcMouse = WindowToNdc(_mouseListener.GetMousePosition());
                 var projection = GetProjection();
-                var windowMouse = new Vector4(ndcMouse.X, ndcMouse.Y, projection.NearPlane, 1);
-                var projectedMouse = windowMouse * projection.Matrix.Inverted();
+                var frustrumMouse = new Vector4(ndcMouse.X, ndcMouse.Y, projection.NearPlane, 1);
+                var projectedMouse = frustrumMouse * projection.Matrix.Inverted();
                 if (GetScissor() == null 
                     || GetScissor()!.Value.ContainsInclusive(projectedMouse.Xy))
                 {
                     var transform = GetViewMatrix() * projection.Matrix;
                     var inverted = transform.Inverted();
-                    var origin = windowMouse * inverted;
-                    origin /= origin.W;
-                    var dz = (windowMouse + new Vector4(0, 0, 1, 0)) * inverted;
-                    dz = origin - dz / dz.W;
-                    var ray = new Ray3(origin.Xyz, dz.Xyz);
+                    var worldMouse = frustrumMouse * inverted;
+                    var front = 
+                        worldMouse + new Vector4(inverted.Row2.X, inverted.Row2.Y, inverted.Row2.Z, inverted.Row2.W);
+                    worldMouse /= worldMouse.W;
+                    var dz = worldMouse - front / front.W;
+                    var ray = new Ray3(worldMouse.Xyz, dz.Xyz);
                     float? d = element.GetRayIntersection(ray);
                     if (d != null && !(d < 0) && d <= _topDistance)
                     {
