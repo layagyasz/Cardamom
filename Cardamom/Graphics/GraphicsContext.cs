@@ -6,7 +6,7 @@ namespace Cardamom.Graphics
     public abstract class GraphicsContext
     {
         private Box2i _viewPort;
-        private readonly Stack<Matrix4> _projectionStack = new();
+        private readonly Stack<Projection> _projectionStack = new();
         private readonly Stack<Matrix4> _viewStack = new();
         private readonly Stack<Box2?> _scissorStack = new();
 
@@ -18,7 +18,7 @@ namespace Cardamom.Graphics
         public abstract void Clear();
         public abstract void Flatten();
 
-        public Matrix4 GetProjectionMatrix()
+        public Projection GetProjection()
         {
             return _projectionStack.Peek();
         }
@@ -48,7 +48,7 @@ namespace Cardamom.Graphics
             _scissorStack.Push(null);
         }
 
-        public void PushProjectionMatrix(Matrix4 projection)
+        public void PushProjection(Projection projection)
         {
             _projectionStack.Push(projection);
         }

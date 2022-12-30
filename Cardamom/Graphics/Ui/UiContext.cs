@@ -1,4 +1,6 @@
-﻿using Cardamom.Window;
+﻿using Cardamom.Graphics.Ui.Elements;
+using Cardamom.Mathematics.Geometry;
+using Cardamom.Window;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui
@@ -46,23 +48,25 @@ namespace Cardamom.Graphics.Ui
             if (_mouseListener != null)
             {
                 var ndcMouse = WindowToNdc(_mouseListener.GetMousePosition());
-                var mouse = new Vector4(ndcMouse.X, ndcMouse.Y, 0, 1) * GetProjectionMatrix().Inverted();
+                var projection = GetProjection();
+                var windowMouse = new Vector4(ndcMouse.X, ndcMouse.Y, projection.NearPlane, 1);
+                var projectedMouse = windowMouse * projection.Matrix.Inverted();
                 if (GetScissor() == null 
-                    || GetScissor()!.Value.ContainsInclusive(mouse.Xy))
+                    || GetScissor()!.Value.ContainsInclusive(projectedMouse.Xy))
                 {
-                    var inverted = GetViewMatrix().Inverted();
-                    var origin =
-                        new Vector3(
-                            inverted.Row0.X * mouse.X + inverted.Row1.X * mouse.Y + inverted.Row3.X,
-                            inverted.Row0.Y * mouse.X + inverted.Row1.Y * mouse.Y + inverted.Row3.Y,
-                            inverted.Row0.Z * mouse.X + inverted.Row1.Z * mouse.Y + inverted.Row3.Z);
-                    var dz = -new Vector3(inverted.Row2.X, inverted.Row2.Y, inverted.Row2.Z);
-                    float? d = element.GetRayIntersection(new(origin, dz));
+                    var transform = GetViewMatrix() * projection.Matrix;
+                    var inverted = transform.Inverted();
+                    var origin = windowMouse * inverted;
+                    origin /= origin.W;
+                    var dz = (windowMouse + new Vector4(0, 0, 1, 0)) * inverted;
+                    dz = origin - dz / dz.W;
+                    var ray = new Ray3(origin.Xyz, dz.Xyz);
+                    float? d = element.GetRayIntersection(ray);
                     if (d != null && !(d < 0) && d <= _topDistance)
                     {
                         _topElement = element;
                         _topDistance = d.Value;
-                        _topIntersection = origin + dz * d.Value;
+                        _topIntersection = ray.Point + ray.Direction * d.Value;
                     }
                 }
             }

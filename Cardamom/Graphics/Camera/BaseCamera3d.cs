@@ -14,7 +14,7 @@ namespace Cardamom.Graphics.Camera
         private Matrix4 _view;
 
         private bool _updateProjection = true;
-        private Matrix4 _projection;
+        private Projection _projection;
 
         protected BaseCamera3d(float aspectRatio, float farPlane)
         {
@@ -23,7 +23,7 @@ namespace Cardamom.Graphics.Camera
         }
 
         protected abstract Matrix4 GetViewMatrixImpl();
-        protected abstract Matrix4 GetProjectionMatrixImpl();
+        protected abstract Projection GetProjectionImpl();
 
         public void InvalidateView()
         {
@@ -64,11 +64,11 @@ namespace Cardamom.Graphics.Camera
             return _view;
         }
 
-        public Matrix4 GetProjectionMatrix()
+        public Projection GetProjection()
         {
             if (_updateProjection)
             {
-                _projection = GetProjectionMatrixImpl();
+                _projection = GetProjectionImpl();
                 _updateProjection = false;
             }
             return _projection;

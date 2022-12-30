@@ -7,6 +7,6 @@ namespace Cardamom.Graphics.Camera
         float AspectRatio { get; }
         void SetAspectRatio(float aspectRatio);
         Matrix4 GetViewMatrix();
-        Matrix4 GetProjectionMatrix();
+        Projection GetProjection();
     }
 }

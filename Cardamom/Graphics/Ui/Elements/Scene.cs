@@ -35,7 +35,7 @@ namespace Cardamom.Graphics.Ui.Elements
             {
                 target.PushTranslation(Position);
                 target.PushViewMatrix(Camera.GetViewMatrix());
-                target.PushProjectionMatrix(Camera.GetProjectionMatrix());
+                target.PushProjection(Camera.GetProjection());
                 foreach (var element in _elements)
                 {
                     element.Draw(target);
@@ -52,7 +52,7 @@ namespace Cardamom.Graphics.Ui.Elements
             {
                 context.PushTranslation(Position);
                 context.PushViewMatrix(Camera.GetViewMatrix());
-                context.PushProjectionMatrix(Camera.GetProjectionMatrix());
+                context.PushProjection(Camera.GetProjection());
                 foreach (var element in _elements)
                 {
                     element.Update(context, delta);

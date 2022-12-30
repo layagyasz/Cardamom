@@ -70,7 +70,7 @@ namespace Cardamom.Graphics
             Error.LogGLError("bind context");
 
             shader.Bind();
-            shader.SetMatrix4("projection", GetProjectionMatrix());
+            shader.SetMatrix4("projection", GetProjection().Matrix);
             shader.SetMatrix4("view", GetViewMatrix());
 
             GL.Enable(EnableCap.DepthTest);

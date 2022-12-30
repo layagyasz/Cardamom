@@ -29,8 +29,8 @@ namespace Cardamom.Graphics.Ui
             _controller.Bind(_context);
 
             var projection = GetDefaultProjection();
-            RenderWindow.PushProjectionMatrix(projection);
-            _context.PushProjectionMatrix(projection);
+            RenderWindow.PushProjection(projection);
+            _context.PushProjection(projection);
         }
 
         public void Bind(KeyboardListener keyboardListener)
@@ -83,17 +83,17 @@ namespace Cardamom.Graphics.Ui
             RenderWindow.SetViewPort(new(new(), e.Size));
             _context.SetViewPort(new(new(), e.Size));
 
-            Matrix4 projection = GetDefaultProjection();
+            var projection = GetDefaultProjection();
             RenderWindow.PopProjectionMatrix();
-            RenderWindow.PushProjectionMatrix(projection);
+            RenderWindow.PushProjection(projection);
             _context.PopProjectionMatrix();
-            _context.PushProjectionMatrix(projection);
+            _context.PushProjection(projection);
         }
 
-        private Matrix4 GetDefaultProjection()
+        private Projection GetDefaultProjection()
         {
             var viewPort = RenderWindow.GetViewPort();
-            return Matrix4.CreateOrthographicOffCenter(0, viewPort.Size.X, viewPort.Size.Y, 0, -10, 10);
+            return new(-10, Matrix4.CreateOrthographicOffCenter(0, viewPort.Size.X, viewPort.Size.Y, 0, -10, 10));
         }
     }
 }

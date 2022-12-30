@@ -4,6 +4,8 @@ namespace Cardamom.Graphics.Camera
 {
     public class SubjectiveCamera3d : BaseCamera3d
     {
+        private static readonly float s_NearPlane = 0.01f;
+
         public Vector3 Focus { get; private set; }
         public float Distance { get; private set; }
 
@@ -37,9 +39,10 @@ namespace Cardamom.Graphics.Camera
             return Matrix4.LookAt(Focus - Distance * front, Focus, up);
         }
 
-        protected override Matrix4 GetProjectionMatrixImpl()
+        protected override Projection GetProjectionImpl()
         {
-            return Matrix4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, 0.01f, FarPlane);
+            return new(
+                s_NearPlane, Matrix4.CreatePerspectiveFieldOfView(FieldOfView, AspectRatio, s_NearPlane, FarPlane));
         }
     }
 }
