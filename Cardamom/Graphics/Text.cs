@@ -10,7 +10,7 @@ namespace Cardamom.Graphics
         private Font? _font;
         private uint _characterSize;
         private Color4 _color;
-        private Shader? _shader;
+        private RenderShader? _shader;
         private string _text = string.Empty;
         private readonly ArrayList<Vertex3> _vertices = new(48);
 
@@ -114,7 +114,7 @@ namespace Cardamom.Graphics
             }
         }
 
-        public void SetShader(Shader shader)
+        public void SetShader(RenderShader shader)
         {
             _shader = shader;
         }

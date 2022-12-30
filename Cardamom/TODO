@@ -1,5 +1,4 @@
 #Graphics
-Split ComputeShader from Shader
 TexturePage based TextureLibrary
 Support custom VertexArray attributes
 Update camera aspect ratio on screen resize

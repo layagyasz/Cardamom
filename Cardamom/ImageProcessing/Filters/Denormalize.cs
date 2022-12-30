@@ -7,7 +7,7 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Denormalize : IFilter
     {
-        private static Shader? s_DenormalizeShader;
+        private static ComputeShader? s_DenormalizeShader;
         private static readonly int s_MeanLocation = 0;
         private static readonly int s_StandardDeviationLocation = 1;
         private static readonly int s_ChannelLocation = 2;
@@ -25,7 +25,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_DenormalizeShader ??= new Shader.Builder().SetCompute("Resources/denormalize.comp").Build();
+            s_DenormalizeShader ??= ComputeShader.FromFile("Resources/denormalize.comp");
 
             s_DenormalizeShader.SetVector4(s_MeanLocation, _mean);
             s_DenormalizeShader.SetVector4(s_StandardDeviationLocation, _standardDeviation);

@@ -5,10 +5,10 @@ namespace Cardamom.Graphics
     public class Model : GraphicsResource, IRenderable
     {
         private readonly VertexBuffer _buffer;
-        private readonly Shader _shader;
+        private readonly RenderShader _shader;
         private readonly Texture _texture;
 
-        public Model(VertexArray vertices, Shader shader, Texture texture)
+        public Model(VertexArray vertices, RenderShader shader, Texture texture)
         {
             _buffer = new(vertices.Vertices, vertices.PrimitiveType);
             _shader = shader;

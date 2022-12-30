@@ -7,7 +7,7 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class WaveForm : IFilter
     {
-        private static Shader? s_WaveFormShader;
+        private static ComputeShader? s_WaveFormShader;
         private static readonly int s_WaveTypeLocation = 0;
         private static readonly int s_AmplitudeLocation = 1;
         private static readonly int s_BiasLocation = 2;
@@ -47,7 +47,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_WaveFormShader ??= new Shader.Builder().SetCompute("Resources/wave_form.comp").Build();
+            s_WaveFormShader ??= ComputeShader.FromFile("Resources/wave_form.comp");
 
             s_WaveFormShader.SetInt32(s_WaveTypeLocation, (int)_settings.WaveType);
             s_WaveFormShader.SetFloat(s_AmplitudeLocation, _settings.Amplitude);

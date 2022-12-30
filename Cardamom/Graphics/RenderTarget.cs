@@ -30,7 +30,7 @@ namespace Cardamom.Graphics
         }
 
         public void Draw(
-            VertexArray vertices, int start, int count, Shader shader,Texture? texture)
+            VertexArray vertices, int start, int count, RenderShader shader,Texture? texture)
         {
             Draw(vertices.Vertices, vertices.PrimitiveType, start, count, shader, texture);
         }
@@ -40,7 +40,7 @@ namespace Cardamom.Graphics
             PrimitiveType primitiveType,
             int start,
             int count,
-            Shader shader,
+            RenderShader shader,
             Texture? texture)
         {
             _defaultBuffer ??= new(new());
@@ -53,7 +53,7 @@ namespace Cardamom.Graphics
             VertexBuffer buffer,
             int start,
             int count,
-            Shader shader, 
+            RenderShader shader, 
             Texture? texture)
         {
             SetActive(true);

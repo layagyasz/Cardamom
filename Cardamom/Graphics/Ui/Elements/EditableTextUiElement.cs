@@ -16,7 +16,7 @@ namespace Cardamom.Graphics.Ui.Elements
         private bool _cursorActive;
         private int _cursorPeriod;
         private Vector3 _cursorPosition;
-        private Shader? _cursorShader;
+        private RenderShader? _cursorShader;
 
         public EditableTextUiElement(Class @class, IController controller)
             : base(@class, controller) { }

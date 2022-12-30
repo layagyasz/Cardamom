@@ -6,15 +6,15 @@ using System.Text.Json.Serialization;
 
 namespace Cardamom.Json
 {
-    public class ShaderJsonConverter : JsonConverter<Shader>
+    public class ShaderJsonConverter : JsonConverter<RenderShader>
     {
-        public override Shader Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override RenderShader Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var builder = JsonSerializer.Deserialize<Shader.Builder>(ref reader, options)!;
+            var builder = JsonSerializer.Deserialize<RenderShader.Builder>(ref reader, options)!;
             return builder.Build();
         }
 
-        public override void Write(Utf8JsonWriter writer, Shader @object, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, RenderShader @object, JsonSerializerOptions options)
         {
             throw new NotImplementedException();
         }

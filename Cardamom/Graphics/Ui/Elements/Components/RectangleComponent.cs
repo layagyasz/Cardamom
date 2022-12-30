@@ -6,7 +6,7 @@ namespace Cardamom.Graphics.Ui.Elements.Components
 {
     public class RectangleComponent
     {
-        private Shader? _shader;
+        private RenderShader? _shader;
         private float[]? _borderWidth;
         private Color4[]? _borderColor;
         private Vector2[]? _cornerRadius;

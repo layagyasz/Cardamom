@@ -7,7 +7,7 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Classify : IFilter
     {
-        private static Shader? s_ClassifyShader;
+        private static ComputeShader? s_ClassifyShader;
         private static readonly int s_ClassificationCountLocation = 0;
         private static readonly int s_ColorLocation = 1;
         private static readonly int s_ConditionPositionLocation = 33;
@@ -67,7 +67,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_ClassifyShader ??= new Shader.Builder().SetCompute("Resources/classify.comp").Build();
+            s_ClassifyShader ??= ComputeShader.FromFile("Resources/classify.comp");
 
             s_ClassifyShader.SetInt32(s_ClassificationCountLocation, _colors.Length);
             s_ClassifyShader.SetColorArray(s_ColorLocation, _colors);

@@ -16,13 +16,13 @@ namespace Cardamom.Graphics.Ui
         public Color4[] BorderColor { get; set; } = new Color4[4];
         public float[] BorderWidth { get; set; } = new float[4];
         public Vector2[] CornerRadius { get; set; } = new Vector2[4];
-        public KeyedWrapper<Shader>? BackgroundShader { get; set; }
+        public KeyedWrapper<RenderShader>? BackgroundShader { get; set; }
         public TextureSegment Texture { get; set; } = new(string.Empty, null, new(new(), new(1, 1)));
 
         public KeyedWrapper<Font>? FontFace { get; set; }
         public uint FontSize { get; set; } = 12;
         public Color4 Color { get; set; } = Color4.Black;
-        public KeyedWrapper<Shader>? Shader { get; set; }
+        public KeyedWrapper<RenderShader>? Shader { get; set; }
 
         public class Builder
         {
@@ -34,13 +34,13 @@ namespace Cardamom.Graphics.Ui
             public Color4[]? BorderColor { get; set; }
             public float[]? BorderWidth { get; set; }
             public Vector2[]? CornerRadius { get; set; }
-            public KeyedWrapper<Shader>? BackgroundShader { get; set; }
+            public KeyedWrapper<RenderShader>? BackgroundShader { get; set; }
             public TextureSegment? Texture { get; set; }
 
             public KeyedWrapper<Font>? FontFace { get; set; }
             public uint? FontSize { get; set; }
             public Color4? Color { get; set; }
-            public KeyedWrapper<Shader>? Shader { get; set; }
+            public KeyedWrapper<RenderShader>? Shader { get; set; }
 
             public ClassAttributes Build(IEnumerable<Builder> ancestors) => new()
             {

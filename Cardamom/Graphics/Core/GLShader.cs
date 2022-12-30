@@ -1,25 +1,17 @@
-﻿using Cardamom.Graphics.Core;
-using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
-namespace Cardamom.Graphics
+namespace Cardamom.Graphics.Core
 {
-    public class Shader : GLObject
+    public class GLShader : GLObject
     {
-        private Shader(int handle)
+        protected GLShader(int handle)
             : base(handle) { }
 
         public void Bind()
         {
             GL.UseProgram(Handle);
             Error.LogGLError("bind shader");
-        }
-
-        public void DoCompute(Vector2i size)
-        {
-            Bind();
-            GL.DispatchCompute(size.X, size.Y, 1);
-            GL.MemoryBarrier(MemoryBarrierFlags.AllBarrierBits);
         }
 
         public int GetAttributeLocation(string name)
@@ -259,118 +251,29 @@ namespace Cardamom.Graphics
             GL.DeleteProgram(Handle);
         }
 
-        public class Builder
+        protected static int CompileShader(string path, ShaderType shaderType)
         {
-            public string? Vertex { get; set; }
-            public string? Fragment { get; set; }
-            public string? Geometry { get; set; }
-            public string? TesselationControl { get; set; }
-            public string? TesselationEvaluation { get; set; }
-            public string? Compute { get; set; }
-
-            public Builder SetVertex(string path)
+            var shaderSource = File.ReadAllText(path);
+            var shader = GL.CreateShader(shaderType);
+            GL.ShaderSource(shader, shaderSource);
+            GL.CompileShader(shader);
+            GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
+            if (code != (int)All.True)
             {
-                Vertex = path;
-                return this;
+                var infoLog = GL.GetShaderInfoLog(shader);
+                throw new Exception($"Shader compilation error.\n\n{infoLog}");
             }
+            return shader;
+        }
 
-            public Builder SetFragment(string path)
+        protected static void LinkProgram(int program)
+        {
+            GL.LinkProgram(program);
+            GL.GetProgram(program, GetProgramParameterName.LinkStatus, out var code);
+            if (code != (int)All.True)
             {
-                Fragment = path;
-                return this;
-            }
-
-            public Builder SetGeometry(string path)
-            {
-                Geometry = path;
-                return this;
-            }
-
-            public Builder SetTesselationControl(string path)
-            {
-                TesselationControl = path;
-                return this;
-            }
-
-            public Builder SetTesselationEvaluation(string path)
-            {
-                TesselationEvaluation = path;
-                return this;
-            }
-
-            public Builder SetCompute(string path)
-            {
-                Compute = path;
-                return this;
-            }
-
-            public Shader Build()
-            {
-                var handles = new List<int>();
-                if (Vertex != null)
-                {
-                    handles.Add(CompileShader(Vertex, ShaderType.VertexShader));
-                }
-                if (Fragment != null)
-                {
-                    handles.Add(CompileShader(Fragment, ShaderType.FragmentShader));
-                }
-                if (Geometry != null)
-                {
-                    handles.Add(CompileShader(Geometry, ShaderType.GeometryShader));
-                }
-                if (TesselationControl != null)
-                {
-                    handles.Add(CompileShader(TesselationControl, ShaderType.TessControlShader));
-                }
-                if (TesselationEvaluation != null)
-                {
-                    handles.Add(CompileShader(TesselationEvaluation, ShaderType.TessEvaluationShader));
-                }
-                if (Compute != null)
-                {
-                    handles.Add(CompileShader(Compute, ShaderType.ComputeShader));
-                }
-
-                int program = GL.CreateProgram();
-                foreach (var handle in handles)
-                {
-                    GL.AttachShader(program, handle);
-                }
-                LinkProgram(program);
-                foreach (var handle in handles)
-                {
-                    GL.DetachShader(program, handle);
-                    GL.DeleteShader(handle);
-                }
-
-                return new Shader(program);
-            }
-
-            private static int CompileShader(string path, ShaderType shaderType)
-            {
-                var shaderSource = File.ReadAllText(path);
-                var shader = GL.CreateShader(shaderType);
-                GL.ShaderSource(shader, shaderSource);
-                GL.CompileShader(shader);
-                GL.GetShader(shader, ShaderParameter.CompileStatus, out var code);
-                if (code != (int)All.True)
-                {
-                    var infoLog = GL.GetShaderInfoLog(shader);
-                    throw new Exception($"Shader compilation error.\n\n{infoLog}");
-                }
-                return shader;
-            }
-
-            private static void LinkProgram(int program)
-            {
-                GL.LinkProgram(program);
-                GL.GetProgram(program, GetProgramParameterName.LinkStatus, out var code);
-                if (code != (int)All.True)
-                {
-                    var infoLog = GL.GetProgramInfoLog(program);
-                    throw new Exception($"Error linking Shader Program.\n\n{infoLog}");
-                }
+                var infoLog = GL.GetProgramInfoLog(program);
+                throw new Exception($"Error linking Shader Program.\n\n{infoLog}");
             }
         }
     }

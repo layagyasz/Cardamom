@@ -9,11 +9,11 @@ namespace Cardamom.Graphics
     public class GraphicsResources
     {
         private readonly TextureLibrary _textures;
-        private readonly Library<Shader> _shaders;
+        private readonly Library<RenderShader> _shaders;
         private readonly Library<Class> _classes = new();
 
         public GraphicsResources(
-            TextureLibrary textures, Library<Shader> shaders, Library<Class> classes)
+            TextureLibrary textures, Library<RenderShader> shaders, Library<Class> classes)
         {
             _textures = textures;
             _shaders = shaders;
@@ -25,7 +25,7 @@ namespace Cardamom.Graphics
             return _classes[key];
         }
 
-        public Shader GetShader(string key)
+        public RenderShader GetShader(string key)
         {
             return _shaders[key];
         }
@@ -39,7 +39,7 @@ namespace Cardamom.Graphics
             public Library<KeyedWrapper<Font>> Fonts { get; set; } = new();
 
             [JsonConverter(typeof(FromFileJsonConverter))]
-            public Library<KeyedWrapper<Shader>> Shaders { get; set; } = new();
+            public Library<KeyedWrapper<RenderShader>> Shaders { get; set; } = new();
 
             [JsonConverter(typeof(FromMultipleFileJsonConverter))]
             public Library<Class.Builder> Classes { get; set; } = new();
