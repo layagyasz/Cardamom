@@ -23,6 +23,7 @@ namespace Cardamom.Graphics.Ui
         public uint FontSize { get; set; } = 12;
         public Color4 Color { get; set; } = Color4.Black;
         public KeyedWrapper<RenderShader>? Shader { get; set; }
+        public bool DisableScissor { get; set; }
 
         public class Builder
         {
@@ -41,6 +42,7 @@ namespace Cardamom.Graphics.Ui
             public uint? FontSize { get; set; }
             public Color4? Color { get; set; }
             public KeyedWrapper<RenderShader>? Shader { get; set; }
+            public bool? DisableScissor { get; set; }
 
             public ClassAttributes Build(IEnumerable<Builder> ancestors) => new()
             {
@@ -65,6 +67,7 @@ namespace Cardamom.Graphics.Ui
                 FontSize = Inherit(ancestors.Select(x => x.FontSize), FontSize) ?? 12,
                 Color = Inherit(ancestors.Select(x => x.Color), Color) ?? Color4.Black,
                 Shader = Inherit(ancestors.Select(x => x.Shader), Shader)!,
+                DisableScissor = Inherit(ancestors.Select(x => x.DisableScissor), DisableScissor) ?? false
             };
 
             private static T Inherit<T>(IEnumerable<T> ancestors, T child)

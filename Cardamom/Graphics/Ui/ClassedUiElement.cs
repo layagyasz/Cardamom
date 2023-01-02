@@ -12,6 +12,8 @@ namespace Cardamom.Graphics.Ui
         public Vector3 TrueSize { get; private set; }
         public Vector3 InternalSize => TrueSize - LeftPadding - RightPadding;
         public override Vector3 Size => TrueSize + LeftMargin + RightMargin;
+        public bool DisableScissor { get; private set; }
+
 
         private readonly Class _class;
 
@@ -28,6 +30,7 @@ namespace Cardamom.Graphics.Ui
             LeftPadding = new(attributes.LeftPadding.X, attributes.LeftPadding.Y, 0);
             RightPadding = new(attributes.RightPadding.X, attributes.RightPadding.Y, 0);
             TrueSize = new(attributes.Size.X, attributes.Size.Y, 0);
+            DisableScissor = attributes.DisableScissor;
         }
 
         public void SetState(Class.State state)

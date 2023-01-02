@@ -59,7 +59,10 @@ namespace Cardamom.Graphics.Ui.Elements
                 context.Register(this);
                 _rectComponent.Draw(target);
                 target.PushTranslation(LeftPadding);
-                target.PushScissor(new(new(), InternalSize));
+                if (!DisableScissor)
+                {
+                    target.PushScissor(new(new(), InternalSize));
+                }
                 target.PushTranslation(_offset);
                 _textComponent.Draw(target, context);
                 if (_cursorActive && _cursorPeriod < s_CursorPeriod >> 1)
@@ -69,7 +72,10 @@ namespace Cardamom.Graphics.Ui.Elements
                     target.PopViewMatrix();
                 }
                 target.PopViewMatrix();
-                target.PopScissor();
+                if (!DisableScissor)
+                {
+                    target.PopScissor();
+                }
                 target.PopViewMatrix();
                 target.PopViewMatrix();
             }

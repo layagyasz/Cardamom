@@ -60,12 +60,18 @@ namespace Cardamom.Graphics.Ui.Elements
                 base.Draw(target, context);
                 target.PushTranslation(Position + LeftMargin);
                 target.PushTranslation(LeftPadding);
-                target.PushScissor(new(new(), InternalSize));
+                if (!DisableScissor)
+                {
+                    target.PushScissor(new(new(), InternalSize));
+                }
                 foreach (var element in _elements.Values)
                 {
                     element.Draw(target, context);
                 }
-                target.PopScissor();
+                if (!DisableScissor)
+                {
+                    target.PopScissor();
+                }
                 target.PopViewMatrix();
                 target.PopViewMatrix();
             }

@@ -20,7 +20,8 @@
       "Color": "#ffffff",
       "Shader": {
         "$ref": "shader-default"
-      }
+      },
+      "DisableScissor": true
     },
     "States": [
       {
@@ -59,7 +60,8 @@
       "$ref": "example-base-class"
     },
     "Default": {
-      "Size": [ 224, 500 ]
+      "Size": [ 224, 500 ],
+      "Margin": [ 0, 2, 0, 2 ]
     }
   },
   {
@@ -89,7 +91,8 @@
     },
     "Default": {
       "Size": [ 224, 32 ],
-      "Padding": [ 16, 8, 16, 2 ]
+      "Padding": [ 16, 8, 16, 2 ],
+      "DisableScissor": false
     }
   },
   {
@@ -108,7 +111,8 @@
       "$ref": "example-base-class"
     },
     "Default": {
-      "Size": [ 224, 500 ]
+      "Size": [ 224, 500 ],
+      "DisableScissor": false
     }
   },
   {
