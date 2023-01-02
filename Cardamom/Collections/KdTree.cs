@@ -1,18 +1,19 @@
-﻿using Cardamom.Mathematics;
+﻿using Cardamom.Mathematics.Coordinates;
 using Cardamom.Mathematics.Geometry;
+using System.Xml.XPath;
 
 namespace Cardamom.Collections
 {
     public class KdTree<T>
     {
-        public HyperVector Key { get; }
+        public IVector Key { get; }
         public T Value { get; }
         public int Dimension { get; }
         public KdTree<T>? Left { get; }
         public KdTree<T>? Right { get; }
         public HyperBox Region { get; }
 
-        private KdTree(HyperVector key, T value, int dimension, KdTree<T>? left, KdTree<T>? right, HyperBox region)
+        private KdTree(IVector key, T value, int dimension, KdTree<T>? left, KdTree<T>? right, HyperBox region)
         {
             Key = key;
             Value = value;
@@ -22,17 +23,21 @@ namespace Cardamom.Collections
             Region = region;
         }
 
-        public T GetClosest(HyperVector point)
+        public T GetClosest(IVector point)
         {
             (var result, _) = GetClosestSubtree(new(point, float.MaxValue));
-            return result.Value ?? Value;
+            if (result != null)
+            {
+                return result.Value;
+            }
+            return Value;
         }
 
         private (KdTree<T>?, float) GetClosestSubtree(HyperSphere bounds)
         {
             KdTree<T>? current = null;
 
-            var currentD = HyperVector.DistanceSquared(Key, bounds.Center);
+            var currentD = IVector.DistanceSquared(Key, bounds.Center);
             if (currentD < bounds.Radius2)
             {
                 if (currentD < float.Epsilon)
@@ -103,7 +108,7 @@ namespace Cardamom.Collections
         public class Builder
         {
             public int Cardinality { get; set; } 
-            public List<KeyValuePair<HyperVector, T>> Values = new();
+            public List<KeyValuePair<IVector, T>> Values = new();
 
             public Builder SetCardinality(int cardinality)
             {
@@ -111,7 +116,7 @@ namespace Cardamom.Collections
                 return this;
             }
 
-            public Builder Add(HyperVector key, T value)
+            public Builder Add(IVector key, T value)
             {
                 Precondition.Check(key.Cardinality >= Cardinality);
                 Values.Add(new(key, value));
@@ -157,7 +162,7 @@ namespace Cardamom.Collections
             }
 
             private static int Ninther(
-                List<KeyValuePair<HyperVector, T>> keysAndValues, int indexLow, int indexHigh, int dim)
+                List<KeyValuePair<IVector, T>> keysAndValues, int indexLow, int indexHigh, int dim)
             {
                 int c1 = indexLow + (indexHigh - indexLow) / 3;
                 int c2 = indexLow + 2 * (indexHigh - indexLow) / 3;
@@ -169,7 +174,7 @@ namespace Cardamom.Collections
             }
 
             private static int MedianIndex(
-                List<KeyValuePair<HyperVector, T>> keysAndValues, int indexLow, int indexHigh, int dim)
+                List<KeyValuePair<IVector, T>> keysAndValues, int indexLow, int indexHigh, int dim)
             {
                 if (indexHigh - indexLow > 1)
                 {
@@ -183,7 +188,7 @@ namespace Cardamom.Collections
             }
 
             private static int MedianIndex(
-                List<KeyValuePair<HyperVector, T>> keysAndValues, int indexA, int indexB, int indexC, int dim)
+                List<KeyValuePair<IVector, T>> keysAndValues, int indexA, int indexB, int indexC, int dim)
             {
                 if (MaxIndex(keysAndValues, indexA, indexB, dim) == indexA)
                 {
@@ -193,7 +198,7 @@ namespace Cardamom.Collections
             }
 
             private static int MaxIndex(
-                List<KeyValuePair<HyperVector, T>> keysAndValues, int indexLeft, int indexRight, int dim)
+                List<KeyValuePair<IVector, T>> keysAndValues, int indexLeft, int indexRight, int dim)
             {
                 if (keysAndValues[indexLeft].Key[dim] > keysAndValues[indexRight].Key[dim])
                 {
@@ -203,7 +208,7 @@ namespace Cardamom.Collections
             }
 
             private static int MinIndex(
-                List<KeyValuePair<HyperVector, T>> keysAndValues, int indexLeft, int indexRight, int dim)
+                List<KeyValuePair<IVector, T>> keysAndValues, int indexLeft, int indexRight, int dim)
             {
                 if (keysAndValues[indexLeft].Key[dim] < keysAndValues[indexRight].Key[dim])
                 {

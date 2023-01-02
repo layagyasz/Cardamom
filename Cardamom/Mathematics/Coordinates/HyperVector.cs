@@ -1,6 +1,6 @@
-﻿namespace Cardamom.Mathematics
+﻿namespace Cardamom.Mathematics.Coordinates
 {
-    public struct HyperVector
+    public class HyperVector : IVector
     {
         public int Cardinality => _values.Length;
 
@@ -22,21 +22,9 @@
             _values = new float[cardinality];
         }
 
-        public HyperVector Clone()
+        public IVector Clone()
         {
             return new HyperVector(_values.ToArray());
-        }
-
-        public static float DistanceSquared(HyperVector left,  HyperVector right)
-        {
-            Precondition.Check(left.Cardinality == right.Cardinality);
-            float d2 = 0;
-            for (int i=0; i<left.Cardinality; ++i)
-            {
-                float d = left._values[i] - right._values[i];
-                d2 += d * d;
-            }
-            return d2;
         }
     }
 }

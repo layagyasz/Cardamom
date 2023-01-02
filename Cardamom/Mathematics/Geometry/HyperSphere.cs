@@ -1,11 +1,13 @@
-﻿namespace Cardamom.Mathematics.Geometry
+﻿using Cardamom.Mathematics.Coordinates;
+
+namespace Cardamom.Mathematics.Geometry
 {
-    public struct HyperSphere
+    public class HyperSphere
     {
-        public HyperVector Center { get; set; }
+        public IVector Center { get; set; }
         public float Radius2 { get; set; }
 
-        public HyperSphere(HyperVector center, float radius2)
+        public HyperSphere(IVector center, float radius2)
         {
             Center = center;
             Radius2 = radius2;
