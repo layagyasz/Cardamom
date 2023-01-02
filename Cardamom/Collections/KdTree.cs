@@ -57,10 +57,21 @@ namespace Cardamom.Collections
                 {
                     (closestLeft, leftD) = Left.GetClosestSubtree(bounds);
                 }
+                if (closestLeft != null && leftD < currentD)
+                {
+                    current = closestLeft;
+                    currentD = leftD;
+                    bounds.Radius2 = currentD;
+                }
 
                 if (Right != null && bounds.Intersects(Right.Region))
                 {
                     (closestRight, rightD) = Right.GetClosestSubtree(bounds);
+                }
+                if (closestRight != null && rightD < currentD)
+                {
+                    current = closestRight;
+                    currentD = rightD;
                 }
             }
             else
@@ -69,21 +80,22 @@ namespace Cardamom.Collections
                 {
                     (closestRight, rightD) = Right.GetClosestSubtree(bounds);
                 }
+                if (closestRight != null && rightD < currentD)
+                {
+                    current = closestRight;
+                    currentD = rightD;
+                    bounds.Radius2 = currentD;
+                }
 
                 if (Left != null && bounds.Intersects(Left.Region))
                 {
                     (closestLeft, leftD) = Left.GetClosestSubtree(bounds);
                 }
-            }
-            if (closestLeft != null && leftD < currentD)
-            {
-                current = closestLeft;
-                currentD = leftD;
-            }
-            if (closestRight != null && rightD < currentD)
-            {
-                current = closestRight;
-                currentD = rightD;
+                if (closestLeft != null && leftD < currentD)
+                {
+                    current = closestLeft;
+                    currentD = leftD;
+                }
             }
             return (current, currentD);
         }

@@ -121,24 +121,23 @@ namespace Cardamom
             var kdTree = kdTreeBuilder.Build();
 
             Stopwatch kdTime = new();
-            Stopwatch normalTime = new();
-            int score = 0;
-            for (int i=0; i<1000; ++i)
+            kdTime.Start();
+            for (int i = 0; i < 100000; ++i)
             {
                 var point = GeneratePoint(random);
-                kdTime.Start();
-                var fromKd = kdTree.GetClosest(point);
-                kdTime.Stop();
-                normalTime.Start();
-                var fromNormal = GetClosest(point, field);
-                normalTime.Stop();
-                if (HyperVector.DistanceSquared(fromKd, fromNormal) < float.Epsilon)
-                {
-                    score++;
-                }
+                kdTree.GetClosest(point);
             }
-            Console.WriteLine(score);
+            kdTime.Stop();
             Console.WriteLine(kdTime.ElapsedMilliseconds);
+
+            Stopwatch normalTime = new();
+            normalTime.Start();
+            for (int i = 0; i < 100000; ++i)
+            {
+                var point = GeneratePoint(random);
+                var fromNormal = GetClosest(point, field);
+            }
+            normalTime.Stop();
             Console.WriteLine(normalTime.ElapsedMilliseconds);
 
             var camera = new SubjectiveCamera3d(1.5f, 1000, new(), 2);
