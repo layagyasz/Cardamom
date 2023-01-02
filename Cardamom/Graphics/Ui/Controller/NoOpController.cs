@@ -3,7 +3,7 @@ using OpenTK.Windowing.Common;
 
 namespace Cardamom.Graphics.Ui.Controller
 {
-    public class SecondaryController<T> : IController
+    public class NoOpController<T> : IController
     {
         public EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }

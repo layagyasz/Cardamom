@@ -85,9 +85,31 @@ namespace Cardamom
             select.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(select.Item1);
 
-            var text = uiElementFactory.CreateTextInput("example-row-class", new(0, select.Item1.Size.Y, 0));
+            var text = uiElementFactory.CreateTextInput("example-text-input-class", new(0, select.Item1.Size.Y, 0));
             text.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(text.Item1);
+
+            var rows = new List<IUiElement>();
+            for (int i=0; i<5; ++i)
+            {
+                var elements = new List<IUiElement>();
+                for (int j=0; j<5; ++j)
+                {
+                    elements.Add(
+                        uiElementFactory.CreateTextButton(
+                            "example-cell-class", string.Format($"{(char)(i + 65)}-{j}")).Item1);
+                }
+                rows.Add(
+                    uiElementFactory.CreateTableRow(
+                        "example-row-class", elements, new NoOpController<UiSerialContainer>()));
+            }
+            var table = 
+                uiElementFactory.CreateTable(
+                    "example-table-class", 
+                    rows, 
+                    0, 
+                    new(0, text.Item1.Position.Y + text.Item1.Size.Y, 0));
+            pane.Add(table.Item1);
 
             var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(1, 64);
             VertexArray vertices = new(PrimitiveType.Triangles, 6 * uvSphereSolid.Faces.Length);

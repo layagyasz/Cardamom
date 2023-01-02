@@ -2,7 +2,7 @@
 
 namespace Cardamom.Graphics.Ui.Controller
 {
-    public class PaneLayerController : SecondaryController<UiGroupLayer>
+    public class PaneLayerController : NoOpController<UiGroupLayer>
     {
         public override void Bind(object @object)
         {

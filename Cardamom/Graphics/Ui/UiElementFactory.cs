@@ -6,11 +6,11 @@ namespace Cardamom.Graphics.Ui
 {
     public class UiElementFactory
     {
-        private readonly GraphicsResources _classLibrary;
+        private readonly GraphicsResources _resources;
 
         public UiElementFactory(GraphicsResources resources)
         {
-            _classLibrary = resources;
+            _resources = resources;
         }
 
         public static (UiGroupLayer, PaneLayerController) CreatePaneLayer(IEnumerable<IRenderable> panes)
@@ -27,7 +27,7 @@ namespace Cardamom.Graphics.Ui
         public (UiContainer, PaneController) CreatePane(string className)
         {
             var controller = new PaneController();
-            return (new UiContainer(_classLibrary.GetClass(className), controller), controller);
+            return (new UiContainer(_resources.GetClass(className), controller), controller);
         }
 
         public (IUiElement, SelectController<T>) CreateSelect<T>(
@@ -35,7 +35,7 @@ namespace Cardamom.Graphics.Ui
         {
             var controller = new SelectController<T>("select");
             return (new Select(
-                _classLibrary.GetClass(className), 
+                _resources.GetClass(className), 
                 controller,
                 CreateTable(dropBoxClassName, options).Item1), controller);
         }
@@ -43,7 +43,7 @@ namespace Cardamom.Graphics.Ui
         public (IUiElement, SelectOptionController<T>) CreateSelectOption<T>(string className, T value, string text)
         {
             var controller = new SelectOptionController<T>(value);
-            var option = new TextUiElement(_classLibrary.GetClass(className), controller);
+            var option = new TextUiElement(_resources.GetClass(className), controller);
             option.SetText(text);
             return (option, controller);
         }
@@ -52,7 +52,7 @@ namespace Cardamom.Graphics.Ui
         {
             var controller = new ButtonController();
             return 
-                (new SimpleUiElement(_classLibrary.GetClass(className), controller) { Position = position },
+                (new SimpleUiElement(_resources.GetClass(className), controller) { Position = position },
                 controller);
         }
 
@@ -62,7 +62,8 @@ namespace Cardamom.Graphics.Ui
             TableController controller = 
                 scrollSpeed > 0 ? new ScrollingTableController(scrollSpeed) : new StaticTableController();
             var table = 
-                new UiSerialContainer(_classLibrary.GetClass(className), controller)
+                new UiSerialContainer(
+                    _resources.GetClass(className), controller, UiSerialContainer.Orientation.Vertical)
                 {
                     Position = position
                 };
@@ -73,11 +74,24 @@ namespace Cardamom.Graphics.Ui
             return (table, controller);
         }
 
+        public UiSerialContainer CreateTableRow(
+            string className, IEnumerable<IUiElement> elements, IController controller)
+        {
+            var row =
+                new UiSerialContainer(
+                    _resources.GetClass(className), controller, UiSerialContainer.Orientation.Horizontal);
+            foreach (var element in elements)
+            {
+                row.Add(element);
+            }
+            return row;
+        }
+
         public (IUiElement, ButtonController) CreateTextButton(string className, string text, Vector3 position = new())
         {
             var controller = new ButtonController();
             var button =
-                new TextUiElement(_classLibrary.GetClass(className), controller)
+                new TextUiElement(_resources.GetClass(className), controller)
                 {
                     Position = position
                 };
@@ -89,7 +103,7 @@ namespace Cardamom.Graphics.Ui
         {
             var controller = new TextInputController("text");
             return (
-                new EditableTextUiElement(_classLibrary.GetClass(className), controller){ Position = position },
+                new EditableTextUiElement(_resources.GetClass(className), controller){ Position = position },
                 controller);
         }
     }

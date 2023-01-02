@@ -5,12 +5,23 @@ namespace Cardamom.Graphics.Ui.Elements
 {
     public class UiSerialContainer : SimpleUiElement, IEnumerable<IUiElement>
     {
+        public enum Orientation
+        {
+            Horizontal,
+            Vertical
+        }
+
         private readonly List<IUiElement> _elements = new();
+        private readonly Orientation _orientation;
+
         private Vector3 _offset;
         private float _maxOffset;
 
-        public UiSerialContainer(Class @class, IController controller)
-            : base(@class, controller) { }
+        public UiSerialContainer(Class @class, IController controller, Orientation orientation)
+            : base(@class, controller) 
+        { 
+            _orientation = orientation;
+        }
 
         public override void Initialize()
         {
@@ -26,7 +37,14 @@ namespace Cardamom.Graphics.Ui.Elements
 
         public void TryAdjustOffset(float Amount)
         {
-            _offset = new(0, Math.Min(Math.Max(_offset.Y + Amount, _maxOffset), 0), 0);
+            if (_orientation == Orientation.Vertical)
+            {
+                _offset = new(0, Math.Min(Math.Max(_offset.Y + Amount, _maxOffset), 0), 0);
+            }
+            else
+            {
+                _offset = new(Math.Min(Math.Max(_offset.X + Amount, _maxOffset), 0), 0, 0);
+            }
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
@@ -48,9 +66,11 @@ namespace Cardamom.Graphics.Ui.Elements
             float offset = 0;
             foreach (var element in _elements)
             {
-                element.Position = new(0, offset, Position.Z);
+                element.Position = 
+                    _orientation == Orientation.Vertical 
+                        ? new(0, offset, Position.Z) : new(offset, 0, Position.Z);
                 _maxOffset = -offset;
-                offset += element.Size.Y;
+                offset += _orientation == Orientation.Vertical ? element.Size.Y : element.Size.X;
                 element.Draw(target, context);
             }
             target.PopViewMatrix();

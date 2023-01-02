@@ -4,7 +4,6 @@ Support custom VertexArray attributes
 Update camera aspect ratio on screen resize
 
 #Graphics.Ui
-UiSerialContainer can use either horizontal or vertical layout
 Use array setters for ui component shaders
 Use uniform buffers for ui component shaders
 
