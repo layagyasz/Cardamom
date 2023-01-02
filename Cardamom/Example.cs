@@ -1,4 +1,5 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Collections;
+using Cardamom.Graphics;
 using Cardamom.Graphics.Camera;
 using Cardamom.Graphics.Ui;
 using Cardamom.Graphics.Ui.Controller;
@@ -15,6 +16,7 @@ using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using System.Diagnostics;
 
 namespace Cardamom
 {
@@ -107,6 +109,38 @@ namespace Cardamom
                     new DebugController());
             sphereModel.Controller.Clicked += (s, e) => Console.WriteLine(e.Position.Length);
 
+            List<HyperVector> field = new();
+            KdTree<HyperVector>.Builder kdTreeBuilder = new();
+            kdTreeBuilder.SetCardinality(3);
+            for (int i=0; i<1000; ++i)
+            {
+                var point = GeneratePoint(random);
+                field.Add(point);
+                kdTreeBuilder.Add(point, point);
+            }
+            var kdTree = kdTreeBuilder.Build();
+
+            Stopwatch kdTime = new();
+            Stopwatch normalTime = new();
+            int score = 0;
+            for (int i=0; i<1000; ++i)
+            {
+                var point = GeneratePoint(random);
+                kdTime.Start();
+                var fromKd = kdTree.GetClosest(point);
+                kdTime.Stop();
+                normalTime.Start();
+                var fromNormal = GetClosest(point, field);
+                normalTime.Stop();
+                if (HyperVector.DistanceSquared(fromKd, fromNormal) < float.Epsilon)
+                {
+                    score++;
+                }
+            }
+            Console.WriteLine(score);
+            Console.WriteLine(kdTime.ElapsedMilliseconds);
+            Console.WriteLine(normalTime.ElapsedMilliseconds);
+
             var camera = new SubjectiveCamera3d(1.5f, 1000, new(), 2);
             var sceneController =
                 new PassthroughController(
@@ -136,6 +170,16 @@ namespace Cardamom
             screen.Initialize();
             ui.UiRoot = screen;
             ui.Start();
+        }
+
+        private static HyperVector GeneratePoint(Random random)
+        {
+            return new HyperVector(1000 * random.NextSingle(), 1000 * random.NextSingle(), 1000 * random.NextSingle());
+        }
+
+        private static HyperVector GetClosest(HyperVector point, IEnumerable<HyperVector> field)
+        {
+            return field.ArgMin(x => HyperVector.DistanceSquared(x, point));
         }
     }
 }
