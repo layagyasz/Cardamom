@@ -66,7 +66,6 @@ namespace Cardamom.Graphics.Ui
                     UiRoot.Draw(RenderWindow, _context);
                 }
                 _keyboardListener?.DispatchEvents(frameElapsed - elapsed);
-                Console.WriteLine(frameElapsed - elapsed);
                 _controller.DispatchEvents();
                 elapsed = frameElapsed;
 
@@ -86,6 +85,8 @@ namespace Cardamom.Graphics.Ui
             var projection = GetDefaultProjection();
             RenderWindow.PopProjectionMatrix();
             RenderWindow.PushProjection(projection);
+
+            UiRoot?.ResizeContext(new(e.Size.X, e.Size.Y, 0));
         }
 
         private Projection GetDefaultProjection()

@@ -10,7 +10,7 @@ namespace Cardamom.Graphics.Ui.Elements
         public IControlled? Parent { get; set; }
         public ICamera Camera { get; }
         public Vector3 Position { get; set; }
-        public Vector3 Size { get; }
+        public Vector3 Size { get; private set; }
         public bool Visible { get; set; } = true;
 
         private List<IRenderable> _elements;
@@ -27,6 +27,12 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             _elements.ForEach(x => x.Initialize());
             Controller.Bind(this);
+        }
+
+        public void ResizeContext(Vector3 bounds)
+        {
+            Size = bounds;
+            Camera.SetAspectRatio(bounds.X / bounds.Y);
         }
 
         public void Draw(RenderTarget target, UiContext context)

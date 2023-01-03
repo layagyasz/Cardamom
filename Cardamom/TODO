@@ -1,7 +1,6 @@
 #Graphics
 TexturePage based TextureLibrary
 Support custom VertexArray attributes
-Update camera aspect ratio on screen resize
 
 # Pipeline
 Remove dictionaries to passing arguments

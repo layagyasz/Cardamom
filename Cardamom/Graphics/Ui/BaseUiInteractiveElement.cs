@@ -22,6 +22,8 @@ namespace Cardamom.Graphics.Ui
             Controller.Bind(this);
         }
 
+        public void ResizeContext(Vector3 bounds) { }
+
         public abstract float? GetRayIntersection(Ray3 ray);
 
         public abstract void Draw(RenderTarget target, UiContext context);

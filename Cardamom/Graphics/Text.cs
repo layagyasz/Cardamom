@@ -20,6 +20,8 @@ namespace Cardamom.Graphics
 
         public void Initialize() { }
 
+        public void ResizeContext(Vector3 bounds) { }
+
         public void Append(char character)
         {
             _text += character;

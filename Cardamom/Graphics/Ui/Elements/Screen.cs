@@ -32,6 +32,8 @@ namespace Cardamom.Graphics.Ui.Elements
             Controller.Bind(this);
         }
 
+        public virtual void ResizeContext(Vector3 bounds) { }
+
         public float? GetRayIntersection(Ray3 ray)
         {
             return float.MaxValue;

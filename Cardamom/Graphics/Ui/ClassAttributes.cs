@@ -23,6 +23,7 @@ namespace Cardamom.Graphics.Ui
         public uint FontSize { get; set; } = 12;
         public Color4 Color { get; set; } = Color4.Black;
         public KeyedWrapper<RenderShader>? Shader { get; set; }
+
         public bool DisableScissor { get; set; }
 
         public class Builder

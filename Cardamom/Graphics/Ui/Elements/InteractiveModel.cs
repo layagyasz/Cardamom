@@ -1,5 +1,6 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Mathematics.Geometry;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
@@ -22,6 +23,11 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             Controller.Bind(this);
             _model.Initialize();
+        }
+
+        public void ResizeContext(Vector3 bounds) 
+        { 
+            _model.ResizeContext(bounds);
         }
 
         public float? GetRayIntersection(Ray3 ray)

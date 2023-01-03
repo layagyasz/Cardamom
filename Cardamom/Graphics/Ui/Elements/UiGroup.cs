@@ -1,4 +1,6 @@
-﻿namespace Cardamom.Graphics.Ui.Elements
+﻿using OpenTK.Mathematics;
+
+namespace Cardamom.Graphics.Ui.Elements
 {
     public class UiGroup : IEnumerable<IRenderable>, IRenderable
     {
@@ -8,6 +10,8 @@
         {
             _elements.ForEach(x => x.Initialize());
         }
+
+        public void ResizeContext(Vector3 bounds) { }
 
         public void Add(IRenderable element)
         {

@@ -1,5 +1,6 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Mathematics.Geometry;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
@@ -17,6 +18,11 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             base.Initialize();
             Scene.Initialize();
+        }
+
+        public override void ResizeContext(Vector3 bounds)
+        {
+            Scene.ResizeContext(bounds);
         }
 
         public override void Draw(RenderTarget target, UiContext context)
