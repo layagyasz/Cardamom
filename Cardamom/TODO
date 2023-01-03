@@ -3,10 +3,6 @@ TexturePage based TextureLibrary
 Support custom VertexArray attributes
 Update camera aspect ratio on screen resize
 
-#Graphics.Ui
-Use array setters for ui component shaders
-Use uniform buffers for ui component shaders
-
 # Pipeline
 Remove dictionaries to passing arguments
 Define both input and output channels on pipeline nodes?

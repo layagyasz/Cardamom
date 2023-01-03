@@ -37,5 +37,10 @@ namespace Cardamom.Graphics.Ui.Elements
             base.SetAttributes(attributes);
             _rectComponent.SetAttributes(attributes);
         }
+
+        protected override void DisposeImpl()
+        {
+            _rectComponent.Dispose();
+        }
     }
 }

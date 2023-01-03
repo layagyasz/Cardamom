@@ -19,9 +19,44 @@ namespace Cardamom.Graphics.Core
             return GL.GetAttribLocation(Handle, name);
         }
 
+        public int[] GetUniformIndices(string[] names)
+        {
+            var indices = new int[names.Length];
+            GL.GetUniformIndices(Handle, names.Length, names, indices);
+            return indices;
+        }
+
+        public int[] GetUniformOffsets(int[] indices)
+        {
+            var offsets = new int[indices.Length];
+            GL.GetActiveUniforms(Handle, indices.Length, indices, ActiveUniformParameter.UniformOffset, offsets);
+            return offsets;
+        }
+
+        public int[] GetUniformOffsets(string[] names)
+        {
+            return GetUniformOffsets(GetUniformIndices(names));
+        }
+
         public int GetUniformLocation(string name)
         {
             return GL.GetUniformLocation(Handle, name);
+        }
+
+        public int GetUniformBlockIndex(string name)
+        {
+            return GL.GetUniformBlockIndex(Handle, name);
+        }
+
+        public int GetUniformBlockSize(string name)
+        {
+            return GetUniformBlockSize(GetUniformBlockIndex(name));
+        }
+
+        public int GetUniformBlockSize(int index)
+        {
+            GL.GetActiveUniformBlock(Handle, index, ActiveUniformBlockParameter.UniformBlockDataSize, out int size);
+            return size;
         }
 
         public void SetInt32(string name, int data)

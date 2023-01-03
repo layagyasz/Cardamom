@@ -63,5 +63,10 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             return _text;
         }
+
+        protected override void DisposeImpl()
+        {
+            _rectComponent.Dispose();
+        }
     }
 }

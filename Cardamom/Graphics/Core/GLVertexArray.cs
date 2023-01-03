@@ -1,4 +1,5 @@
 ﻿using OpenTK.Graphics.OpenGL4;
+using System.Runtime.InteropServices;
 
 namespace Cardamom.Graphics.Core
 {
@@ -8,11 +9,13 @@ namespace Cardamom.Graphics.Core
         private static readonly int s_ColorAttributeIndex = 1;
         private static readonly int s_TexCoordsAttributeIndex = 2;
 
-        private readonly GLBuffer<Vertex3> _buffer;
+        private readonly int _size;
+        private readonly GLBuffer _buffer;
 
-        public GLVertexArray(GLBuffer<Vertex3> buffer)
+        public GLVertexArray(GLBuffer buffer)
             : base(GL.GenVertexArray())
         {
+            _size = Marshal.SizeOf(typeof(Vertex3));
             _buffer = buffer;
 
             Bind();
@@ -70,7 +73,7 @@ namespace Cardamom.Graphics.Core
 
         public void SetData(Vertex3[] data)
         {
-            _buffer.SetData(data);
+            _buffer.Buffer(_size, data);
             Error.LogGLError("set vertex array data");
         }
 
