@@ -67,6 +67,7 @@ namespace Cardamom.Graphics.Ui.Elements
             }
             target.PushTranslation(_offset);
             float offset = 0;
+            Box3 bounds = new();
             foreach (var element in _elements)
             {
                 element.Position = 
@@ -74,8 +75,10 @@ namespace Cardamom.Graphics.Ui.Elements
                         ? new(0, offset, Position.Z) : new(offset, 0, Position.Z);
                 _maxOffset = -offset;
                 offset += _orientation == Orientation.Vertical ? element.Size.Y : element.Size.X;
+                bounds.Inflate(element.Position + element.Size);
                 element.Draw(target, context);
             }
+            SetDynamicSize(bounds.Size + LeftPadding + RightPadding);
             target.PopViewMatrix();
             if (!DisableScissor)
             {

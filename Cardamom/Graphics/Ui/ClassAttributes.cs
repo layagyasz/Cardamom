@@ -10,7 +10,7 @@ namespace Cardamom.Graphics.Ui
         public float[] Padding { get; set; } = new float[4];
         public Vector2 LeftPadding => new(Padding[0], Padding[1]);
         public Vector2 RightPadding => new(Padding[2], Padding[3]);
-        public Vector2 Size { get; set; }
+        public ElementSizeDefinition Size { get; set; }
 
         public Color4[] BackgroundColor { get; set; } = new Color4[4];
         public Color4[] BorderColor { get; set; } = new Color4[4];
@@ -30,7 +30,7 @@ namespace Cardamom.Graphics.Ui
         {
             public float[]? Margin { get; set; }
             public float[]? Padding { get; set; }
-            public Vector2? Size { get; set; }
+            public ElementSizeDefinition? Size { get; set; }
 
             public Color4[]? BackgroundColor { get; set; }
             public Color4[]? BorderColor { get; set; }

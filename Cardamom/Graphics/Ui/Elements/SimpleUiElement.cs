@@ -1,6 +1,7 @@
 ﻿using Cardamom.Graphics.Ui.Controller;
 using Cardamom.Graphics.Ui.Elements.Components;
 using Cardamom.Mathematics.Geometry;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
@@ -36,6 +37,12 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             base.SetAttributes(attributes);
             _rectComponent.SetAttributes(attributes);
+            SetDyamicSizeImpl(TrueSize.Xy);
+        }
+
+        protected override void SetDyamicSizeImpl(Vector2 size)
+        {
+            _rectComponent.SetSize(size);
         }
 
         protected override void DisposeImpl()

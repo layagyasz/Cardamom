@@ -1,6 +1,15 @@
 #Graphics
 TexturePage based TextureLibrary
 Support custom VertexArray attributes
+Support lighting
+	Include surface norm in vertex struct
+	Multiple texture binding
+Alternate blend modes
+
+#Graphics.Ui
+Dynamic ui element size based on text
+Text align
+Event for long hovering over element
 
 # Pipeline
 Remove dictionaries to passing arguments

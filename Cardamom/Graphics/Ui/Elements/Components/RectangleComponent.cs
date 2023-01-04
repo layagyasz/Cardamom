@@ -46,28 +46,28 @@ namespace Cardamom.Graphics.Ui.Elements.Components
             _texture = attributes.Texture.Texture;
 
             _uniformBuffer.Set(_offsets[0], sizeof(int), _texture == null ? 0 : 1);
-            _uniformBuffer.Set(_offsets[1], 2 * sizeof(float), attributes.Size);
             _uniformBuffer.SetArray(_offsets[2], sizeof(float), _borderWidth);
             _uniformBuffer.SetArray(_offsets[3], 4 * sizeof(float), _borderColor);
             _uniformBuffer.SetArray(_offsets[4], 2 * sizeof(float), _cornerRadius);
 
             Vector2 topLeft = attributes.Texture.TextureView.Min;
             Vector2 bottomRight = attributes.Texture.TextureView.Max;
-            _vertices[0] = new Vertex3(new(), attributes.BackgroundColor[0], topLeft);
-            _vertices[1] = 
-                new Vertex3(
-                    new(attributes.Size.X, 0, 0), attributes.BackgroundColor[1], new(bottomRight.X, topLeft.Y));
-            _vertices[2] = 
-                new Vertex3(
-                    new(0, attributes.Size.Y, 0), attributes.BackgroundColor[3], new(topLeft.X, bottomRight.Y));
-            _vertices[3] = 
-                new Vertex3(
-                    new(attributes.Size.X, 0, 0), attributes.BackgroundColor[1], new(bottomRight.X, topLeft.Y));
-            _vertices[4] = 
-                new Vertex3(
-                    new(0, attributes.Size.Y, 0), attributes.BackgroundColor[3], new(topLeft.X, bottomRight.Y));
-            _vertices[5] = 
-                new Vertex3(new(attributes.Size.X, attributes.Size.Y, 0), attributes.BackgroundColor[2], bottomRight);
+            _vertices[0] = new(new(), attributes.BackgroundColor[0], topLeft);
+            _vertices[1] = new(_vertices[1].Position, attributes.BackgroundColor[1], new(bottomRight.X, topLeft.Y));
+            _vertices[2] = new(_vertices[2].Position, attributes.BackgroundColor[3], new(topLeft.X, bottomRight.Y));
+            _vertices[3] = new(_vertices[3].Position, attributes.BackgroundColor[1], new(bottomRight.X, topLeft.Y));
+            _vertices[4] = new(_vertices[4].Position, attributes.BackgroundColor[3], new(topLeft.X, bottomRight.Y));
+            _vertices[5] = new(_vertices[5].Position, attributes.BackgroundColor[2], bottomRight);
+        }
+
+        public void SetSize(Vector2 size)
+        {
+            _uniformBuffer!.Set(_offsets![1], 2 * sizeof(float), size);
+            _vertices[1] = new(new(size.X, 0, 0), _vertices[1].Color, _vertices[1].TexCoords);
+            _vertices[2] = new(new(0, size.Y, 0), _vertices[2].Color, _vertices[2].TexCoords);
+            _vertices[3] = new(new(size.X, 0, 0), _vertices[3].Color, _vertices[3].TexCoords);
+            _vertices[4] = new(new(0, size.Y, 0), _vertices[4].Color, _vertices[4].TexCoords);
+            _vertices[5] = new(new(size.X, size.Y, 0), _vertices[5].Color, _vertices[5].TexCoords);
         }
 
         public void Draw(RenderTarget target)

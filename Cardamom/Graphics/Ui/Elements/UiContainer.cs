@@ -64,10 +64,13 @@ namespace Cardamom.Graphics.Ui.Elements
                 {
                     target.PushScissor(new(new(), InternalSize));
                 }
+                Box3 bounds = new();
                 foreach (var element in _elements.Values)
                 {
+                    bounds.Inflate(element.Position + element.Size);
                     element.Draw(target, context);
                 }
+                SetDynamicSize(bounds.Size + LeftPadding + RightPadding);
                 if (!DisableScissor)
                 {
                     target.PopScissor();
