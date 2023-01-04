@@ -55,6 +55,14 @@ namespace Cardamom.Graphics.Core
             Error.LogGLError("buffer data");
         }
 
+        public void Buffer<T>(int size, T[] data, int start, int count) where T : struct
+        {
+            Bind();
+            GL.BufferData(Target, size * count, 0, UsageHint);
+            Error.LogGLError("buffer data");
+            SubDataArray(size * start, size, data, count);
+        }
+
         public T Read<T>(int offset, int size) where T : struct
         {
             Bind();
@@ -78,10 +86,10 @@ namespace Cardamom.Graphics.Core
             Error.LogGLError("sub data");
         }
 
-        public void SubDataArray<T>(int offset, int size, T[] data) where T : struct
+        public void SubDataArray<T>(int offset, int size, T[] data, int count) where T : struct
         {
             Bind();
-            GL.BufferSubData(Target, offset, size * data.Length, data);
+            GL.BufferSubData(Target, offset, size * count, data);
             Error.LogGLError("sub data");
         }
 

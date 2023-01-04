@@ -35,7 +35,7 @@ namespace Cardamom.Graphics
 
         public void SetArray<T>(int offset, int size, T[] data) where T : struct
         {
-            _buffer.SubDataArray(offset, size, data);
+            _buffer.SubDataArray(offset, size, data, data.Length);
         }
 
         protected override void DisposeImpl()

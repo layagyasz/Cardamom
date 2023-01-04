@@ -2,7 +2,7 @@
 
 namespace Cardamom.Graphics.Ui.Elements.Components
 {
-    public class TextComponent
+    public class TextComponent : GraphicsResource
     {
         public Vector2 Size => _text.Size;
 
@@ -34,6 +34,11 @@ namespace Cardamom.Graphics.Ui.Elements.Components
         public void Draw(RenderTarget target, UiContext context)
         {
             _text.Draw(target, context);
+        }
+
+        protected override void DisposeImpl()
+        {
+            _text.Dispose();
         }
     }
 }

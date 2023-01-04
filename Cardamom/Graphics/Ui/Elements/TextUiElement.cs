@@ -94,6 +94,7 @@ namespace Cardamom.Graphics.Ui.Elements
         protected override void DisposeImpl()
         {
             _rectComponent.Dispose();
+            _textComponent.Dispose();
         }
     }
 }

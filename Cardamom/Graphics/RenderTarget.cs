@@ -44,7 +44,7 @@ namespace Cardamom.Graphics
             Texture? texture)
         {
             _defaultBuffer ??= new(new());
-            _defaultBuffer.SetData(vertices);
+            _defaultBuffer.Buffer(vertices);
             _defaultBuffer.PrimitiveType = primitiveType;
             Draw(_defaultBuffer, start, count, shader, texture);
         }

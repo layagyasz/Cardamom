@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics
 {
-    public class Text : IRenderable
+    public class Text : GraphicsResource, IRenderable
     {
         public Vector2 Size
         {
@@ -22,8 +22,10 @@ namespace Cardamom.Graphics
         private RenderShader? _shader;
         private string _text = string.Empty;
         private readonly ArrayList<Vertex3> _vertices = new(48);
+        private readonly VertexBuffer _buffer = new(PrimitiveType.Triangles);
 
-        private bool _update = true;
+        private bool _updateVertices = true;
+        private bool _updateBuffer = true;
         private Vector2 _cursor;
         private Box2 _bounds;
         private char _lastCharacter;
@@ -101,7 +103,7 @@ namespace Cardamom.Graphics
             if (characterSize != _characterSize)
             {
                 _characterSize = characterSize;
-                _update = true;
+                _updateVertices = true;
             }
         }
 
@@ -114,6 +116,7 @@ namespace Cardamom.Graphics
                 {
                     _vertices.GetData()[i].Color = _color;
                 }
+                _updateBuffer = true;
             }
         }
 
@@ -122,7 +125,7 @@ namespace Cardamom.Graphics
             if (font != _font)
             {
                 _font = font;
-                _update = true;
+                _updateVertices = true;
             }
         }
 
@@ -134,7 +137,7 @@ namespace Cardamom.Graphics
         public void SetText(string text)
         {
             _text = text;
-            _update = true;
+            _updateVertices = true;
         }
 
         public void Update(long delta) { }
@@ -142,21 +145,25 @@ namespace Cardamom.Graphics
         public void Draw(RenderTarget target, UiContext context)
         {
             ForceUpdate();
+            if (_updateBuffer)
+            {
+                _buffer.Buffer(_vertices.GetData(), 0, _vertices.Count);
+                _updateBuffer = false;
+            }
             target.Draw(
-                _vertices.GetData(),
-                PrimitiveType.Triangles,
+                _buffer,
                 0,
-                _vertices.Count, 
+                _buffer.Length, 
                 _shader!,
                 _font!.GetTexure(_characterSize));
         }
 
         private void ForceUpdate()
         {
-            if (_update)
+            if (_updateVertices)
             {
                 UpdateMesh();
-                _update = false;
+                _updateVertices = false;
             }
         }
 
@@ -169,6 +176,7 @@ namespace Cardamom.Graphics
             {
                 AppendInternal(character);
             }
+            _updateBuffer = true;
         }
 
         private void AppendInternal(char character)
@@ -217,6 +225,11 @@ namespace Cardamom.Graphics
 
             _cursor.X += glyph.Advance;
             _bounds.Inflate(new(right, bottom));
+        }
+
+        protected override void DisposeImpl()
+        {
+            _buffer.Dispose();
         }
     }
 }

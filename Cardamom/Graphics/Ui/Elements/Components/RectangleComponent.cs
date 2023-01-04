@@ -18,7 +18,9 @@ namespace Cardamom.Graphics.Ui.Elements.Components
         private Vector2[]? _cornerRadius;
         private Texture? _texture;
 
-        private readonly VertexArray _vertices = new(PrimitiveType.Triangles, 6);
+        private bool _updateBuffer = true;
+        private readonly VertexBuffer _buffer = new(PrimitiveType.Triangles);
+        private readonly Vertex3[] _vertices = new Vertex3[6];
 
         public Vector2 Size => (_vertices[5].Position - _vertices[0].Position).Xy;
 
@@ -58,22 +60,29 @@ namespace Cardamom.Graphics.Ui.Elements.Components
             _vertices[3] = new(_vertices[3].Position, attributes.BackgroundColor[1], new(bottomRight.X, topLeft.Y));
             _vertices[4] = new(_vertices[4].Position, attributes.BackgroundColor[3], new(topLeft.X, bottomRight.Y));
             _vertices[5] = new(_vertices[5].Position, attributes.BackgroundColor[2], bottomRight);
+            _updateBuffer = true;
         }
 
         public void SetSize(Vector2 size)
         {
             _uniformBuffer!.Set(_offsets![1], 2 * sizeof(float), size);
-            _vertices[1] = new(new(size.X, 0, 0), _vertices[1].Color, _vertices[1].TexCoords);
-            _vertices[2] = new(new(0, size.Y, 0), _vertices[2].Color, _vertices[2].TexCoords);
-            _vertices[3] = new(new(size.X, 0, 0), _vertices[3].Color, _vertices[3].TexCoords);
-            _vertices[4] = new(new(0, size.Y, 0), _vertices[4].Color, _vertices[4].TexCoords);
-            _vertices[5] = new(new(size.X, size.Y, 0), _vertices[5].Color, _vertices[5].TexCoords);
+            _vertices[1].Position = new(size.X, 0, 0);
+            _vertices[2].Position = new(0, size.Y, 0);
+            _vertices[3].Position = new(size.X, 0, 0);
+            _vertices[4].Position = new(0, size.Y, 0);
+            _vertices[5].Position = new(size.X, size.Y, 0);
+            _updateBuffer = true;
         }
 
         public void Draw(RenderTarget target)
         {
+            if (_updateBuffer)
+            {
+                _buffer.Buffer(_vertices);
+                _updateBuffer = false;
+            }
             _uniformBuffer!.Bind(0);
-            target.Draw(_vertices, 0, _vertices.Length, _shader!, _texture);
+            target.Draw(_buffer, 0, _buffer.Length, _shader!, _texture);
         }
 
         protected override void DisposeImpl()

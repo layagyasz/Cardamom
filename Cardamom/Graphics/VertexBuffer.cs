@@ -22,10 +22,15 @@ namespace Cardamom.Graphics
             Length = vertices.Length;
         }
 
-        public void SetData(Vertex3[] vertices)
+        public void Buffer(Vertex3[] vertices)
         {
-            _vertices.SetData(vertices);
-            Length = vertices.Length;
+            Buffer(vertices, 0, vertices.Length);
+        }
+
+        public void Buffer(Vertex3[] vertices, int start, int count)
+        {
+            _vertices.SetData(vertices, start, count);
+            Length = count;
         }
 
         public void Draw(int start, int count)
