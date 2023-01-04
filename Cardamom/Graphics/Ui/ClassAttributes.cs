@@ -1,9 +1,18 @@
 ﻿using OpenTK.Mathematics;
+using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics.Ui
 {
     public class ClassAttributes
     {
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum Alignment
+        {
+            Left,
+            Center,
+            Right
+        }
+
         public float[] Margin { get; set; } = new float[4];
         public Vector2 LeftMargin => new(Margin[0], Margin[1]);
         public Vector2 RightMargin => new(Margin[2], Margin[3]);
@@ -21,6 +30,7 @@ namespace Cardamom.Graphics.Ui
 
         public KeyedWrapper<Font>? FontFace { get; set; }
         public uint FontSize { get; set; } = 12;
+        public Alignment Align { get; set; } = Alignment.Left;
         public Color4 Color { get; set; } = Color4.Black;
         public KeyedWrapper<RenderShader>? Shader { get; set; }
 
@@ -41,6 +51,7 @@ namespace Cardamom.Graphics.Ui
 
             public KeyedWrapper<Font>? FontFace { get; set; }
             public uint? FontSize { get; set; }
+            public Alignment? Align { get; set; }
             public Color4? Color { get; set; }
             public KeyedWrapper<RenderShader>? Shader { get; set; }
             public bool? DisableScissor { get; set; }
@@ -66,6 +77,7 @@ namespace Cardamom.Graphics.Ui
 
                 FontFace = Inherit(ancestors.Select(x => x.FontFace), FontFace),
                 FontSize = Inherit(ancestors.Select(x => x.FontSize), FontSize) ?? 12,
+                Align = Inherit(ancestors.Select(x => x.Align), Align) ?? Alignment.Left,
                 Color = Inherit(ancestors.Select(x => x.Color), Color) ?? Color4.Black,
                 Shader = Inherit(ancestors.Select(x => x.Shader), Shader)!,
                 DisableScissor = Inherit(ancestors.Select(x => x.DisableScissor), DisableScissor) ?? false

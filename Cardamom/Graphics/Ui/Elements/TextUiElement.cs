@@ -10,6 +10,9 @@ namespace Cardamom.Graphics.Ui.Elements
         protected readonly RectangleComponent _rectComponent = new();
         protected readonly TextComponent _textComponent = new();
 
+        protected Vector3 _alignAdjust;
+
+        private ClassAttributes.Alignment _align;
         private string _text = string.Empty;
 
         public TextUiElement(Class @class, IController controller)
@@ -25,7 +28,7 @@ namespace Cardamom.Graphics.Ui.Elements
                 target.PushTranslation(Position + LeftMargin);
                 context.Register(this);
                 _rectComponent.Draw(target);
-                target.PushTranslation(LeftPadding);
+                target.PushTranslation(LeftPadding + _alignAdjust);
                 if (!DisableScissor)
                 {
                     target.PushScissor(new(new(), InternalSize));
@@ -52,6 +55,7 @@ namespace Cardamom.Graphics.Ui.Elements
             base.SetAttributes(attributes);
             _rectComponent.SetAttributes(attributes);
             _textComponent.SetAttributes(attributes);
+            _align = attributes.Align;
             SetDyamicSizeImpl(TrueSize.Xy);
         }
 
@@ -64,11 +68,27 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             _text = text;
             _textComponent.SetText(text);
+            _alignAdjust = GetAlign();
         }
 
         public string GetText()
         {
             return _text;
+        }
+
+        protected Vector3 GetAlign()
+        {
+            switch (_align)
+            {
+                case ClassAttributes.Alignment.Left:
+                    return new();
+                case ClassAttributes.Alignment.Center:
+                    return new(0.5f * (InternalSize.X - _textComponent.Size.X), 0, 0);
+                case ClassAttributes.Alignment.Right:
+                    return new(InternalSize.X - _textComponent.Size.X, 0, 0);
+                default:
+                    throw new InvalidProgramException();
+            }
         }
 
         protected override void DisposeImpl()

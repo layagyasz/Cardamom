@@ -7,6 +7,15 @@ namespace Cardamom.Graphics
 {
     public class Text : IRenderable
     {
+        public Vector2 Size
+        {
+            get
+            {
+                ForceUpdate();
+                return _bounds.Size;
+            }
+        }
+
         private Font? _font;
         private uint _characterSize;
         private Color4 _color;
@@ -16,6 +25,7 @@ namespace Cardamom.Graphics
 
         private bool _update = true;
         private Vector2 _cursor;
+        private Box2 _bounds;
         private char _lastCharacter;
 
         public void Initialize() { }
@@ -154,6 +164,7 @@ namespace Cardamom.Graphics
         {
             _cursor = new(0, _characterSize);
             _vertices.Clear();
+            _bounds = new();
             foreach (var character in _text)
             {
                 AppendInternal(character);
@@ -205,6 +216,7 @@ namespace Cardamom.Graphics
             _vertices.Add(new(new(right, bottom, 0), _color, new(texRight, texBottom)));
 
             _cursor.X += glyph.Advance;
+            _bounds.Inflate(new(right, bottom));
         }
     }
 }

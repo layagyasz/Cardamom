@@ -58,7 +58,7 @@ namespace Cardamom.Graphics.Ui.Elements
                 target.PushTranslation(Position + LeftMargin);
                 context.Register(this);
                 _rectComponent.Draw(target);
-                target.PushTranslation(LeftPadding);
+                target.PushTranslation(LeftPadding + _alignAdjust);
                 if (!DisableScissor)
                 {
                     target.PushScissor(new(new(), InternalSize));

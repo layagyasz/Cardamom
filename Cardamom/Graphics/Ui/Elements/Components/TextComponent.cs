@@ -4,6 +4,8 @@ namespace Cardamom.Graphics.Ui.Elements.Components
 {
     public class TextComponent
     {
+        public Vector2 Size => _text.Size;
+
         private readonly Text _text = new();
 
         public void SetAttributes(ClassAttributes attributes)

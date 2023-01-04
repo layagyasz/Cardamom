@@ -102,7 +102,8 @@
     },
     "Default": {
       "Size": [ 224, 32 ],
-      "Padding": [ 16, 4, 16, 2 ]
+      "Padding": [ 16, 4, 16, 2 ],
+      "Align": "Right"
     }
   },
   {
@@ -122,7 +123,8 @@
     },
     "Default": {
       "Size": [ 192, 32 ],
-      "Margin": [ 0, 2, 0, 2 ]
+      "Margin": [ 0, 2, 0, 2 ],
+      "Align": "Center"
     },
     "States": [
       {

@@ -66,7 +66,6 @@ namespace Cardamom.Graphics.Ui
                     UiRoot.Draw(RenderWindow, _context);
                 }
                 _keyboardListener?.DispatchEvents(frameElapsed - elapsed);
-                Console.WriteLine(frameElapsed - elapsed);
                 _controller.DispatchEvents();
                 elapsed = frameElapsed;
 

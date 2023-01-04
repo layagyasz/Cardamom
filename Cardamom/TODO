@@ -8,8 +8,8 @@ Alternate blend modes
 
 #Graphics.Ui
 Dynamic ui element size based on text
-Text align
 Event for long hovering over element
+Ui elements use vertex buffers
 
 # Pipeline
 Remove dictionaries to passing arguments

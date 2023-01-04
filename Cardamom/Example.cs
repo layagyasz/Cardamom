@@ -111,7 +111,7 @@ namespace Cardamom
                     new(0, text.Item1.Position.Y + text.Item1.Size.Y, 0));
             pane.Add(table.Item1);
 
-            var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(1, 64);
+            var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(1, 32);
             VertexArray vertices = new(PrimitiveType.Triangles, 6 * uvSphereSolid.Faces.Length);
             var projection = new CylindricalProjection.Spherical();
             for (int i=0; i<uvSphereSolid.Faces.Length; ++i)
