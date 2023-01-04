@@ -22,7 +22,7 @@ namespace Cardamom.Graphics
         private RenderShader? _shader;
         private string _text = string.Empty;
         private readonly ArrayList<Vertex3> _vertices = new(48);
-        private readonly VertexBuffer _buffer = new(PrimitiveType.Triangles);
+        private readonly VertexBuffer<Vertex3> _buffer = new(PrimitiveType.Triangles);
 
         private bool _updateVertices = true;
         private bool _updateBuffer = true;

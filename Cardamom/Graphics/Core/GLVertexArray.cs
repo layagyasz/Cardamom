@@ -3,59 +3,42 @@ using System.Runtime.InteropServices;
 
 namespace Cardamom.Graphics.Core
 {
-    public class GLVertexArray : GLObject
+    public class GLVertexArray<T> : GLObject where T: struct
     {
-        private static readonly int s_PositionAttributeIndex = 0;
-        private static readonly int s_ColorAttributeIndex = 1;
-        private static readonly int s_TexCoordsAttributeIndex = 2;
-
+        private readonly Type _type;
         private readonly int _size;
         private readonly GLBuffer _buffer;
 
         public GLVertexArray(GLBuffer buffer)
             : base(GL.GenVertexArray())
         {
-            _size = Marshal.SizeOf(typeof(Vertex3));
+            _type = typeof(T);
+            _size = Marshal.SizeOf(_type);
             _buffer = buffer;
 
             Bind();
             _buffer.Bind();
 
-            GL.VertexAttribPointer(
-                s_PositionAttributeIndex, 
-                3, 
-                VertexAttribPointerType.Float, 
-                /* normalized= */ false, 
-                9 * sizeof(float),
-                0);
-            Error.LogGLError("link position attribute");
+            foreach (var field in _type.GetFields())
+            {
+                var attribute = 
+                    (VertexAttributeAttribute?)field.GetCustomAttributes(false)
+                        .FirstOrDefault(x => x is VertexAttributeAttribute);
+                if (attribute != null)
+                {
+                    GL.VertexAttribPointer(
+                        attribute.Index,
+                        attribute.Cardinality,
+                        attribute.Type,
+                        attribute.Normalized,
+                        _size,
+                        Marshal.OffsetOf<T>(field.Name));
+                    Error.LogGLError($"link {field.Name} attribute");
 
-            GL.EnableVertexAttribArray(s_PositionAttributeIndex);
-            Error.LogGLError("enable position attribute");
-
-            GL.VertexAttribPointer(
-                s_ColorAttributeIndex,
-                4, 
-                VertexAttribPointerType.Float,
-                /* normalized= */ false, 
-                9 * sizeof(float), 
-                3 * sizeof(float));
-            Error.LogGLError("link color attribute");
-
-            GL.EnableVertexAttribArray(s_ColorAttributeIndex);
-            Error.LogGLError("enable color attribute");
-
-            GL.VertexAttribPointer(
-                s_TexCoordsAttributeIndex,
-                2,
-                VertexAttribPointerType.Float,
-                /* normalized= */ false,
-                9 * sizeof(float),
-                7 * sizeof(float));
-            Error.LogGLError("link tex coord attribute");
-
-            GL.EnableVertexAttribArray(s_TexCoordsAttributeIndex);
-            Error.LogGLError("enable tex coord attribute");
+                    GL.EnableVertexAttribArray(attribute.Index);
+                    Error.LogGLError($"enable {field.Name} attribute");
+                }
+            }
         }
 
         public void Bind()

@@ -5,7 +5,7 @@ namespace Cardamom.Graphics
 {
     public class Model : GraphicsResource, IRenderable
     {
-        private readonly VertexBuffer _buffer;
+        private readonly VertexBuffer<Vertex3> _buffer;
         private readonly RenderShader _shader;
         private readonly Texture _texture;
 

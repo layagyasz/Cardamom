@@ -19,7 +19,7 @@ namespace Cardamom.Graphics.Ui.Elements.Components
         private Texture? _texture;
 
         private bool _updateBuffer = true;
-        private readonly VertexBuffer _buffer = new(PrimitiveType.Triangles);
+        private readonly VertexBuffer<Vertex3> _buffer = new(PrimitiveType.Triangles);
         private readonly Vertex3[] _vertices = new Vertex3[6];
 
         public Vector2 Size => (_vertices[5].Position - _vertices[0].Position).Xy;

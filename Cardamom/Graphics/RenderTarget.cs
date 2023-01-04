@@ -7,7 +7,7 @@ namespace Cardamom.Graphics
 {
     public abstract class RenderTarget : GraphicsContext
     {
-        private VertexBuffer? _defaultBuffer;
+        private VertexBuffer<Vertex3>? _defaultBuffer;
 
         protected RenderTarget(Box2i viewPort)
             : base(viewPort) { }
@@ -49,12 +49,13 @@ namespace Cardamom.Graphics
             Draw(_defaultBuffer, start, count, shader, texture);
         }
 
-        public void Draw(
-            VertexBuffer buffer,
+        public void Draw<T>(
+            VertexBuffer<T> buffer,
             int start,
             int count,
             RenderShader shader, 
-            Texture? texture)
+            Texture? texture) 
+            where T :struct
         {
             SetActive(true);
             Error.LogGLError("bind context");

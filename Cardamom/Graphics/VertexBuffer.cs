@@ -3,12 +3,12 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace Cardamom.Graphics
 {
-    public class VertexBuffer : GraphicsResource
+    public class VertexBuffer<T> : GraphicsResource where T : struct
     {
         public int Length { get; private set; }
         public PrimitiveType PrimitiveType { get;  set; }
 
-        private GLVertexArray _vertices = new(new());
+        private readonly GLVertexArray<T> _vertices = new(new());
 
         public VertexBuffer(PrimitiveType primitiveType)
         {

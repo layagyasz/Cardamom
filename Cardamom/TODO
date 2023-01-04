@@ -1,6 +1,5 @@
 #Graphics
 TexturePage based TextureLibrary
-Support custom VertexArray attributes
 Support lighting
 	Include surface norm in vertex struct
 	Multiple texture binding
@@ -10,6 +9,6 @@ Alternate blend modes
 Dynamic ui element size based on text
 Event for long hovering over element
 
-# Pipeline
+#ImageProcessing.Pipeline
 Remove dictionaries to passing arguments
 Define both input and output channels on pipeline nodes?
