@@ -54,12 +54,12 @@ namespace Cardamom.Graphics.Core
             Error.LogGLError($"draw {primitiveType} vertex array");
         }
 
-        public void SetData(Vertex3[] data)
+        public void SetData(T[] data)
         {
             _buffer.Buffer(_size, data);
         }
 
-        public void SetData(Vertex3[] data, int start, int count)
+        public void SetData(T[] data, int start, int count)
         {
             _buffer.Buffer(_size, data, start, count);
         }

@@ -18,7 +18,7 @@ layout(binding = 0) uniform settings
     vec2 corner_radius[4];
 };
 
-uniform sampler2D texture0;
+layout(binding = 0) uniform sampler2D texture0;
 
 bool outside_ellipse(vec2 point, vec2 radius)
 {

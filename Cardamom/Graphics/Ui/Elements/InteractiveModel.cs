@@ -4,15 +4,15 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.Ui.Elements
 {
-    public class InteractiveModel : IInteractive, IRenderable
+    public class InteractiveModel<T> : IInteractive, IRenderable where T : struct
     {
         public IController Controller { get; }
         public IControlled? Parent { get; set; }
 
-        private readonly Model _model;
+        private readonly Model<T> _model;
         private readonly ICollider3 _collider;
 
-        public InteractiveModel(Model model, ICollider3 collider, IController controller)
+        public InteractiveModel(Model<T> model, ICollider3 collider, IController controller)
         {
             Controller = controller;
             _model = model;

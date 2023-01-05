@@ -42,11 +42,11 @@ namespace Cardamom
                     .AddNode(
                         new LatticeNoiseNode.Builder()
                             .SetKey("lattice-noise")
-                            .SetChannel(Channel.Red | Channel.Green | Channel.Blue)
+                            .SetChannel(Channel.Color)
                             .SetInput("input", "new")
                             .SetParameters(
-                                new() 
-                                { 
+                                new()
+                                {
                                     Seed = seed,
                                     Frequency = noiseFrequency,
                                     Scale = noiseScale,
@@ -59,9 +59,15 @@ namespace Cardamom
                     .AddNode(
                         new DenormalizeNode.Builder()
                             .SetKey("denormalize")
-                            .SetChannel(Channel.Red | Channel.Green | Channel.Blue)
+                            .SetChannel(Channel.Color)
+                            .SetInput("input", "lattice-noise"))
+                    .AddNode(
+                        new SobelNode.Builder()
+                            .SetKey("sobel")
+                            .SetChannel(Channel.Red)
                             .SetInput("input", "lattice-noise"))
                     .AddOutput("lattice-noise")
+                    .AddOutput("sobel")
                     .Build();
             var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
             var output = pipeline.Run(canvases);
@@ -112,7 +118,7 @@ namespace Cardamom
             pane.Add(table.Item1);
 
             var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(1, 32);
-            VertexArray vertices = new(PrimitiveType.Triangles, 6 * uvSphereSolid.Faces.Length);
+            VertexLit3[] vertices = new VertexLit3[6 * uvSphereSolid.Faces.Length];
             var projection = new CylindricalProjection.Spherical();
             for (int i=0; i<uvSphereSolid.Faces.Length; ++i)
             {
@@ -120,12 +126,18 @@ namespace Cardamom
                 {
                     var vert = uvSphereSolid.Faces[i].Vertices[j];
                     var texCoords = resolution * new Vector2(0.5f, 1) * projection.Project(vert);
-                    vertices[6 * i + j] = new(vert.AsCartesian(), Color4.White, texCoords);
+                    var c = vert.AsCartesian();
+                    vertices[6 * i + j] = new(c, Color4.White, texCoords, c.Normalized(), texCoords);
                 }
             }
             var sphereModel =
-                new InteractiveModel(
-                    new(vertices, resources.GetShader("shader-default"), output![0].GetTexture()), 
+                new InteractiveModel<VertexLit3>(
+                    new Model<VertexLit3>(
+                        vertices, 
+                        PrimitiveType.Triangles, 
+                        resources.GetShader("shader-simple-light"), 
+                        output![0].GetTexture(),
+                        output![1].GetTexture()), 
                     new Sphere(new(), 1),
                     new DebugController());
             sphereModel.Controller.Clicked += (s, e) => Console.WriteLine(e.Position.Length);

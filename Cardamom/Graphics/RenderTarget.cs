@@ -30,49 +30,40 @@ namespace Cardamom.Graphics
         }
 
         public void Draw(
-            VertexArray vertices, int start, int count, RenderShader shader,Texture? texture)
+            VertexArray vertices, int start, int count, RenderResources resources)
         {
-            Draw(vertices.Vertices, vertices.PrimitiveType, start, count, shader, texture);
+            Draw(vertices.Vertices, vertices.PrimitiveType, start, count, resources);
         }
 
         public void Draw(
-            Vertex3[] vertices,
-            PrimitiveType primitiveType,
-            int start,
-            int count,
-            RenderShader shader,
-            Texture? texture)
+            Vertex3[] vertices, PrimitiveType primitiveType, int start, int count, RenderResources resources)
         {
             _defaultBuffer ??= new(new());
             _defaultBuffer.Buffer(vertices);
             _defaultBuffer.PrimitiveType = primitiveType;
-            Draw(_defaultBuffer, start, count, shader, texture);
+            Draw(_defaultBuffer, start, count, resources);
         }
 
-        public void Draw<T>(
-            VertexBuffer<T> buffer,
-            int start,
-            int count,
-            RenderShader shader, 
-            Texture? texture) 
+        public void Draw<T>(VertexBuffer<T> buffer, int start, int count, RenderResources resources) 
             where T :struct
         {
             SetActive(true);
             Error.LogGLError("bind context");
 
-            if (texture != null)
+            if (resources.Texture0 != null)
             {
-                texture?.Bind(TextureUnit.Texture0);
+                resources.Texture0.Bind(TextureUnit.Texture0);
             }
-            else
+            if (resources.Texture1 != null)
             {
-                Texture.Unbind(TextureUnit.Texture0);
+                resources.Texture1.Bind(TextureUnit.Texture1);
             }
+
             Error.LogGLError("bind context");
 
-            shader.Bind();
-            shader.SetMatrix4("projection", GetProjection().Matrix);
-            shader.SetMatrix4("view", GetViewMatrix());
+            resources.Shader.Bind();
+            resources.Shader.SetMatrix4("projection", GetProjection().Matrix);
+            resources.Shader.SetMatrix4("view", GetViewMatrix());
 
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
@@ -108,6 +99,14 @@ namespace Cardamom.Graphics
 
             buffer.Draw(start, count);
 
+            if (resources.Texture0 != null)
+            {
+                Texture.Unbind(TextureUnit.Texture0);
+            }
+            if (resources.Texture1 != null)
+            {
+                Texture.Unbind(TextureUnit.Texture1);
+            }
             SetActive(false);
         }
     }

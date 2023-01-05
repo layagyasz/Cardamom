@@ -19,5 +19,12 @@
       "Vertex": "Example/default.vert",
       "Fragment": "Example/classed_ui_element.frag"
     }
+  },
+  {
+    "$id": "shader-simple-light",
+    "Element": {
+      "Vertex": "Example/simple_light.vert",
+      "Fragment": "Example/simple_light.frag"
+    }
   }
 ]

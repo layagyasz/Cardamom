@@ -22,8 +22,8 @@ namespace Cardamom.ImageProcessing.Filters
 
             s_SobelShader ??= ComputeShader.FromFile("Resources/sobel.comp");
 
-            s_SobelShader.SetInt32(s_ChannelIndexLocation, _channel.GetIndex());
-            s_SobelShader.SetInt32(s_ChannelLocation, (int)channel);
+            s_SobelShader.SetInt32(s_ChannelIndexLocation, channel.GetIndex());
+            s_SobelShader.SetInt32(s_ChannelLocation, (int)_channel);
 
             var inTex = inputs.First().Value.GetTexture();
             var outTex = output.GetTexture();

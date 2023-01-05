@@ -1,8 +1,6 @@
 #Graphics
 TexturePage based TextureLibrary
-Support lighting
-	Include surface norm in vertex struct
-	Multiple texture binding
+Quaternions for combining lighting normals
 Alternate blend modes
 
 #Graphics.Ui

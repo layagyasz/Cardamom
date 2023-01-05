@@ -68,7 +68,7 @@ namespace Cardamom.Graphics.Ui.Elements
                 if (_cursorActive && _cursorPeriod < s_CursorPeriod >> 1)
                 {
                     target.PushTranslation(_cursorPosition);
-                    target.Draw(_cursor, 0, _cursor.Length, _cursorShader!, s_Blank);
+                    target.Draw(_cursor, 0, _cursor.Length, new(_cursorShader!, s_Blank));
                     target.PopViewMatrix();
                 }
                 target.PopViewMatrix();

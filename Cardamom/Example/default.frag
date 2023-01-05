@@ -6,7 +6,7 @@ in vec4 vert_color;
 in vec2 vert_tex_coord;
 in vec3 vert_internal_coord;
 
-uniform sampler2D texture0;
+layout(binding = 0) uniform sampler2D texture0;
 
 void main()
 {

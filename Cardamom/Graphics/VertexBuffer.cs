@@ -15,19 +15,19 @@ namespace Cardamom.Graphics
             PrimitiveType = primitiveType;
         }
 
-        public VertexBuffer(Vertex3[] vertices, PrimitiveType primitiveType)
+        public VertexBuffer(T[] vertices, PrimitiveType primitiveType)
         {
             _vertices.SetData(vertices);
             PrimitiveType = primitiveType;
             Length = vertices.Length;
         }
 
-        public void Buffer(Vertex3[] vertices)
+        public void Buffer(T[] vertices)
         {
             Buffer(vertices, 0, vertices.Length);
         }
 
-        public void Buffer(Vertex3[] vertices, int start, int count)
+        public void Buffer(T[] vertices, int start, int count)
         {
             _vertices.SetData(vertices, start, count);
             Length = count;
