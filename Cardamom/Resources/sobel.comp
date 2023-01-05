@@ -12,28 +12,28 @@ layout(rgba32f, binding = 1) uniform image2D out_texture;
 layout(location=0) uniform int channel_index;
 layout(location=1) uniform int channel;
 
-vec3 generate(ivec2 position) {
+vec3 generate(ivec2 position, ivec2 size) {
 	vec4 x = 
-		imageLoad(in_texture, position + ivec2(-1, -1))
-		- imageLoad(in_texture, position + ivec2(1, -1))
-		+ 2 * imageLoad(in_texture, position + ivec2(-1, 0))
-		- 2 * imageLoad(in_texture, position + ivec2(1, 0))
-		+ imageLoad(in_texture, position + ivec2(-1, 1))
-		- imageLoad(in_texture, position + ivec2(1, 1));
+		imageLoad(in_texture, (position + ivec2(-1, -1)) % size)
+		- imageLoad(in_texture, (position + ivec2(1, -1)) % size)
+		+ 2 * imageLoad(in_texture, (position + ivec2(-1, 0)) % size)
+		- 2 * imageLoad(in_texture, (position + ivec2(1, 0)) % size)
+		+ imageLoad(in_texture, (position + ivec2(-1, 1)) % size)
+		- imageLoad(in_texture, (position + ivec2(1, 1)) % size);
 	vec4 y =
-		imageLoad(in_texture, position + ivec2(-1, -1))
-		+ 2 * imageLoad(in_texture, position + ivec2(0, -1))
-		+ imageLoad(in_texture, position + ivec2(1, -1))
-		- imageLoad(in_texture, position + ivec2(-1, 1))
-		- 2 * imageLoad(in_texture, position + ivec2(0, 1))
-		- imageLoad(in_texture, position + ivec2(1, 1));
+		imageLoad(in_texture, (position + ivec2(-1, -1)) % size)
+		+ 2 * imageLoad(in_texture, (position + ivec2(0, -1)) % size)
+		+ imageLoad(in_texture, (position + ivec2(1, -1)) % size)
+		- imageLoad(in_texture, (position + ivec2(-1, 1)) % size)
+		- 2 * imageLoad(in_texture, (position + ivec2(0, 1)) % size)
+		- imageLoad(in_texture, (position + ivec2(1, 1)) % size);
 	return 0.5f * normalize(vec3(x[channel_index], y[channel_index], 1)) + 0.5f;
 }
 
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     vec4 current = imageLoad(in_texture, position);
-	vec3 sobel = generate(position);
+	vec3 sobel = generate(position, imageSize(in_texture));
 	vec4 new = 
 		vec4(
 			(channel & CHANNEL_RED) != 0 ? sobel.r : current.r,

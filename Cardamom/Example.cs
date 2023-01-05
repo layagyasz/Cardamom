@@ -25,7 +25,7 @@ namespace Cardamom
         {
             var window = new RenderWindow("Cardamom - Example", new Vector2i(800, 600));
 
-            float resolution = 512;
+            float resolution = 2048;
             var random = new Random();
             var seed = ConstantValue.Create(random.Next());
             var noiseFrequency = ConstantValue.Create(0.01f);
@@ -117,7 +117,7 @@ namespace Cardamom
                     new(0, text.Item1.Position.Y + text.Item1.Size.Y, 0));
             pane.Add(table.Item1);
 
-            var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(1, 32);
+            var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(1, 64);
             VertexLit3[] vertices = new VertexLit3[6 * uvSphereSolid.Faces.Length];
             var projection = new CylindricalProjection.Spherical();
             for (int i=0; i<uvSphereSolid.Faces.Length; ++i)
@@ -127,7 +127,10 @@ namespace Cardamom
                     var vert = uvSphereSolid.Faces[i].Vertices[j];
                     var texCoords = resolution * new Vector2(0.5f, 1) * projection.Project(vert);
                     var c = vert.AsCartesian();
-                    vertices[6 * i + j] = new(c, Color4.White, texCoords, c.Normalized(), texCoords);
+                    var surface =
+                        Quaternion.FromAxisAngle(
+                            Vector3.Cross(Vector3.UnitZ, c), MathF.Acos(Vector3.Dot(c, Vector3.UnitZ)));
+                    vertices[6 * i + j] = new(c, Color4.White, texCoords, surface, texCoords);
                 }
             }
             var sphereModel =

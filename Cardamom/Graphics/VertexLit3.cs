@@ -16,18 +16,18 @@ namespace Cardamom.Graphics
         [VertexAttribute(2, 2, VertexAttribPointerType.Float, false)]
         public Vector2 TexCoords;
 
-        [VertexAttribute(3, 3, VertexAttribPointerType.Float, true)]
-        public Vector3 Normal;
+        [VertexAttribute(3, 4, VertexAttribPointerType.Float, true)]
+        public Quaternion Surface;
 
         [VertexAttribute(4, 2, VertexAttribPointerType.Float, false)]
         public Vector2 BumpTexCoords;
 
-        public VertexLit3(Vector3 position, Color4 color, Vector2 texCoords, Vector3 normal, Vector2 bumpTexCoords)
+        public VertexLit3(Vector3 position, Color4 color, Vector2 texCoords, Quaternion surface, Vector2 bumpTexCoords)
         {
             Position = position;
             Color = color;
             TexCoords = texCoords;
-            Normal = normal;
+            Surface = surface;
             BumpTexCoords = bumpTexCoords;
         }
     }
