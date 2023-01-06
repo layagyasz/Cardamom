@@ -67,22 +67,22 @@
     <None Update="freetype6.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\adjust.comp">
+    <None Update="Resources\ImageProcessing\Filters\adjust.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\classify.comp">
+    <None Update="Resources\ImageProcessing\Filters\classify.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\denormalize.comp">
+    <None Update="Resources\ImageProcessing\Filters\denormalize.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\lattice_noise.comp">
+    <None Update="Resources\ImageProcessing\Filters\lattice_noise.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\sobel.comp">
+    <None Update="Resources\ImageProcessing\Filters\sobel.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\wave_form.comp">
+    <None Update="Resources\ImageProcessing\Filters\wave_form.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

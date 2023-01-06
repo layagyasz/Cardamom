@@ -117,7 +117,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_LatticeNoiseShader ??= ComputeShader.FromFile("Resources/lattice_noise.comp");
+            s_LatticeNoiseShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/lattice_noise.comp");
 
             s_LatticeNoiseShader.SetFloat(s_FrequencyLocation, _settings.Frequency);
             s_LatticeNoiseShader.SetFloat(s_LacunarityLocation, _settings.Lacunarity);

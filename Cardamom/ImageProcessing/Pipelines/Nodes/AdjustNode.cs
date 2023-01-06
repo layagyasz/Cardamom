@@ -33,7 +33,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new Adjust.Builder();
             if (_parameters.OverflowBehavior != null)
             {
-                builder.SetOverflowBehavior((Adjust.OverflowBehavior)_parameters.OverflowBehavior.Get());
+                builder.SetOverflowBehavior((OverflowBehavior)_parameters.OverflowBehavior.Get());
             }
             if (_parameters.Adjustment != null)
             {

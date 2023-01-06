@@ -67,7 +67,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_ClassifyShader ??= ComputeShader.FromFile("Resources/classify.comp");
+            s_ClassifyShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/classify.comp");
 
             s_ClassifyShader.SetInt32(s_ClassificationCountLocation, _colors.Length);
             s_ClassifyShader.SetColorArray(s_ColorLocation, _colors);

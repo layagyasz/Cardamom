@@ -25,7 +25,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_DenormalizeShader ??= ComputeShader.FromFile("Resources/denormalize.comp");
+            s_DenormalizeShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/denormalize.comp");
 
             s_DenormalizeShader.SetVector4(s_MeanLocation, _mean);
             s_DenormalizeShader.SetVector4(s_StandardDeviationLocation, _standardDeviation);

@@ -20,7 +20,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_SobelShader ??= ComputeShader.FromFile("Resources/sobel.comp");
+            s_SobelShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/sobel.comp");
 
             s_SobelShader.SetInt32(s_ChannelIndexLocation, channel.GetIndex());
             s_SobelShader.SetInt32(s_ChannelLocation, (int)_channel);

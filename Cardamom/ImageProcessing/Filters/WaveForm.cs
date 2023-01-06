@@ -47,7 +47,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_WaveFormShader ??= ComputeShader.FromFile("Resources/wave_form.comp");
+            s_WaveFormShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/wave_form.comp");
 
             s_WaveFormShader.SetInt32(s_WaveTypeLocation, (int)_settings.WaveType);
             s_WaveFormShader.SetFloat(s_AmplitudeLocation, _settings.Amplitude);

@@ -12,13 +12,6 @@ namespace Cardamom.ImageProcessing.Filters
         private static readonly int s_AdjustmentLocation = 1;
         private static readonly int s_ChannelLocation = 2;
 
-        public enum OverflowBehavior
-        {
-            None = 0,
-            Clamp = 1,
-            Modulus = 2
-        }
-
         private readonly OverflowBehavior _overflowBehavior;
         private readonly Vector4 _adjustment;
 
@@ -32,7 +25,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_AdjustShader ??= ComputeShader.FromFile("Resources/adjust.comp");
+            s_AdjustShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/adjust.comp");
 
             s_AdjustShader.SetInt32(s_OverflowBehaviorLocation, (int)_overflowBehavior);
             s_AdjustShader.SetVector4(s_AdjustmentLocation, _adjustment);
