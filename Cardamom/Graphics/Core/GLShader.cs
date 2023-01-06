@@ -143,6 +143,18 @@ namespace Cardamom.Graphics.Core
             GL.Uniform3(location, data);
         }
 
+        public void SetVector3i(string name, Vector3i data)
+        {
+            Bind();
+            GL.Uniform3(GetUniformLocation(name), data);
+        }
+
+        public void SetVector3i(int location, Vector3i data)
+        {
+            Bind();
+            GL.Uniform3(location, data);
+        }
+
         public void SetVector4(string name, Vector4 data)
         {
             Bind();
@@ -150,6 +162,18 @@ namespace Cardamom.Graphics.Core
         }
 
         public void SetVector4(int location, Vector4 data)
+        {
+            Bind();
+            GL.Uniform4(location, data);
+        }
+
+        public void SetVector4i(string name, Vector4i data)
+        {
+            Bind();
+            GL.Uniform4(GetUniformLocation(name), data);
+        }
+
+        public void SetVector4i(int location, Vector4i data)
         {
             Bind();
             GL.Uniform4(location, data);

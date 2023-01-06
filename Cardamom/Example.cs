@@ -31,19 +31,19 @@ namespace Cardamom
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
                     .AddNode(
-                        new GradientNode.Builder()
-                            .SetKey("gradient")
+                        new WhiteNoiseNode.Builder()
+                            .SetKey("white-noise")
                             .SetChannel(Channel.Color)
                             .SetInput("input", "new")
                             .SetParameters(
-                                new GradientNode.Parameters()
+                                new WhiteNoiseNode.Parameters()
                                 { 
-                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution))  
+                                    Seed = ConstantValue.Create(new Vector4i(1, 2, 3, 0))  
                                 }))
-                    .AddOutput("gradient")
+                    .AddOutput("white-noise")
                     .Build();
             var testOutput = testPipeline.Run(canvases);
-            testOutput[0].GetTexture().CopyToImage().SaveToFile("test-gradient.png");
+            testOutput[0].GetTexture().CopyToImage().SaveToFile("test-white-noise.png");
 
             var random = new Random();
             var seed = ConstantValue.Create(random.Next());
