@@ -281,6 +281,30 @@ namespace Cardamom.Graphics.Core
             GL.UniformMatrix4(location, true, ref data);
         }
 
+        public void SetMatrix4x2(string name, Matrix4x2 data)
+        {
+            Bind();
+            GL.UniformMatrix4x2(GetUniformLocation(name), true, ref data);
+        }
+
+        public void SetMatrix4x2(int location, Matrix4x2 data)
+        {
+            Bind();
+            GL.UniformMatrix4x2(location, true, ref data);
+        }
+
+        public void SetMatrix4x3(string name, Matrix4x3 data)
+        {
+            Bind();
+            GL.UniformMatrix4x3(GetUniformLocation(name), true, ref data);
+        }
+
+        public void SetMatrix4x3(int location, Matrix4x3 data)
+        {
+            Bind();
+            GL.UniformMatrix4x3(location, true, ref data);
+        }
+
         protected override void DisposeImpl()
         {
             GL.DeleteProgram(Handle);

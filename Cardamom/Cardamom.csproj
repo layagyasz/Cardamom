@@ -76,6 +76,9 @@
     <None Update="Resources\ImageProcessing\Filters\denormalize.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\ImageProcessing\Filters\gradient.comp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\ImageProcessing\Filters\lattice_noise.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

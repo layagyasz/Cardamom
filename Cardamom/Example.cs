@@ -26,6 +26,25 @@ namespace Cardamom
             var window = new RenderWindow("Cardamom - Example", new Vector2i(800, 600));
 
             float resolution = 2048;
+            var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
+            var testPipeline =
+                new Pipeline.Builder()
+                    .AddNode(new GeneratorNode.Builder().SetKey("new"))
+                    .AddNode(
+                        new GradientNode.Builder()
+                            .SetKey("gradient")
+                            .SetChannel(Channel.Color)
+                            .SetInput("input", "new")
+                            .SetParameters(
+                                new GradientNode.Parameters()
+                                { 
+                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution))  
+                                }))
+                    .AddOutput("gradient")
+                    .Build();
+            var testOutput = testPipeline.Run(canvases);
+            testOutput[0].GetTexture().CopyToImage().SaveToFile("test-gradient.png");
+
             var random = new Random();
             var seed = ConstantValue.Create(random.Next());
             var noiseFrequency = ConstantValue.Create(0.01f);
@@ -69,7 +88,6 @@ namespace Cardamom
                     .AddOutput("lattice-noise")
                     .AddOutput("sobel")
                     .Build();
-            var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
             var output = pipeline.Run(canvases);
 
             var ui = new UiWindow(window);
