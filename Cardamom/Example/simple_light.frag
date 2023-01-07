@@ -7,7 +7,7 @@ out vec4 out_color;
 in vec4 vert_color;
 in vec2 vert_tex_coord;
 in vec3 vert_internal_coord;
-in vec4 vert_surface;
+in vec3 vert_normal;
 in vec2 vert_bump_tex_coord;
 
 layout(binding = 0) uniform sampler2D diffuse_texture;
@@ -33,12 +33,24 @@ vec3 quaternion_rotate(vec3 v, vec4 q)
   return quaternion_multiply(quaternion_multiply(q, vec4(v, 0)), quaternion_conjugate(q)).xyz;
 }
 
+vec3 combine_normals(vec3 surface_normal, vec3 bump_normal)
+{
+    const float epsilon = 0.000001f;
+    const float inv_sqrt_2 = 0.70710678f;
+    vec4 q = 
+        inv_sqrt_2 * vec4(
+            sqrt(1 - bump_normal.z) * vec3(-bump_normal.y, bump_normal.x, 0), 
+            sqrt(1 + bump_normal.z));
+    return quaternion_rotate(surface_normal, q);
+}
+
 void main()
 {
     vec3 bump_normal =  2 * texture(bump_texture, vert_tex_coord / textureSize(bump_texture, 0)).rgb - 1;
-    vec3 normal = quaternion_rotate(bump_normal, vert_surface);
-    float light = AMBIENT + max(0, dot(normal, vec3(-1, 0, 0)));
+    bump_normal = normalize(bump_normal * vec3(-4, -4, 1));
+    vec3 normal = combine_normals(normalize(vert_normal), bump_normal);
+    float light = AMBIENT + max(0, dot(normal, vec3(0, 0, -1)));
 
     vec4 diffuse = vert_color * texture(diffuse_texture, vert_tex_coord / textureSize(diffuse_texture, 0)); 
-    out_color = vec4(light * diffuse.xyz, 1);
+    out_color = vec4(light * diffuse.rgb, 1);
 }

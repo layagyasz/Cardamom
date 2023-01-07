@@ -27,40 +27,16 @@ namespace Cardamom
 
             float resolution = 2048;
             var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
-            var testPipeline =
-                new Pipeline.Builder()
-                    .AddNode(new GeneratorNode.Builder().SetKey("new"))
-                    .AddNode(
-                        new GradientNode.Builder()
-                            .SetKey("gradient")
-                            .SetChannel(Channel.Red | Channel.Green)
-                            .SetInput("input", "new")
-                            .SetParameters(
-                                new GradientNode.Parameters()
-                                { 
-                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution)),
-                                    Factor = ConstantValue.Create(new Matrix4x2(new(1, 0), new(0, 1), new(), new()))
-                                }))
-                    .AddNode(
-                        new CylinderizeNode.Builder()
-                            .SetKey("cylinderize")
-                            .SetChannel(Channel.All)
-                            .SetInput("input", "gradient"))
-                    .AddOutput("cylinderize")
-                    .Build();
-            var testOutput = testPipeline.Run(canvases);
-            testOutput[0].GetTexture().CopyToImage().SaveToFile("test-cylinderize.png");
-
             var random = new Random();
             var seed = ConstantValue.Create(random.Next());
             var noiseFrequency = ConstantValue.Create(0.01f);
             var noiseScale = 
                 ConstantValue.Create(new Vector3(MathHelper.TwoPi / resolution, MathHelper.Pi / resolution, 256));
             var noiseSurface = ConstantValue.Create(LatticeNoise.Surface.Sphere);
-            var noiseEvaluator = ConstantValue.Create(LatticeNoise.Evaluator.VerticalEdgeInverse);
-            var noiseInterpolator = ConstantValue.Create(LatticeNoise.Interpolator.Linear);
-            var noisePreTreatment = ConstantValue.Create(LatticeNoise.Treatment.SemiRig);
-            var noisePostTreatment = ConstantValue.Create(LatticeNoise.Treatment.Billow);
+            var noiseEvaluator = ConstantValue.Create(LatticeNoise.Evaluator.Gradient);
+            var noiseInterpolator = ConstantValue.Create(LatticeNoise.Interpolator.HermiteQuintic);
+            var noisePreTreatment = ConstantValue.Create(LatticeNoise.Treatment.None);
+            var noisePostTreatment = ConstantValue.Create(LatticeNoise.Treatment.None);
             var pipeline =
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
@@ -151,10 +127,7 @@ namespace Cardamom
                     var vert = uvSphereSolid.Faces[i].Vertices[j];
                     var texCoords = resolution * new Vector2(0.5f, 1) * projection.Project(vert);
                     var c = vert.AsCartesian();
-                    var surface =
-                        Quaternion.FromAxisAngle(
-                            Vector3.Cross(Vector3.UnitZ, c), MathF.Acos(Vector3.Dot(c, Vector3.UnitZ)));
-                    vertices[6 * i + j] = new(c, Color4.White, texCoords, surface, texCoords);
+                    vertices[6 * i + j] = new(c, Color4.White, texCoords, c.Normalized(), texCoords);
                 }
             }
             var sphereModel =
