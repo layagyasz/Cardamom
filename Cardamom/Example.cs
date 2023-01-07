@@ -42,14 +42,14 @@ namespace Cardamom
                                     Factor = ConstantValue.Create(new Matrix4x2(new(1, 0), new(0, 1), new(), new()))
                                 }))
                     .AddNode(
-                        new SpherizeNode.Builder()
-                            .SetKey("spherize")
+                        new CylinderizeNode.Builder()
+                            .SetKey("cylinderize")
                             .SetChannel(Channel.All)
                             .SetInput("input", "gradient"))
-                    .AddOutput("spherize")
+                    .AddOutput("cylinderize")
                     .Build();
             var testOutput = testPipeline.Run(canvases);
-            testOutput[0].GetTexture().CopyToImage().SaveToFile("test-spherize.png");
+            testOutput[0].GetTexture().CopyToImage().SaveToFile("test-cylinderize.png");
 
             var random = new Random();
             var seed = ConstantValue.Create(random.Next());
