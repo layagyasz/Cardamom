@@ -28,26 +28,16 @@ vec4 quaternion_multiply(vec4 q1, vec4 q2)
   return qr;
 }
 
-vec3 quaternion_rotate(vec3 v, vec4 q)
-{ 
-  return quaternion_multiply(quaternion_multiply(q, vec4(v, 0)), quaternion_conjugate(q)).xyz;
-}
-
 vec3 combine_normals(vec3 surface_normal, vec3 bump_normal)
 {
-    const float epsilon = 0.000001f;
-    const float inv_sqrt_2 = 0.70710678f;
-    vec4 q = 
-        inv_sqrt_2 * vec4(
-            sqrt(1 - bump_normal.z) * vec3(-bump_normal.y, bump_normal.x, 0), 
-            sqrt(1 + bump_normal.z));
-    return quaternion_rotate(surface_normal, q);
+    return quaternion_multiply(
+        vec4(bump_normal, 0),
+        vec4(-surface_normal.y, surface_normal.x, 0, surface_normal.z)).xyz;
 }
 
 void main()
 {
     vec3 bump_normal =  2 * texture(bump_texture, vert_tex_coord / textureSize(bump_texture, 0)).rgb - 1;
-    bump_normal = normalize(bump_normal * vec3(-4, -4, 1));
     vec3 normal = combine_normals(normalize(vert_normal), bump_normal);
     float light = AMBIENT + max(0, dot(normal, vec3(0, 0, -1)));
 
