@@ -85,6 +85,9 @@
     <None Update="Resources\ImageProcessing\Filters\sobel.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\ImageProcessing\Filters\spherize.comp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\ImageProcessing\Filters\wave_form.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

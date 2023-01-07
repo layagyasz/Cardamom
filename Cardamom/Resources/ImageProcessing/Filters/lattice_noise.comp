@@ -295,8 +295,9 @@ vec3 map(vec2 pixel) {
 			return vec3(scale.z * cos(t), scale.z * sin(t), scale.y * (pixel.y + offset.y));
 		case SURFACE_SPHERE:
 			vec2 angle = scale.xy * (pixel + offset.xy);
-			float sinTheta = sin(angle.y);
-			return scale.z * vec3(cos(angle.x) * sinTheta, sin(angle.x) * sinTheta, cos(angle.y));
+			float zenith = cos(angle.y);
+			float r = sqrt(1 - zenith * zenith);
+			return scale.z * vec3(r * cos(angle.x), r * sin(angle.x), zenith);
 		default:
 			return scale * (vec3(pixel, 0) + offset);
 	}

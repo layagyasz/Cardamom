@@ -31,19 +31,25 @@ namespace Cardamom
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
                     .AddNode(
-                        new WhiteNoiseNode.Builder()
-                            .SetKey("white-noise")
-                            .SetChannel(Channel.Color)
+                        new GradientNode.Builder()
+                            .SetKey("gradient")
+                            .SetChannel(Channel.Red | Channel.Green)
                             .SetInput("input", "new")
                             .SetParameters(
-                                new WhiteNoiseNode.Parameters()
+                                new GradientNode.Parameters()
                                 { 
-                                    Seed = ConstantValue.Create(new Vector4i(1, 2, 3, 0))  
+                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution)),
+                                    Factor = ConstantValue.Create(new Matrix4x2(new(1, 0), new(0, 1), new(), new()))
                                 }))
-                    .AddOutput("white-noise")
+                    .AddNode(
+                        new SpherizeNode.Builder()
+                            .SetKey("spherize")
+                            .SetChannel(Channel.All)
+                            .SetInput("input", "gradient"))
+                    .AddOutput("spherize")
                     .Build();
             var testOutput = testPipeline.Run(canvases);
-            testOutput[0].GetTexture().CopyToImage().SaveToFile("test-white-noise.png");
+            testOutput[0].GetTexture().CopyToImage().SaveToFile("test-spherize.png");
 
             var random = new Random();
             var seed = ConstantValue.Create(random.Next());
