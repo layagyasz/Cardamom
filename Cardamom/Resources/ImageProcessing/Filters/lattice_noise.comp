@@ -5,10 +5,6 @@
 #define HASH_SPACE 256
 #define KERNEL_SIZE 64
 
-#define SURFACE_PLANE 0
-#define SURFACE_CYLINDER 1
-#define SURFACE_SPHERE 2
-
 #define EVALUATOR_COSINE 0
 #define EVALUATOR_COSINE_INVERSE 1
 #define EVALUATOR_CURL 2
@@ -66,17 +62,14 @@ layout(location=2) uniform int octaves;
 layout(location=3) uniform float persistence;
 layout(location=4) uniform float bias;
 layout(location=5) uniform float amplitude;
-layout(location=6) uniform vec3 offset;
-layout(location=7) uniform int surface;
-layout(location=8) uniform vec3 scale;
-layout(location=9) uniform int evaluator;
-layout(location=10) uniform int interpolator;
-layout(location=11) uniform int pre_treatment;
-layout(location=12) uniform int post_treatment;
-layout(location=13) uniform int channel;
+layout(location=6) uniform int evaluator;
+layout(location=7) uniform int interpolator;
+layout(location=8) uniform int pre_treatment;
+layout(location=9) uniform int post_treatment;
+layout(location=10) uniform int channel;
 
-layout(location=14) uniform int hash_lookup[HASH_SPACE];
-layout(location=270) uniform vec3 kernel[KERNEL_SIZE];
+layout(location=11) uniform int hash_lookup[HASH_SPACE];
+layout(location=267) uniform vec3 kernel[KERNEL_SIZE];
 
 float treat(float x, int function) {
 	switch (function) {
@@ -288,25 +281,10 @@ float generate(vec3 position) {
     return total / max + bias;
 }
 
-vec3 map(vec2 pixel) {
-	switch (surface) {
-		case SURFACE_CYLINDER:
-			float t = scale.x * (pixel.x + offset.x);
-			return vec3(scale.z * cos(t), scale.z * sin(t), scale.y * (pixel.y + offset.y));
-		case SURFACE_SPHERE:
-			vec2 angle = scale.xy * (pixel + offset.xy);
-			float zenith = cos(angle.y);
-			float r = sqrt(1 - zenith * zenith);
-			return scale.z * vec3(r * cos(angle.x), r * sin(angle.x), zenith);
-		default:
-			return scale * (vec3(pixel, 0) + offset);
-	}
-}
-
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     vec4 current = imageLoad(in_texture, position);
-	float v = clamp(generate(map(gl_GlobalInvocationID.xy)), 0, 1);
+	float v = clamp(generate(current.xyz), 0, 1);
 	vec4 new = 
 		vec4(
 			(channel & CHANNEL_RED) != 0 ? v : current.r,

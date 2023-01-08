@@ -28,11 +28,19 @@ vec4 quaternion_multiply(vec4 q1, vec4 q2)
   return qr;
 }
 
+vec4 quaternion_rotate(vec3 v, vec4 q)
+{
+    return quaternion_multiply(quaternion_multiply(q, vec4(v, 0)), quaternion_conjugate(q));
+}
+
 vec3 combine_normals_quat(vec3 surface_normal, vec3 bump_normal)
 {
-    return quaternion_multiply(
-        vec4(bump_normal, 0),
-        vec4(-surface_normal.y, surface_normal.x, 0, surface_normal.z)).xyz;
+    const float inv_sqrt_2 = 0.70710678f;
+    return quaternion_rotate(
+        bump_normal,
+        vec4(
+            inv_sqrt_2 * sqrt(1 - surface_normal.z) * normalize(vec3(-surface_normal.y, surface_normal.x, 0)), 
+            inv_sqrt_2 * sqrt(1 + surface_normal.z))).xyz;
 }
 
 vec2 as_spherical(vec3 v)
@@ -47,7 +55,8 @@ vec3 as_cartesian(vec2 v)
 
 vec3 combine_normals_tan(vec3 surface_normal, vec3 bump_normal)
 {
-    return as_cartesian(as_spherical(surface_normal) + as_spherical(bump_normal) + vec2(-1.57f , -1.57f));
+    const float pi_over_2 = 1.57079632f;
+    return as_cartesian(as_spherical(surface_normal) + as_spherical(bump_normal) - vec2(pi_over_2, pi_over_2));
 }
 
 
@@ -58,5 +67,5 @@ void main()
     float light = AMBIENT + max(0, dot(normal, vec3(0, 0, -1)));
 
     vec4 diffuse = vert_color * texture(diffuse_texture, vert_tex_coord / textureSize(diffuse_texture, 0)); 
-    out_color = vec4(light * diffuse.rgb, 1);
+    out_color = vec4(light, light, light, 1);
 }

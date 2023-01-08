@@ -17,9 +17,6 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public IParameterValue? Persistence { get; set; }
             public IParameterValue? Bias { get; set; }
             public IParameterValue? Amplitude { get; set; }
-            public IParameterValue? Offset { get; set; }
-            public IParameterValue? Surface { get; set; }
-            public IParameterValue? Scale { get; set; }
             public IParameterValue? Evaluator { get; set; }
             public IParameterValue? Interpolator { get; set; }
             public IParameterValue? PreTreatment { get; set; }
@@ -85,18 +82,6 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             if (_parameters.Amplitude != null)
             {
                 builder.SetAmplitude((float)_parameters.Amplitude.Get());
-            }
-            if (_parameters.Offset != null)
-            {
-                builder.SetOffset((Vector3)_parameters.Offset.Get());
-            }
-            if (_parameters.Surface != null)
-            {
-                builder.SetSurface((LatticeNoise.Surface)_parameters.Surface.Get());
-            }
-            if (_parameters.Scale != null)
-            {
-                builder.SetScale((Vector3)_parameters.Scale.Get());
             }
             if (_parameters.Evaluator != null)
             {

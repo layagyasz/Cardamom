@@ -27,10 +27,7 @@ namespace Cardamom
             var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
             var random = new Random();
             var seed = ConstantValue.Create(random.Next());
-            var noiseFrequency = ConstantValue.Create(0.01f);
-            var noiseScale = 
-                ConstantValue.Create(new Vector3(MathHelper.TwoPi / resolution, MathHelper.Pi / resolution, 256));
-            var noiseSurface = ConstantValue.Create(LatticeNoise.Surface.Sphere);
+            var noiseFrequency = ConstantValue.Create(2f);
             var noiseEvaluator = ConstantValue.Create(LatticeNoise.Evaluator.Gradient);
             var noiseInterpolator = ConstantValue.Create(LatticeNoise.Interpolator.HermiteQuintic);
             var noisePreTreatment = ConstantValue.Create(LatticeNoise.Treatment.None);
@@ -39,17 +36,31 @@ namespace Cardamom
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
                     .AddNode(
+                        new GradientNode.Builder()
+                            .SetKey("gradient")
+                            .SetChannel(Channel.Red | Channel.Green)
+                            .SetInput("input", "new")
+                            .SetParameters(
+                                new GradientNode.Parameters()
+                                { 
+                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution)),
+                                    Factor = ConstantValue.Create(new Matrix4x2(new(1, 0), new(0, 1), new(), new()))
+                                }))
+                    .AddNode(
+                        new SpherizeNode.Builder()
+                            .SetKey("spherize")
+                            .SetChannel(Channel.All)
+                            .SetInput("input", "gradient"))
+                    .AddNode(
                         new LatticeNoiseNode.Builder()
                             .SetKey("lattice-noise")
                             .SetChannel(Channel.Color)
-                            .SetInput("input", "new")
+                            .SetInput("input", "spherize")
                             .SetParameters(
                                 new()
                                 {
                                     Seed = seed,
                                     Frequency = noiseFrequency,
-                                    Scale = noiseScale,
-                                    Surface = noiseSurface,
                                     Evaluator = noiseEvaluator,
                                     Interpolator = noiseInterpolator,
                                     PreTreatment = noisePreTreatment,
