@@ -67,5 +67,5 @@ void main()
     float light = AMBIENT + max(0, dot(normal, vec3(0, 0, -1)));
 
     vec4 diffuse = vert_color * texture(diffuse_texture, vert_tex_coord / textureSize(diffuse_texture, 0)); 
-    out_color = vec4(light, light, light, 1);
+    out_color = vec4(light * diffuse.rgb, 1);
 }

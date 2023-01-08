@@ -12,21 +12,19 @@ layout(rgba32f, binding = 0) uniform image2D in_texture;
 layout(rgba32f, binding = 1) uniform image2D out_texture;
 
 layout(location=0) uniform int wave_type;
-layout(location=1) uniform float amplitude;
-layout(location=2) uniform float bias;
-layout(location=3) uniform vec2 periodicity;
-layout(location=4) uniform vec2 turbulence;
-layout(location=5) uniform vec2 scale;
-layout(location=6) uniform vec2 offset;
-layout(location=7) uniform int channel;
+layout(location=1) uniform vec4 amplitude;
+layout(location=2) uniform vec4 bias;
+layout(location=3) uniform mat4 frequency;
+layout(location=4) uniform int channel;
 
-float generate(vec2 position, float v_turbulence) {
-	float w = dot(periodicity, scale * position + turbulence * (2 * v_turbulence - 1) + offset);
+float generate(vec4 position, int channel) {
+	const float tau = 6.2831853f;
+	float w = tau * dot(frequency[channel], position);
 	if (wave_type == WAVE_TYPE_SINE)
 	{
-		return amplitude * sin(w) + bias;
+		return amplitude[channel] * sin(w) + bias[channel];
 	}
-	return amplitude * cos(w) + bias;
+	return amplitude[channel] * cos(w) + bias[channel];
 }
 
 void main() {
@@ -34,9 +32,9 @@ void main() {
     vec4 current = imageLoad(in_texture, position);
 	vec4 new = 
 		vec4(
-			(channel & CHANNEL_RED) != 0 ? clamp(generate(gl_GlobalInvocationID.xy, current.r), 0, 1) : current.r,
-			(channel & CHANNEL_GREEN) != 0 ? clamp(generate(gl_GlobalInvocationID.xy, current.g), 0, 1) : current.g,
-			(channel & CHANNEL_BLUE) != 0 ? clamp(generate(gl_GlobalInvocationID.xy, current.b), 0, 1) : current.b,
-			(channel & CHANNEL_ALPHA) != 0 ? clamp(generate(gl_GlobalInvocationID.xy, current.a), 0, 1) : current.a);
+			(channel & CHANNEL_RED) != 0 ? generate(current, 0) : current.r,
+			(channel & CHANNEL_GREEN) != 0 ? generate(current, 1) : current.g,
+			(channel & CHANNEL_BLUE) != 0 ? generate(current, 2) : current.b,
+			(channel & CHANNEL_ALPHA) != 0 ? generate(current, 3) : current.a);
     imageStore(out_texture, position, new);
 }

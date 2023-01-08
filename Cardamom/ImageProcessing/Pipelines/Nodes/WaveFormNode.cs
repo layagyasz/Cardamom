@@ -10,10 +10,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public IParameterValue? WaveType { get; set; }
             public IParameterValue? Amplitude { get; set; }
             public IParameterValue? Bias { get; set; }
-            public IParameterValue? Periodicity { get; set; }
-            public IParameterValue? Turbulence { get; set; }
-            public IParameterValue? Scale { get; set; }
-            public IParameterValue? Offset { get; set; }
+            public IParameterValue? Frequency { get; set; }
         }
 
         public override bool Inline => true;
@@ -42,27 +39,15 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             }
             if (_parameters.Amplitude != null)
             {
-                builder.SetAmplitude((float)_parameters.Amplitude.Get());
+                builder.SetAmplitude((Vector4)_parameters.Amplitude.Get());
             }
             if (_parameters.Bias != null)
             {
-                builder.SetBias((float)_parameters.Bias.Get());
+                builder.SetBias((Vector4)_parameters.Bias.Get());
             }
-            if (_parameters.Periodicity != null)
+            if (_parameters.Frequency != null)
             {
-                builder.SetPeriodicity((Vector2)_parameters.Periodicity.Get());
-            }
-            if (_parameters.Turbulence != null)
-            {
-                builder.SetTurbulence((Vector2)_parameters.Turbulence.Get());
-            }
-            if (_parameters.Scale != null)
-            {
-                builder.SetScale((Vector2)_parameters.Scale.Get());
-            }
-            if (_parameters.Offset != null)
-            {
-                builder.SetOffset((Vector2)_parameters.Offset.Get());
+                builder.SetFrequency((Matrix4)_parameters.Frequency.Get());
             }
             return builder.Build();
         }
