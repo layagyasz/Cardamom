@@ -28,17 +28,33 @@ vec4 quaternion_multiply(vec4 q1, vec4 q2)
   return qr;
 }
 
-vec3 combine_normals(vec3 surface_normal, vec3 bump_normal)
+vec3 combine_normals_quat(vec3 surface_normal, vec3 bump_normal)
 {
     return quaternion_multiply(
         vec4(bump_normal, 0),
         vec4(-surface_normal.y, surface_normal.x, 0, surface_normal.z)).xyz;
 }
 
+vec2 as_spherical(vec3 v)
+{
+    return vec2(atan(length(v.xz), v.y), atan(v.z, v.x));
+}
+
+vec3 as_cartesian(vec2 v)
+{
+    return vec3(sin(v.x) * cos(v.y), cos(v.x), sin(v.x) * sin(v.y));
+}
+
+vec3 combine_normals_tan(vec3 surface_normal, vec3 bump_normal)
+{
+    return as_cartesian(as_spherical(surface_normal) + as_spherical(bump_normal) + vec2(-1.57f , -1.57f));
+}
+
+
 void main()
 {
     vec3 bump_normal =  2 * texture(bump_texture, vert_tex_coord / textureSize(bump_texture, 0)).rgb - 1;
-    vec3 normal = combine_normals(normalize(vert_normal), bump_normal);
+    vec3 normal = combine_normals_tan(normalize(vert_normal), bump_normal);
     float light = AMBIENT + max(0, dot(normal, vec3(0, 0, -1)));
 
     vec4 diffuse = vert_color * texture(diffuse_texture, vert_tex_coord / textureSize(diffuse_texture, 0)); 

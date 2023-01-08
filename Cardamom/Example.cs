@@ -1,5 +1,4 @@
-﻿using Cardamom.Collections;
-using Cardamom.Graphics;
+﻿using Cardamom.Graphics;
 using Cardamom.Graphics.Camera;
 using Cardamom.Graphics.Ui;
 using Cardamom.Graphics.Ui.Controller;
@@ -15,7 +14,6 @@ using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-using System.Diagnostics;
 
 namespace Cardamom
 {
@@ -27,49 +25,6 @@ namespace Cardamom
 
             float resolution = 2048;
             var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
-
-            var testPipeline =
-                new Pipeline.Builder()
-                    .AddNode(new GeneratorNode.Builder().SetKey("new"))
-                    .AddNode(new GeneratorNode.Builder().SetKey("new-2"))
-                    .AddNode(
-                        new GradientNode.Builder()
-                            .SetKey("gradient-1")
-                            .SetChannel(Channel.Color)
-                            .SetInput("input", "new")
-                            .SetParameters(new GradientNode.Parameters()
-                            {
-                                Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution))
-                            }))
-                    .AddNode(
-                        new GradientNode.Builder()
-                            .SetKey("gradient-2")
-                            .SetChannel(Channel.Color)
-                            .SetInput("input", "new-2")
-                            .SetParameters(new GradientNode.Parameters()
-                            {
-                                Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution)),
-                                Factor = ConstantValue.Create(new Matrix4x2(new(1, 0), new(0, 1), new(), new()))
-                            }))
-                    .AddNode(
-                        new CombineNode.Builder()
-                            .SetKey("combine")
-                            .SetChannel(Channel.Color)
-                            .SetInput("left", "gradient-1")
-                            .SetInput("right", "gradient-2")
-                            .SetParameters(
-                                new CombineNode.Parameters()
-                                { 
-                                    LeftFactor = ConstantValue.Create(new Vector4(1, 1, 1, 0)),
-                                    RightFactor = ConstantValue.Create(new Vector4(-1, -1, -1, 0)),
-                                }))
-                    .AddOutput("combine")
-                    .AddOutput("gradient-1")
-                    .Build();
-            var testOutput = testPipeline.Run(canvases);
-            testOutput[0].GetTexture().CopyToImage().SaveToFile("test-combine.png");
-            testOutput[1].GetTexture().CopyToImage().SaveToFile("test-gradient.png");
-
             var random = new Random();
             var seed = ConstantValue.Create(random.Next());
             var noiseFrequency = ConstantValue.Create(0.01f);
@@ -109,8 +64,8 @@ namespace Cardamom
                         new SobelNode.Builder()
                             .SetKey("sobel")
                             .SetChannel(Channel.Red)
-                            .SetInput("input", "lattice-noise"))
-                    .AddOutput("lattice-noise")
+                            .SetInput("input", "denormalize"))
+                    .AddOutput("denormalize")
                     .AddOutput("sobel")
                     .Build();
             var output = pipeline.Run(canvases);
