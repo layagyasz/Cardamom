@@ -8,8 +8,6 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public class Parameters
         {
             public IParameterValue? WaveType { get; set; }
-            public IParameterValue? Amplitude { get; set; }
-            public IParameterValue? Bias { get; set; }
             public IParameterValue? Frequency { get; set; }
         }
 
@@ -36,14 +34,6 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             if (_parameters.WaveType != null)
             {
                 builder.SetWaveType((WaveForm.WaveType)_parameters.WaveType.Get());
-            }
-            if (_parameters.Amplitude != null)
-            {
-                builder.SetAmplitude((Vector4)_parameters.Amplitude.Get());
-            }
-            if (_parameters.Bias != null)
-            {
-                builder.SetBias((Vector4)_parameters.Bias.Get());
             }
             if (_parameters.Frequency != null)
             {

@@ -42,8 +42,8 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
-            private Vector4 _mean = new(0.5f, 0.5f, 0.5f, 1f);
-            private Vector4 _standardDeviation = new(0.15f, 0.15f, 0.15f, 0f);
+            private Vector4 _mean = new();
+            private Vector4 _standardDeviation = new(0.15f, 0.15f, 0.15f, 0.15f);
 
             public Builder SetMean(Vector4 mean)
             {

@@ -12,15 +12,14 @@ namespace Cardamom.ImageProcessing.Filters
         private static readonly int s_LacunarityLocation = 1;
         private static readonly int s_OctavesLocation = 2;
         private static readonly int s_PersistenceLocation = 3;
-        private static readonly int s_BiasLocation = 4;
-        private static readonly int s_AmplitudeLocation = 5;
-        private static readonly int s_EvaluatorLocation = 6;
-        private static readonly int s_InterpolatorLocation = 7;
-        private static readonly int s_PreTreatmentLocation = 8;
-        private static readonly int s_PostTreatmentLocation = 9;
-        private static readonly int s_ChannelLocation = 10;
-        private static readonly int s_HashLookupLocation = 11;
-        private static readonly int s_KernelLocation = 267;
+        private static readonly int s_AmplitudeLocation = 4;
+        private static readonly int s_EvaluatorLocation = 5;
+        private static readonly int s_InterpolatorLocation = 6;
+        private static readonly int s_PreTreatmentLocation = 7;
+        private static readonly int s_PostTreatmentLocation = 8;
+        private static readonly int s_ChannelLocation = 9;
+        private static readonly int s_HashLookupLocation = 10;
+        private static readonly int s_KernelLocation = 266;
 
         public enum Evaluator
         {
@@ -79,7 +78,6 @@ namespace Cardamom.ImageProcessing.Filters
             public float Lacunarity { get; set; } = 2;
             public int Octaves { get; set; } = 6;
             public float Persistence { get; set; } = 0.6f;
-            public float Bias { get; set; } = 0.5f;
             public float Amplitude { get; set; } = 1;
             public Evaluator Evaluator { get; set; } = Evaluator.Gradient;
             public Interpolator Interpolator { get; set; } = Interpolator.Linear;
@@ -110,7 +108,6 @@ namespace Cardamom.ImageProcessing.Filters
             s_LatticeNoiseShader.SetFloat(s_LacunarityLocation, _settings.Lacunarity);
             s_LatticeNoiseShader.SetInt32(s_OctavesLocation, _settings.Octaves);
             s_LatticeNoiseShader.SetFloat(s_PersistenceLocation, _settings.Persistence);
-            s_LatticeNoiseShader.SetFloat(s_BiasLocation, _settings.Bias);
             s_LatticeNoiseShader.SetFloat(s_AmplitudeLocation, _settings.Amplitude);
             s_LatticeNoiseShader.SetInt32(s_EvaluatorLocation, (int)_settings.Evaluator);
             s_LatticeNoiseShader.SetInt32(s_InterpolatorLocation, (int)_settings.Interpolator);
@@ -182,12 +179,6 @@ namespace Cardamom.ImageProcessing.Filters
             public Builder SetPersistence(float persistence)
             {
                 _settings.Persistence = persistence;
-                return this;
-            }
-
-            public Builder SetBias(float bias)
-            {
-                _settings.Bias = bias;
                 return this;
             }
 

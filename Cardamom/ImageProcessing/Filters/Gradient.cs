@@ -14,7 +14,7 @@ namespace Cardamom.ImageProcessing.Filters
 
         public struct Settings
         {
-            public Matrix4x2 Factor { get; set; } = 
+            public Matrix4x2 Gradient { get; set; } = 
                 new(new(0.5f, 0.5f), new(0.5f, 0.5f), new(0.5f, 0.5f), new(0.5f, 0.5f));
             public Vector4 Bias { get; set; }
             public Vector2 Scale { get; set; } = new(1, 1);
@@ -39,14 +39,14 @@ namespace Cardamom.ImageProcessing.Filters
 
             Matrix4 gradient = new()
             {
-                Row0 = _settings.Scale.X * _settings.Factor.Column0,
-                Row1 = _settings.Scale.Y * _settings.Factor.Column1,
+                Row0 = _settings.Scale.X * _settings.Gradient.Column0,
+                Row1 = _settings.Scale.Y * _settings.Gradient.Column1,
                 Row3 = 
                     new(
-                        Vector2.Dot(_settings.Factor.Row0, _settings.Offset) + _settings.Bias.X,
-                        Vector2.Dot(_settings.Factor.Row1, _settings.Offset) + _settings.Bias.Y,
-                        Vector2.Dot(_settings.Factor.Row2, _settings.Offset) + _settings.Bias.Z,
-                        Vector2.Dot(_settings.Factor.Row3, _settings.Offset) + _settings.Bias.W)
+                        Vector2.Dot(_settings.Gradient.Row0, _settings.Offset) + _settings.Bias.X,
+                        Vector2.Dot(_settings.Gradient.Row1, _settings.Offset) + _settings.Bias.Y,
+                        Vector2.Dot(_settings.Gradient.Row2, _settings.Offset) + _settings.Bias.Z,
+                        Vector2.Dot(_settings.Gradient.Row3, _settings.Offset) + _settings.Bias.W)
             };
 
             s_GradientShader.SetInt32(s_OverflowBehaviorLocation, (int)_settings.OverflowBehavior);
@@ -66,9 +66,9 @@ namespace Cardamom.ImageProcessing.Filters
         {
             private Settings _settings = new();
 
-            public Builder SetFactor(Matrix4x2 factor)
+            public Builder SetGradient(Matrix4x2 gradient)
             {
-                _settings.Factor = factor;
+                _settings.Gradient = gradient;
                 return this;
             }
 

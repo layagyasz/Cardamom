@@ -9,10 +9,8 @@ namespace Cardamom.ImageProcessing.Filters
     {
         private static ComputeShader? s_WaveFormShader;
         private static readonly int s_WaveTypeLocation = 0;
-        private static readonly int s_AmplitudeLocation = 1;
-        private static readonly int s_BiasLocation = 2;
-        private static readonly int s_FrequencyLocation = 3;
-        private static readonly int s_ChannelLocation = 4;
+        private static readonly int s_FrequencyLocation = 1;
+        private static readonly int s_ChannelLocation = 2;
 
         public enum WaveType
         {
@@ -20,22 +18,13 @@ namespace Cardamom.ImageProcessing.Filters
             Cosine = 1
         }
 
-        public struct Settings
+        private readonly WaveType _waveType;
+        private readonly Matrix4 _frequency;
+
+        public WaveForm(WaveType waveType, Matrix4 frequency)
         {
-            public WaveType WaveType { get; set; } = WaveType.Sine;
-            public Vector4 Amplitude { get; set; } = new(0.5f, 0.5f, 0.5f, 0.5f);
-            public Vector4 Bias { get; set; } = new(0.5f, 0.5f, 0.5f, 0.5f);
-            public Matrix4 Frequency { get; set; } =
-                new(new(1, 1, 1, 1), new(1, 1, 1, 1), new(1, 1, 1, 1), new(1, 1, 1, 1));
-
-            public Settings() { }
-        }
-
-        private readonly Settings _settings;
-
-        public WaveForm(Settings settings)
-        {
-            _settings = settings;
+            _waveType = waveType;
+            _frequency = frequency;
         }
 
         public void Apply(Canvas output, Channel channel, Dictionary<string, Canvas> inputs)
@@ -44,11 +33,8 @@ namespace Cardamom.ImageProcessing.Filters
 
             s_WaveFormShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/wave_form.comp");
 
-            s_WaveFormShader.SetInt32(s_WaveTypeLocation, (int)_settings.WaveType);
-            s_WaveFormShader.SetVector4(s_AmplitudeLocation, _settings.Amplitude);
-            s_WaveFormShader.SetVector4(s_BiasLocation, _settings.Bias);
-            s_WaveFormShader.SetMatrix4(s_FrequencyLocation, _settings.Frequency);
-
+            s_WaveFormShader.SetInt32(s_WaveTypeLocation, (int)_waveType);
+            s_WaveFormShader.SetMatrix4(s_FrequencyLocation, _frequency);
             s_WaveFormShader.SetInt32(s_ChannelLocation, (int)channel);
 
             var inTex = inputs.First().Value.GetTexture();
@@ -62,35 +48,24 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
-            private Settings _settings = new();
+            private WaveType _waveType = WaveType.Sine;
+            private Matrix4 _frequency = Matrix4.Identity;
 
             public Builder SetWaveType(WaveType waveType)
             {
-                _settings.WaveType = waveType;
-                return this;
-            }
-
-            public Builder SetAmplitude(Vector4 amplitude)
-            {
-                _settings.Amplitude = amplitude;
-                return this;
-            }
-
-            public Builder SetBias(Vector4 bias)
-            {
-                _settings.Bias = bias;
+                _waveType = waveType;
                 return this;
             }
 
             public Builder SetFrequency(Matrix4 frequency)
             {
-                _settings.Frequency = frequency;
+                _frequency = frequency;
                 return this;
             }
 
             public IFilter Build()
             {
-                return new WaveForm(_settings);
+                return new WaveForm(_waveType, _frequency);
             }
         }
     }

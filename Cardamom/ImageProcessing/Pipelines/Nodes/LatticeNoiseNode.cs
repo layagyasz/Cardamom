@@ -15,7 +15,6 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public IParameterValue? Lacunarity { get; set; }
             public IParameterValue? Octaves { get; set; }
             public IParameterValue? Persistence { get; set; }
-            public IParameterValue? Bias { get; set; }
             public IParameterValue? Amplitude { get; set; }
             public IParameterValue? Evaluator { get; set; }
             public IParameterValue? Interpolator { get; set; }
@@ -74,10 +73,6 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             if (_parameters.Persistence != null)
             {
                 builder.SetPersistence((float)_parameters.Persistence.Get());
-            }
-            if (_parameters.Bias != null)
-            {
-                builder.SetBias((float)_parameters.Bias.Get());
             }
             if (_parameters.Amplitude != null)
             {

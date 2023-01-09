@@ -12,19 +12,17 @@ layout(rgba32f, binding = 0) uniform image2D in_texture;
 layout(rgba32f, binding = 1) uniform image2D out_texture;
 
 layout(location=0) uniform int wave_type;
-layout(location=1) uniform vec4 amplitude;
-layout(location=2) uniform vec4 bias;
-layout(location=3) uniform mat4 frequency;
-layout(location=4) uniform int channel;
+layout(location=1) uniform mat4 frequency;
+layout(location=2) uniform int channel;
 
 float generate(vec4 position, int channel) {
 	const float tau = 6.2831853f;
 	float w = tau * dot(frequency[channel], position);
 	if (wave_type == WAVE_TYPE_SINE)
 	{
-		return amplitude[channel] * sin(w) + bias[channel];
+		return sin(w);
 	}
-	return amplitude[channel] * cos(w) + bias[channel];
+	return cos(w);
 }
 
 void main() {

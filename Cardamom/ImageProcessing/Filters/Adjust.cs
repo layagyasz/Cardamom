@@ -9,16 +9,19 @@ namespace Cardamom.ImageProcessing.Filters
     {
         private static ComputeShader? s_AdjustShader;
         private static readonly int s_OverflowBehaviorLocation = 0;
-        private static readonly int s_AdjustmentLocation = 1;
-        private static readonly int s_ChannelLocation = 2;
+        private static readonly int s_GradientLocation = 1;
+        private static readonly int s_BiasLocation = 2;
+        private static readonly int s_ChannelLocation = 3;
 
         private readonly OverflowBehavior _overflowBehavior;
-        private readonly Vector4 _adjustment;
+        private readonly Matrix4 _gradient;
+        private readonly Vector4 _bias;
 
-        public Adjust(OverflowBehavior overflowBehavior, Vector4 adjustment)
+        public Adjust(OverflowBehavior overflowBehavior, Matrix4 gradient, Vector4 bias)
         {
+            _gradient = gradient;
             _overflowBehavior = overflowBehavior;
-            _adjustment = adjustment;
+            _bias = bias;
         }
 
         public void Apply(Canvas output, Channel channel, Dictionary<string, Canvas> inputs)
@@ -28,8 +31,8 @@ namespace Cardamom.ImageProcessing.Filters
             s_AdjustShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/adjust.comp");
 
             s_AdjustShader.SetInt32(s_OverflowBehaviorLocation, (int)_overflowBehavior);
-            s_AdjustShader.SetVector4(s_AdjustmentLocation, _adjustment);
-
+            s_AdjustShader.SetMatrix4(s_GradientLocation, _gradient);
+            s_AdjustShader.SetVector4(s_BiasLocation, _bias);
             s_AdjustShader.SetInt32(s_ChannelLocation, (int)channel);
 
             var inTex = inputs.First().Value.GetTexture();
@@ -43,8 +46,9 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
-            private OverflowBehavior _overflowBehavior = OverflowBehavior.Clamp;
-            private Vector4 _adjustment = new(0, 0, 0, 0);
+            private OverflowBehavior _overflowBehavior = OverflowBehavior.None;
+            private Matrix4 _gradient = Matrix4.Identity;
+            private Vector4 _bias = new();
 
             public Builder SetOverflowBehavior(OverflowBehavior overflowBehavior)
             {
@@ -52,15 +56,21 @@ namespace Cardamom.ImageProcessing.Filters
                 return this;
             }
 
-            public Builder SetAdjustment(Vector4 adjustment)
+            public Builder SetGradient(Matrix4 gradient)
             {
-                _adjustment = adjustment;
+                _gradient = gradient;
+                return this;
+            }
+
+            public Builder SetBias(Vector4 bias)
+            {
+                _bias = bias;
                 return this;
             }
 
             public IFilter Build()
             {
-                return new Adjust(_overflowBehavior, _adjustment);
+                return new Adjust(_overflowBehavior, _gradient, _bias);
             }
         }
     }

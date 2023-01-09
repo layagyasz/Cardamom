@@ -53,7 +53,7 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
-            private OverflowBehavior _overflowBehavior = OverflowBehavior.Clamp;
+            private OverflowBehavior _overflowBehavior = OverflowBehavior.None;
             private Vector4 _leftFactor = new(0.5f, 0.5f, 0.5f, 0.5f);
             private Vector4 _rightFactor = new(0.5f, 0.5f, 0.5f, 0.5f);
             private Vector4 _bias = new();

@@ -8,7 +8,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public class Parameters
         {
             public IParameterValue? OverflowBehavior { get; set; }
-            public IParameterValue? Adjustment { get; set; }
+            public IParameterValue? Gradient { get; set; }
+            public IParameterValue? Bias { get; set; }
         }
 
         public override bool Inline => true;
@@ -35,9 +36,13 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             {
                 builder.SetOverflowBehavior((OverflowBehavior)_parameters.OverflowBehavior.Get());
             }
-            if (_parameters.Adjustment != null)
+            if (_parameters.Gradient != null)
             {
-                builder.SetAdjustment((Vector4)_parameters.Adjustment.Get());
+                builder.SetGradient((Matrix4)_parameters.Gradient.Get());
+            }
+            if (_parameters.Bias != null)
+            {
+                builder.SetBias((Vector4)_parameters.Bias.Get());
             }
             return builder.Build();
         }

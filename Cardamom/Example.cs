@@ -44,7 +44,7 @@ namespace Cardamom
                                 new GradientNode.Parameters()
                                 { 
                                     Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution)),
-                                    Factor = ConstantValue.Create(new Matrix4x2(new(1, 0), new(0, 1), new(), new()))
+                                    Gradient = ConstantValue.Create(new Matrix4x2(new(1, 0), new(0, 1), new(), new()))
                                 }))
                     .AddNode(
                         new SpherizeNode.Builder()
@@ -75,13 +75,12 @@ namespace Cardamom
                         new CombineNode.Builder()
                             .SetKey("combine")
                             .SetChannel(Channel.Color)
-                            .SetInput("left", "lattice-noise")
+                            .SetInput("left", "denormalize")
                             .SetInput("right", "spherize")
                             .SetParameters(new CombineNode.Parameters()
                             {
-                                LeftFactor = ConstantValue.Create(new Vector4(0.2f, 0.2f, 0.2f, 0.2f)),
-                                RightFactor = ConstantValue.Create(new Vector4(0.3f, 0.3f, 0.3f, 0.3f)),
-                                Bias = ConstantValue.Create(new Vector4(0.5f, 0.5f, 0.5f, 0.5f))
+                                LeftFactor = ConstantValue.Create(new Vector4(0.2f, 0.2f, 0.2f, 0)),
+                                RightFactor = ConstantValue.Create(new Vector4(1f, 1f, 1f, 1f))
                             }))
                     .AddNode(
                         new WaveFormNode.Builder()
@@ -91,20 +90,34 @@ namespace Cardamom
                             .SetParameters(
                                 new WaveFormNode.Parameters()
                                 { 
-                                    WaveType = ConstantValue.Create(WaveForm.WaveType.Sine),
-                                    Amplitude = ConstantValue.Create(new Vector4(-0.5f, -0.5f, -0.5f, 0)),
-                                    Frequency = ConstantValue.Create(Matrix4.Identity * 4f),
+                                    WaveType = ConstantValue.Create(WaveForm.WaveType.Cosine)
+                                }))
+                    .AddNode(
+                        new AdjustNode.Builder()
+                            .SetKey("adjust")
+                            .SetChannel(Channel.Color)
+                            .SetInput("input", "wave-form")
+                            .SetParameters(
+                                new AdjustNode.Parameters() 
+                                { 
+                                    Gradient = ConstantValue.Create(
+                                        new Matrix4(
+                                            new(-0.5f, 0, 0, 0),
+                                            new(0, -0.5f, 0, 0),
+                                            new(0, 0, -0.5f, 0),
+                                            new())),
+                                    Bias = ConstantValue.Create(new Vector4(0.5f, 0.5f, 0.5f, 0))
                                 }))
                     .AddNode(
                         new SobelNode.Builder()
                             .SetKey("sobel")
                             .SetChannel(Channel.Red)
-                            .SetInput("input", "wave-form"))
-                    .AddOutput("wave-form")
+                            .SetInput("input", "adjust"))
+                    .AddOutput("adjust")
                     .AddOutput("sobel")
                     .Build();
             var output = pipeline.Run(canvases);
-            output[0].GetTexture().CopyToImage().SaveToFile("test-wave-form.png");
+            output[0].GetTexture().CopyToImage().SaveToFile("test-adjust.png");
 
             var ui = new UiWindow(window);
             ui.Bind(new MouseListener());

@@ -7,7 +7,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? Factor { get; set; }
+            public IParameterValue? Gradient { get; set; }
             public IParameterValue? Bias { get; set; }
             public IParameterValue? Scale { get; set; }
             public IParameterValue? Offset { get; set; }
@@ -34,9 +34,9 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public override IFilter BuildFilter()
         {
             var builder = new Gradient.Builder();
-            if (_parameters.Factor != null)
+            if (_parameters.Gradient != null)
             {
-                builder.SetFactor((Matrix4x2)_parameters.Factor.Get());
+                builder.SetGradient((Matrix4x2)_parameters.Gradient.Get());
             }
             if (_parameters.Bias != null)
             {
