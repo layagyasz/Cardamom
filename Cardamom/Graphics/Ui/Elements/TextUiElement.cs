@@ -40,6 +40,8 @@ namespace Cardamom.Graphics.Ui.Elements
                 }
                 target.PopViewMatrix();
                 target.PopViewMatrix();
+
+                SetDynamicSize(LeftPadding + RightPadding + new Vector3(_textComponent.Size));
             }
         }
 

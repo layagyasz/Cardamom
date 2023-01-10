@@ -2,9 +2,6 @@
 TexturePage based TextureLibrary
 Alternate blend modes
 
-#Graphics.Ui
-Dynamic ui element size based on text
-
 #ImageProcessing.Pipeline
 Remove dictionaries to passing arguments
 Define both input and output channels on pipeline nodes?
