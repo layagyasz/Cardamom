@@ -26,6 +26,8 @@ namespace Cardamom.Graphics.Ui
             mouseListener.MouseButtonClicked += HandleMouseButtonClicked;
             mouseListener.MouseButtonDragged += HandleMouseButtonDragged;
             mouseListener.MouseWheelScrolled += HandleMouseWheelScrolled;
+            mouseListener.MouseLingered += HandleMouseLingered;
+            mouseListener.MouseLingerBroken += HandleMouseLingerBroken;
         }
 
         public void Bind(UiContext context)
@@ -101,6 +103,16 @@ namespace Cardamom.Graphics.Ui
         private void HandleMouseWheelScrolled(object? sender, MouseWheelEventArgs e)
         {
             Consume(_mouseOver, x => x.Controller?.HandleMouseWheelScrolled(e) ?? false);
+        }
+
+        private void HandleMouseLingered(object? sender, EventArgs e)
+        {
+            Consume(_mouseOver, x => x.Controller?.HandleMouseLingered() ?? false);
+        }
+
+        private void HandleMouseLingerBroken(object? sender, EventArgs e)
+        {
+            Consume(_mouseOver, x => x.Controller?.HandleMouseLingerBroken() ?? false);
         }
 
         private static void Consume(IControlled? root, Func<IControlled, bool> consumer)

@@ -17,6 +17,8 @@ namespace Cardamom.Graphics.Ui.Controller
         bool HandleMouseButtonClicked(MouseButtonClickEventArgs e);
         bool HandleMouseButtonDragged(MouseButtonDragEventArgs e);
         bool HandleMouseWheelScrolled(MouseWheelEventArgs e);
+        bool HandleMouseLingered();
+        bool HandleMouseLingerBroken();
         bool HandleFocusEntered();
         bool HandleFocusLeft();
     }

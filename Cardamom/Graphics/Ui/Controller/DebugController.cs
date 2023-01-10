@@ -64,6 +64,18 @@ namespace Cardamom.Graphics.Ui.Controller
             return true;
         }
 
+        public bool HandleMouseLingered()
+        {
+            PrintEvent("[MouseLingered]");
+            return true;
+        }
+
+        public bool HandleMouseLingerBroken()
+        {
+            PrintEvent("[MouseLingerBroken]");
+            return true;
+        }
+
         public bool HandleFocusEntered()
         {
             PrintEvent("[FocusEntered]");

@@ -79,7 +79,7 @@ float treat(float x, int function) {
 			return abs(x);
 		case TREATMENT_RIDGE:
 			return -abs(x);
-		case TREATMENT_SEMI_BILLOW:
+		case TREATMENT_SEMIBILLOW:
 			return max(0, x);
 		case TREATMENT_SEMIRIDGE:
 			return min(0, x);

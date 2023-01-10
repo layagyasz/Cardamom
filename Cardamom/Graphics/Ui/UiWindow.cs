@@ -60,12 +60,14 @@ namespace Cardamom.Graphics.Ui
                 _context.Clear();
 
                 long frameElapsed = stopwatch.ElapsedMilliseconds;
+                long delta = frameElapsed - elapsed;
                 if (UiRoot != null)
                 {
-                    UiRoot.Update(frameElapsed - elapsed);
+                    UiRoot.Update(delta);
                     UiRoot.Draw(RenderWindow, _context);
                 }
-                _keyboardListener?.DispatchEvents(frameElapsed - elapsed);
+                _keyboardListener?.DispatchEvents(delta);
+                _mouseListener?.DispatchEvents(delta);
                 _controller.DispatchEvents();
                 elapsed = frameElapsed;
 

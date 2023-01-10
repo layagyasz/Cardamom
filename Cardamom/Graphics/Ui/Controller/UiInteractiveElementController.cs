@@ -61,6 +61,16 @@ namespace Cardamom.Graphics.Ui.Controller
             return false;
         }
 
+        public virtual bool HandleMouseLingered()
+        {
+            return false;
+        }
+
+        public virtual bool HandleMouseLingerBroken()
+        {
+            return false;
+        }
+
         public virtual bool HandleFocusEntered()
         {
             Focused?.Invoke(this, EventArgs.Empty);

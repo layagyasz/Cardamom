@@ -79,6 +79,16 @@ namespace Cardamom.Graphics.Ui.Controller
             return true;
         }
 
+        public bool HandleMouseLingered()
+        {
+            return false;
+        }
+
+        public bool HandleMouseLingerBroken()
+        {
+            return false;
+        }
+
         public bool HandleFocusEntered()
         {
             return false;

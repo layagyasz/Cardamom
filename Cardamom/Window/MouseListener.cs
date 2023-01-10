@@ -6,16 +6,24 @@ namespace Cardamom.Window
 {
     public class MouseListener
     {
+        private static readonly long s_LingerTime = 1000;
+
         public EventHandler<MouseButtonEventArgs>? MouseButtonClicked { get; set; }
         public EventHandler<MouseButtonDragEventArgs>? MouseButtonDragged { get; set; }
         public EventHandler<MouseWheelEventArgs>? MouseWheelScrolled { get; set; }
+        public EventHandler<EventArgs>? MouseLingered { get; set; }
+        public EventHandler<EventArgs>? MouseLingerBroken { get; set; }
 
         private RenderWindow? _window;
 
+        // Variables to track mouse dragging
         private MouseButton? _depressedButton;
         private Vector2 _depressedPosition;
         private bool _drag;
         private Vector2 _draggedPosition;
+
+        // Variables to track mouse lingering
+        private long _lingerTime;
 
         public void Bind(RenderWindow window)
         {
@@ -24,6 +32,15 @@ namespace Cardamom.Window
             window.MouseButtonReleased += HandleMouseButtonReleased;
             window.MouseWheelScrolled += HandleMouseWheelScrolled;
             window.MouseMoved += HandleMouseMoved;
+        }
+
+        public void DispatchEvents(long delta)
+        {
+            if (_lingerTime < s_LingerTime && _lingerTime + delta >= s_LingerTime)
+            {
+                MouseLingered?.Invoke(this, EventArgs.Empty);
+            }
+            _lingerTime += delta;
         }
 
         public Vector2 GetMousePosition()
@@ -58,6 +75,12 @@ namespace Cardamom.Window
 
         private void HandleMouseMoved(object? sender, MouseMoveEventArgs e)
         {
+            if (_lingerTime >= s_LingerTime)
+            {
+                MouseLingerBroken?.Invoke(this, EventArgs.Empty);
+            }
+            _lingerTime = 0;
+
             if (_drag || _depressedButton != null)
             {
                 _drag = true;

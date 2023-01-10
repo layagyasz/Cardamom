@@ -77,6 +77,16 @@ namespace Cardamom.Graphics.Ui.Controller
             return _subcontroller!.HandleMouseWheelScrolled(e);
         }
 
+        public bool HandleMouseLingered()
+        {
+            return _subcontroller!.HandleMouseLingered();
+        }
+
+        public bool HandleMouseLingerBroken()
+        {
+            return _subcontroller!.HandleMouseLingerBroken();
+        }
+
         public bool HandleFocusEntered()
         {
             return _subcontroller!.HandleFocusEntered();
