@@ -7,13 +7,13 @@ namespace Cardamom.ImageProcessing.Filters
     {
         private static ComputeShader? s_SobelShader;
         private static readonly int s_ChannelIndexLocation = 0;
-        private static readonly int s_ChannelLocation = 1;
+        private static readonly int s_RoughnessLocation = 1;
 
-        private readonly Channel _channel;
+        private readonly float _roughness;
 
-        public Sobel(Channel channel)
+        public Sobel(float roughness)
         {
-            _channel = channel;
+            _roughness = roughness;
         }
 
         public void Apply(Canvas output, Channel channel, Dictionary<string, Canvas> inputs)
@@ -23,7 +23,7 @@ namespace Cardamom.ImageProcessing.Filters
             s_SobelShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/sobel.comp");
 
             s_SobelShader.SetInt32(s_ChannelIndexLocation, channel.GetIndex());
-            s_SobelShader.SetInt32(s_ChannelLocation, (int)_channel);
+            s_SobelShader.SetFloat(s_RoughnessLocation, _roughness);
 
             var inTex = inputs.First().Value.GetTexture();
             var outTex = output.GetTexture();
@@ -36,17 +36,17 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
-            private Channel _channel = Channel.All;
+            private float _roughness = 1;
 
-            public Builder SetChannel(Channel channel)
+            public Builder SetRoughness(float roughness)
             {
-                _channel = channel;
+                _roughness = roughness;
                 return this;
             }
 
             public IFilter Build()
             {
-                return new Sobel(_channel);
+                return new Sobel(_roughness);
             }
         }
     }

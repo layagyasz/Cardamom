@@ -6,7 +6,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? Channel { get; set; }
+            public IParameterValue? Roughness { get; set; }
         }
 
         public override bool Inline => false;
@@ -29,9 +29,9 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public override IFilter BuildFilter()
         {
             var builder = new Sobel.Builder();
-            if (_parameters.Channel != null)
+            if (_parameters.Roughness != null)
             {
-                builder.SetChannel((Channel)_parameters.Channel.Get());
+                builder.SetRoughness((float)_parameters.Roughness.Get());
             }
             return builder.Build();
         }
