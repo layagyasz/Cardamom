@@ -44,8 +44,9 @@
 
 #define TREATMENT_NONE 0
 #define TREATMENT_BILLOW 1
-#define TREATMENT_RIG 2
-#define TREATMENT_SEMIRIG 3
+#define TREATMENT_RIDGE 2
+#define TREATMENT_SEMIBILLOW 3
+#define TREATMENT_SEMIRIDGE 4
 
 #define CHANNEL_RED 1
 #define CHANNEL_GREEN 2
@@ -76,9 +77,11 @@ float treat(float x, int function) {
 			return x;
 		case TREATMENT_BILLOW:
 			return abs(x);
-		case TREATMENT_RIG:
+		case TREATMENT_RIDGE:
 			return -abs(x);
-		case TREATMENT_SEMIRIG:
+		case TREATMENT_SEMI_BILLOW:
+			return max(0, x);
+		case TREATMENT_SEMIRIDGE:
 			return min(0, x);
 		default:
 			return x;

@@ -68,8 +68,9 @@ namespace Cardamom.ImageProcessing.Filters
         {
             None = 0,
             Billow = 1,
-            Rig = 2,
-            SemiRig = 3
+            Ridge = 2,
+            SemiBillow = 3,
+            SemiRidge = 4
         }
 
         public struct Settings
