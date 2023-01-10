@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Graphics
+namespace Cardamom.Graphics.TexturePacking
 {
     public class TextureSegment : IKeyed
     {

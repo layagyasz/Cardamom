@@ -1,4 +1,4 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Graphics.TexturePacking;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

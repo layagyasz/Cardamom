@@ -1,11 +1,11 @@
 ﻿using OpenTK.Mathematics;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Graphics
+namespace Cardamom.Graphics.TexturePacking
 {
     public class TextureLibrary
     {
-        public static readonly TextureLibrary Empty = 
+        public static readonly TextureLibrary Empty =
             new(Enumerable.Empty<Texture>(), Enumerable.Empty<TextureSegment>());
 
         private readonly List<Texture> _textures;

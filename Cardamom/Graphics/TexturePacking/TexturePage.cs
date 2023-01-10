@@ -1,6 +1,6 @@
 ﻿using OpenTK.Mathematics;
 
-namespace Cardamom.Graphics
+namespace Cardamom.Graphics.TexturePacking
 {
     public class TexturePage
     {
@@ -25,7 +25,7 @@ namespace Cardamom.Graphics
         {
             _fill = fill;
             _texture = Texture.Create(initialSize, fill);
-            Padding = padding; 
+            Padding = padding;
             RowHeightRatio = rowHeightRatio;
         }
 
