@@ -1,6 +1,6 @@
 namespace Cardamom.Trackers
 {
-    class MultiCount<T> : IDictionary<T, int> where T : notnull
+    public class MultiCount<T> : IDictionary<T, int> where T : notnull
     {
         private readonly Dictionary<T, int> _counts = new();
 

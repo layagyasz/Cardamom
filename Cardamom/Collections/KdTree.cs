@@ -1,6 +1,5 @@
 ﻿using Cardamom.Mathematics.Coordinates;
 using Cardamom.Mathematics.Geometry;
-using System.Xml.XPath;
 
 namespace Cardamom.Collections
 {

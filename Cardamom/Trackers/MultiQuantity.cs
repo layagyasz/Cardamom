@@ -1,6 +1,6 @@
 namespace Cardamom.Trackers
 {
-    class MultiQuantity<T> : IDictionary<T, float> where T : notnull
+    public class MultiQuantity<T> : IDictionary<T, float> where T : notnull
     {
         private readonly Dictionary<T, float> _quantities = new();
 

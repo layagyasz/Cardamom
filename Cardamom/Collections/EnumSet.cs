@@ -1,6 +1,6 @@
 namespace Cardamom.Collections
 {
-    class EnumSet<T> : ISet<T> where T : Enum
+    public class EnumSet<T> : ISet<T> where T : Enum
     {
         readonly bool[] _values;
 

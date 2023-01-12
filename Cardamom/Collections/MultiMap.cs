@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace Cardamom.Collections
 {
-    class MultiMap<TKey, TValue> : IDictionary<TKey, IEnumerable<TValue>> where TKey : notnull
+    public class MultiMap<TKey, TValue> : IDictionary<TKey, IEnumerable<TValue>> where TKey : notnull
     {
         private readonly Dictionary<TKey, List<TValue>> _dict = new();
 
