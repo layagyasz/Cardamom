@@ -1,15 +1,13 @@
 ﻿using Cardamom.Graphics.TexturePacking;
 using OpenTK.Mathematics;
-using OpenTK.Platform.Windows;
 using SharpFont;
-using SharpFont.Cache;
 
 namespace Cardamom.Graphics
 {
     public class Font
     {
         private readonly Face _face;
-        private readonly Dictionary<uint, TexturePage> _pages = new();
+        private readonly Dictionary<uint, ITexturePage> _pages = new();
         private readonly Dictionary<CompositeKey<uint, uint>, Glyph> _glyphs = new();
 
         public Font(string path)
@@ -37,19 +35,21 @@ namespace Cardamom.Graphics
             var bitmap = _face.Glyph.Bitmap;
             var topLeft = new Vector2i(_face.Glyph.BitmapLeft, -_face.Glyph.BitmapTop);
             var size = new Vector2i(bitmap.Width, bitmap.Rows);
-            var textureView = page.Add(size, TranslateBitmap(bitmap));
-
-            var glyph =
-                new Glyph()
-                {
-                    Advance = (float)_face.Glyph.Advance.X,
-                    Bounds = new(topLeft, topLeft + size),
-                    TextureView = textureView,
-                    LeftBuffer = _face.Glyph.DeltaLsb,
-                    RightBuffer = _face.Glyph.DeltaRsb
-                };
-            _glyphs.Add(CompositeKey<uint, uint>.Create(code, characterSize), glyph);
-            return glyph;
+            if (page.Add(new Bitmap(size, TranslateBitmap(bitmap)), out var textureView))
+            {
+                var glyph =
+                    new Glyph()
+                    {
+                        Advance = (float)_face.Glyph.Advance.X,
+                        Bounds = new(topLeft, topLeft + size),
+                        TextureView = textureView,
+                        LeftBuffer = _face.Glyph.DeltaLsb,
+                        RightBuffer = _face.Glyph.DeltaRsb
+                    };
+                _glyphs.Add(CompositeKey<uint, uint>.Create(code, characterSize), glyph);
+                return glyph;
+            }
+            throw new InvalidOperationException();
         }
 
         public float GetKerning(uint left, uint right, uint characterSize)
@@ -82,20 +82,20 @@ namespace Cardamom.Graphics
             return (float)_face.Size.Metrics.Height;
         }
 
-        private TexturePage GetOrLoadPage(uint characterSize)
+        private ITexturePage GetOrLoadPage(uint characterSize)
         {
-            if (_pages.TryGetValue(characterSize, out TexturePage? page))
+            if (_pages.TryGetValue(characterSize, out ITexturePage? page))
             {
                 return page;
             }
-            var newPage = new TexturePage(new(128, 128), new(1, 1, 1, 0), new(1, 1), 1.1f);
+            var newPage = new DynamicVariableSizeTexturePage(new(128, 128), new(1, 1, 1, 0), new(1, 1), 1.1f);
             _pages.Add(characterSize, newPage);
             return newPage;
         }
 
-        private TexturePage? GetPage(uint characterSize)
+        private ITexturePage? GetPage(uint characterSize)
         {
-            _pages.TryGetValue(characterSize, out TexturePage? page);
+            _pages.TryGetValue(characterSize, out ITexturePage? page);
             return page;
         }
 

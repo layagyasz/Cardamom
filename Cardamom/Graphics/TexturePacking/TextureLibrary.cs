@@ -1,20 +1,16 @@
-﻿using OpenTK.Mathematics;
-using System.Text.Json.Serialization;
-
-namespace Cardamom.Graphics.TexturePacking
+﻿namespace Cardamom.Graphics.TexturePacking
 {
     public class TextureLibrary
     {
-        public static readonly TextureLibrary Empty =
-            new(Enumerable.Empty<Texture>(), Enumerable.Empty<TextureSegment>());
+        public static readonly TextureLibrary Empty = new(Enumerable.Empty<ITextureVolume>());
 
-        private readonly List<Texture> _textures;
+        private readonly List<ITextureVolume> _volumes;
         private readonly Dictionary<string, TextureSegment> _segments;
 
-        public TextureLibrary(IEnumerable<Texture> textures, IEnumerable<TextureSegment> segments)
+        public TextureLibrary(IEnumerable<ITextureVolume> volumes)
         {
-            _textures = textures.ToList();
-            _segments = segments.ToDictionary(x => x.Key, x => x);
+            _volumes = volumes.ToList();
+            _segments = volumes.SelectMany(x => x.GetSegments()).ToDictionary(x => x.Key, x => x);
         }
 
         public TextureSegment Get(string key)
@@ -22,56 +18,18 @@ namespace Cardamom.Graphics.TexturePacking
             return _segments[key];
         }
 
-        public IEnumerable<Texture> GetTextures()
-        {
-            return _textures;
-        }
-
         public IEnumerable<TextureSegment> GetSegments()
         {
             return _segments.Values;
         }
 
-        [JsonDerivedType(typeof(CompositeBuilder), "composite")]
-        [JsonDerivedType(typeof(StaticBuilder), "static")]
-        public interface IBuilder
+        public class Builder
         {
-            TextureLibrary Build();
-        }
-
-        public class CompositeBuilder : IBuilder
-        {
-            public List<IBuilder>? Volumes { get; set; }
+            public List<ITextureVolume.IBuilder> Volumes { get; set; } = new();
 
             public TextureLibrary Build()
             {
-                var volumes = Volumes!.Select(x => x.Build());
-                return new TextureLibrary(
-                    volumes.SelectMany(x => x.GetTextures()), volumes.SelectMany(x => x.GetSegments()));
-            }
-        }
-
-        public class StaticBuilder : IBuilder
-        {
-            public struct StaticSegment
-            {
-                public string? Key { get; set; }
-                public Vector2i TopLeft { get; set; }
-                public Vector2i Size { get; set; }
-
-                public TextureSegment ToSegment(Texture texture)
-                {
-                    return new TextureSegment(Key!, texture, new(TopLeft, Size));
-                }
-            }
-
-            public string? TexturePath { get; set; }
-            public List<StaticSegment>? Segments { get; set; }
-
-            public TextureLibrary Build()
-            {
-                var texture = Texture.FromFile(TexturePath!);
-                return new TextureLibrary(Enumerable.Repeat(texture, 1), Segments!.Select(x => x.ToSegment(texture)));
+                return new TextureLibrary(Volumes.Select(x => x.Build()));
             }
         }
     }

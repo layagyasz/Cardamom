@@ -9,7 +9,7 @@ namespace Cardamom.Json
         public override TextureLibrary Read(
             ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var library = JsonSerializer.Deserialize<TextureLibrary.IBuilder>(ref reader, options)!.Build();
+            var library = JsonSerializer.Deserialize<TextureLibrary.Builder>(ref reader, options)!.Build();
             if (options.ReferenceHandler != null)
             {
                 var resolver = options.ReferenceHandler.CreateResolver();

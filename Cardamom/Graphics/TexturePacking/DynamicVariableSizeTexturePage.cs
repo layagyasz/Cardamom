@@ -1,8 +1,9 @@
 ﻿using OpenTK.Mathematics;
+using SharpFont;
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public class TexturePage
+    public class DynamicVariableSizeTexturePage : ITexturePage
     {
         private static readonly float s_MaxRowRatio = 1.4f;
 
@@ -21,7 +22,8 @@ namespace Cardamom.Graphics.TexturePacking
         private Texture _texture;
         private int _nextRowTop;
 
-        public TexturePage(Vector2i initialSize, Color4 fill, Vector2i padding, float rowHeightRatio)
+        public DynamicVariableSizeTexturePage(
+            Vector2i initialSize, Color4 fill, Vector2i padding, float rowHeightRatio)
         {
             _fill = fill;
             _texture = Texture.Create(initialSize, fill);
@@ -34,7 +36,27 @@ namespace Cardamom.Graphics.TexturePacking
             return _texture;
         }
 
-        public Box2i Add(Vector2i size, byte[] bitmap)
+        public bool Add(Texture texture, out Box2i bounds)
+        {
+            if (ReserveSpace(texture.Size, out bounds))
+            {
+                _texture.Update(bounds.Min, texture);
+                return true;
+            }
+            return false;
+        }
+
+        public bool Add(Bitmap bitmap, out Box2i bounds)
+        {
+            if (ReserveSpace(bitmap.Size, out bounds))
+            {
+                _texture.Update(bounds.Min, bitmap);
+                return true;
+            }
+            return false;
+        }
+
+        private bool ReserveSpace(Vector2i size, out Box2i bounds)
         {
             Vector2i paddedSize = size + 2 * Padding;
             Row? selectedRow = null;
@@ -61,9 +83,10 @@ namespace Cardamom.Graphics.TexturePacking
             selectedRow ??= AddRow(paddedSize.X, (int)(RowHeightRatio * paddedSize.Y));
             var topLeft = Padding + new Vector2i(selectedRow.Width, selectedRow.Top);
             var rect = new Box2i(topLeft, topLeft + size);
-            _texture.Update(topLeft, size, bitmap);
             selectedRow.Width += paddedSize.X;
-            return rect;
+
+            bounds = rect;
+            return true;
         }
 
         private Row AddRow(int width, int height)

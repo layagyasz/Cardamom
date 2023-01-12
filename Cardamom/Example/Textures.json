@@ -1,11 +1,15 @@
 {
-  "$type": "static",
-  "TexturePath": "Example/texture-example.png",
-  "Segments": [
+  "Volumes": [
     {
-      "Key": "texture-example",
-      "TopLeft": [ 0, 0 ],
-      "Size": [ 64, 64 ]
+      "$type": "static",
+      "TexturePath": "Example/texture-example.png",
+      "Segments": [
+        {
+          "Key": "texture-example",
+          "TopLeft": [ 0, 0 ],
+          "Size": [ 64, 64 ]
+        }
+      ]
     }
   ]
 }

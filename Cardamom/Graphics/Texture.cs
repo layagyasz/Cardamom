@@ -111,12 +111,6 @@ namespace Cardamom.Graphics
             GL.ClearTexImage(Handle, 0, PixelFormat.Rgba, PixelType.Float, ref color);
         }
 
-        public void Update(Texture other)
-        {
-            other.Bind(TextureUnit.Texture0);
-            GL.CopyTextureSubImage2D(Handle, 0, 0, 0, 0, 0, other.Size.X, other.Size.Y);
-        }
-
         public byte[] GetData()
         {
             Bind(TextureUnit.Texture0);
@@ -125,7 +119,19 @@ namespace Cardamom.Graphics
             return bytes;
         }
 
-        public void Update(Vector2i offset, Vector2i size, byte[] bytes)
+        public void Update(Texture other)
+        {
+            other.Bind(TextureUnit.Texture0);
+            GL.CopyTextureSubImage2D(Handle, 0, 0, 0, 0, 0, other.Size.X, other.Size.Y);
+        }
+
+        public void Update(Vector2i offset, Texture other)
+        {
+            other.Bind(TextureUnit.Texture0);
+            GL.CopyTextureSubImage2D(Handle, 0, offset.X, offset.Y, 0, 0, other.Size.X, other.Size.Y);
+        }
+
+        public void Update(Vector2i offset, Bitmap bitmap)
         {
             Bind(TextureUnit.Texture0);
             GL.TexSubImage2D(
@@ -133,11 +139,11 @@ namespace Cardamom.Graphics
                 0,
                 offset.X,
                 offset.Y,
-                size.X,
-                size.Y, 
+                bitmap.Size.X,
+                bitmap.Size.Y, 
                 PixelFormat.Rgba,
                 PixelType.UnsignedByte, 
-                bytes);
+                bitmap.Bytes);
         }
 
         protected override void DisposeImpl()
