@@ -11,9 +11,9 @@ namespace Cardamom.Randoms
     [JsonDerivedType(typeof(UniformSampler), "uniform")]
     public interface ISampler : IGenerator<float>, Generic.IGenerator 
     { 
-        object Generic.IGenerator.Generate(Random random)
+        T Generic.IGenerator.Generate<T>(Random random)
         {
-            return ((IGenerator<float>)this).Generate(random);
+            return (T)(object)Generate(random);
         }
     }
 }

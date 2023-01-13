@@ -2,6 +2,6 @@
 {
     public interface IGenerator
     {
-        object Generate(Random random);
+        T Generate<T>(Random random);
     }
 }
