@@ -89,6 +89,11 @@ namespace Cardamom.Collections
             return _keys[IndexOf(x)];
         }
 
+        public T Get(int index)
+        {
+            return _keys[index];
+        }
+
         public bool ContainsKey(T key)
         {
             return Array.IndexOf(_keys, key, 0, Count) >= 0;

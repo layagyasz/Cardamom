@@ -103,8 +103,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mathematics\Graphing\" />
-  </ItemGroup>
-
 </Project>
