@@ -2,7 +2,6 @@ namespace Cardamom.Graphing.BehaviorTree
 {
     public class SerialNode<TContext> : CollectionNode<BehaviorNodeStatus, TContext>
     {
-
         public override BehaviorNodeStatus Execute(TContext context)
         {
             bool run = false;
