@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers;
 using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
@@ -7,9 +8,9 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? OverflowBehavior { get; set; }
-            public IParameterValue? Gradient { get; set; }
-            public IParameterValue? Bias { get; set; }
+            public ISupplier<OverflowBehavior>? OverflowBehavior { get; set; }
+            public ISupplier<Matrix4>? Gradient { get; set; }
+            public ISupplier<Vector4>? Bias { get; set; }
         }
 
         public override bool Inline => true;
@@ -34,15 +35,15 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new Adjust.Builder();
             if (_parameters.OverflowBehavior != null)
             {
-                builder.SetOverflowBehavior((OverflowBehavior)_parameters.OverflowBehavior.Get());
+                builder.SetOverflowBehavior(_parameters.OverflowBehavior.Get());
             }
             if (_parameters.Gradient != null)
             {
-                builder.SetGradient((Matrix4)_parameters.Gradient.Get());
+                builder.SetGradient(_parameters.Gradient.Get());
             }
             if (_parameters.Bias != null)
             {
-                builder.SetBias((Vector4)_parameters.Bias.Get());
+                builder.SetBias(_parameters.Bias.Get());
             }
             return builder.Build();
         }

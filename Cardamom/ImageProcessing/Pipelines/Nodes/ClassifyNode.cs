@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
@@ -6,7 +7,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? Classifications { get; set; }
+            public ISupplier<IEnumerable<Classify.Classification>>? Classifications { get; set; }
         }
 
         public override bool Inline => true;
@@ -31,7 +32,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new Classify.Builder();
             if (_parameters.Classifications != null)
             {
-                builder.AddAllClassifications((IEnumerable<Classify.Classification>)_parameters.Classifications.Get());
+                builder.AddAllClassifications(_parameters.Classifications.Get());
             }
             return builder.Build();
         }

@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers;
 using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
@@ -7,8 +8,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? WaveType { get; set; }
-            public IParameterValue? Frequency { get; set; }
+            public ISupplier<WaveForm.WaveType>? WaveType { get; set; }
+            public ISupplier<Matrix4>? Frequency { get; set; }
         }
 
         public override bool Inline => true;
@@ -33,11 +34,11 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new WaveForm.Builder();
             if (_parameters.WaveType != null)
             {
-                builder.SetWaveType((WaveForm.WaveType)_parameters.WaveType.Get());
+                builder.SetWaveType(_parameters.WaveType.Get());
             }
             if (_parameters.Frequency != null)
             {
-                builder.SetFrequency((Matrix4)_parameters.Frequency.Get());
+                builder.SetFrequency(_parameters.Frequency.Get());
             }
             return builder.Build();
         }

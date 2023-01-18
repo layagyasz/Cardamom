@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers;
 using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
@@ -7,8 +8,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? Mean { get; set; }
-            public IParameterValue? StandardDeviation { get; set; }
+            public ISupplier<Vector4>? Mean { get; set; }
+            public ISupplier<Vector4>? StandardDeviation { get; set; }
         }
 
         public override bool Inline => true;
@@ -33,11 +34,11 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new Denormalize.Builder();
             if (_parameters.Mean != null)
             {
-                builder.SetMean((Vector4)_parameters.Mean.Get());
+                builder.SetMean(_parameters.Mean.Get());
             }
             if (_parameters.StandardDeviation != null)
             {
-                builder.SetStandardDeviation((Vector4)_parameters.StandardDeviation.Get());
+                builder.SetStandardDeviation(_parameters.StandardDeviation.Get());
             }
             return builder.Build();
         }

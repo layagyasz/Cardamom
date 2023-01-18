@@ -10,13 +10,14 @@ using Cardamom.ImageProcessing.Pipelines.Nodes;
 using Cardamom.Mathematics.Coordinates;
 using Cardamom.Mathematics.Coordinates.Projections;
 using Cardamom.Mathematics.Geometry;
+using Cardamom.Utils.Suppliers;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom
-{
+{ 
     public static class Example
     {
         public static void Main()
@@ -26,12 +27,13 @@ namespace Cardamom
             float resolution = 2048;
             var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
             var random = new Random();
-            var seed = ConstantValue.Create(random.Next());
-            var noiseFrequency = ConstantValue.Create(2f);
-            var noiseEvaluator = ConstantValue.Create(LatticeNoise.Evaluator.Gradient);
-            var noiseInterpolator = ConstantValue.Create(LatticeNoise.Interpolator.HermiteQuintic);
-            var noisePreTreatment = ConstantValue.Create(LatticeNoise.Treatment.None);
-            var noisePostTreatment = ConstantValue.Create(LatticeNoise.Treatment.None);
+            var seed = ConstantSupplier<int>.Create(random.Next());
+            var noiseFrequency = ConstantSupplier<float>.Create(2f);
+            var noiseEvaluator = ConstantSupplier<LatticeNoise.Evaluator>.Create(LatticeNoise.Evaluator.Gradient);
+            var noiseInterpolator =
+            ConstantSupplier<LatticeNoise.Interpolator>.Create(LatticeNoise.Interpolator.HermiteQuintic);
+            var noisePreTreatment = ConstantSupplier<LatticeNoise.Treatment>.Create(LatticeNoise.Treatment.None);
+            var noisePostTreatment = ConstantSupplier<LatticeNoise.Treatment>.Create(LatticeNoise.Treatment.None);
             var pipeline =
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
@@ -43,8 +45,10 @@ namespace Cardamom
                             .SetParameters(
                                 new GradientNode.Parameters()
                                 { 
-                                    Scale = ConstantValue.Create(new Vector2(1f / resolution, 1f / resolution)),
-                                    Gradient = ConstantValue.Create(new Matrix4x2(new(1, 0), new(0, 1), new(), new()))
+                                    Scale = ConstantSupplier<Vector2>.Create(
+                                        new Vector2(1f / resolution, 1f / resolution)),
+                                    Gradient = ConstantSupplier<Matrix4x2>.Create(
+                                        new Matrix4x2(new(1, 0), new(0, 1), new(), new()))
                                 }))
                     .AddNode(
                         new SpherizeNode.Builder()
@@ -79,8 +83,8 @@ namespace Cardamom
                             .SetInput("right", "spherize")
                             .SetParameters(new CombineNode.Parameters()
                             {
-                                LeftFactor = ConstantValue.Create(new Vector4(0.2f, 0.2f, 0.2f, 0)),
-                                RightFactor = ConstantValue.Create(new Vector4(1f, 1f, 1f, 1f))
+                                LeftFactor = ConstantSupplier<Vector4>.Create(new Vector4(0.2f, 0.2f, 0.2f, 0)),
+                                RightFactor = ConstantSupplier<Vector4>.Create(new Vector4(1f, 1f, 1f, 1f))
                             }))
                     .AddNode(
                         new WaveFormNode.Builder()
@@ -90,7 +94,7 @@ namespace Cardamom
                             .SetParameters(
                                 new WaveFormNode.Parameters()
                                 { 
-                                    WaveType = ConstantValue.Create(WaveForm.WaveType.Cosine)
+                                    WaveType = ConstantSupplier<WaveForm.WaveType>.Create(WaveForm.WaveType.Cosine)
                                 }))
                     .AddNode(
                         new AdjustNode.Builder()
@@ -100,13 +104,13 @@ namespace Cardamom
                             .SetParameters(
                                 new AdjustNode.Parameters() 
                                 { 
-                                    Gradient = ConstantValue.Create(
+                                    Gradient = ConstantSupplier<Matrix4>.Create(
                                         new Matrix4(
                                             new(-0.5f, 0, 0, 0),
                                             new(0, -0.5f, 0, 0),
                                             new(0, 0, -0.5f, 0),
                                             new())),
-                                    Bias = ConstantValue.Create(new Vector4(0.5f, 0.5f, 0.5f, 0))
+                                    Bias = ConstantSupplier<Vector4>.Create(new Vector4(0.5f, 0.5f, 0.5f, 0))
                                 }))
                     .AddNode(
                         new SobelNode.Builder()

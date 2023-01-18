@@ -1,6 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
-using OpenTK.Mathematics;
-using System.Threading.Channels;
+using Cardamom.Utils.Suppliers;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
@@ -8,18 +7,18 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? Seed { get; set; }
-            public IParameterValue? HashSpace { get; set; }
-            public IParameterValue? KernelSize { get; set; }
-            public IParameterValue? Frequency { get; set; }
-            public IParameterValue? Lacunarity { get; set; }
-            public IParameterValue? Octaves { get; set; }
-            public IParameterValue? Persistence { get; set; }
-            public IParameterValue? Amplitude { get; set; }
-            public IParameterValue? Evaluator { get; set; }
-            public IParameterValue? Interpolator { get; set; }
-            public IParameterValue? PreTreatment { get; set; }
-            public IParameterValue? PostTreatment { get; set; }
+            public ISupplier<int>? Seed { get; set; }
+            public ISupplier<int>? HashSpace { get; set; }
+            public ISupplier<int>? KernelSize { get; set; }
+            public ISupplier<float>? Frequency { get; set; }
+            public ISupplier<float>? Lacunarity { get; set; }
+            public ISupplier<int>? Octaves { get; set; }
+            public ISupplier<float>? Persistence { get; set; }
+            public ISupplier<float>? Amplitude { get; set; }
+            public ISupplier<LatticeNoise.Evaluator>? Evaluator { get; set; }
+            public ISupplier<LatticeNoise.Interpolator>? Interpolator { get; set; }
+            public ISupplier<LatticeNoise.Treatment>? PreTreatment { get; set; }
+            public ISupplier<LatticeNoise.Treatment>? PostTreatment { get; set; }
         }
 
         public override bool Inline => true;
@@ -48,51 +47,51 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new LatticeNoise.Builder();
             if (_parameters.Seed != null)
             {
-                builder.SetSeed((int)_parameters.Seed.Get());
+                builder.SetSeed(_parameters.Seed.Get());
             }
             if (_parameters.HashSpace != null)
             {
-                builder.SetHashSpace((int)_parameters.HashSpace.Get());
+                builder.SetHashSpace(_parameters.HashSpace.Get());
             }
             if (_parameters.KernelSize != null)
             {
-                builder.SetKernelSize((int)_parameters.KernelSize.Get());
+                builder.SetKernelSize(_parameters.KernelSize.Get());
             }
             if (_parameters.Frequency != null)
             {
-                builder.SetFrequency((float)_parameters.Frequency.Get());
+                builder.SetFrequency(_parameters.Frequency.Get());
             }
             if (_parameters.Lacunarity != null)
             {
-                builder.SetLacunarity((float)_parameters.Lacunarity.Get());
+                builder.SetLacunarity(_parameters.Lacunarity.Get());
             }
             if (_parameters.Octaves != null)
             {
-                builder.SetOctaves((int)_parameters.Octaves.Get());
+                builder.SetOctaves(_parameters.Octaves.Get());
             }
             if (_parameters.Persistence != null)
             {
-                builder.SetPersistence((float)_parameters.Persistence.Get());
+                builder.SetPersistence(_parameters.Persistence.Get());
             }
             if (_parameters.Amplitude != null)
             {
-                builder.SetAmplitude((float)_parameters.Amplitude.Get());
+                builder.SetAmplitude(_parameters.Amplitude.Get());
             }
             if (_parameters.Evaluator != null)
             {
-                builder.SetEvaluator((LatticeNoise.Evaluator)_parameters.Evaluator.Get());
+                builder.SetEvaluator(_parameters.Evaluator.Get());
             }
             if (_parameters.Interpolator != null)
             {
-                builder.SetInterpolator((LatticeNoise.Interpolator)_parameters.Interpolator.Get());
+                builder.SetInterpolator(_parameters.Interpolator.Get());
             }
             if (_parameters.PreTreatment != null)
             {
-                builder.SetPreTreatment((LatticeNoise.Treatment)_parameters.PreTreatment.Get());
+                builder.SetPreTreatment(_parameters.PreTreatment.Get());
             }
             if (_parameters.PostTreatment != null)
             {
-                builder.SetPostTreatment((LatticeNoise.Treatment)_parameters.PostTreatment.Get());
+                builder.SetPostTreatment(_parameters.PostTreatment.Get());
             }
             return builder.Build();
         }

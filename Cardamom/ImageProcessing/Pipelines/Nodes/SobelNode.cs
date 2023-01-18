@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
@@ -6,7 +7,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? Roughness { get; set; }
+            public ISupplier<float>? Roughness { get; set; }
         }
 
         public override bool Inline => false;
@@ -31,7 +32,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new Sobel.Builder();
             if (_parameters.Roughness != null)
             {
-                builder.SetRoughness((float)_parameters.Roughness.Get());
+                builder.SetRoughness(_parameters.Roughness.Get());
             }
             return builder.Build();
         }

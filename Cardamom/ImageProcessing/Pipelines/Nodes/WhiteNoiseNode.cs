@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers;
 using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
@@ -7,7 +8,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? Seed { get; set; }
+            public ISupplier<Vector4i>? Seed { get; set; }
         }
 
         public override bool Inline => true;
@@ -32,7 +33,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new WhiteNoise.Builder();
             if (_parameters.Seed != null)
             {
-                builder.SetSeed((Vector4i)_parameters.Seed.Get());
+                builder.SetSeed(_parameters.Seed.Get());
             }
             return builder.Build();
         }

@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
@@ -6,8 +7,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? YScale { get; set; }
-            public IParameterValue? Radius { get; set; }
+            public ISupplier<Spherize.YScale>? YScale { get; set; }
+            public ISupplier<float>? Radius { get; set; }
         }
 
         public override bool Inline => true;

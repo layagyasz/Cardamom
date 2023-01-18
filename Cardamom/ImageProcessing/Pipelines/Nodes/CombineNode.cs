@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers;
 using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
@@ -7,10 +8,10 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? OverflowBehavior { get; set; }
-            public IParameterValue? LeftFactor { get; set; }
-            public IParameterValue? RightFactor { get; set; }
-            public IParameterValue? Bias { get; set; }
+            public ISupplier<OverflowBehavior>? OverflowBehavior { get; set; }
+            public ISupplier<Vector4>? LeftFactor { get; set; }
+            public ISupplier<Vector4>? RightFactor { get; set; }
+            public ISupplier<Vector4>? Bias { get; set; }
         }
 
         public override bool Inline => true;
@@ -35,19 +36,19 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new Combine.Builder();
             if (_parameters.OverflowBehavior != null)
             {
-                builder.SetOverflowBehavior((OverflowBehavior)_parameters.OverflowBehavior.Get());
+                builder.SetOverflowBehavior(_parameters.OverflowBehavior.Get());
             }
             if (_parameters.LeftFactor != null)
             {
-                builder.SetLeftFactor((Vector4)_parameters.LeftFactor.Get());
+                builder.SetLeftFactor(_parameters.LeftFactor.Get());
             }
             if (_parameters.RightFactor != null)
             {
-                builder.SetRightFactor((Vector4)_parameters.RightFactor.Get());
+                builder.SetRightFactor(_parameters.RightFactor.Get());
             }
             if (_parameters.Bias != null)
             {
-                builder.SetBias((Vector4)_parameters.Bias.Get());
+                builder.SetBias(_parameters.Bias.Get());
             }
             return builder.Build();
         }

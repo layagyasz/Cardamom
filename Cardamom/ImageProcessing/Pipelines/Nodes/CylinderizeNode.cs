@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers;
 using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
@@ -7,8 +8,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public IParameterValue? YRange { get; set; }
-            public IParameterValue? Radius { get; set; }
+            public ISupplier<Vector2>? YRange { get; set; }
+            public ISupplier<float>? Radius { get; set; }
         }
 
         public override bool Inline => true;
@@ -33,11 +34,11 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = new Cylinderize.Builder();
             if (_parameters.YRange != null)
             {
-                builder.SetYRange((Vector2)_parameters.YRange.Get());
+                builder.SetYRange(_parameters.YRange.Get());
             }
             if (_parameters.Radius != null)
             {
-                builder.SetRadius((float)_parameters.Radius.Get());
+                builder.SetRadius(_parameters.Radius.Get());
             }
             return builder.Build();
         }

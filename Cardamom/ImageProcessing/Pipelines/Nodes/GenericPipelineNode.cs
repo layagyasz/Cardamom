@@ -1,4 +1,5 @@
 ﻿using Cardamom.ImageProcessing.Filters;
+using Cardamom.Utils.Suppliers.Generic;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
@@ -11,14 +12,14 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         private readonly Type _type;
         private readonly Type _builderType;
         private readonly Dictionary<string, string> _inputs;
-        private readonly Dictionary<string, IParameterValue> _parameters;
+        private readonly Dictionary<string, ISupplier> _parameters;
 
         private GenericPipelineNode(
             string key,
             Channel channel,
             Type type,
             Dictionary<string, string> inputs,
-            Dictionary<string, IParameterValue> parameters)
+            Dictionary<string, ISupplier> parameters)
         {
             Key = key;
             Channel = channel;
@@ -45,7 +46,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             var builder = (IFilter.IFilterBuilder)Activator.CreateInstance(_builderType)!;
             foreach (var param in _parameters)
             {
-                _type.GetMethod("Set" + param.Key)!.Invoke(builder, new object?[] { param.Value.Get() });
+                _type.GetMethod("Set" + param.Key)!.Invoke(builder, new object?[] { param.Value.Get<object>() });
             }
             builder.Build().Apply(output, Channel, inputs);
         }
@@ -56,7 +57,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public Type? Type { get; set; }
             public Channel Channel { get; set; } = Channel.All;
             public Dictionary<string, string> Inputs { get; set; } = new();
-            public Dictionary<string, IParameterValue> Parameters { get; set; } = new();
+            public Dictionary<string, ISupplier> Parameters { get; set; } = new();
 
             public Builder SetKey(string key)
             {
@@ -82,7 +83,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
                 return this;
             }
 
-            public Builder SetParameter(string parameterName, IParameterValue value)
+            public Builder SetParameter(string parameterName, ISupplier value)
             {
                 Parameters.Add(parameterName, value);
                 return this;
