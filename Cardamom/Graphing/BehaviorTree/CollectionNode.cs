@@ -5,7 +5,7 @@ namespace Cardamom.Graphing.BehaviorTree
     public abstract class CollectionNode<TOut, TContext> :
         IBehaviorNode<TOut, TContext>, IEnumerable<IBehaviorNode<TOut, TContext>>
     {
-        private List<IBehaviorNode<TOut, TContext>> _nodes = new();
+        private readonly List<IBehaviorNode<TOut, TContext>> _nodes = new();
 
         public IEnumerator<IBehaviorNode<TOut, TContext>> GetEnumerator()
         {
@@ -17,11 +17,11 @@ namespace Cardamom.Graphing.BehaviorTree
             return GetEnumerator();
         }
 
-        public void Add(IBehaviorNode<TOut, TContext> Node)
+        public void Add(IBehaviorNode<TOut, TContext> node)
         {
-            _nodes.Add(Node);
+            _nodes.Add(node);
         }
 
-        public abstract TOut Execute(TContext Context);
+        public abstract TOut Execute(TContext context);
     }
 }

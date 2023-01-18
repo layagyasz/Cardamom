@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Cardamom.Randoms
+namespace Cardamom.Utils.Generators.Samplers
 {
     [JsonDerivedType(typeof(ConstantSampler), "constant")]
     [JsonDerivedType(typeof(ExponentialSampler), "exponential")]
@@ -9,11 +9,5 @@ namespace Cardamom.Randoms
     [JsonDerivedType(typeof(ParetoSampler), "pareto")]
     [JsonDerivedType(typeof(ReciprocalSampler), "reciprocal")]
     [JsonDerivedType(typeof(UniformSampler), "uniform")]
-    public interface ISampler : IGenerator<float>, Generic.IGenerator 
-    { 
-        T Generic.IGenerator.Generate<T>(Random random)
-        {
-            return (T)(object)Generate(random);
-        }
-    }
+    public interface ISampler : IGenerator<float> { }
 }

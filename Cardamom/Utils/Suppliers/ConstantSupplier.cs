@@ -1,11 +1,11 @@
-﻿namespace Cardamom.Graphing.BehaviorTree
+﻿namespace Cardamom.Utils.Suppliers
 {
     public class ConstantSupplier<T> : ISupplier<T>
     {
         public T Value { get; }
 
-        public ConstantSupplier(T value) 
-        { 
+        public ConstantSupplier(T value)
+        {
             Value = value;
         }
 

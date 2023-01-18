@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace Cardamom.Graphing.BehaviorTree
+namespace Cardamom.Utils.Suppliers
 {
     public class TimedSupplier<T> : ISupplier<T>
     {

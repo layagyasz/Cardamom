@@ -1,4 +1,4 @@
-﻿namespace Cardamom.Randoms
+﻿namespace Cardamom.Utils.Generators.Samplers
 {
     public class ConstantSampler : ISampler
     {

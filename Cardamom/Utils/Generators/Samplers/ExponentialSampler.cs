@@ -1,6 +1,6 @@
 ﻿using MathNet.Numerics.Distributions;
 
-namespace Cardamom.Randoms
+namespace Cardamom.Utils.Generators.Samplers
 {
     public class ExponentialSampler : ISampler
     {
@@ -9,7 +9,7 @@ namespace Cardamom.Randoms
 
         public ExponentialSampler() { }
 
-        public ExponentialSampler(float scale, float rate) 
+        public ExponentialSampler(float scale, float rate)
         {
             Scale = scale;
             Rate = rate;

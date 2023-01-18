@@ -1,6 +1,6 @@
 ﻿using Cardamom.Mathematics;
 
-namespace Cardamom.Randoms
+namespace Cardamom.Utils.Generators.Samplers
 {
     public class UniformSampler : ISampler
     {
@@ -8,8 +8,8 @@ namespace Cardamom.Randoms
 
         public UniformSampler() { }
 
-        public UniformSampler(Interval range) 
-        { 
+        public UniformSampler(Interval range)
+        {
             Range = range;
         }
 

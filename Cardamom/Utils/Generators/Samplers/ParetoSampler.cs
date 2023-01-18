@@ -1,6 +1,6 @@
 ﻿using MathNet.Numerics.Distributions;
 
-namespace Cardamom.Randoms
+namespace Cardamom.Utils.Generators.Samplers
 {
     public class ParetoSampler : ISampler
     {

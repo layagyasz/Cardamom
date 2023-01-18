@@ -1,6 +1,6 @@
 ﻿using MathNet.Numerics.Distributions;
 
-namespace Cardamom.Randoms
+namespace Cardamom.Utils.Generators.Samplers
 {
     public class GammaSampler : ISampler
     {
@@ -11,7 +11,7 @@ namespace Cardamom.Randoms
 
         public GammaSampler(float shape, float rate)
         {
-            Shape = shape; 
+            Shape = shape;
             Rate = rate;
         }
 
