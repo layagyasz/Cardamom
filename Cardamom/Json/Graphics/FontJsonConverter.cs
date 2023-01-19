@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Json
+namespace Cardamom.Json.Graphics
 {
     public class FontJsonConverter : JsonConverter<Font>
     {

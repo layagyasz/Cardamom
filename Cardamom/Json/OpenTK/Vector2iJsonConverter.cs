@@ -1,12 +1,12 @@
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Json
+namespace Cardamom.Json.OpenTK
 {
-    public class Vector2JsonConverter : JsonConverter<Vector2>
+    public class Vector2iJsonConverter : JsonConverter<Vector2i>
     {
-        public override Vector2 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Vector2i Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartArray)
             {
@@ -14,10 +14,10 @@ namespace Cardamom.Json
             }
             reader.Read();
 
-            var value = new Vector2();
-            value.X = reader.GetSingle();
+            var value = new Vector2i();
+            value.X = reader.GetInt32();
             reader.Read();
-            value.Y = reader.GetSingle();
+            value.Y = reader.GetInt32();
             reader.Read();
 
             if (reader.TokenType != JsonTokenType.EndArray)
@@ -27,7 +27,7 @@ namespace Cardamom.Json
             return value;
         }
 
-        public override void Write(Utf8JsonWriter writer, Vector2 @object, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, Vector2i @object, JsonSerializerOptions options)
         {
             writer.WriteStartArray();
             writer.WriteStringValue(@object.X.ToString());

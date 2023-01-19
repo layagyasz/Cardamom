@@ -1,4 +1,4 @@
-﻿using Cardamom.Json;
+﻿using Cardamom.Json.Collections;
 using OpenTK.Mathematics;
 using System.Text.Json.Serialization;
 

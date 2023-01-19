@@ -28,6 +28,11 @@ namespace Cardamom.Mathematics.Coordinates
             return new(Radius * (float)Math.Cos(Zenith), Azimuth, Radius * (float)Math.Sin(Zenith));
         }
 
+        public Spherical3 Normalized()
+        {
+            return new(1, Zenith, Azimuth);
+        }
+
         public static Spherical3 operator *(float m, Spherical3 c)
         {
             return new Spherical3(m * c.Radius, c.Zenith, c.Azimuth);

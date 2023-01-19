@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Json
+namespace Cardamom.Json.Collections
 {
     public class ReferenceDictionaryJsonConverter : JsonConverterFactory
     {

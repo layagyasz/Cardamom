@@ -1,9 +1,9 @@
-﻿using Cardamom.Json;
+﻿using Cardamom.Json.Graphics.Ui;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics.Ui
 {
-    [JsonConverter(typeof(ElementSizeConverter))]
+    [JsonConverter(typeof(ElementSizeDefinitionConverter))]
     public struct ElementSizeDefinition
     {
         [JsonConverter(typeof(JsonStringEnumConverter))]

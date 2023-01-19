@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Json
+namespace Cardamom.Json.Collections
 {
     public class FromMultipleFileJsonConverter : JsonConverterFactory
     {
@@ -28,7 +28,7 @@ namespace Cardamom.Json
             throw new JsonException();
         }
 
-        class FromMultipleFileJsonConverterImpl<TCollection, TValue> 
+        class FromMultipleFileJsonConverterImpl<TCollection, TValue>
             : JsonConverter<TCollection> where TCollection : ICollection<TValue>
         {
             public override TCollection? Read(

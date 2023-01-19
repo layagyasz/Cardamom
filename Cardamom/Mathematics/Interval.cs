@@ -28,6 +28,11 @@ namespace Cardamom.Mathematics
             return MathHelper.Clamp(value, Minimum, Maximum);
         }
 
+        public bool Contains(float value)
+        {
+            return Minimum < value && value < Maximum;
+        }
+
         public override string ToString()
         {
             return string.Format($"[{Minimum}, {Maximum}]");

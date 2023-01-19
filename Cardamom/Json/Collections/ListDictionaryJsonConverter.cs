@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Json
+namespace Cardamom.Json.Collections
 {
     public class ListDictionaryJsonConverter : JsonConverterFactory
     {
@@ -9,14 +9,14 @@ namespace Cardamom.Json
         {
             return typeToConvert
                 .GetInterfaces()
-                .Any(x =>x.IsGenericType && typeof(IDictionary<,>).IsAssignableFrom(x.GetGenericTypeDefinition()));
+                .Any(x => x.IsGenericType && typeof(IDictionary<,>).IsAssignableFrom(x.GetGenericTypeDefinition()));
         }
 
         public override JsonConverter? CreateConverter(Type typeToConvert, JsonSerializerOptions options)
         {
             foreach (var @interface in typeToConvert.GetInterfaces())
             {
-                if (@interface.IsGenericType 
+                if (@interface.IsGenericType
                     && typeof(IDictionary<,>).IsAssignableFrom(@interface.GetGenericTypeDefinition()))
                 {
                     var args = @interface.GetGenericArguments();
@@ -28,7 +28,7 @@ namespace Cardamom.Json
             throw new JsonException();
         }
 
-        class DictionaryListJsonConverterImpl<TDict, TKey, TValue> 
+        class DictionaryListJsonConverterImpl<TDict, TKey, TValue>
             : JsonConverter<TDict> where TDict : IDictionary<TKey, TValue>
         {
             public override TDict? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)

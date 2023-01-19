@@ -25,6 +25,11 @@ namespace Cardamom.Mathematics.Coordinates
             return new((float)Math.Sqrt(Radius * Radius + Y * Y), Azimuth, (float)Math.Atan2(Y, Radius));
         }
 
+        public Cylindrical3 Normalized()
+        {
+            return new(1, Azimuth, Y);
+        }
+
         public static Cylindrical3 operator *(float m, Cylindrical3 c)
         {
             return new Cylindrical3(m * c.Radius, c.Azimuth, c.Y);

@@ -3,14 +3,14 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Json
+namespace Cardamom.Json.OpenTK
 {
     public class ColorJsonConverter : JsonConverter<Color4>
     {
         public override Color4 Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             string stringValue = reader.GetString()!;
-            if (stringValue[0] != '#' || (stringValue.Length != 7 && stringValue.Length != 9))
+            if (stringValue[0] != '#' || stringValue.Length != 7 && stringValue.Length != 9)
             {
                 throw new JsonException($"Improperly formatted color '{stringValue}'.");
             }

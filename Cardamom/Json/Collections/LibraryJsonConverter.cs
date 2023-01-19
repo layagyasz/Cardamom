@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Json
+namespace Cardamom.Json.Collections
 {
     public class LibraryJsonConverter : JsonConverterFactory
     {
@@ -10,8 +10,8 @@ namespace Cardamom.Json
             return typeToConvert
                 .GetInterfaces()
                 .Any(
-                    x => 
-                        x.IsGenericType 
+                    x =>
+                        x.IsGenericType
                         && typeof(IDictionary<,>).IsAssignableFrom(x.GetGenericTypeDefinition())
                         && x.GetGenericArguments()[0] == typeof(string));
         }

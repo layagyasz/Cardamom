@@ -2,9 +2,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Json
+namespace Cardamom.Json.Graphics.Ui
 {
-    public class ElementSizeConverter : JsonConverter<ElementSizeDefinition>
+    public class ElementSizeDefinitionConverter : JsonConverter<ElementSizeDefinition>
     {
         class AxisSizeConverter : JsonConverter<ElementSizeDefinition.AxisSize>
         {
