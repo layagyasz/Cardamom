@@ -2,7 +2,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Mathematics.Comparers
 {
-    class ClockwiseVector2Comparer : IComparer<Vector2>
+    public class ClockwiseVector2Comparer : IComparer<Vector2>
     {
         public Vector2 Center { get; }
 
