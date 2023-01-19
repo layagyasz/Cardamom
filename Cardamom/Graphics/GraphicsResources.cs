@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics
 {
+    [JsonConverter(typeof(GraphicsResourcesJsonConverter))]
     public class GraphicsResources
     {
         private readonly TextureLibrary _textures;
