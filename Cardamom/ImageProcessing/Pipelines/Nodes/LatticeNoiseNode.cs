@@ -8,8 +8,6 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public class Parameters
         {
             public ISupplier<int>? Seed { get; set; }
-            public ISupplier<int>? HashSpace { get; set; }
-            public ISupplier<int>? KernelSize { get; set; }
             public ISupplier<float>? Frequency { get; set; }
             public ISupplier<float>? Lacunarity { get; set; }
             public ISupplier<int>? Octaves { get; set; }
@@ -48,14 +46,6 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             if (_parameters.Seed != null)
             {
                 builder.SetSeed(_parameters.Seed.Get());
-            }
-            if (_parameters.HashSpace != null)
-            {
-                builder.SetHashSpace(_parameters.HashSpace.Get());
-            }
-            if (_parameters.KernelSize != null)
-            {
-                builder.SetKernelSize(_parameters.KernelSize.Get());
             }
             if (_parameters.Frequency != null)
             {

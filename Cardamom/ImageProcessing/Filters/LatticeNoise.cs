@@ -17,9 +17,8 @@ namespace Cardamom.ImageProcessing.Filters
         private static readonly int s_InterpolatorLocation = 6;
         private static readonly int s_PreTreatmentLocation = 7;
         private static readonly int s_PostTreatmentLocation = 8;
-        private static readonly int s_ChannelLocation = 9;
-        private static readonly int s_HashLookupLocation = 10;
-        private static readonly int s_KernelLocation = 266;
+        private static readonly int s_SeedLocation = 9;
+        private static readonly int s_ChannelLocation = 10;
 
         public enum Evaluator
         {
@@ -84,18 +83,15 @@ namespace Cardamom.ImageProcessing.Filters
             public Interpolator Interpolator { get; set; } = Interpolator.Linear;
             public Treatment PreTreatment { get; set; } = Treatment.None;
             public Treatment PostTreatment { get; set; } = Treatment.None;
+            public int Seed { get; set; }
 
             public Settings() { }
         }
 
-        private readonly int[] _hashLookup;
-        private readonly Vector3[] _kernel;
         private readonly Settings _settings;
 
-        private LatticeNoise(int[] hashLookup, Vector3[] kernel, Settings settings)
+        private LatticeNoise(Settings settings)
         {
-            _hashLookup = hashLookup;
-            _kernel = kernel;
             _settings = settings;
         }
 
@@ -113,9 +109,8 @@ namespace Cardamom.ImageProcessing.Filters
             s_LatticeNoiseShader.SetInt32(s_EvaluatorLocation, (int)_settings.Evaluator);
             s_LatticeNoiseShader.SetInt32(s_InterpolatorLocation, (int)_settings.Interpolator);
             s_LatticeNoiseShader.SetInt32(s_PreTreatmentLocation, (int)_settings.PreTreatment);
+            s_LatticeNoiseShader.SetInt32(s_SeedLocation, _settings.Seed);
             s_LatticeNoiseShader.SetInt32(s_PostTreatmentLocation, (int)_settings.PostTreatment);
-            s_LatticeNoiseShader.SetInt32Array(s_HashLookupLocation, _hashLookup);
-            s_LatticeNoiseShader.SetVector3Array(s_KernelLocation, _kernel);
 
             s_LatticeNoiseShader.SetInt32(s_ChannelLocation, (int)channel);
 
@@ -130,32 +125,11 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
-            private int _hashSpace = 256;
-            private int _kernelSize = 64;
-            private Random? _generator;
             private Settings _settings = new();
-
-            public Builder SetHashSpace(int hashSpace)
-            {
-                _hashSpace = hashSpace;
-                return this;
-            }
-
-            public Builder SetKernelSize(int kernelSize)
-            {
-                _kernelSize = kernelSize;
-                return this;
-            }
 
             public Builder SetSeed(int seed)
             {
-                _generator = new Random(seed);
-                return this;
-            }
-
-            public Builder SetGenerator(Random random)
-            {
-                _generator = random;
+                _settings.Seed = seed;
                 return this;
             }
 
@@ -215,29 +189,7 @@ namespace Cardamom.ImageProcessing.Filters
 
             public IFilter Build()
             {
-                var lookup = new int[_hashSpace];
-                var kernel = new Vector3[_kernelSize];
-                Random generator = _generator!;
-                for (int i = 0; i < _hashSpace; ++i)
-                {
-                    lookup[i] = i;
-                }
-                for (int i = 0; i < _hashSpace; ++i)
-                {
-                    var index = generator.Next(0, _hashSpace);
-                    (lookup[index], lookup[i]) = (lookup[i], lookup[index]);
-                }
-                for (int i = 0; i < _kernelSize; ++i)
-                {
-                    var z = 2 * generator.NextSingle() - 1;
-                    var theta = 2 * Math.PI * generator.NextSingle();
-                    kernel[i] =
-                        new(
-                            (float)(Math.Sqrt(1 - z * z) * Math.Cos(theta)),
-                            (float)(Math.Sqrt(1 - z * z) * Math.Sin(theta)),
-                            z);
-                }
-                return new LatticeNoise(lookup, kernel, _settings);
+                return new LatticeNoise(_settings);
             }
         }
     }

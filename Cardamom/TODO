@@ -5,5 +5,3 @@ Implement DynamicFixedSizeTextureVolume
 #ImageProcessing.Pipeline
 Remove dictionaries to passing arguments
 Define both input and output channels on pipeline nodes?
-LatticeNoise generate randoms on gpu
-LatticeNoise use hardcoded kernel

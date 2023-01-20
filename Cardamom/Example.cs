@@ -121,7 +121,6 @@ namespace Cardamom
                     .AddOutput("sobel")
                     .Build();
             var output = pipeline.Run(canvases);
-            output[0].GetTexture().CopyToImage().SaveToFile("test-adjust.png");
 
             var ui = new UiWindow(window);
             ui.Bind(new MouseListener());
