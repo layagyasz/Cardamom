@@ -2,31 +2,31 @@ namespace Cardamom.Trackers
 {
 	public class Pool
 	{
-		public double Amount { get; private set; }
-		public double MaxAmount { get; }
+		public float Amount { get; private set; }
+		public float MaxAmount { get; }
 
-		public Pool(double maxAmount)
+		public Pool(float maxAmount)
 		{
 			MaxAmount = maxAmount;
 			Amount = maxAmount;
 		}
 
-		public void Change(double amount)
+		public void Change(float amount)
 		{
 			Amount = Math.Min(Math.Max(Amount + amount, 0), MaxAmount);
 		}
 
 		public bool IsEmpty()
 		{
-			return Amount <= double.Epsilon;
+			return Amount <= float.Epsilon;
 		}
 
 		public bool IsFull()
 		{
-			return MaxAmount - Amount <= double.Epsilon;
+			return MaxAmount - Amount <= float.Epsilon;
 		}
 
-		public double PercentFull()
+		public float PercentFull()
 		{
 			return Amount / MaxAmount;
 		}
