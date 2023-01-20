@@ -1,8 +1,12 @@
 ﻿using Cardamom.Graphics.Core;
+using Cardamom.Json;
 using OpenTK.Graphics.OpenGL4;
+using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics
 {
+    [JsonConverter(typeof(BuilderJsonConverter))]
+    [BuilderClass(typeof(Builder))]
     public class RenderShader : GLShader
     {
         private RenderShader(int handle)
