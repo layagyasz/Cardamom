@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphing
 {
-    public class VoronoiGrapher
+    public static class VoronoiGrapher
     {
         public class VoronoiNeighborsResult
         {
