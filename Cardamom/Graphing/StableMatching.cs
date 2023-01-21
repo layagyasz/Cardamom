@@ -5,76 +5,108 @@ namespace Cardamom.Graphing
     public static class StableMatching
     {
         public static IEnumerable<Tuple<TLeft, TRight>> Compute<TLeft, TRight>(
-            IEnumerable<TLeft> left, IEnumerable<TRight> right) where TLeft : IGraphNode where TRight : IGraphNode
+            IEnumerable<TLeft> left,
+            IEnumerable<TRight> right, 
+            Func<TLeft, TRight, float> leftPreferenceFn, 
+            Func<TLeft, TRight, float> rightPreferenceFn)
+            where TLeft : notnull 
+            where TRight : notnull
         {
-            Dictionary<TLeft, LeftWrapper<TLeft, TRight>> leftWrappers = 
-                left.Select(LeftWrapper<TLeft, TRight>.Wrap).ToDictionary(x => x.Key, x => x);
-            Dictionary<TRight, RightWrapper<TLeft, TRight>> rightWrappers = 
-                right.Select(RightWrapper<TLeft, TRight>.Wrap).ToDictionary(x => x.Key, x => x);
-            foreach (var l in leftWrappers.Values)
-            {
-                foreach (var r in l.Key.GetEdges())
-                {
-                    l.AddPreference(rightWrappers[(TRight)r.End], r.Cost);
-                }
-            }
-            foreach (var r in rightWrappers.Values)
-            {
-                foreach (var l in  r.Key.GetEdges())
-                {
-                    r.AddPreference(leftWrappers[(TLeft)l.End], l.Cost);
-                }
-            }
+            (var leftWrappers, var rightWrappers) = 
+                BipartiteGraph.Generate(
+                    left, right, new GraphGenerator<TLeft, TRight>(leftPreferenceFn, rightPreferenceFn));
 
-            Stack<LeftWrapper<TLeft, TRight>> open = new(leftWrappers.Values);
+            Stack<IBipartiteNode> open = new(leftWrappers);
             while (open.Count > 0)
             {
-                var current = open.Pop();
+                var current = (LeftWrapper)open.Pop();
                 while (current.HasNextPreference())
                 {
                     while (Equals(current.Match, default))
                     {
-                        var r = current.GetNextPreference();
-                        var preference = r.GetPreference(current);
-                        if (preference > r.CurrentPreference)
+                        var r = (RightWrapper)current.GetNextPreference();
+                        var preference = r.GetCost(current);
+                        var currentMatch = (LeftWrapper?)r.Match;
+                        if (Equals(currentMatch, default))
                         {
-                            if (!Equals(r.Match, default))
-                            {
-                                open.Push(r.Match);
-                                r.Match.Update(default);
-                            }
-                            r.Update(current, preference);
+                            r.Update(current);
+                            current.Update(r);
+                        }
+                        else if (r.GetCost(current) > r.GetCost(currentMatch))
+                        {
+                            open.Push(currentMatch);
+                            currentMatch.Update(default);
+                            r.Update(current);
                             current.Update(r);
                         }
                     }
                 }
             }
 
-            return leftWrappers.Values.Select(x => new Tuple<TLeft, TRight>(x.Key, x.Match!.Key));
+            return leftWrappers.Select(x => new Tuple<TLeft, TRight>((TLeft)x.Value, (TRight)x.Match!.Value));
         }
 
-        private class LeftWrapper<T, K>
+        private class GraphGenerator<TLeft, TRight> 
+            : IBipartiteGraphGenerator<TLeft, LeftWrapper, TRight, RightWrapper> 
+            where TLeft : notnull 
+            where TRight : notnull
         {
-            public T Key { get; }
-            public RightWrapper<T, K>? Match { get; private set; }
-            private readonly Heap<RightWrapper<T, K>, float> _preferences = new();
+            private readonly Func<TLeft, TRight, float> _leftPreferenceFn;
+            private readonly Func<TLeft, TRight, float> _rightPreferenceFn;
 
-            private LeftWrapper(T key)
+            public GraphGenerator(
+                Func<TLeft, TRight, float> leftPreferenceFn, Func<TLeft, TRight, float> rightPreferenceFn)
             {
-                Key = key;
+                _leftPreferenceFn = leftPreferenceFn;
+                _rightPreferenceFn = rightPreferenceFn;
             }
 
-            public static LeftWrapper<T, K> Wrap(T left)
+            public LeftWrapper GenerateNode(int id, TLeft value, int numNeighbors)
             {
-                return new LeftWrapper<T, K>(left);
+                return new LeftWrapper(id, value, numNeighbors);
             }
 
-            public void AddPreference(RightWrapper<T, K> rightWrapper, float preference)
+            public RightWrapper GenerateNode(int id, TRight value, int numNeighbors)
             {
-                _preferences.Push(rightWrapper, preference);
+                return new RightWrapper(id, value, numNeighbors);
             }
 
-            public RightWrapper<T, K> GetNextPreference()
+            public float GetLefthandCost(TLeft left, TRight right)
+            {
+                return _leftPreferenceFn(left, right);
+            }
+
+            public float GetRighthandCost(TLeft left, TRight right)
+            {
+                return _rightPreferenceFn(left, right);
+            }
+        }
+
+        private class LeftWrapper : IBipartiteNode
+        {
+            public int Id { get; }
+            public object Value { get; }
+            public IBipartiteNode? Match { get; private set; }
+            private readonly Heap<IBipartiteNode, float> _preferences;
+
+            public LeftWrapper(int id, object value, int numNeighbors)
+            {
+                Id = id;
+                Value = value;
+                _preferences = new(numNeighbors);
+            }
+
+            public float GetCost(IBipartiteNode other)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void SetCost(IBipartiteNode other, float preference)
+            {
+                _preferences.Push(other, preference);
+            }
+
+            public IBipartiteNode GetNextPreference()
             {
                 return _preferences.Pop();
             }
@@ -84,43 +116,39 @@ namespace Cardamom.Graphing
                 return _preferences.Count > 0;
             }
 
-            public void Update(RightWrapper<T, K>? match)
+            public void Update(IBipartiteNode? match)
             {
                 Match = match;
             }
         }
 
-        private class RightWrapper<T, K>
+        private class RightWrapper : IBipartiteNode
         {
-            public K Key { get; }
-            public LeftWrapper<T, K>? Match { get; private set; }
-            public float CurrentPreference { get; private set; } = float.PositiveInfinity;
-            private readonly Dictionary<LeftWrapper<T, K>, float> _preferences = new();
+            public int Id { get; }
+            public object Value { get; }
+            public IBipartiteNode? Match { get; private set; }
+            private readonly float[] _preferences;
 
-            private RightWrapper(K key)
+            public RightWrapper(int id, object value, int numNeighbors)
             {
-                Key = key;
+                Id = id;
+                Value = value;
+                _preferences = new float[numNeighbors];
             }
 
-            public static RightWrapper<T, K> Wrap(K right)
+            public void SetCost(IBipartiteNode other, float preference)
             {
-                return new RightWrapper<T, K>(right);
+                _preferences[other.Id] = preference;
             }
 
-            public void AddPreference(LeftWrapper<T, K> leftWrapper, float preference)
+            public float GetCost(IBipartiteNode other)
             {
-                _preferences.Add(leftWrapper, preference);
+                return _preferences[other.Id];
             }
 
-            public float GetPreference(LeftWrapper<T, K> leftWrapper)
-            {
-                return _preferences[leftWrapper];
-            }
-
-            public void Update(LeftWrapper<T, K> match, float preference)
+            public void Update(IBipartiteNode match)
             {
                 Match = match;
-                CurrentPreference = preference;
             }
         }
     }

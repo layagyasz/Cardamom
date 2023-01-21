@@ -3,51 +3,21 @@
     public static class MaxCostAssignment
     {
         public static IEnumerable<Tuple<TLeft, TRight>> Compute<TLeft, TRight>(
-            IEnumerable<TLeft> left, IEnumerable<TRight> right) where TLeft : IGraphNode where TRight : IGraphNode
+            IEnumerable<TLeft> left, IEnumerable<TRight> right, Func<TLeft, TRight, float> costFn) 
+            where TLeft : notnull where TRight : notnull
         {
-            int numLeft = left.Count();
-            int numRight = right.Count();
-            var nodes = new Dictionary<object, HungarianNode>(numLeft + numRight);
-            var leftNodes = new HungarianNode[numLeft];
-            var rightNodes = new HungarianNode[numRight];
-
-            int leftId = 0;
-            foreach (var l in left)
-            {
-                HungarianNode H = new(l, leftId, numRight);
-                leftNodes[leftId++] = H;
-                nodes.Add(l, H);
-            }
-            int rightId = 0;
-            foreach (var r in right)
-            {
-                HungarianNode h = new(r, rightId, numLeft);
-                foreach (var edge in r.GetEdges())
-                {
-                    h.AddNeighbor(nodes[edge.End], edge.Cost);
-                }
-                rightNodes[rightId++] = h;
-                nodes.Add(r, h);
-            }
-            foreach (var l in left)
-            {
-                var h = nodes[l];
-                foreach (var edge in l.GetEdges())
-                {
-                    h.AddNeighbor(nodes[edge.End], edge.Cost);
-                }
-            }
-
+            (var leftNodes, var rightNodes) = 
+                BipartiteGraph.Generate(left, right, new GraphGenerator<TLeft, TRight>(costFn));
             Assign(leftNodes, rightNodes);
 
-            return leftNodes.Select(x => new Tuple<TLeft, TRight>((TLeft)x.Key, (TRight)x.Match!.Key));
+            return leftNodes.Select(x => new Tuple<TLeft, TRight>((TLeft)x.Value, (TRight)x.Match!.Value));
         }
 
         private static void Assign(HungarianNode[] leftNodes, HungarianNode[] rightNodes)
         {
             int rounds = 0;
-            Array.ForEach(leftNodes, l => l.Potential = l.Neighbors.Max());
-            Array.ForEach(rightNodes, r => r.Potential = r.Neighbors.Max());
+            Array.ForEach(leftNodes, l => l.Potential = l.Costs.Max());
+            Array.ForEach(rightNodes, r => r.Potential = r.Costs.Max());
             Queue<HungarianNode> queue = new();
             while (rounds < leftNodes.Length)
             {
@@ -113,7 +83,7 @@
             }
         }
 
-        private static Tuple<HungarianNode?, HungarianNode?> ExposePath(
+        private static (HungarianNode?, HungarianNode?) ExposePath(
             Queue<HungarianNode> queue, HungarianNode[] rightNodes)
         {
             while (queue.Count > 0)
@@ -126,7 +96,7 @@
                     {
                         if (node.Match == null)
                         {
-                            return new Tuple<HungarianNode?, HungarianNode?>(current, node);
+                            return (current, node);
                         }
                         else
                         {
@@ -137,10 +107,10 @@
                     }
                 }
             }
-            return new Tuple<HungarianNode?, HungarianNode?>(null, null);
+            return (null, null);
         }
 
-        private static Tuple<HungarianNode?, HungarianNode?> ImproveLabeling(
+        private static (HungarianNode?, HungarianNode?) ImproveLabeling(
             Queue<HungarianNode> queue, HungarianNode[] rightNodes)
         {
             foreach (var node in rightNodes)
@@ -149,7 +119,7 @@
                 {
                     if (node.Match == null)
                     {
-                        return new Tuple<HungarianNode?, HungarianNode?>(node.SlackNode, node);
+                        return (node.SlackNode, node);
                     }
                     else
                     {
@@ -162,7 +132,7 @@
                     }
                 }
             }
-            return new Tuple<HungarianNode?, HungarianNode?>(null, null);
+            return (null, null);
         }
 
         private static void UpdateLabels(HungarianNode[] leftNodes, HungarianNode[] rightNodes)
@@ -188,33 +158,65 @@
             }
         }
 
-        private class HungarianNode
+        private class GraphGenerator<TLeft, TRight> 
+            : IBipartiteGraphGenerator<TLeft, HungarianNode, TRight, HungarianNode> 
+            where TLeft: notnull where TRight : notnull
+        {
+            private readonly Func<TLeft, TRight, float> _costFn;
+
+            public GraphGenerator(Func<TLeft, TRight, float> costFn)
+            {
+                _costFn = costFn;
+            }
+
+            public HungarianNode GenerateNode(int id, TLeft value, int numNeighbors)
+            {
+                return new HungarianNode(id, value, numNeighbors);
+            }
+
+            public HungarianNode GenerateNode(int id, TRight value, int numNeighbors)
+            {
+                return new HungarianNode(id, value, numNeighbors);
+            }
+
+            public float GetLefthandCost(TLeft left, TRight right)
+            {
+                return _costFn(left, right);
+            }
+
+            public float GetRighthandCost(TLeft left, TRight right)
+            {
+                return _costFn(left, right);
+            }
+        }
+
+        private class HungarianNode : IBipartiteNode
         {
             public int Id { get; }
-            public object Key { get; }
+            public object Value { get; }
             public bool Mark { get; set; }
             public float Potential { get; set; }
             public float Slack { get; set; }
             public HungarianNode? Match { get; set; }
             public HungarianNode? SlackNode { get; set; }
             public HungarianNode? Parent { get; set; }
-            public float[] Neighbors { get; }
+            public float[] Costs { get; }
 
-            public HungarianNode(object key, int id, int size)
+            public HungarianNode(int id, object value, int numNeighbors)
             {
                 Id = id;
-                Key = key;
-                Neighbors = new float[size];
+                Value = value;
+                Costs = new float[numNeighbors];
             }
 
-            public void AddNeighbor(HungarianNode node, float cost)
+            public void SetCost(IBipartiteNode other, float cost)
             {
-                Neighbors[node.Id] = cost;
+                Costs[other.Id] = cost;
             }
 
-            public float GetCost(HungarianNode node)
+            public float GetCost(IBipartiteNode other)
             {
-                return Neighbors[node.Id];
+                return Costs[other.Id];
             }
         }
     }

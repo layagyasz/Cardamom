@@ -12,6 +12,11 @@
             _values = new KeyValuePair<TKey, TValue>[1];
         }
 
+        public Heap(int capacity)
+        {
+            _values = new KeyValuePair<TKey, TValue>[capacity];
+        }
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return _values.Cast<KeyValuePair<TKey, TValue>>().Take(Count).GetEnumerator();
