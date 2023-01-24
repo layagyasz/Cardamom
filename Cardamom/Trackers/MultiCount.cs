@@ -48,6 +48,11 @@ namespace Cardamom.Trackers
             }
         }
 
+        public void Add(Count<T> count)
+        {
+            Add(count.Key, count.Value);
+        }
+
         public void Add(KeyValuePair<T, int> keyValuePair)
         {
             Add(keyValuePair.Key, keyValuePair.Value);

@@ -37,6 +37,11 @@ namespace Cardamom.Trackers
             }
         }
 
+        public void Add(Quantity<T> quantity)
+        {
+            Add(quantity.Key, quantity.Value);
+        }
+
         public void Add(KeyValuePair<T, float> keyValuePair)
         {
             Add(keyValuePair.Key, keyValuePair.Value);
