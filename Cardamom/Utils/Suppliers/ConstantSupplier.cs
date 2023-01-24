@@ -1,6 +1,6 @@
 ﻿namespace Cardamom.Utils.Suppliers
 {
-    public class ConstantSupplier<T> : ISupplier<T>
+    public class ConstantSupplier<T> : IConstantSupplier<T>
     {
         public T? Value { get; set; }
 

@@ -50,12 +50,12 @@ namespace Cardamom.ImageProcessing.Pipelines
                         var o = edge.Source.Run(canvasProvider);
                         inputs.Add(edge.InputName, o);
                     }
-                    result = canvasProvider.Get();
-                    Step.Run(result, inputs);
+                    result = Step.External ? null : canvasProvider.Get();
+                    result = Step.Run(result, inputs);
                     _cachedOutput = result;
                     foreach (var edge in Incoming)
                     {
-                        if (edge.Source.IsDone())
+                        if (edge.Source.IsDone() && !edge.Source.Step.External)
                         {
                             edge.Source.Return(canvasProvider);
                         }
@@ -81,15 +81,22 @@ namespace Cardamom.ImageProcessing.Pipelines
             }
         }
 
+        private readonly List<InputNode> _inputs;
         private readonly List<Node> _roots;
 
-        private Pipeline(List<Node> roots)
+        private Pipeline(List<InputNode> inputs, List<Node> roots)
         {
+            _inputs = inputs;
             _roots = roots;
         }
 
-        public Canvas[] Run(ICanvasProvider canvasProvider)
+        public Canvas[] Run(ICanvasProvider canvasProvider, params Canvas[] input)
         {
+            Precondition.Check(input.Length == _inputs.Count);
+            for (int i=0; i <input.Length; ++i)
+            {
+                _inputs[i].SetCanvas(input[i]);
+            }
             var outs = new Canvas[_roots.Count];
             for (int i=0; i<_roots.Count;++i)
             {
@@ -122,6 +129,12 @@ namespace Cardamom.ImageProcessing.Pipelines
                 var steps = Steps.Select(x => x.Build()).ToList();
                 var nodes =
                     steps.Select(x => new Node(x, Outputs.Contains(x.Key!))).ToDictionary(x => x.Step.Key!, x => x);
+                var inputs =
+                    nodes.Values
+                        .Where(x => x.Step is InputNode)
+                        .Select(x => (InputNode)x.Step)
+                        .OrderBy(x => x.Index)
+                        .ToList();
                 var output = Outputs.Select(x => nodes[x]).ToList();
                 foreach (var node in nodes.Values)
                 {
@@ -133,7 +146,16 @@ namespace Cardamom.ImageProcessing.Pipelines
                         source.Outgoing.Add(e);
                     }
                 }
-                return new Pipeline(output);
+                return new Pipeline(inputs, output);
+            }
+
+            public Builder Clone()
+            {
+                return new Builder()
+                {
+                    Steps = Steps.ToList(),
+                    Outputs = Outputs.ToList()
+                };
             }
         }
     }

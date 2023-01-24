@@ -1,6 +1,7 @@
 ﻿using Cardamom.Graphics.Core;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using SharpFont;
 using StbImageSharp;
 
 namespace Cardamom.Graphics
@@ -111,12 +112,12 @@ namespace Cardamom.Graphics
             GL.ClearTexImage(Handle, 0, PixelFormat.Rgba, PixelType.Float, ref color);
         }
 
-        public byte[] GetData()
+        public Color4[,] GetData()
         {
             Bind(TextureUnit.Texture0);
-            var bytes = new byte[4 * Size.X * Size.Y];
-            GL.GetTexImage(TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.UnsignedByte, bytes);
-            return bytes;
+            var data = new Color4[Size.X, Size.Y];
+            GL.GetTexImage(TextureTarget.Texture2D, 0, PixelFormat.Rgba, PixelType.Float, data);
+            return data;
         }
 
         public void Update(Texture other)
@@ -144,6 +145,21 @@ namespace Cardamom.Graphics
                 PixelFormat.Rgba,
                 PixelType.UnsignedByte, 
                 bitmap.Bytes);
+        }
+
+        public void Update(Vector2i offset, Color4[,] data)
+        {
+            Bind(TextureUnit.Texture0);
+            GL.TexSubImage2D(
+                TextureTarget.Texture2D,
+                0,
+                offset.X,
+                offset.Y,
+                data.GetLength(0),
+                data.GetLength(1),
+                PixelFormat.Rgba,
+                PixelType.Float,
+                data);
         }
 
         protected override void DisposeImpl()

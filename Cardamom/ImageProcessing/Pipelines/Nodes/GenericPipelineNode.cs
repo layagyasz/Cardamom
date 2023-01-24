@@ -7,6 +7,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public string Key { get; set; }
         public Channel Channel { get; }
+        public bool External => false;
         public bool Inline { get; }
 
         private readonly Type _type;
@@ -41,14 +42,15 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             return _inputs;
         }
 
-        public void Run(Canvas output, Dictionary<string, Canvas> inputs)
+        public Canvas Run(Canvas? output, Dictionary<string, Canvas> inputs)
         {
             var builder = (IFilter.IFilterBuilder)Activator.CreateInstance(_builderType)!;
             foreach (var param in _parameters)
             {
                 _type.GetMethod("Set" + param.Key)!.Invoke(builder, new object?[] { param.Value.Get<object>() });
             }
-            builder.Build().Apply(output, Channel, inputs);
+            builder.Build().Apply(output!, Channel, inputs);
+            return output!;
         }
 
         public class Builder : IPipelineNode.IBuilder

@@ -6,7 +6,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public string Key { get; set; }
         public Channel Channel { get; }
-
+        public bool External => false;
         public abstract bool Inline { get; }
 
         protected BaseFilterPipelineNode(string key, Channel channel)
@@ -18,9 +18,10 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public abstract Dictionary<string, string> GetInputs();
         public abstract IFilter BuildFilter();
 
-        public void Run(Canvas output, Dictionary<string, Canvas> inputs)
+        public Canvas Run(Canvas? output, Dictionary<string, Canvas> inputs)
         {
-            BuildFilter().Apply(output, Channel, inputs);
+            BuildFilter().Apply(output!, Channel, inputs);
+            return output!;
         }
 
         public abstract class BaseFilterPipelineNodeBuilder<TParameters>

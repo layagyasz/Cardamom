@@ -3,7 +3,7 @@ using Cardamom.Utils.Suppliers;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
-    internal class ClassifyNode : BaseFilterPipelineNode
+    public class ClassifyNode : BaseFilterPipelineNode
     {
         public class Parameters
         {

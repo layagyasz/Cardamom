@@ -12,6 +12,11 @@ namespace Cardamom.ImageProcessing
             _texture = Texture.Create(size, color);
         }
 
+        public Canvas(Texture texture)
+        {
+            _texture = texture;
+        }
+
         public Texture GetTexture()
         {
             return _texture;

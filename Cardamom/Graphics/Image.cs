@@ -21,22 +21,34 @@ namespace Cardamom.Graphics
 
         public static Image FromFile(string path)
         {
-            using (Stream stream = File.OpenRead(path))
-            {
-                ImageResult image = ImageResult.FromStream(stream, StbImageSharp.ColorComponents.RedGreenBlueAlpha);
-                return FromData(new(image.Width, image.Height), image.Data);
-            }
+            using Stream stream = File.OpenRead(path);
+            ImageResult image = ImageResult.FromStream(stream, StbImageSharp.ColorComponents.RedGreenBlueAlpha);
+            return FromData(new(image.Width, image.Height), image.Data);
         }
 
         public static Image FromData(Vector2i size, byte[] data, bool invertYAxis = false)
+        {
+            var image = new Image(size);
+            for (int y = 0; y < size.Y; ++y)
+            {
+                for (int x = 0; x < size.X; ++x)
+                {
+                    int index = 4 * (size.X * (invertYAxis ? size.Y - y - 1 : y) + x);
+                    image._pixels[x, y] = ToColor(data[index], data[index + 1], data[index + 2], data[index + 3]);
+                }
+            }
+            return image;
+        }
+
+
+        public static Image FromData(Vector2i size, Color4[,] data, bool invertYAxis = false)
         {
             var image = new Image(size);
             for (int y=0; y<size.Y; ++y)
             {
                 for (int x=0;x<size.X;++x)
                 {
-                    int index = 4 * (size.X * (invertYAxis ? size.Y - y - 1 : y) + x);
-                    image._pixels[x, y] = ToColor(data[index], data[index + 1], data[index + 2], data[index + 3]);
+                    image._pixels[x, y] = data[x, invertYAxis ? size.Y - y - 1 : y];
                 }
             }
             return image;
