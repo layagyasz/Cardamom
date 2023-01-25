@@ -1,5 +1,9 @@
-﻿namespace Cardamom.Graphics.TexturePacking
+﻿using Cardamom.Json.Graphics.TexturePacking;
+using System.Text.Json.Serialization;
+
+namespace Cardamom.Graphics.TexturePacking
 {
+    [JsonConverter(typeof(TextureLibraryJsonConverter))]
     public class TextureLibrary
     {
         public static readonly TextureLibrary Empty = new(Enumerable.Empty<ITextureVolume>());

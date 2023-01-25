@@ -1,9 +1,12 @@
 ﻿using Cardamom.Graphics.TexturePacking;
+using Cardamom.Json.Graphics;
 using OpenTK.Mathematics;
 using SharpFont;
+using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics
 {
+    [JsonConverter(typeof(FontJsonConverter))]
     public class Font
     {
         private readonly Face _face;

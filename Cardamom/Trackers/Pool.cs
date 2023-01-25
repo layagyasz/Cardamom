@@ -33,6 +33,12 @@ namespace Cardamom.Trackers
 			return MaxAmount - Amount <= float.Epsilon;
 		}
 
+		public void Merge(Pool other)
+		{
+			ChangeMax(other.MaxAmount);
+			Change(other.Amount);
+		}
+
 		public float PercentFull()
 		{
 			return Amount / MaxAmount;

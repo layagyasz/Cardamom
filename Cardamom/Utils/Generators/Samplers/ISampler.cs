@@ -2,12 +2,12 @@
 
 namespace Cardamom.Utils.Generators.Samplers
 {
-    [JsonDerivedType(typeof(ConstantSampler), "constant")]
-    [JsonDerivedType(typeof(ExponentialSampler), "exponential")]
-    [JsonDerivedType(typeof(GammaSampler), "gamma")]
-    [JsonDerivedType(typeof(NormalSampler), "normal")]
-    [JsonDerivedType(typeof(ParetoSampler), "pareto")]
-    [JsonDerivedType(typeof(ReciprocalSampler), "reciprocal")]
-    [JsonDerivedType(typeof(UniformSampler), "uniform")]
+    [JsonDerivedType(typeof(ConstantSampler), "Constant")]
+    [JsonDerivedType(typeof(ExponentialSampler), "Exponential")]
+    [JsonDerivedType(typeof(GammaSampler), "Gamma")]
+    [JsonDerivedType(typeof(NormalSampler), "Normal")]
+    [JsonDerivedType(typeof(ParetoSampler), "Pareto")]
+    [JsonDerivedType(typeof(ReciprocalSampler), "Reciprocal")]
+    [JsonDerivedType(typeof(UniformSampler), "Uniform")]
     public interface ISampler : IGenerator<float> { }
 }

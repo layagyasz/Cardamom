@@ -60,9 +60,6 @@ namespace Cardamom.Graphics
                 options.Converters.Add(new ColorJsonConverter());
                 options.Converters.Add(new Vector2JsonConverter());
                 options.Converters.Add(new Vector2iJsonConverter());
-                options.Converters.Add(new FontJsonConverter());
-                options.Converters.Add(new TextureLibraryJsonConverter());
-                options.Converters.Add(new LibraryJsonConverter());
                 return JsonSerializer.Deserialize<Builder>(File.ReadAllText(path), options)!;
             }
 

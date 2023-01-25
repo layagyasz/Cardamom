@@ -1,7 +1,10 @@
-﻿using OpenTK.Mathematics;
+﻿using Cardamom.Json.Mathematics;
+using OpenTK.Mathematics;
+using System.Text.Json.Serialization;
 
 namespace Cardamom.Mathematics
 {
+    [JsonConverter(typeof(IntervalJsonConverter))]
     public struct Interval
     {
         public static readonly Interval Unbounded = new(float.MinValue, float.MaxValue);

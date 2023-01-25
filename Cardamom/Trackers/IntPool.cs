@@ -33,6 +33,12 @@
             return Amount == MaxAmount;
         }
 
+        public void Merge(IntPool other)
+        {
+            ChangeMax(other.MaxAmount);
+            Change(other.Amount);
+        }
+
         public float PercentFull()
         {
             return 1f * Amount / MaxAmount;

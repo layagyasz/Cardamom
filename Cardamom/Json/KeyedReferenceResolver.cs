@@ -22,7 +22,7 @@ namespace Cardamom.Json
             if (value is IKeyed keyed)
             {
                 alreadyExists = _objects.ContainsKey(keyed.Key!);
-                return keyed.Key!;
+                return keyed.Key;
             }
             throw new JsonException("Type must be derived from IKeyed.");
         }
