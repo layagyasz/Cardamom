@@ -1,6 +1,6 @@
 #Graphics
 Alternate blend modes
-Implement DynamicFixedSizeTextureVolume
+Batch builders for texture volumes
 
 #ImageProcessing.Pipeline
 Remove dictionaries to passing arguments

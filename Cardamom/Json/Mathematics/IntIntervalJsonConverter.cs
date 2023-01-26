@@ -4,9 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace Cardamom.Json.Mathematics
 {
-    public class IntervalJsonConverter : JsonConverter<Interval>
+    public class IntIntervalJsonConverter : JsonConverter<IntInterval>
     {
-        public override Interval Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override IntInterval Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             if (reader.TokenType != JsonTokenType.StartArray)
             {
@@ -14,10 +14,10 @@ namespace Cardamom.Json.Mathematics
             }
             reader.Read();
 
-            var value = new Interval();
-            value.Minimum = reader.GetSingle();
+            var value = new IntInterval();
+            value.Minimum = reader.GetInt32();
             reader.Read();
-            value.Maximum = reader.GetSingle();
+            value.Maximum = reader.GetInt32();
             reader.Read();
 
             if (reader.TokenType != JsonTokenType.EndArray)
@@ -27,7 +27,7 @@ namespace Cardamom.Json.Mathematics
             return value;
         }
 
-        public override void Write(Utf8JsonWriter writer, Interval @object, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, IntInterval @object, JsonSerializerOptions options)
         {
             writer.WriteStartArray();
             writer.WriteNumberValue(@object.Minimum);

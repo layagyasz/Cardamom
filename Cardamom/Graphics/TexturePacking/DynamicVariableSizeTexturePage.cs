@@ -1,11 +1,36 @@
-﻿using OpenTK.Mathematics;
-using SharpFont;
+﻿using Cardamom.Mathematics;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.TexturePacking
 {
     public class DynamicVariableSizeTexturePage : ITexturePage
     {
         private static readonly float s_MaxRowRatio = 1.4f;
+
+        public class Supplier : ITexturePageSupplier
+        {
+            public IntInterval WidthRange { get; }
+            public IntInterval HeightRange { get; }
+            public Color4 Fill { get; }
+            public Vector2i Padding { get; }
+            public float RowHeightRatio { get; }
+
+            public Supplier(
+                IntInterval widthRange, IntInterval heightRange, Color4 fill, Vector2i padding, float rowHeightRatio)
+            {
+                WidthRange = widthRange;
+                HeightRange = heightRange;
+                Fill = fill;
+                Padding = padding;
+                RowHeightRatio = rowHeightRatio;
+            }
+
+            public ITexturePage Get()
+            {
+                return new DynamicVariableSizeTexturePage(
+                    new(WidthRange.Minimum, HeightRange.Minimum), Fill, Padding, RowHeightRatio);
+            }
+        }
 
         class Row
         {
@@ -17,8 +42,9 @@ namespace Cardamom.Graphics.TexturePacking
         public Vector2i Padding { get; }
         public float RowHeightRatio { get; }
 
-        private Color4 _fill;
+        private readonly Color4 _fill;
         private readonly List<Row> _rows = new();
+
         private Texture _texture;
         private int _nextRowTop;
 

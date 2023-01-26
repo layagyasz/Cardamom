@@ -11,7 +11,8 @@ namespace Cardamom.Graphics.TexturePacking
         TextureSegment Get(string Key);
 
         [JsonDerivedType(typeof(StaticTexturePage.Builder), "Static")]
-        [JsonDerivedType(typeof(DynamicVariableSizeTextureVolume.Builder), "DynamicVariableSize")]
+        [JsonDerivedType(typeof(DynamicTextureVolume.VariableSizeBuilder), "DynamicVariableSize")]
+        [JsonDerivedType(typeof(DynamicTextureVolume.StaticSizeBuilder), "DynamicStaticSize")]
         public interface IBuilder
         {
             ITextureVolume Build();
