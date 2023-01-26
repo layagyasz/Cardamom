@@ -127,7 +127,7 @@ namespace Cardamom.Graphics.TexturePacking
             return false;
         }
 
-        public class StaticSizeBuilder : ITextureVolume.IBuilder
+        public class TextureSet
         {
             public struct DynamicSegment
             {
@@ -136,8 +136,28 @@ namespace Cardamom.Graphics.TexturePacking
             }
 
             [JsonConverter(typeof(FromMultipleFileJsonConverter))]
-            public List<DynamicSegment> Textures { get; set; } = new();
+            public List<DynamicSegment> Explicit { get; set; } = new();
+            public List<string> Implicit { get; set; } = new();
 
+            public IEnumerable<DynamicSegment> GetSegments()
+            {
+                foreach (var pattern in Implicit)
+                {
+                    foreach (var file in Directory.EnumerateFiles(string.Empty, pattern, SearchOption.AllDirectories))
+                    {
+                        yield return new DynamicSegment()
+                        {
+                            Key = Path.GetFileNameWithoutExtension(file),
+                            Path = file
+                        };
+                    }
+                }
+            }
+        }
+
+        public class StaticSizeBuilder : ITextureVolume.IBuilder
+        {
+            public TextureSet? Textures { get; set; }
             public Vector2i Size { get; set; } = new(1024, 1024);
             public Vector2i ElementSize { get; set; } = new();
             public Color4 PageFill { get; set; } = new();
@@ -147,9 +167,10 @@ namespace Cardamom.Graphics.TexturePacking
             {
                 DynamicTextureVolume volume =
                     new(new DynamicStaticSizeTexturePage.Supplier(Size, ElementSize, PageFill, SegmentPadding), false);
-                foreach (var segment in Textures)
+                foreach (var segment in Textures!.GetSegments())
                 {
-                    volume.Add(segment.Key!, Texture.FromFile(segment.Path!));
+                    using var texture = Texture.FromFile(segment.Path!);
+                    volume.Add(segment.Key!, texture);
                 }
                 return volume;
             }
@@ -157,15 +178,7 @@ namespace Cardamom.Graphics.TexturePacking
 
         public class VariableSizeBuilder : ITextureVolume.IBuilder
         {
-            public struct DynamicSegment
-            {
-                public string? Key { get; set; }
-                public string? Path { get; set; }
-            }
-
-            [JsonConverter(typeof(FromMultipleFileJsonConverter))]
-            public List<DynamicSegment> Textures { get; set; } = new();
-
+            public TextureSet? Textures { get; set; }
             public IntInterval WidthRange { get; set; } = new(128, 4096);
             public IntInterval HeightRange { get; set; } = new(128, 4096);
             public Color4 PageFill { get; set; } = new();
@@ -178,9 +191,10 @@ namespace Cardamom.Graphics.TexturePacking
                     new(
                         new DynamicVariableSizeTexturePage.Supplier(
                             WidthRange, HeightRange, PageFill, SegmentPadding, RowHeightRatio), true);
-                foreach (var segment in Textures)
+                foreach (var segment in Textures!.GetSegments())
                 {
-                    volume.Add(segment.Key!, Texture.FromFile(segment.Path!));
+                    using var texture = Texture.FromFile(segment.Path!);
+                    volume.Add(segment.Key!, texture);
                 }
                 return volume;
             }

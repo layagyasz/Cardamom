@@ -1,6 +1,6 @@
 #Graphics
 Alternate blend modes
-Batch builders for texture volumes
+Enforce max size for dynamic variable size texture pages
 
 #ImageProcessing.Pipeline
 Remove dictionaries to passing arguments
