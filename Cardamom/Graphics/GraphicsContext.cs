@@ -8,6 +8,7 @@ namespace Cardamom.Graphics
         private Box2i _viewPort;
         private readonly Stack<Projection> _projectionStack = new();
         private readonly Stack<Matrix4> _viewStack = new();
+        private readonly Stack<Matrix4> _modelStack = new();
         private readonly Stack<Box2?> _scissorStack = new();
 
         protected GraphicsContext(Box2i viewPort) 
@@ -17,6 +18,11 @@ namespace Cardamom.Graphics
 
         public abstract void Clear();
         public abstract void Flatten();
+
+        public Matrix4 GetModelMatrix()
+        {
+            return _modelStack.Peek();
+        }
 
         public Projection GetProjection()
         {
@@ -30,7 +36,7 @@ namespace Cardamom.Graphics
 
         public Matrix4 GetViewMatrix()
         {
-            return _viewStack.Count == 0 ? Matrix4.Identity : _viewStack.Peek();
+            return _viewStack.Peek();
         }
 
         public Box2i GetViewPort()
@@ -56,9 +62,14 @@ namespace Cardamom.Graphics
         public void PushScissor(Box3 scissor)
         {
             var currentScissor = GetScissor();
-            var transformed = Combine(scissor, GetViewMatrix());
+            var transformed = Combine(scissor, GetModelMatrix() * GetViewMatrix());
             _scissorStack.Push(
                 currentScissor == null ? transformed : currentScissor.Value.GetIntersection(transformed));
+        }
+
+        public void PopModelMatrix()
+        {
+            _modelStack.Pop();
         }
 
         public void PopProjectionMatrix()
@@ -71,14 +82,26 @@ namespace Cardamom.Graphics
             _viewStack.Pop();
         }
 
-        public void PushViewMatrix(Matrix4 transform)
+        public void PushModelMatrix(Matrix4 transform)
         {
-            _viewStack.Push(transform * GetViewMatrix());
+            if (_modelStack.Count == 0)
+            {
+                _modelStack.Push(transform);
+            }
+            else
+            {
+                _modelStack.Push(transform * GetModelMatrix());
+            }
         }
 
         public void PushTranslation(Vector3 translation)
         {
-            PushViewMatrix(Matrix4.CreateTranslation(translation));
+            PushModelMatrix(Matrix4.CreateTranslation(translation));
+        }
+
+        public void PushViewMatrix(Matrix4 view)
+        {
+            _viewStack.Push(view);
         }
 
         public void SetViewPort(Box2i viewPort)

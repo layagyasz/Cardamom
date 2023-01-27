@@ -39,7 +39,6 @@ namespace Cardamom.Graphics.Ui.Elements
         {
             if (Visible)
             {
-                target.PushTranslation(Position);
                 target.PushViewMatrix(Camera.GetViewMatrix());
                 target.PushProjection(Camera.GetProjection());
                 foreach (var element in _elements)
@@ -47,7 +46,6 @@ namespace Cardamom.Graphics.Ui.Elements
                     element.Draw(target, context);
                 }
                 target.PopProjectionMatrix();
-                target.PopViewMatrix();
                 target.PopViewMatrix();
             }
         }

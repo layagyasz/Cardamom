@@ -36,7 +36,7 @@ namespace Cardamom.Graphics.Ui.Elements
             {
                 layer.Draw(target, context);
             }
-            target.PopViewMatrix();
+            target.PopModelMatrix();
         }
 
         public override void Update(long delta)

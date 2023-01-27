@@ -31,6 +31,8 @@ namespace Cardamom.Graphics.Ui
 
             var projection = GetDefaultProjection();
             RenderWindow.PushProjection(projection);
+            RenderWindow.PushViewMatrix(Matrix4.Identity);
+            RenderWindow.PushModelMatrix(Matrix4.Identity);
         }
 
         public void Bind(KeyboardListener keyboardListener)

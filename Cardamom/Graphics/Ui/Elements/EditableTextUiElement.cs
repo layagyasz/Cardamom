@@ -69,15 +69,15 @@ namespace Cardamom.Graphics.Ui.Elements
                 {
                     target.PushTranslation(_cursorPosition);
                     target.Draw(_cursor, 0, _cursor.Length, new(_cursorShader!, s_Blank));
-                    target.PopViewMatrix();
+                    target.PopModelMatrix();
                 }
-                target.PopViewMatrix();
+                target.PopModelMatrix();
                 if (!DisableScissor)
                 {
                     target.PopScissor();
                 }
-                target.PopViewMatrix();
-                target.PopViewMatrix();
+                target.PopModelMatrix();
+                target.PopModelMatrix();
 
                 SetDynamicSize(LeftPadding + RightPadding + new Vector3(_textComponent.Size));
             }

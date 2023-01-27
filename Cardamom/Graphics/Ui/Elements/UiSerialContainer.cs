@@ -79,12 +79,12 @@ namespace Cardamom.Graphics.Ui.Elements
                 element.Draw(target, context);
             }
             SetDynamicSize(bounds.Size + LeftPadding + RightPadding);
-            target.PopViewMatrix();
+            target.PopModelMatrix();
             if (!DisableScissor)
             {
                 target.PopScissor();
             }
-            target.PopViewMatrix();
+            target.PopModelMatrix();
         }
 
         public override void Update(long delta)

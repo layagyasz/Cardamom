@@ -64,6 +64,7 @@ namespace Cardamom.Graphics
             resources.Shader.Bind();
             resources.Shader.SetMatrix4("projection", GetProjection().Matrix);
             resources.Shader.SetMatrix4("view", GetViewMatrix());
+            resources.Shader.SetMatrix4("model", GetModelMatrix());
 
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);

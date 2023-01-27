@@ -57,7 +57,7 @@ namespace Cardamom.Graphics.Ui
                 var scissor = _context!.GetScissor();
                 if (scissor == null || scissor.Value.ContainsInclusive(projectedMouse.Xy))
                 {
-                    var transform = _context.GetViewMatrix() * projection.Matrix;
+                    var transform = _context.GetModelMatrix() * _context.GetViewMatrix() * projection.Matrix;
                     var inverted = transform.Inverted();
                     var worldMouse = frustrumMouse * inverted;
                     var front = 

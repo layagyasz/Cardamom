@@ -22,7 +22,7 @@ namespace Cardamom.Graphics.Ui.Elements
                 target.PushTranslation(Position + LeftMargin);
                 context.Register(this);
                 _rectComponent.Draw(target);
-                target.PopViewMatrix();
+                target.PopModelMatrix();
             }
         }
 

@@ -75,8 +75,8 @@ namespace Cardamom.Graphics.Ui.Elements
                 {
                     target.PopScissor();
                 }
-                target.PopViewMatrix();
-                target.PopViewMatrix();
+                target.PopModelMatrix();
+                target.PopModelMatrix();
             }
         }
 
