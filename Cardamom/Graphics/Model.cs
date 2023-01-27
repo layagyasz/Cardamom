@@ -24,7 +24,7 @@ namespace Cardamom.Graphics
 
         public void Draw(RenderTarget target, UiContext context)
         {
-            target.Draw(_buffer, 0, _buffer.Length, new(_shader, _texture, _bumpTexture));
+            target.Draw(_buffer, 0, _buffer.Length, new(BlendMode.None, _shader, _texture, _bumpTexture));
         }
 
         public virtual void Update(long delta) { }

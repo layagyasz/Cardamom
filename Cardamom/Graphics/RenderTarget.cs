@@ -50,14 +50,8 @@ namespace Cardamom.Graphics
             SetActive(true);
             Error.LogGLError("bind context");
 
-            if (resources.Texture0 != null)
-            {
-                resources.Texture0.Bind(TextureUnit.Texture0);
-            }
-            if (resources.Texture1 != null)
-            {
-                resources.Texture1.Bind(TextureUnit.Texture1);
-            }
+            resources.Texture0?.Bind(TextureUnit.Texture0);
+            resources.Texture1?.Bind(TextureUnit.Texture1);
 
             Error.LogGLError("bind context");
 
@@ -70,12 +64,12 @@ namespace Cardamom.Graphics
             GL.DepthFunc(DepthFunction.Lequal);
 
             GL.Enable(EnableCap.Blend);
-            GL.BlendEquation(BlendEquationMode.FuncAdd);
+            GL.BlendEquation(resources.BlendMode.Equation);
             GL.BlendFuncSeparate(
-                BlendingFactorSrc.SrcAlpha,
-                BlendingFactorDest.OneMinusSrcAlpha, 
-                BlendingFactorSrc.One, 
-                BlendingFactorDest.OneMinusSrcAlpha);
+                resources.BlendMode.ColorSourceFactor,
+                resources.BlendMode.ColorDestinationFactor,
+                resources.BlendMode.AlphaSourceFactor,
+                resources.BlendMode.AlphaDestinationFactor);
             Error.LogGLError("set blend");
 
             var scissor = GetScissor();

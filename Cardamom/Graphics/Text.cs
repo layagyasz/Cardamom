@@ -154,7 +154,7 @@ namespace Cardamom.Graphics
                 _buffer,
                 0,
                 _buffer.Length, 
-                new(_shader!, _font!.GetTexure(_characterSize)!));
+                new(BlendMode.Alpha, _shader!, _font!.GetTexure(_characterSize)!));
         }
 
         private void ForceUpdate()

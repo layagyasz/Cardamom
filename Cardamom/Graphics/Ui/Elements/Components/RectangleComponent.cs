@@ -82,7 +82,11 @@ namespace Cardamom.Graphics.Ui.Elements.Components
                 _updateBuffer = false;
             }
             _uniformBuffer!.Bind(0);
-            target.Draw(_buffer, 0, _buffer.Length, _texture == null ? new(_shader!) : new(_shader!, _texture!));
+            target.Draw(
+                _buffer, 
+                0, 
+                _buffer.Length,
+                _texture == null ? new(BlendMode.Alpha, _shader!) : new(BlendMode.Alpha, _shader!, _texture!));
         }
 
         protected override void DisposeImpl()
