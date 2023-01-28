@@ -55,7 +55,7 @@ namespace Cardamom.Graphics
             {
                 JsonSerializerOptions options = new()
                 {
-                    ReferenceHandler = new KeyedReferenceHandler(new Dictionary<string, IKeyed>())
+                    ReferenceHandler = new KeyedReferenceHandler()
                 };
                 options.Converters.Add(new ColorJsonConverter());
                 options.Converters.Add(new Vector2JsonConverter());

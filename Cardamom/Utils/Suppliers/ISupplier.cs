@@ -1,5 +1,9 @@
-﻿namespace Cardamom.Utils.Suppliers
+﻿using Cardamom.Json;
+using System.Text.Json.Serialization;
+
+namespace Cardamom.Utils.Suppliers
 {
+    [JsonConverter(typeof(GenericJsonConverter))]
     public interface ISupplier<T> : Generic.ISupplier
     {
         T Get();

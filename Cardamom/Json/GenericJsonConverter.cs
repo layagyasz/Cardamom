@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using MathNet.Numerics.LinearAlgebra;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Json
@@ -29,12 +30,29 @@ namespace Cardamom.Json
                 {
                     throw new JsonException();
                 }
+                string? reference = null;
                 if (reader.GetString() != "Type")
                 {
-                    throw new JsonException();
+                    if (reader.GetString() == "$ref")
+                    {
+                        reader.Read();
+                        reference = reader.GetString();
+                        reader.Read();
+                        return (T?)options.ReferenceHandler?.CreateResolver().ResolveReference(reference!);
+                    }
+                    else if (reader.GetString() == "$id")
+                    {
+                        reader.Read();
+                        reference = reader.GetString();
+                        reader.Read();
+                    }
+                    if (reader.GetString() != "Type")
+                    {
+                        throw new JsonException();
+                    }
                 }
                 reader.Read();
-                Type type = Type.GetType(reader.GetString())!;
+                Type type = Type.GetType(reader.GetString()!)!;
                 reader.Read();
 
                 if (reader.TokenType != JsonTokenType.PropertyName)
@@ -45,9 +63,16 @@ namespace Cardamom.Json
                 {
                     throw new JsonException();
                 }
+
+                var result = (T?)JsonSerializer.Deserialize(ref reader, type, options);
                 reader.Read();
 
-                return (T?)JsonSerializer.Deserialize(ref reader, type, options);
+                if (reference != null)
+                {
+                    options.ReferenceHandler?.CreateResolver().AddReference(reference!, result!);
+                }
+
+                return result;
             }
 
             public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)

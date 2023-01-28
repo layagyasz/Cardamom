@@ -1,4 +1,5 @@
 ﻿using Cardamom.Graphics;
+using Cardamom.Mathematics;
 using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Filters
@@ -26,8 +27,7 @@ namespace Cardamom.ImageProcessing.Filters
         public struct Condition
         {
             public Channel Channel { get; set; }
-            public float Minimum { get; set; } = 0f;
-            public float Maximum { get; set; } = 1f;
+            public Interval Range { get; set; } = new(0, 1);
 
             public Condition() { }
         }
@@ -54,7 +54,7 @@ namespace Cardamom.ImageProcessing.Filters
                 foreach (var condition in c[x].Conditions)
                 {
                     _conditionChannels[j] = condition.Channel.GetIndex();
-                    _conditionRanges[j] = new(condition.Minimum, condition.Maximum);
+                    _conditionRanges[j] = new(condition.Range.Minimum, condition.Range.Maximum);
                     ++j;
                 }
                 _classificationPositions[x] = new(i, j);

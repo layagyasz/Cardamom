@@ -1,5 +1,6 @@
 ﻿using Cardamom.Graphics;
 using OpenTK.Mathematics;
+using System.Text.Json.Serialization;
 
 namespace Cardamom.ImageProcessing.Filters
 {
@@ -12,6 +13,7 @@ namespace Cardamom.ImageProcessing.Filters
         private static readonly int s_FrequencyLocation = 1;
         private static readonly int s_ChannelLocation = 2;
 
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum WaveType
         {
             Sine = 0,

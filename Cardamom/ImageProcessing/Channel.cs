@@ -1,5 +1,8 @@
-﻿namespace Cardamom.ImageProcessing
+﻿using System.Text.Json.Serialization;
+
+namespace Cardamom.ImageProcessing
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     [Flags]
     public enum Channel
     {

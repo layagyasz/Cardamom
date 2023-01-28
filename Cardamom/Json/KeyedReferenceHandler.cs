@@ -6,9 +6,13 @@ namespace Cardamom.Json
     {
         private readonly KeyedReferenceResolver _resolver;
 
-        public KeyedReferenceHandler(Dictionary<string, IKeyed> objects)
+        public KeyedReferenceHandler()
+            : this(new(), new()) { }
+
+        public KeyedReferenceHandler(
+            Dictionary<string, IKeyed> keyedObjects, Dictionary<string, object> unkeyedObjects)
         {
-            _resolver = new(objects);
+            _resolver = new(keyedObjects, unkeyedObjects);
         }
 
         public override ReferenceResolver CreateResolver()

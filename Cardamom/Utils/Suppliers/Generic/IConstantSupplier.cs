@@ -1,6 +1,10 @@
-﻿namespace Cardamom.Utils.Suppliers.Generic
+﻿using Cardamom.Json;
+using System.Text.Json.Serialization;
+
+namespace Cardamom.Utils.Suppliers.Generic
 {
-    public interface IConstantSupplier : ISupplier 
+    [JsonConverter(typeof(GenericJsonConverter))]
+    public interface IConstantSupplier : ISupplier
     {
         void Set(object value);
     }
