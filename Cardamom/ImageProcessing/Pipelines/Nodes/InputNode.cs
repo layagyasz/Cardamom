@@ -20,6 +20,11 @@
             return new();
         }
 
+        public string? GetOutput()
+        {
+            return null;
+        }
+
         public void SetCanvas(Canvas canvas)
         {
             _canvas = canvas;

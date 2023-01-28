@@ -38,8 +38,9 @@ vec4 generate(vec4 v) {
 
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
-    vec4 current = imageLoad(in_texture, position);
-	vec4 classified = generate(current);
+    vec4 input = imageLoad(in_texture, position);
+	vec4 current = imageLoad(out_texture, position);
+	vec4 classified = generate(input);
 	vec4 new = 
 		vec4(
 			(channel & CHANNEL_RED) != 0 ? classified.r : current.r,

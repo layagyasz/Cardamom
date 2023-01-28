@@ -10,15 +10,20 @@ namespace Cardamom.ImageProcessing.Pipelines
             internal IPipelineNode Step { get; }
             internal List<Edge> Incoming { get; set; } = new();
             internal List<Edge> Outgoing { get; set; } = new();
-            public bool IsOutput { get; }
+            internal Edge? IncomingOutput { get; set; }
+            public int IsOutput { get; private set; }
 
             private Canvas? _cachedOutput;
             private int _outstanding;
 
-            internal Node(IPipelineNode step, bool isOutput)
+            internal Node(IPipelineNode step)
             {
                 Step = step;
-                IsOutput = isOutput;
+            }
+
+            internal void MarkOutput()
+            {
+                IsOutput++;
             }
 
             internal bool IsDone()
@@ -28,7 +33,7 @@ namespace Cardamom.ImageProcessing.Pipelines
 
             internal void Return(ICanvasProvider canvasProvider)
             {
-                if (_cachedOutput != null && !IsOutput)
+                if (_cachedOutput != null && IsOutput == 0 && !Step.External)
                 {
                     canvasProvider.Return(_cachedOutput);
                 }
@@ -50,17 +55,28 @@ namespace Cardamom.ImageProcessing.Pipelines
                         var o = edge.Source.Run(canvasProvider);
                         inputs.Add(edge.InputName, o);
                     }
-                    result = Step.External ? null : canvasProvider.Get();
+                    if (IncomingOutput != null)
+                    {
+                        result = IncomingOutput.Source.Run(canvasProvider);
+                    }
+                    else if (!Step.External)
+                    {
+                        result = canvasProvider.Get();
+                    }
+                    else
+                    {
+                        result = null; 
+                    }
                     result = Step.Run(result, inputs);
                     _cachedOutput = result;
                     foreach (var edge in Incoming)
                     {
-                        if (edge.Source.IsDone() && !edge.Source.Step.External)
+                        if (edge.Source.IsDone())
                         {
                             edge.Source.Return(canvasProvider);
                         }
                     }
-                    _outstanding = Outgoing.Count + (IsOutput ? 1 : 0);
+                    _outstanding = Outgoing.Count + IsOutput;
                 }
                 _outstanding--;
                 return result;
@@ -127,8 +143,7 @@ namespace Cardamom.ImageProcessing.Pipelines
             public Pipeline Build()
             {
                 var steps = Steps.Select(x => x.Build()).ToList();
-                var nodes =
-                    steps.Select(x => new Node(x, Outputs.Contains(x.Key!))).ToDictionary(x => x.Step.Key!, x => x);
+                var nodes = steps.Select(x => new Node(x)).ToDictionary(x => x.Step.Key!, x => x);
                 var inputs =
                     nodes.Values
                         .Where(x => x.Step is InputNode)
@@ -138,12 +153,23 @@ namespace Cardamom.ImageProcessing.Pipelines
                 var output = Outputs.Select(x => nodes[x]).ToList();
                 foreach (var node in nodes.Values)
                 {
+                    if (output.Contains(node))
+                    {
+                        node.MarkOutput();
+                    }
                     foreach (var edge in node.Step.GetInputs())
                     {
                         var source = nodes[edge.Value];
                         Edge e = new(source, node, edge.Key);
                         node.Incoming.Add(e);
                         source.Outgoing.Add(e);
+                    }
+                    if (node.Step.GetOutput() != null)
+                    {
+                        var source = nodes[node.Step.GetOutput()!];
+                        Edge e = new(source, node, "output");
+                        node.IncomingOutput = e;
+                        source.MarkOutput();
                     }
                 }
                 return new Pipeline(inputs, output);

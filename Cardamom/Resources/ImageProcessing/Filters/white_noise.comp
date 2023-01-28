@@ -43,7 +43,7 @@ float generate(vec2 v, int seed) {
 void main() {
 	vec2 p = gl_GlobalInvocationID.xy;
 	ivec2 position = ivec2(gl_GlobalInvocationID.xy);
-	vec4 current = imageLoad(in_texture, position);
+    vec4 current = imageLoad(out_texture, position);
 	vec4 new = 
 		vec4(
 			(channel & CHANNEL_RED) != 0 ? generate(p, seed.r) : current.r,

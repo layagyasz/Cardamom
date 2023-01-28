@@ -13,6 +13,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         private readonly Type _type;
         private readonly Type _builderType;
         private readonly Dictionary<string, string> _inputs;
+        private readonly string? _output;
         private readonly Dictionary<string, ISupplier> _parameters;
 
         private GenericPipelineNode(
@@ -20,12 +21,14 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             Channel channel,
             Type type,
             Dictionary<string, string> inputs,
+            string? output,
             Dictionary<string, ISupplier> parameters)
         {
             Key = key;
             Channel = channel;
             _type = type;
             _inputs = inputs;
+            _output = output;
             _parameters = parameters;
 
             var builderAttr =
@@ -40,6 +43,11 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public Dictionary<string, string> GetInputs()
         {
             return _inputs;
+        }
+
+        public string? GetOutput()
+        {
+            return _output;
         }
 
         public Canvas Run(Canvas? output, Dictionary<string, Canvas> inputs)
@@ -59,6 +67,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public Type? Type { get; set; }
             public Channel Channel { get; set; } = Channel.All;
             public Dictionary<string, string> Inputs { get; set; } = new();
+            public string? Output { get; set; }
             public Dictionary<string, ISupplier> Parameters { get; set; } = new();
 
             public Builder SetKey(string key)
@@ -85,6 +94,12 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
                 return this;
             }
 
+            public Builder SetOutput(string stepKey)
+            {
+                Output = stepKey;
+                return this;
+            }
+
             public Builder SetParameter(string parameterName, ISupplier value)
             {
                 Parameters.Add(parameterName, value);
@@ -93,7 +108,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
 
             public IPipelineNode Build()
             {
-                return new GenericPipelineNode(Key!, Channel, Type!, Inputs, Parameters);
+                return new GenericPipelineNode(Key!, Channel, Type!, Inputs, Output, Parameters);
             }
         }
     }

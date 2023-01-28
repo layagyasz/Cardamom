@@ -16,19 +16,13 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
 
         public override bool Inline => true;
 
-        private readonly Dictionary<string, string> _inputs;
         private readonly Parameters _parameters;
 
-        public CombineNode(string key, Channel channel, Dictionary<string, string> inputs, Parameters parameters)
-            : base(key, channel)
+        public CombineNode(
+            string key, Channel channel, Dictionary<string, string> inputs, string? output, Parameters parameters)
+            : base(key, channel, inputs, output)
         {
-            _inputs = inputs;
             _parameters = parameters;
-        }
-
-        public override Dictionary<string, string> GetInputs()
-        {
-            return _inputs;
         }
 
         public override IFilter BuildFilter()
@@ -57,7 +51,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         {
             public override IPipelineNode Build()
             {
-                return new CombineNode(Key!, Channel, Inputs, Parameters);
+                return new CombineNode(Key!, Channel, Inputs, Output, Parameters);
             }
         }
     }

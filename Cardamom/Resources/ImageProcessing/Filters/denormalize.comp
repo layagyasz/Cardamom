@@ -46,16 +46,17 @@ float generate(float v, float v_mean, float v_standard_deviation) {
 
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
-    vec4 current = imageLoad(in_texture, position);
+    vec4 input = imageLoad(in_texture, position);
+	vec4 current = imageLoad(out_texture, position);
 	vec4 new = 
 		vec4(
 			(channel & CHANNEL_RED) != 0 
-				? generate(current.r, mean[0], standard_deviation[0]) : current.r,
+				? generate(input.r, mean[0], standard_deviation[0]) : current.r,
 			(channel & CHANNEL_GREEN) != 0 
-				? generate(current.g, mean[1], standard_deviation[1]) : current.g,
+				? generate(input.g, mean[1], standard_deviation[1]) : current.g,
 			(channel & CHANNEL_BLUE) != 0 
-				? generate(current.b, mean[2], standard_deviation[2]) : current.b,
+				? generate(input.b, mean[2], standard_deviation[2]) : current.b,
 			(channel & CHANNEL_ALPHA) != 0 
-				? generate(current.a, mean[3], standard_deviation[3]) : current.a);
+				? generate(input.a, mean[3], standard_deviation[3]) : current.a);
     imageStore(out_texture, position, new);
 }

@@ -29,6 +29,6 @@ vec3 generate(vec3 v) {
 
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
-    vec4 current = imageLoad(in_texture, position);
-    imageStore(out_texture, position, vec4(generate(current.xyz), 1));
+    vec4 input = imageLoad(in_texture, position);
+    imageStore(out_texture, position, vec4(generate(input.xyz), 1));
 }

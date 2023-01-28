@@ -8,6 +8,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         bool Inline { get; }
 
         Dictionary<string, string> GetInputs();
+        string? GetOutput();
         Canvas Run(Canvas? output, Dictionary<string, Canvas> inputs);
 
         [JsonDerivedType(typeof(AdjustNode.Builder), "Adjust")]

@@ -16,6 +16,11 @@
             return new();
         }
 
+        public string? GetOutput()
+        {
+            return null;
+        }
+
         public Canvas Run(Canvas? output, Dictionary<string, Canvas> inputs) 
         {
             Precondition.Check(inputs.Count == 0);

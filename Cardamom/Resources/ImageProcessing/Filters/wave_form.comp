@@ -27,12 +27,13 @@ float generate(vec4 position, int channel) {
 
 void main() {
     ivec2 position = ivec2(gl_GlobalInvocationID.xy);
-    vec4 current = imageLoad(in_texture, position);
+    vec4 input = imageLoad(in_texture, position);
+	vec4 current = imageLoad(out_texture, position);
 	vec4 new = 
 		vec4(
-			(channel & CHANNEL_RED) != 0 ? generate(current, 0) : current.r,
-			(channel & CHANNEL_GREEN) != 0 ? generate(current, 1) : current.g,
-			(channel & CHANNEL_BLUE) != 0 ? generate(current, 2) : current.b,
-			(channel & CHANNEL_ALPHA) != 0 ? generate(current, 3) : current.a);
+			(channel & CHANNEL_RED) != 0 ? generate(input, 0) : current.r,
+			(channel & CHANNEL_GREEN) != 0 ? generate(input, 1) : current.g,
+			(channel & CHANNEL_BLUE) != 0 ? generate(input, 2) : current.b,
+			(channel & CHANNEL_ALPHA) != 0 ? generate(input, 3) : current.a);
     imageStore(out_texture, position, new);
 }
