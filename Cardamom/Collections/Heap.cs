@@ -56,7 +56,7 @@
         {
             if (Count == _values.Length)
             {
-                var newValues = new KeyValuePair<TKey, TValue>[Count];
+                var newValues = new KeyValuePair<TKey, TValue>[2 * Count];
                 Array.Copy(_values, newValues, Count);
                 _values = newValues;
             }

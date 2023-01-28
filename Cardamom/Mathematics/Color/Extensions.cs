@@ -4,7 +4,7 @@ namespace Cardamom.Mathematics.Color
 {
     public static class Extensions
     {
-        public static ColorHsl ToHsl(this Color4 color)
+        public static ColorHsl AsHsl(this Color4 color)
         {
             float max = Math.Max(color.R, Math.Max(color.G, color.B));
             float min = Math.Min(color.R, Math.Min(color.G, color.B));

@@ -43,7 +43,7 @@ namespace Cardamom.ImageProcessing.Filters
         public class Builder : IFilter.IFilterBuilder
         {
             private Vector4 _mean = new();
-            private Vector4 _standardDeviation = new(0.15f, 0.15f, 0.15f, 0.15f);
+            private Vector4 _standardDeviation = new(0.075f, 0.075f, 0.075f, 0.075f);
 
             public Builder SetMean(Vector4 mean)
             {

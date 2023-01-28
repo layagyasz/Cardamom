@@ -48,7 +48,13 @@ namespace Cardamom.Graphics
             {
                 for (int x=0;x<size.X;++x)
                 {
-                    image._pixels[x, y] = data[x, invertYAxis ? size.Y - y - 1 : y];
+                    var color = data[invertYAxis ? size.Y - y - 1 : y, x];
+                    image._pixels[x, y] = 
+                        new(
+                            MathHelper.Clamp(color.R, 0, 1), 
+                            MathHelper.Clamp(color.G, 0, 1), 
+                            MathHelper.Clamp(color.B, 0, 1),
+                            MathHelper.Clamp(color.A, 0, 1));
                 }
             }
             return image;

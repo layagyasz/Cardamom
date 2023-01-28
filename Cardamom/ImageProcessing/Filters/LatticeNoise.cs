@@ -74,7 +74,7 @@ namespace Cardamom.ImageProcessing.Filters
 
         public struct Settings
         {
-            public float Frequency { get; set; } = .002f;
+            public float Frequency { get; set; } = 1f;
             public float Lacunarity { get; set; } = 2;
             public int Octaves { get; set; } = 6;
             public float Persistence { get; set; } = 0.6f;
