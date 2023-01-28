@@ -31,9 +31,13 @@ namespace Cardamom.ImageProcessing.Pipelines
                 return _outstanding == 0;
             }
 
-            internal void Release()
+            internal void Release(ICanvasProvider canvasProvider)
             {
                 _outstanding--;
+                if (IsDone())
+                {
+                    Return(canvasProvider);
+                }
             }
 
             internal void Return(ICanvasProvider canvasProvider)
@@ -74,13 +78,13 @@ namespace Cardamom.ImageProcessing.Pipelines
                     }
                     result = Step.Run(result, inputs);
                     _cachedOutput = result;
+                    if (IncomingOutput != null)
+                    {
+                        IncomingOutput.Source.Release(canvasProvider);
+                    }
                     foreach (var edge in Incoming)
                     {
-                        edge.Source.Release();
-                        if (edge.Source.IsDone())
-                        {
-                            edge.Source.Return(canvasProvider);
-                        }
+                        edge.Source.Release(canvasProvider);
                     }
                     _outstanding = Outgoing.Count + IsOutput;
                 }
