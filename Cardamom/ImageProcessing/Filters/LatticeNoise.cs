@@ -80,7 +80,7 @@ namespace Cardamom.ImageProcessing.Filters
             public float Persistence { get; set; } = 0.6f;
             public float Amplitude { get; set; } = 1;
             public Evaluator Evaluator { get; set; } = Evaluator.Gradient;
-            public Interpolator Interpolator { get; set; } = Interpolator.Linear;
+            public Interpolator Interpolator { get; set; } = Interpolator.HermiteQuintic;
             public Treatment PreTreatment { get; set; } = Treatment.None;
             public Treatment PostTreatment { get; set; } = Treatment.None;
             public int Seed { get; set; }

@@ -23,7 +23,9 @@ namespace Cardamom.ImageProcessing.Pipelines
             {
                 return new Canvas(_id++, Size, Color);
             }
-            return _free.Dequeue();
+            var cached = _free.Dequeue();
+            cached.GetTexture().Fill(Color);
+            return cached;
         }
 
         public void Return(Canvas canvas)

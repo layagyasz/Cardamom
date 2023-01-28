@@ -78,10 +78,7 @@ namespace Cardamom.ImageProcessing.Pipelines
                     }
                     result = Step.Run(result, inputs);
                     _cachedOutput = result;
-                    if (IncomingOutput != null)
-                    {
-                        IncomingOutput.Source.Release(canvasProvider);
-                    }
+                    IncomingOutput?.Source.Release(canvasProvider);
                     foreach (var edge in Incoming)
                     {
                         edge.Source.Release(canvasProvider);
@@ -126,7 +123,7 @@ namespace Cardamom.ImageProcessing.Pipelines
             for (int i=0; i<_roots.Count;++i)
             {
                 outs[i] = _roots[i].Run(canvasProvider);
-                _roots[i].Return(canvasProvider);
+                _roots[i].Release(canvasProvider);
             }
             GL.Finish();
             return outs;

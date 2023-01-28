@@ -52,6 +52,7 @@ namespace Cardamom.Graphics
 
             resources.Texture0?.Bind(TextureUnit.Texture0);
             resources.Texture1?.Bind(TextureUnit.Texture1);
+            resources.Texture2?.Bind(TextureUnit.Texture2);
 
             Error.LogGLError("bind context");
 
@@ -101,6 +102,10 @@ namespace Cardamom.Graphics
             if (resources.Texture1 != null)
             {
                 Texture.Unbind(TextureUnit.Texture1);
+            }
+            if (resources.Texture2 != null)
+            {
+                Texture.Unbind(TextureUnit.Texture2);
             }
             SetActive(false);
         }

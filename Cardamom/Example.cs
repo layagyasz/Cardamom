@@ -24,7 +24,7 @@ namespace Cardamom
         {
             var window = new RenderWindow("Cardamom - Example", new Vector2i(800, 600));
 
-            float resolution = 2048;
+            int resolution = 2048;
             var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
             var random = new Random();
             var seed = ConstantSupplier<int>.Create(random.Next());
@@ -76,71 +76,14 @@ namespace Cardamom
                             .SetChannel(Channel.Color)
                             .SetInput("input", "lattice-noise"))
                     .AddNode(
-                        new CombineNode.Builder()
-                            .SetKey("combine")
-                            .SetChannel(Channel.Color)
-                            .SetInput("left", "denormalize")
-                            .SetInput("right", "spherize")
-                            .SetParameters(new CombineNode.Parameters()
-                            {
-                                LeftTransform = 
-                                    ConstantSupplier<Matrix4>.Create(
-                                        new Matrix4(
-                                            new(0.2f, 0, 0, 0),
-                                            new(0, 0.2f, 0, 0),
-                                            new(0, 0, 0.2f, 0),
-                                            new(0, 0, 0, 0.2f))),
-                                RightTransform = 
-                                    ConstantSupplier<Matrix4>.Create(
-                                        new Matrix4(
-                                            new(0, 0, 0, 0),
-                                            new(1, 1, 1, 1),
-                                            new(0, 0, 0, 0),
-                                            new(0, 0, 0, 0)))
-                            }))
-                    .AddNode(
-                        new WaveFormNode.Builder()
-                            .SetKey("wave-form")
-                            .SetChannel(Channel.Color)
-                            .SetInput("input", "combine")
-                            .SetParameters(
-                                new WaveFormNode.Parameters()
-                                { 
-                                    WaveType = ConstantSupplier<WaveForm.WaveType>.Create(WaveForm.WaveType.Cosine),
-                                    Frequency =
-                                        ConstantSupplier<Matrix4>.Create(
-                                            new Matrix4(
-                                                new(0.5f, 0, 0, 0),
-                                                new(0, 0.5f, 0, 0),
-                                                new(0, 0, 0.5f, 0),
-                                                new(0, 0, 0, 0.5f)))
-                                }))
-                    .AddNode(
-                        new AdjustNode.Builder()
-                            .SetKey("adjust")
-                            .SetChannel(Channel.Color)
-                            .SetInput("input", "wave-form")
-                            .SetParameters(
-                                new AdjustNode.Parameters() 
-                                { 
-                                    Gradient = ConstantSupplier<Matrix4>.Create(
-                                        new Matrix4(
-                                            new(-1f, 0, 0, 0),
-                                            new(0, -1f, 0, 0),
-                                            new(0, 0, -1f, 0),
-                                            new())),
-                                    Bias = ConstantSupplier<Vector4>.Create(new Vector4(0.5f, 0.5f, 0.5f, 0))
-                                }))
-                    .AddNode(
                         new SobelNode.Builder()
                             .SetKey("sobel")
                             .SetChannel(Channel.Red)
-                            .SetInput("input", "adjust"))
-                    .AddOutput("adjust")
+                            .SetInput("input", "denormalize"))
+                    .AddOutput("denormalize")
                     .AddOutput("sobel")
                     .Build();
             var output = pipeline.Run(canvases);
-            output[0].GetTexture().CopyToImage().SaveToFile("output.png");
 
             var ui = new UiWindow(window);
             ui.Bind(new MouseListener());
@@ -197,7 +140,7 @@ namespace Cardamom
                     var vert = uvSphereSolid.Faces[i].Vertices[j];
                     var texCoords = resolution * new Vector2(0.5f, 1) * projection.Project(vert);
                     var c = vert.AsCartesian();
-                    vertices[6 * i + j] = new(c, Color4.White, texCoords, c.Normalized(), texCoords);
+                    vertices[6 * i + j] = new(c, Color4.White, texCoords, c.Normalized(), texCoords, texCoords);
                 }
             }
             var sphereModel =
@@ -206,8 +149,10 @@ namespace Cardamom
                         vertices, 
                         PrimitiveType.Triangles, 
                         resources.GetShader("shader-simple-light"), 
-                        output![0].GetTexture(),
-                        output![1].GetTexture()), 
+                        new(
+                            Texture.Create(new(resolution, resolution), Color4.White), 
+                            output[1].GetTexture(),
+                            Texture.Create(new(resolution, resolution), new(0.5f, 32f, 0, 0.25f)))), 
                     new Sphere(new(), 1),
                     new DebugController());
             sphereModel.Controller.Clicked += (s, e) => Console.WriteLine(e.Position.Length);

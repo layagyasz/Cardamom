@@ -6,6 +6,7 @@
         public RenderShader Shader { get; set; }
         public Texture? Texture0 { get; set; }
         public Texture? Texture1 { get; set; }
+        public Texture? Texture2 { get; set; }
 
         public RenderResources(BlendMode blendMode, RenderShader shader)
         {
@@ -26,6 +27,16 @@
             Shader = shader;
             Texture0 = texture0;
             Texture1 = texture1;
+        }
+
+        public RenderResources(
+            BlendMode blendMode, RenderShader shader, Texture texture0, Texture texture1, Texture texture2)
+        {
+            BlendMode = blendMode;
+            Shader = shader;
+            Texture0 = texture0;
+            Texture1 = texture1;
+            Texture2 = texture2;
         }
     }
 }

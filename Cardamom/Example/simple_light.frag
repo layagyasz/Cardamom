@@ -1,17 +1,22 @@
 #version 430 core
 
-#define AMBIENT 0.2f
-
 out vec4 out_color;
 
 in vec4 vert_color;
 in vec2 vert_tex_coord;
 in vec3 vert_internal_coord;
 in vec3 vert_normal;
-in vec2 vert_bump_tex_coord;
+in vec2 vert_normal_tex_coord;
+in vec2 vert_lighting_tex_coord;
+in vec3 eye_normal;
 
 layout(binding = 0) uniform sampler2D diffuse_texture;
-layout(binding = 1) uniform sampler2D bump_texture;
+layout(binding = 1) uniform sampler2D normal_texture;
+layout(binding = 2) uniform sampler2D lighting_texture;
+
+const vec3 light_normal = vec3(0, 0, -1);
+const float light_intensity = 0.5f;
+const float ambient = 0.2f;
 
 vec4 quaternion_conjugate(vec4 q)
 { 
@@ -33,14 +38,14 @@ vec4 quaternion_rotate(vec3 v, vec4 q)
     return quaternion_multiply(quaternion_multiply(q, vec4(v, 0)), quaternion_conjugate(q));
 }
 
-vec3 combine_normals_quat(vec3 surface_normal, vec3 bump_normal)
+vec3 combine_normals_quat(vec3 surface_normal, vec3 texture_normal)
 {
     const float inv_sqrt_2 = 0.70710678f;
     return quaternion_rotate(
-        bump_normal,
+        surface_normal,
         vec4(
-            inv_sqrt_2 * sqrt(1 - surface_normal.z) * normalize(vec3(-surface_normal.y, surface_normal.x, 0)), 
-            inv_sqrt_2 * sqrt(1 + surface_normal.z))).xyz;
+            inv_sqrt_2 * sqrt(1 - texture_normal.z) * normalize(vec3(-texture_normal.y, texture_normal.x, 0)), 
+            inv_sqrt_2 * sqrt(1 + texture_normal.z))).xyz;
 }
 
 vec2 as_spherical(vec3 v)
@@ -53,19 +58,33 @@ vec3 as_cartesian(vec2 v)
     return vec3(sin(v.x) * cos(v.y), cos(v.x), sin(v.x) * sin(v.y));
 }
 
-vec3 combine_normals_tan(vec3 surface_normal, vec3 bump_normal)
+vec3 combine_normals_tan(vec3 surface_normal, vec3 texture_normal)
 {
     const float pi_over_2 = 1.57079632f;
-    return as_cartesian(as_spherical(surface_normal) + as_spherical(bump_normal) - vec2(pi_over_2, pi_over_2));
+    return as_cartesian(as_spherical(surface_normal) + as_spherical(texture_normal) - vec2(pi_over_2, pi_over_2));
 }
 
 
 void main()
 {
-    vec3 bump_normal =  2 * texture(bump_texture, vert_tex_coord / textureSize(bump_texture, 0)).rgb - 1;
-    vec3 normal = combine_normals_tan(normalize(vert_normal), bump_normal);
-    float light = AMBIENT + max(0, dot(normal, vec3(0, 0, -1)));
+    vec4 lighting = texture(lighting_texture, vert_lighting_tex_coord / textureSize(lighting_texture, 0));
+    vec2 specular_params = lighting.xy;
+    float luminance = lighting.z;
+    float roughness = lighting.w;
 
-    vec4 diffuse = vert_color * texture(diffuse_texture, vert_tex_coord / textureSize(diffuse_texture, 0)); 
-    out_color = vec4(light * diffuse.rgb, 1);
+    vec3 texture_normal = vec3(0, 0, 1);
+    if (roughness > 0.00001)
+    {
+        texture_normal =  2 * texture(normal_texture, vert_normal_tex_coord / textureSize(normal_texture, 0)).rgb - 1;
+        texture_normal = normalize(vec3(texture_normal.x * roughness, texture_normal.y * roughness, texture_normal.z));
+    }
+    vec3 normal = combine_normals_tan(normalize(vert_normal), texture_normal);
+
+    float diffuse = light_intensity * max(0, dot(normal, light_normal));
+    float specular = specular_params.x 
+        * pow(max(0, dot(normal, normalize(light_normal + eye_normal))), specular_params.y);
+    float ambient = ambient + luminance;
+
+    vec4 diffuse_color = vert_color * texture(diffuse_texture, vert_tex_coord / textureSize(diffuse_texture, 0)); 
+    out_color = vec4((diffuse + specular + ambient) * diffuse_color.rgb, 1);
 }
