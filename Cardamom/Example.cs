@@ -83,8 +83,20 @@ namespace Cardamom
                             .SetInput("right", "spherize")
                             .SetParameters(new CombineNode.Parameters()
                             {
-                                LeftFactor = ConstantSupplier<Vector4>.Create(new Vector4(0.2f, 0.2f, 0.2f, 0)),
-                                RightFactor = ConstantSupplier<Vector4>.Create(new Vector4(1f, 1f, 1f, 1f))
+                                LeftTransform = 
+                                    ConstantSupplier<Matrix4>.Create(
+                                        new Matrix4(
+                                            new(0.2f, 0, 0, 0),
+                                            new(0, 0.2f, 0, 0),
+                                            new(0, 0, 0.2f, 0),
+                                            new(0, 0, 0, 0.2f))),
+                                RightTransform = 
+                                    ConstantSupplier<Matrix4>.Create(
+                                        new Matrix4(
+                                            new(0, 0, 0, 0),
+                                            new(1, 1, 1, 1),
+                                            new(0, 0, 0, 0),
+                                            new(0, 0, 0, 0)))
                             }))
                     .AddNode(
                         new WaveFormNode.Builder()
@@ -94,7 +106,14 @@ namespace Cardamom
                             .SetParameters(
                                 new WaveFormNode.Parameters()
                                 { 
-                                    WaveType = ConstantSupplier<WaveForm.WaveType>.Create(WaveForm.WaveType.Cosine)
+                                    WaveType = ConstantSupplier<WaveForm.WaveType>.Create(WaveForm.WaveType.Cosine),
+                                    Frequency =
+                                        ConstantSupplier<Matrix4>.Create(
+                                            new Matrix4(
+                                                new(0.5f, 0, 0, 0),
+                                                new(0, 0.5f, 0, 0),
+                                                new(0, 0, 0.5f, 0),
+                                                new(0, 0, 0, 0.5f)))
                                 }))
                     .AddNode(
                         new AdjustNode.Builder()
@@ -106,9 +125,9 @@ namespace Cardamom
                                 { 
                                     Gradient = ConstantSupplier<Matrix4>.Create(
                                         new Matrix4(
-                                            new(-0.5f, 0, 0, 0),
-                                            new(0, -0.5f, 0, 0),
-                                            new(0, 0, -0.5f, 0),
+                                            new(-1f, 0, 0, 0),
+                                            new(0, -1f, 0, 0),
+                                            new(0, 0, -1f, 0),
                                             new())),
                                     Bias = ConstantSupplier<Vector4>.Create(new Vector4(0.5f, 0.5f, 0.5f, 0))
                                 }))
@@ -121,6 +140,7 @@ namespace Cardamom
                     .AddOutput("sobel")
                     .Build();
             var output = pipeline.Run(canvases);
+            output[0].GetTexture().CopyToImage().SaveToFile("output.png");
 
             var ui = new UiWindow(window);
             ui.Bind(new MouseListener());

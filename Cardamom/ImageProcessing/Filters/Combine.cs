@@ -9,21 +9,21 @@ namespace Cardamom.ImageProcessing.Filters
     {
         private static ComputeShader? s_CombineShader;
         private static readonly int s_OverflowBehaviorLocation = 0;
-        private static readonly int s_LeftFactorLocation = 1;
-        private static readonly int s_RightFactorLocation = 2;
+        private static readonly int s_LeftTransformLocation = 1;
+        private static readonly int s_RightTransformLocation = 2;
         private static readonly int s_BiasLocation = 3;
         private static readonly int s_ChannelLocation = 4;
 
         private readonly OverflowBehavior _overflowBehavior;
-        private readonly Vector4 _leftFactor;
-        private readonly Vector4 _rightFactor;
+        private readonly Matrix4 _leftTransform;
+        private readonly Matrix4 _rightTransform;
         private readonly Vector4 _bias;
 
-        public Combine(OverflowBehavior overflowBehavior, Vector4 leftFactor, Vector4 rightFactor, Vector4 bias)
+        public Combine(OverflowBehavior overflowBehavior, Matrix4 leftTransform, Matrix4 rightTransform, Vector4 bias)
         {
             _overflowBehavior = overflowBehavior;
-            _leftFactor = leftFactor;
-            _rightFactor = rightFactor;
+            _leftTransform = leftTransform;
+            _rightTransform = rightTransform;
             _bias = bias;
         }
 
@@ -34,8 +34,8 @@ namespace Cardamom.ImageProcessing.Filters
             s_CombineShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/combine.comp");
 
             s_CombineShader.SetInt32(s_OverflowBehaviorLocation, (int)_overflowBehavior);
-            s_CombineShader.SetVector4(s_LeftFactorLocation, _leftFactor);
-            s_CombineShader.SetVector4(s_RightFactorLocation, _rightFactor);
+            s_CombineShader.SetMatrix4(s_LeftTransformLocation, _leftTransform);
+            s_CombineShader.SetMatrix4(s_RightTransformLocation, _rightTransform);
             s_CombineShader.SetVector4(s_BiasLocation, _bias);
             s_CombineShader.SetInt32(s_ChannelLocation, (int)channel);
 
@@ -54,8 +54,8 @@ namespace Cardamom.ImageProcessing.Filters
         public class Builder : IFilter.IFilterBuilder
         {
             private OverflowBehavior _overflowBehavior = OverflowBehavior.None;
-            private Vector4 _leftFactor = new(0.5f, 0.5f, 0.5f, 0.5f);
-            private Vector4 _rightFactor = new(0.5f, 0.5f, 0.5f, 0.5f);
+            private Matrix4 _leftTransform = Matrix4.Identity * 0.5f;
+            private Matrix4 _rightTransform = Matrix4.Identity * 0.5f;
             private Vector4 _bias = new();
 
             public Builder SetOverflowBehavior(OverflowBehavior overflowBehavior)
@@ -64,15 +64,15 @@ namespace Cardamom.ImageProcessing.Filters
                 return this;
             }
 
-            public Builder SetLeftFactor(Vector4 leftFactor)
+            public Builder SetLeftTransform(Matrix4 leftTransform)
             {
-                _leftFactor = leftFactor;
+                _leftTransform = leftTransform;
                 return this;
             }
 
-            public Builder SetRightFactor(Vector4 rightFactor)
+            public Builder SetRightTransform(Matrix4 rightTransform)
             {
-                _rightFactor = rightFactor;
+                _rightTransform = rightTransform;
                 return this;
             }
 
@@ -84,7 +84,7 @@ namespace Cardamom.ImageProcessing.Filters
 
             public IFilter Build()
             {
-                return new Combine(_overflowBehavior, _leftFactor, _rightFactor, _bias);
+                return new Combine(_overflowBehavior, _leftTransform, _rightTransform, _bias);
             }
         }
     }

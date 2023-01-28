@@ -1,5 +1,4 @@
-﻿using Cardamom.Utils.Generators.Samplers;
-using OpenTK.Mathematics;
+﻿using OpenTK.Mathematics;
 
 namespace Cardamom.Utils.Suppliers.Vector
 {

@@ -15,8 +15,8 @@ layout(rgba32f, binding = 1) uniform image2D right_texture;
 layout(rgba32f, binding = 2) uniform image2D out_texture;
 
 layout(location=0) uniform int overflow_behavior;
-layout(location=1) uniform vec4 left_factor;
-layout(location=2) uniform vec4 right_factor;
+layout(location=1) uniform mat4 left_transform;
+layout(location=2) uniform mat4 right_transform;
 layout(location=3) uniform vec4 bias;
 layout(location=4) uniform int channel;
 
@@ -33,7 +33,7 @@ vec4 handle_overflow(vec4 v)
 }
 
 vec4 generate(vec4 left, vec4 right) {
-	return handle_overflow(left_factor * left + right_factor * right + bias);
+	return handle_overflow(left * left_transform + right * right_transform + bias);
 }
 
 void main() {

@@ -5,10 +5,12 @@ namespace Cardamom.ImageProcessing
 {
     public class Canvas : IDisposable
     {
+        public int Id { get; }
         private readonly Texture _texture;
 
-        public Canvas(Vector2i size, Color4 color)
+        public Canvas(int id, Vector2i size, Color4 color)
         {
+            Id = id;
             _texture = Texture.Create(size, color);
         }
 
@@ -27,6 +29,11 @@ namespace Cardamom.ImageProcessing
             GC.SuppressFinalize(this);
             GC.KeepAlive(this);
             _texture.Dispose();
+        }
+
+        public override string ToString()
+        {
+            return string.Format($"[Canvas: Id={Id}]");
         }
     }
 }

@@ -9,8 +9,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public class Parameters
         {
             public ISupplier<OverflowBehavior>? OverflowBehavior { get; set; }
-            public ISupplier<Vector4>? LeftFactor { get; set; }
-            public ISupplier<Vector4>? RightFactor { get; set; }
+            public ISupplier<Matrix4>? LeftTransform { get; set; }
+            public ISupplier<Matrix4>? RightTransform { get; set; }
             public ISupplier<Vector4>? Bias { get; set; }
         }
 
@@ -32,13 +32,13 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             {
                 builder.SetOverflowBehavior(_parameters.OverflowBehavior.Get());
             }
-            if (_parameters.LeftFactor != null)
+            if (_parameters.LeftTransform != null)
             {
-                builder.SetLeftFactor(_parameters.LeftFactor.Get());
+                builder.SetLeftTransform(_parameters.LeftTransform.Get());
             }
-            if (_parameters.RightFactor != null)
+            if (_parameters.RightTransform != null)
             {
-                builder.SetRightFactor(_parameters.RightFactor.Get());
+                builder.SetRightTransform(_parameters.RightTransform.Get());
             }
             if (_parameters.Bias != null)
             {

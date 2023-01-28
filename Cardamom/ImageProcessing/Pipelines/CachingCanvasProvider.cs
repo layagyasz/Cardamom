@@ -9,6 +9,8 @@ namespace Cardamom.ImageProcessing.Pipelines
 
         private readonly Queue<Canvas> _free = new();
 
+        int _id = 0;
+
         public CachingCanvasProvider(Vector2i size, Color4 color)
         {
             Size = size;
@@ -19,7 +21,7 @@ namespace Cardamom.ImageProcessing.Pipelines
         {
             if (_free.Count == 0)
             {
-                return new Canvas(Size, Color);
+                return new Canvas(_id++, Size, Color);
             }
             return _free.Dequeue();
         }

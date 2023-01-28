@@ -31,6 +31,11 @@ namespace Cardamom.ImageProcessing.Pipelines
                 return _outstanding == 0;
             }
 
+            internal void Release()
+            {
+                _outstanding--;
+            }
+
             internal void Return(ICanvasProvider canvasProvider)
             {
                 if (_cachedOutput != null && IsOutput == 0 && !Step.External)
@@ -71,6 +76,7 @@ namespace Cardamom.ImageProcessing.Pipelines
                     _cachedOutput = result;
                     foreach (var edge in Incoming)
                     {
+                        edge.Source.Release();
                         if (edge.Source.IsDone())
                         {
                             edge.Source.Return(canvasProvider);
@@ -78,7 +84,6 @@ namespace Cardamom.ImageProcessing.Pipelines
                     }
                     _outstanding = Outgoing.Count + IsOutput;
                 }
-                _outstanding--;
                 return result;
             }
         }
