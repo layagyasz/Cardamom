@@ -1,4 +1,4 @@
-﻿using Cardamom.Graphics.Ui;
+﻿using Cardamom.Ui;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics

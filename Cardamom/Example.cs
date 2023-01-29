@@ -1,8 +1,5 @@
 ﻿using Cardamom.Graphics;
 using Cardamom.Graphics.Camera;
-using Cardamom.Graphics.Ui;
-using Cardamom.Graphics.Ui.Controller;
-using Cardamom.Graphics.Ui.Elements;
 using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
@@ -10,6 +7,10 @@ using Cardamom.ImageProcessing.Pipelines.Nodes;
 using Cardamom.Mathematics.Coordinates;
 using Cardamom.Mathematics.Coordinates.Projections;
 using Cardamom.Mathematics.Geometry;
+using Cardamom.Ui;
+using Cardamom.Ui.Controller;
+using Cardamom.Ui.Controller.Element;
+using Cardamom.Ui.Elements;
 using Cardamom.Utils.Suppliers;
 using Cardamom.Window;
 using OpenTK.Graphics.OpenGL4;
@@ -17,7 +18,7 @@ using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom
-{ 
+{
     public static class Example
     {
         public static void Main()
@@ -120,7 +121,7 @@ namespace Cardamom
                 }
                 rows.Add(
                     uiElementFactory.CreateTableRow(
-                        "example-row-class", elements, new NoOpController<UiSerialContainer>()));
+                        "example-row-class", elements, new NoOpElementController<UiSerialContainer>()));
             }
             var table = 
                 uiElementFactory.CreateTable(
@@ -152,7 +153,7 @@ namespace Cardamom
                         new(
                             Texture.Create(new(resolution, resolution), Color4.White), 
                             output[1].GetTexture(),
-                            Texture.Create(new(resolution, resolution), new(0.5f, 32f, 0, 0.25f)))), 
+                            Texture.Create(new(resolution, resolution), new(1f, 128f, 0, 0.25f)))), 
                     new Sphere(new(), 1),
                     new DebugController());
             sphereModel.Controller.Clicked += (s, e) => Console.WriteLine(e.Position.Length);
@@ -168,7 +169,7 @@ namespace Cardamom
                         DistanceRange = new(1.1f, 10)
                     });
             var scene =
-                new Scene(
+                new BasicScene(
                     new Vector3(800, 600, 0),
                     sceneController,
                     camera,
@@ -176,8 +177,7 @@ namespace Cardamom
 
             var screen = 
                 new SceneScreen(
-                    new Mathematics.Geometry.Rectangle(new(), new(800, 600)),
-                    new SceneScreenController(),
+                    new NoOpController<Screen>(),
                     new List<UiGroupLayer>()
                     {
                         UiElementFactory.CreatePaneLayer(new List<IRenderable>() { pane }).Item1

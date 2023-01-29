@@ -36,7 +36,8 @@ namespace Cardamom.Graphics.Camera
             var right = Vector3.Normalize(Vector3.Cross(front, Vector3.UnitY));
             var up = Vector3.Normalize(Vector3.Cross(right, front));
 
-            return Matrix4.LookAt(Focus - Distance * front, Focus, up);
+            Position = Focus - Distance * front;
+            return Matrix4.LookAt(Position, Focus, up);
         }
 
         protected override Projection GetProjectionImpl()

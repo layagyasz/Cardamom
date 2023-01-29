@@ -1,5 +1,5 @@
 ﻿using Cardamom.Collections;
-using Cardamom.Graphics.Ui;
+using Cardamom.Ui;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 

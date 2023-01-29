@@ -4,6 +4,7 @@ namespace Cardamom.Graphics.Camera
 {
     public abstract class BaseCamera3d : ICamera
     {
+        public Vector3 Position { get; protected set; }
         public float Pitch { get; private set; } = 0;
         public float Yaw { get; private set; } = 0;
         public float AspectRatio { get; private set; }

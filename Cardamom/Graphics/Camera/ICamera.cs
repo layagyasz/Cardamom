@@ -4,6 +4,7 @@ namespace Cardamom.Graphics.Camera
 {
     public interface ICamera
     {
+        Vector3 Position { get; }
         float AspectRatio { get; }
         void SetAspectRatio(float aspectRatio);
         Matrix4 GetViewMatrix();
