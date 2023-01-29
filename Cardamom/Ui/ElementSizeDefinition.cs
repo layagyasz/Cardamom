@@ -1,4 +1,4 @@
-﻿using Cardamom.Json.Graphics.Ui;
+﻿using Cardamom.Json.Ui;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Ui

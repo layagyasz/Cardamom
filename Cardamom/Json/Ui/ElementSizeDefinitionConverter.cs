@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Json.Graphics.Ui
+namespace Cardamom.Json.Ui
 {
     public class ElementSizeDefinitionConverter : JsonConverter<ElementSizeDefinition>
     {

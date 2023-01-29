@@ -90,7 +90,7 @@ namespace Cardamom
             ui.Bind(new MouseListener());
             ui.Bind(
                 new KeyboardListener(SimpleKeyMapper.Us, new Keys[] { Keys.Left, Keys.Right, Keys.Up, Keys.Down }));
-            var resources = GraphicsResources.Builder.ReadFrom("Example/GraphicsResources.json").Build();
+            var resources = GameResources.Builder.ReadFrom("Example/GraphicsResources.json").Build();
             var uiElementFactory = new UiElementFactory(resources);
             var pane = uiElementFactory.CreatePane("example-base-class").Item1;
             var options = new List<IUiElement>();

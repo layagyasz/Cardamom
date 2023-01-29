@@ -1,25 +1,24 @@
 ﻿using Cardamom.Collections;
+using Cardamom.Graphics;
 using Cardamom.Graphics.TexturePacking;
 using Cardamom.Json;
 using Cardamom.Json.Collections;
-using Cardamom.Json.Graphics;
-using Cardamom.Json.Graphics.TexturePacking;
 using Cardamom.Json.OpenTK;
 using Cardamom.Ui;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Cardamom.Graphics
+namespace Cardamom
 {
     [JsonConverter(typeof(BuilderJsonConverter))]
     [BuilderClass(typeof(Builder))]
-    public class GraphicsResources
+    public class GameResources
     {
         private readonly TextureLibrary _textures;
         private readonly Library<RenderShader> _shaders;
         private readonly Library<Class> _classes = new();
 
-        public GraphicsResources(
+        public GameResources(
             TextureLibrary textures, Library<RenderShader> shaders, Library<Class> classes)
         {
             _textures = textures;
@@ -63,10 +62,10 @@ namespace Cardamom.Graphics
                 return JsonSerializer.Deserialize<Builder>(File.ReadAllText(path), options)!;
             }
 
-            public GraphicsResources Build()
+            public GameResources Build()
             {
-                return new GraphicsResources(
-                    Textures, 
+                return new GameResources(
+                    Textures,
                     Shaders.ToLibrary(x => x.Key, x => x.Value.Element!),
                     Classes.ToLibrary(x => x.Key, x => x.Value.Build()));
             }

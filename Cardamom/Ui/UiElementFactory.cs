@@ -8,9 +8,9 @@ namespace Cardamom.Ui
 {
     public class UiElementFactory
     {
-        private readonly GraphicsResources _resources;
+        private readonly GameResources _resources;
 
-        public UiElementFactory(GraphicsResources resources)
+        public UiElementFactory(GameResources resources)
         {
             _resources = resources;
         }
