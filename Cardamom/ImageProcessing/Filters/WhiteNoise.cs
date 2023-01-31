@@ -7,6 +7,8 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class WhiteNoise : IFilter
     {
+        private static readonly Vector2i s_LocalGroupSize = new(32, 32);
+
         private static ComputeShader? s_WhiteNoiseShader;
         private static readonly int s_SeedLocation = 0;
         private static readonly int s_ChannelLocation = 1;
@@ -22,7 +24,8 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_WhiteNoiseShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/white_noise.comp");
+            s_WhiteNoiseShader ??= 
+                ComputeShader.FromFile("Resources/ImageProcessing/Filters/white_noise.comp", s_LocalGroupSize);
 
             s_WhiteNoiseShader.SetVector4i(s_SeedLocation, _seed);
             s_WhiteNoiseShader.SetInt32(s_ChannelLocation, (int)channel);

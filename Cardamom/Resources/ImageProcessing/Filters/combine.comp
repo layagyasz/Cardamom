@@ -9,7 +9,7 @@
 #define OVERFLOW_BEHAVIOR_CLAMP 1
 #define OVERFLOW_BEHAVIOR_MODULUS 2
 
-layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D left_texture;
 layout(rgba32f, binding = 1) uniform image2D right_texture;
 layout(rgba32f, binding = 2) uniform image2D out_texture;

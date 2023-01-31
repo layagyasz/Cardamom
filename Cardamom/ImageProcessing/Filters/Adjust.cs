@@ -7,6 +7,8 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Adjust : IFilter
     {
+        private static readonly Vector2i s_LocalGroupSize = new(32, 32);
+
         private static ComputeShader? s_AdjustShader;
         private static readonly int s_OverflowBehaviorLocation = 0;
         private static readonly int s_GradientLocation = 1;
@@ -28,7 +30,8 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_AdjustShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/adjust.comp");
+            s_AdjustShader ??= 
+                ComputeShader.FromFile("Resources/ImageProcessing/Filters/adjust.comp", s_LocalGroupSize);
 
             s_AdjustShader.SetInt32(s_OverflowBehaviorLocation, (int)_overflowBehavior);
             s_AdjustShader.SetMatrix4(s_GradientLocation, _gradient);

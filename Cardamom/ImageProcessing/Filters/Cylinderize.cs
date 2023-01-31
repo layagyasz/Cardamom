@@ -7,6 +7,8 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Cylinderize : IFilter
     {
+        private static readonly Vector2i s_LocalGroupSize = new(32, 32);
+
         private static ComputeShader? s_CylinderizeShader;
         private static readonly int s_YRangeLocation = 0;
         private static readonly int s_RadiusLocation = 1;
@@ -25,7 +27,8 @@ namespace Cardamom.ImageProcessing.Filters
             Precondition.Check(inputs.Count == 1);
             Precondition.Check(channel == Channel.All);
 
-            s_CylinderizeShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/cylinderize.comp");
+            s_CylinderizeShader ??= 
+                ComputeShader.FromFile("Resources/ImageProcessing/Filters/cylinderize.comp", s_LocalGroupSize);
 
             s_CylinderizeShader.SetVector2(s_YRangeLocation, _yRange);
             s_CylinderizeShader.SetFloat(s_RadiusLocation, _radius);

@@ -7,6 +7,8 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Combine : IFilter
     {
+        private static readonly Vector2i s_LocalGroupSize = new(32, 32);
+
         private static ComputeShader? s_CombineShader;
         private static readonly int s_OverflowBehaviorLocation = 0;
         private static readonly int s_LeftTransformLocation = 1;
@@ -31,7 +33,8 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 2);
 
-            s_CombineShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/combine.comp");
+            s_CombineShader ??= 
+                ComputeShader.FromFile("Resources/ImageProcessing/Filters/combine.comp", s_LocalGroupSize);
 
             s_CombineShader.SetInt32(s_OverflowBehaviorLocation, (int)_overflowBehavior);
             s_CombineShader.SetMatrix4(s_LeftTransformLocation, _leftTransform);

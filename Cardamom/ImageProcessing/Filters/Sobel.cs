@@ -1,10 +1,13 @@
 ﻿using Cardamom.Graphics;
+using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Filters
 {
     [FilterBuilder(typeof(Builder))]
     public class Sobel : IFilter
     {
+        private static readonly Vector2i s_LocalGroupSize = new(32, 32);
+
         private static ComputeShader? s_SobelShader;
         private static readonly int s_ChannelIndexLocation = 0;
         private static readonly int s_RoughnessLocation = 1;
@@ -20,7 +23,7 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_SobelShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/sobel.comp");
+            s_SobelShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/sobel.comp", s_LocalGroupSize);
 
             s_SobelShader.SetInt32(s_ChannelIndexLocation, channel.GetIndex());
             s_SobelShader.SetFloat(s_RoughnessLocation, _roughness);

@@ -1,4 +1,5 @@
 ﻿using Cardamom.Graphics;
+using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Filters
 {
@@ -6,6 +7,8 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Spherize : IFilter
     {
+        private static readonly Vector2i s_LocalGroupSize = new(32, 32);
+
         private static ComputeShader? s_SpherizeShader;
         private static readonly int s_YScaleLocation = 0;
         private static readonly int s_RadiusLocation = 1;
@@ -30,7 +33,8 @@ namespace Cardamom.ImageProcessing.Filters
             Precondition.Check(inputs.Count == 1);
             Precondition.Check(channel == Channel.All);
 
-            s_SpherizeShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/spherize.comp");
+            s_SpherizeShader ??=
+                ComputeShader.FromFile("Resources/ImageProcessing/Filters/spherize.comp", s_LocalGroupSize);
 
             s_SpherizeShader.SetInt32(s_YScaleLocation, (int)_yScale);
             s_SpherizeShader.SetFloat(s_RadiusLocation, _radius);

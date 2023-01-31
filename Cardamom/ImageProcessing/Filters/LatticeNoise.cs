@@ -7,6 +7,8 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class LatticeNoise : IFilter
     {
+        private static readonly Vector2i s_LocalGroupSize = new(32, 32);
+
         private static ComputeShader? s_LatticeNoiseShader;
         private static readonly int s_FrequencyLocation = 0;
         private static readonly int s_LacunarityLocation = 1;
@@ -99,7 +101,8 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_LatticeNoiseShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/lattice_noise.comp");
+            s_LatticeNoiseShader ??=
+                ComputeShader.FromFile("Resources/ImageProcessing/Filters/lattice_noise.comp", s_LocalGroupSize);
 
             s_LatticeNoiseShader.SetFloat(s_FrequencyLocation, _settings.Frequency);
             s_LatticeNoiseShader.SetFloat(s_LacunarityLocation, _settings.Lacunarity);

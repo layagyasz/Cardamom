@@ -8,6 +8,8 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class Bucketize : IFilter
     {
+        private static readonly Vector2i s_LocalGroupSize = new(1, 1);
+
         private static ComputeShader? s_BucketizeShader;
         private static readonly int s_BucketCountLocation = 0;
         private static readonly int s_ColorLocation = 1;
@@ -67,7 +69,8 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_BucketizeShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/bucketize.comp");
+            s_BucketizeShader ??= 
+                ComputeShader.FromFile("Resources/ImageProcessing/Filters/bucketize.comp", s_LocalGroupSize);
 
             s_BucketizeShader.SetInt32(s_BucketCountLocation, _colors.Length);
             s_BucketizeShader.SetColorArray(s_ColorLocation, _colors);

@@ -8,6 +8,8 @@ namespace Cardamom.ImageProcessing.Filters
     [FilterInline]
     public class WaveForm : IFilter
     {
+        private static readonly Vector2i s_LocalGroupSize = new(32, 32);
+
         private static ComputeShader? s_WaveFormShader;
         private static readonly int s_WaveTypeLocation = 0;
         private static readonly int s_FrequencyLocation = 1;
@@ -33,7 +35,8 @@ namespace Cardamom.ImageProcessing.Filters
         {
             Precondition.Check(inputs.Count == 1);
 
-            s_WaveFormShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/wave_form.comp");
+            s_WaveFormShader ??= 
+                ComputeShader.FromFile("Resources/ImageProcessing/Filters/wave_form.comp", s_LocalGroupSize);
 
             s_WaveFormShader.SetInt32(s_WaveTypeLocation, (int)_waveType);
             s_WaveFormShader.SetMatrix4(s_FrequencyLocation, _frequency);
