@@ -1,5 +1,4 @@
 ﻿using Cardamom.Graphics;
-using Cardamom.Mathematics;
 using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Filters
@@ -9,57 +8,51 @@ namespace Cardamom.ImageProcessing.Filters
     public class Classify : IFilter
     {
         private static ComputeShader? s_ClassifyShader;
-        private static readonly int s_ClassificationCountLocation = 0;
-        private static readonly int s_ColorLocation = 1;
-        private static readonly int s_ConditionPositionLocation = 33;
-        private static readonly int s_ConditionChannelLocation = 65;
-        private static readonly int s_ConditionRangeLocation = 193;
-        private static readonly int s_ChannelLocation = 321;
+        private static readonly int s_ModeLocation = 0;
+        private static readonly int s_ClassificationCountLocation = 1;
+        private static readonly int s_ColorLocation = 2;
+        private static readonly int s_CenterLocation = 34;
+        private static readonly int s_AxisWeightLocation = 66;
+        private static readonly int s_WeightLocation = 98;
+        private static readonly int s_BlendRangeLocation = 130;
+        private static readonly int s_ChannelLocation = 162;
 
         public struct Classification
         {
             public Color4 Color { get; set; }
-            public List<Condition> Conditions { get; set; } = new();
+            public Vector4 Center { get; set; }
+            public Vector4 AxisWeight { get; set; }
+            public float Weight { get; set; }
+            public float BlendRange { get; set; }
 
             public Classification() { }
         }
 
-        public struct Condition
-        {
-            public Channel Channel { get; set; }
-            public Interval Range { get; set; } = new(0, 1);
-
-            public Condition() { }
-        }
-
+        private readonly bool _blend;
         private readonly Color4[] _colors;
-        private readonly Vector2i[] _classificationPositions;
-        private readonly int[] _conditionChannels;
-        private readonly Vector2[] _conditionRanges;
+        private readonly Vector4[] _centers;
+        private readonly Vector4[] _axisWeights;
+        private readonly float[] _weights;
+        private readonly float[] _blendRanges;
 
-        public Classify(IEnumerable<Classification> classifications)
+        public Classify(bool blend, IEnumerable<Classification> classifications)
         {
             var c = classifications.ToArray();
-            int numConditions = c.Sum(x => x.Conditions.Count);
 
+            _blend = blend;
             _colors = new Color4[c.Length];
-            _classificationPositions = new Vector2i[c.Length];
-            _conditionChannels = new int[numConditions];
-            _conditionRanges = new Vector2[numConditions];
+            _centers = new Vector4[c.Length];
+            _axisWeights = new Vector4[c.Length];
+            _weights = new float[c.Length];
+            _blendRanges = new float[c.Length];
 
-            int i = 0;
-            for (int x=0; x < c.Length; ++x)
+            for (int i = 0; i < c.Length; ++i)
             {
-                int j = i;
-                foreach (var condition in c[x].Conditions)
-                {
-                    _conditionChannels[j] = condition.Channel.GetIndex();
-                    _conditionRanges[j] = new(condition.Range.Minimum, condition.Range.Maximum);
-                    ++j;
-                }
-                _classificationPositions[x] = new(i, j);
-                _colors[x] = c[x].Color;
-                i = j;
+                _colors[i] = c[i].Color;
+                _centers[i] = c[i].Center;
+                _axisWeights[i] = c[i].AxisWeight;
+                _weights[i] = c[i].Weight;
+                _blendRanges[i] = c[i].BlendRange;
             }
         }
 
@@ -69,11 +62,13 @@ namespace Cardamom.ImageProcessing.Filters
 
             s_ClassifyShader ??= ComputeShader.FromFile("Resources/ImageProcessing/Filters/classify.comp");
 
+            s_ClassifyShader.SetInt32(s_ModeLocation, _blend ? 1 : 0);
             s_ClassifyShader.SetInt32(s_ClassificationCountLocation, _colors.Length);
             s_ClassifyShader.SetColorArray(s_ColorLocation, _colors);
-            s_ClassifyShader.SetVector2iArray(s_ConditionPositionLocation, _classificationPositions);
-            s_ClassifyShader.SetInt32Array(s_ConditionChannelLocation, _conditionChannels);
-            s_ClassifyShader.SetVector2Array(s_ConditionRangeLocation, _conditionRanges);
+            s_ClassifyShader.SetVector4Array(s_CenterLocation, _centers);
+            s_ClassifyShader.SetVector4Array(s_AxisWeightLocation, _axisWeights);
+            s_ClassifyShader.SetFloatArray(s_WeightLocation, _weights);
+            s_ClassifyShader.SetFloatArray(s_BlendRangeLocation, _blendRanges);
 
             s_ClassifyShader.SetInt32(s_ChannelLocation, (int)channel);
 
@@ -88,6 +83,7 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
+            private bool _blend;
             private readonly List<Classification> _classifications = new();
 
             public Builder AddClassification(Classification classification)
@@ -102,9 +98,15 @@ namespace Cardamom.ImageProcessing.Filters
                 return this;
             }
 
+            public Builder SetBlend(bool blend)
+            {
+                _blend = blend;
+                return this;
+            }
+
             public IFilter Build()
             {
-                return new Classify(_classifications);
+                return new Classify(_blend, _classifications);
             }
         }
     }

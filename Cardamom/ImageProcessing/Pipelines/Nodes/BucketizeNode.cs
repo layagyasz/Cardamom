@@ -3,19 +3,18 @@ using Cardamom.Utils.Suppliers;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
-    public class ClassifyNode : BaseFilterPipelineNode
+    public class BucketizeNode : BaseFilterPipelineNode
     {
         public class Parameters
         {
-            public ISupplier<bool>? Blend { get; set; }
-            public ISupplier<IEnumerable<Classify.Classification>>? Classifications { get; set; }
+            public ISupplier<IEnumerable<Bucketize.Bucket>>? Buckets { get; set; }
         }
 
         public override bool Inline => true;
 
         private readonly Parameters _parameters;
 
-        public ClassifyNode(
+        public BucketizeNode(
             string key, Channel channel, Dictionary<string, string> inputs, string? output, Parameters parameters)
             : base(key, channel, inputs, output)
         {
@@ -24,14 +23,10 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
 
         public override IFilter BuildFilter()
         {
-            var builder = new Classify.Builder();
-            if (_parameters.Classifications != null)
+            var builder = new Bucketize.Builder();
+            if (_parameters.Buckets != null)
             {
-                builder.AddAllClassifications(_parameters.Classifications.Get());
-            }
-            if (_parameters.Blend != null)
-            {
-                builder.SetBlend(_parameters.Blend.Get());
+                builder.AddAllBuckets(_parameters.Buckets.Get());
             }
             return builder.Build();
         }
@@ -40,7 +35,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         {
             public override IPipelineNode Build()
             {
-                return new ClassifyNode(Key!, Channel, Inputs, Output, Parameters);
+                return new BucketizeNode(Key!, Channel, Inputs, Output, Parameters);
             }
         }
     }

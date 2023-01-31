@@ -1,4 +1,5 @@
-﻿using Cardamom.ImageProcessing.Pipelines.Nodes;
+﻿using Cardamom.Graphics.Core;
+using Cardamom.ImageProcessing.Pipelines.Nodes;
 using OpenTK.Graphics.OpenGL4;
 
 namespace Cardamom.ImageProcessing.Pipelines
@@ -125,7 +126,11 @@ namespace Cardamom.ImageProcessing.Pipelines
                 outs[i] = _roots[i].Run(canvasProvider);
                 _roots[i].Release(canvasProvider);
             }
+            Error.LogGLError("compute");
+
             GL.Finish();
+            Error.LogGLError("compute");
+
             return outs;
         }
 

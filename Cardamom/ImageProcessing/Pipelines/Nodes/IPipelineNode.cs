@@ -12,7 +12,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         Canvas Run(Canvas? output, Dictionary<string, Canvas> inputs);
 
         [JsonDerivedType(typeof(AdjustNode.Builder), "Adjust")]
-        [JsonDerivedType(typeof(ClassifyNode.Builder), "Classify")]
+        [JsonDerivedType(typeof(BucketizeNode.Builder), "Classify")]
         [JsonDerivedType(typeof(CombineNode.Builder), "Combine")]
         [JsonDerivedType(typeof(CylinderizeNode.Builder), "Cylinderize")]
         [JsonDerivedType(typeof(DenormalizeNode.Builder), "Denormalize")]

@@ -147,8 +147,7 @@ namespace Cardamom
             var sphereModel =
                 new InteractiveModel<VertexLit3>(
                     new Model<VertexLit3>(
-                        vertices, 
-                        PrimitiveType.Triangles, 
+                        new(vertices, PrimitiveType.Triangles), 
                         resources.GetShader("shader-simple-light"), 
                         new(
                             Texture.Create(new(resolution, resolution), Color4.White), 

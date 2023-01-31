@@ -77,6 +77,9 @@
     <None Update="Resources\ImageProcessing\Filters\adjust.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Update="Resources\ImageProcessing\Filters\bucketize.comp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\ImageProcessing\Filters\classify.comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
