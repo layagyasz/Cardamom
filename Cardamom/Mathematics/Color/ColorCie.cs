@@ -11,5 +11,10 @@
             X = x;
             Y = y;
         }
+
+        public override string ToString()
+        {
+            return string.Format($"[ColorCie: X={X}, Y={Y}, Z={Z}]");
+        }
     }
 }

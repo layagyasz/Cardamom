@@ -86,7 +86,7 @@ namespace Cardamom.Collections
 
         public T Get(float x)
         {
-            return _keys[IndexOf(x)];
+            return _keys[IndexOf(x * Total)];
         }
 
         public T Get(int index)
@@ -136,7 +136,7 @@ namespace Cardamom.Collections
             return true;
         }
 
-        private int IndexOf(double interval)
+        private int IndexOf(float interval)
         {
             if (Count == 0)
             {

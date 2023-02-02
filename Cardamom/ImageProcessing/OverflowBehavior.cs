@@ -1,5 +1,8 @@
-﻿namespace Cardamom.ImageProcessing
+﻿using System.Text.Json.Serialization;
+
+namespace Cardamom.ImageProcessing
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum OverflowBehavior
     {
         None = 0,

@@ -8,7 +8,7 @@ namespace Cardamom.Utils.Suppliers.Vector
 
         public Vector4 Get()
         {
-            var value = ComponentValue!.Get();
+            var value = ComponentValue?.Get() ?? 0;
             return new(value, value, value, value);
         }
     }

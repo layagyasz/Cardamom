@@ -8,7 +8,7 @@ namespace Cardamom.Utils.Suppliers.Matrix
 
         public Matrix4 Get()
         {
-            var diagonal = Diagonal!.Get();
+            var diagonal = Diagonal?.Get() ?? 0;
             return new(
                 new(diagonal, 0, 0, 0),
                 new(0, diagonal, 0, 0),

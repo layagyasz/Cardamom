@@ -27,13 +27,12 @@ vec4 generate(vec4 v) {
 	vec4 nearest_color = vec4(0, 0, 0, 0);
 	for (int i=0; i<classification_count; ++i) {
 		vec4 d = (centers[i] - v) * axis_weights[i];
-		float distance = dot(d, d);
-		float c = weights[i] * max(0, 1 - distance / blend_ranges[i]);
+		float c = weights[i] * max(0, 1 - dot(d, d) / blend_ranges[i]);
 		result += c * colors[i];
 		weight_total += c;
-		if (i ==0 || distance < nearest)
+		if (mode != MODE_BLEND && (i ==0 || c > nearest))
 		{
-			nearest = distance;
+			nearest = c;
 			nearest_color = colors[i];
 		}
 	}

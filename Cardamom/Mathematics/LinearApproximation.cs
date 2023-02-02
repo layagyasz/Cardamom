@@ -1,17 +1,16 @@
-﻿using MathNet.Numerics.Statistics;
+﻿using Cardamom.Json;
 
 namespace Cardamom.Mathematics
 {
     public class LinearApproximation
     {
-        public float Minimum { get; set; }
-        public float Maximum { get; set; }
+        public Interval Range { get; set; }
         public float Resolution { get; set; }
         public float[] Values { get; set; } = Array.Empty<float>();
 
         public float GetPoint(float x)
         {
-            if (x < Minimum || x > Maximum)
+            if (!Range.Contains(x))
             {
                 return float.NaN;
             }
@@ -26,11 +25,11 @@ namespace Cardamom.Mathematics
             {
                 return float.NaN;
             }
-            if (min < Minimum || min > Maximum)
+            if (!Range.Contains(min))
             {
                 return float.NaN;
             }
-            if (max < Minimum || max > Maximum)
+            if (!Range.Contains(max))
             {
                 return float.NaN;
             }
@@ -55,16 +54,20 @@ namespace Cardamom.Mathematics
 
         private int GetBucket(float x)
         {
-            return (int)((x - Minimum) / Resolution);
+            return (int)((x - Range.Minimum) / Resolution);
         }
 
         private float GetBucketA(float x, int bucket)
         {
-            return (x - (bucket * Resolution + Minimum)) / Resolution;
+            return (x - (bucket * Resolution + Range.Minimum)) / Resolution;
         }
 
         private float Lerp(int bucket, float a)
         {
+            if (bucket == Values.Length - 1)
+            {
+                return Values[bucket];
+            }
             return Values[bucket] * (1 - a) + Values[bucket + 1] * a;
         }
     }
