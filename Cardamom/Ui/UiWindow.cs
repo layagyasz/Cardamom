@@ -9,11 +9,11 @@ namespace Cardamom.Ui
     public class UiWindow
     {
         public RenderWindow RenderWindow { get; }
-        public IRenderable? UiRoot { get; set; }
 
         private readonly UiRootController _controller;
         private readonly UiContext _context;
 
+        private IRenderable? _uiRoot;
         private MouseListener? _mouseListener;
         private KeyboardListener? _keyboardListener;
 
@@ -49,7 +49,14 @@ namespace Cardamom.Ui
             _mouseListener.Bind(RenderWindow);
             _context.Bind(mouseListener);
             _controller.Bind(_mouseListener);
+        }
 
+        public void SetRoot(IRenderable root)
+        {
+            _uiRoot = root;
+            _uiRoot.Initialize();
+            Vector2 viewport = RenderWindow.GetViewPort().Size;
+            _uiRoot.ResizeContext(new(viewport.X, viewport.Y, 0));
         }
 
         public void Start()
@@ -64,10 +71,10 @@ namespace Cardamom.Ui
 
                 long frameElapsed = stopwatch.ElapsedMilliseconds;
                 long delta = frameElapsed - elapsed;
-                if (UiRoot != null)
+                if (_uiRoot != null)
                 {
-                    UiRoot.Update(delta);
-                    UiRoot.Draw(RenderWindow, _context);
+                    _uiRoot.Update(delta);
+                    _uiRoot.Draw(RenderWindow, _context);
                 }
                 _keyboardListener?.DispatchEvents(delta);
                 _mouseListener?.DispatchEvents(delta);
@@ -91,7 +98,7 @@ namespace Cardamom.Ui
             RenderWindow.PopProjectionMatrix();
             RenderWindow.PushProjection(projection);
 
-            UiRoot?.ResizeContext(new(e.Size.X, e.Size.Y, 0));
+            _uiRoot?.ResizeContext(new(e.Size.X, e.Size.Y, 0));
         }
 
         private Projection GetDefaultProjection()

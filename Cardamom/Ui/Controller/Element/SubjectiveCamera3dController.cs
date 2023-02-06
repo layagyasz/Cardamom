@@ -12,16 +12,19 @@ namespace Cardamom.Ui.Controller.Element
         public EventHandler<EventArgs>? Focused { get; set; }
 
         public float KeySensitivity { get; set; } = 1f;
+        public float MouseSensitivity { get; set; } = 1f;
         public float MouseWheelSensitivity { get; set; } = 1f;
         public Interval PitchRange { get; set; } = Interval.Unbounded;
-        public Interval RollRange { get; set; } = Interval.Unbounded;
+        public Interval YawRange { get; set; } = Interval.Unbounded;
         public Interval DistanceRange { get; set; } = Interval.Unbounded;
 
-        private readonly SubjectiveCamera3d? _camera;
+        private readonly SubjectiveCamera3d _camera;
+        private readonly float _surfaceDepth;
 
-        public SubjectiveCamera3dController(SubjectiveCamera3d camera)
+        public SubjectiveCamera3dController(SubjectiveCamera3d camera, float surfaceDepth)
         {
             _camera = camera;
+            _surfaceDepth = surfaceDepth;
         }
 
         public void Bind(object @object) { }
@@ -33,16 +36,16 @@ namespace Cardamom.Ui.Controller.Element
             switch (e.Key)
             {
                 case Keys.Left:
-                    _camera!.SetYaw(RollRange.Clamp(_camera.Yaw - KeySensitivity * e.TimeDelta));
+                    _camera.SetYaw(YawRange.Clamp(_camera.Yaw - KeySensitivity * e.TimeDelta));
                     return true;
                 case Keys.Right:
-                    _camera!.SetYaw(RollRange.Clamp(_camera.Yaw + KeySensitivity * e.TimeDelta));
+                    _camera.SetYaw(YawRange.Clamp(_camera.Yaw + KeySensitivity * e.TimeDelta));
                     return true;
                 case Keys.Up:
-                    _camera!.SetPitch(PitchRange.Clamp(_camera.Pitch + KeySensitivity * e.TimeDelta));
+                    _camera.SetPitch(PitchRange.Clamp(_camera.Pitch + KeySensitivity * e.TimeDelta));
                     return true;
                 case Keys.Down:
-                    _camera!.SetPitch(PitchRange.Clamp(_camera.Pitch - KeySensitivity * e.TimeDelta));
+                    _camera.SetPitch(PitchRange.Clamp(_camera.Pitch - KeySensitivity * e.TimeDelta));
                     return true;
             }
             return false;
@@ -70,12 +73,15 @@ namespace Cardamom.Ui.Controller.Element
 
         public bool HandleMouseButtonDragged(MouseButtonDragEventArgs e)
         {
-            return false;
+            var d = (_camera.Distance - _surfaceDepth) * MouseSensitivity * e.NdcDelta;
+            _camera.SetPitch(PitchRange.Clamp(_camera.Pitch + d.Y));
+            _camera.SetYaw(YawRange.Clamp(_camera.Yaw + d.X));
+            return true;
         }
 
         public bool HandleMouseWheelScrolled(MouseWheelEventArgs e)
         {
-            _camera!.SetDistance(DistanceRange.Clamp(_camera.Distance - MouseWheelSensitivity * e.OffsetY));
+            _camera.SetDistance(DistanceRange.Clamp(_camera.Distance - MouseWheelSensitivity * e.OffsetY));
             return true;
         }
 

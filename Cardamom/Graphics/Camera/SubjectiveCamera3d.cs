@@ -9,12 +9,8 @@ namespace Cardamom.Graphics.Camera
         public Vector3 Focus { get; private set; }
         public float Distance { get; private set; }
 
-        public SubjectiveCamera3d(float aspectRatio, float farPlane, Vector3 focus, float distance)
-            : base(aspectRatio, farPlane)
-        {
-            Focus = focus;
-            Distance = distance;
-        }
+        public SubjectiveCamera3d(float farPlane)
+            : base(farPlane) { }
 
         public void SetFocus(Vector3 focus)
         {

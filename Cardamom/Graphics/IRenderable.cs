@@ -7,6 +7,6 @@ namespace Cardamom.Graphics
     {
         void Draw(RenderTarget target, UiContext context);
         void Update(long delta);
-        public void ResizeContext(Vector3 bounds);
+        void ResizeContext(Vector3 bounds);
     }
 }

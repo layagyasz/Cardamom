@@ -91,13 +91,21 @@ namespace Cardamom.Window
                         (MouseButton)_depressedButton!,
                         _depressedPosition,
                         _draggedPosition,
-                        e.Delta));
+                        e.Delta, 
+                        WindowToNdc(e.Delta)));
             }
         }
 
         private void HandleMouseWheelScrolled(object? sender, MouseWheelEventArgs e)
         {
             MouseWheelScrolled?.Invoke(this, e);
+        }
+
+        private Vector2 WindowToNdc(Vector2 position)
+        {
+            var v = position / _window!.GetViewPort().Size;
+            v.Y = -v.Y;
+            return v;
         }
     }
 }

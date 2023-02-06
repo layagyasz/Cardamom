@@ -7,6 +7,7 @@
         public Texture? Texture0 { get; set; }
         public Texture? Texture1 { get; set; }
         public Texture? Texture2 { get; set; }
+        public bool IsPretransformed { get; set; }
 
         public RenderResources(BlendMode blendMode, RenderShader shader)
         {

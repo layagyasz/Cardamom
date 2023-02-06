@@ -157,10 +157,11 @@ namespace Cardamom
                     new DebugController());
             sphereModel.Controller.Clicked += (s, e) => Console.WriteLine(e.Position.Length);
 
-            var camera = new SubjectiveCamera3d(1.5f, 1000, new(), 2);
+            var camera = new SubjectiveCamera3d(1000);
+            camera.SetDistance(2);
             var sceneController =
                 new PassthroughController(
-                    new SubjectiveCamera3dController(camera)
+                    new SubjectiveCamera3dController(camera, 1f)
                     {
                         KeySensitivity = 0.0005f,
                         MouseWheelSensitivity = 0.1f,
@@ -182,8 +183,7 @@ namespace Cardamom
                         UiElementFactory.CreatePaneLayer(new List<IRenderable>() { pane }).Item1
                     },
                     scene);
-            screen.Initialize();
-            ui.UiRoot = screen;
+            ui.SetRoot(screen);
             ui.Start();
         }
     }

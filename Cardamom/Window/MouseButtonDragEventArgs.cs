@@ -9,13 +9,16 @@ namespace Cardamom.Window
         public Vector2 Start { get; }
         public Vector2 End { get; }
         public Vector2 Delta { get; }
+        public Vector2 NdcDelta { get; }
 
-        public MouseButtonDragEventArgs(MouseButton button, Vector2 start, Vector2 end, Vector2 delta)
+        public MouseButtonDragEventArgs(
+            MouseButton button, Vector2 start, Vector2 end, Vector2 delta, Vector2 ndcDelta)
         {
             Button = button;
             Start = start;
             End = end;
             Delta = delta;
+            NdcDelta = ndcDelta;
         }
 
         public override string ToString()

@@ -64,7 +64,6 @@ vec3 combine_normals_tan(vec3 surface_normal, vec3 texture_normal)
     return as_cartesian(as_spherical(surface_normal) + as_spherical(texture_normal) - vec2(pi_over_2, pi_over_2));
 }
 
-
 void main()
 {
     vec4 lighting = texture(lighting_texture, vert_lighting_tex_coord / textureSize(lighting_texture, 0));
@@ -78,7 +77,7 @@ void main()
         texture_normal =  2 * texture(normal_texture, vert_normal_tex_coord / textureSize(normal_texture, 0)).rgb - 1;
         texture_normal = normalize(vec3(texture_normal.x * roughness, texture_normal.y * roughness, texture_normal.z));
     }
-    vec3 normal = combine_normals_tan(normalize(vert_normal), texture_normal);
+    vec3 normal = combine_normals_quat(normalize(vert_normal), texture_normal);
 
     float diffuse = light_intensity * max(0, dot(normal, light_normal));
     float specular = specular_params.x 
