@@ -2,12 +2,13 @@
 {
     public struct RenderResources
     {
-        public BlendMode BlendMode { get; set; }
+        public BlendMode BlendMode { get; set; } = BlendMode.Alpha;
         public RenderShader Shader { get; set; }
         public Texture? Texture0 { get; set; }
         public Texture? Texture1 { get; set; }
         public Texture? Texture2 { get; set; }
         public bool IsPretransformed { get; set; }
+        public bool EnableDepthTest { get; set; } = true;
 
         public RenderResources(BlendMode blendMode, RenderShader shader)
         {

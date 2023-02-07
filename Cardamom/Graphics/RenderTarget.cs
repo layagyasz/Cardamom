@@ -69,8 +69,15 @@ namespace Cardamom.Graphics
                 resources.Shader.SetMatrix4("model", GetModelMatrix());
             }
 
-            GL.Enable(EnableCap.DepthTest);
-            GL.DepthFunc(DepthFunction.Lequal);
+            if (resources.EnableDepthTest)
+            {
+                GL.Enable(EnableCap.DepthTest);
+                GL.DepthFunc(DepthFunction.Lequal);
+            }
+            else
+            {
+                GL.Disable(EnableCap.DepthTest);
+            }
 
             GL.Enable(EnableCap.Blend);
             GL.BlendEquation(resources.BlendMode.Equation);
