@@ -16,6 +16,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             public ISupplier<float>? Persistence { get; set; }
             public ISupplier<float>? Amplitude { get; set; }
             public ISupplier<IntInterval>? Density { get; set; }
+            public ISupplier<Interval>? Scale { get; set; }
         }
 
         public override bool Inline => true;
@@ -59,6 +60,10 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
             if (_parameters.Density != null)
             {
                 builder.SetDensity(_parameters.Density.Get());
+            }
+            if (_parameters.Scale != null)
+            {
+                builder.SetScale(_parameters.Scale.Get());
             }
             return builder.Build();
         }

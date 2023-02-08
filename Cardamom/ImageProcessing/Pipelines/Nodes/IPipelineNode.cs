@@ -22,6 +22,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         [JsonDerivedType(typeof(LatticeNoiseNode.Builder), "LatticeNoise")]
         [JsonDerivedType(typeof(SobelNode.Builder), "Sobel")]
         [JsonDerivedType(typeof(SpherizeNode.Builder), "Spherize")]
+        [JsonDerivedType(typeof(SpotNoiseNode.Builder), "SpotNoise")]
         [JsonDerivedType(typeof(WaveFormNode.Builder), "WaveForm")]
         [JsonDerivedType(typeof(WhiteNoiseNode.Builder), "WhiteNoise")]
         public interface IBuilder : IKeyed

@@ -4,6 +4,7 @@ using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
 using Cardamom.ImageProcessing.Pipelines;
 using Cardamom.ImageProcessing.Pipelines.Nodes;
+using Cardamom.Mathematics;
 using Cardamom.Mathematics.Coordinates;
 using Cardamom.Mathematics.Coordinates.Projections;
 using Cardamom.Mathematics.Geometry;
@@ -26,10 +27,10 @@ namespace Cardamom
             var window = new RenderWindow("Cardamom - Example", new Vector2i(800, 600));
 
             int resolution = 2048;
-            var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
+            var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.White);
             var random = new Random();
             var seed = ConstantSupplier<int>.Create(random.Next());
-            var noiseFrequency = ConstantSupplier<float>.Create(50f);
+            var noiseFrequency = ConstantSupplier<float>.Create(1f);
             var pipeline =
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
@@ -40,7 +41,7 @@ namespace Cardamom
                             .SetInput("input", "new")
                             .SetParameters(
                                 new GradientNode.Parameters()
-                                { 
+                                {
                                     Scale = ConstantSupplier<Vector2>.Create(
                                         new Vector2(1f / resolution, 1f / resolution)),
                                     Gradient = ConstantSupplier<Matrix4x2>.Create(
@@ -59,8 +60,7 @@ namespace Cardamom
                             .SetParameters(
                                 new()
                                 {
-                                    Seed = seed,
-                                    Frequency = noiseFrequency
+                                    Seed = seed
                                 }))
                     .AddNode(
                         new SobelNode.Builder()
@@ -117,7 +117,7 @@ namespace Cardamom
                     new(0, text.Item1.Position.Y + text.Item1.Size.Y, 0));
             pane.Add(table.Item1);
 
-            var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(990, 64);
+            var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(1, 64);
             VertexLit3[] vertices = new VertexLit3[6 * uvSphereSolid.Faces.Length];
             var projection = new CylindricalProjection.Spherical();
             for (int i=0; i<uvSphereSolid.Faces.Length; ++i)

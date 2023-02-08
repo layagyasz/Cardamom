@@ -17,8 +17,9 @@ namespace Cardamom.ImageProcessing.Filters
         private static readonly int s_PersistenceLocation = 3;
         private static readonly int s_AmplitudeLocation = 4;
         private static readonly int s_DensityLocation = 5;
-        private static readonly int s_SeedLocation = 6;
-        private static readonly int s_ChannelLocation = 7;
+        private static readonly int s_ScaleLocation = 6;
+        private static readonly int s_SeedLocation = 7;
+        private static readonly int s_ChannelLocation = 8;
 
         public struct Settings
         {
@@ -28,6 +29,7 @@ namespace Cardamom.ImageProcessing.Filters
             public float Persistence { get; set; } = 0.6f;
             public float Amplitude { get; set; } = 1f;
             public IntInterval Density { get; set; } = new(0, 1);
+            public Interval Scale { get; set; } = new(1, 1);
             public int Seed { get; set; }
 
             public Settings() { }
@@ -54,6 +56,7 @@ namespace Cardamom.ImageProcessing.Filters
             s_SpotNoiseShader.SetFloat(s_AmplitudeLocation, _settings.Amplitude);
             s_SpotNoiseShader.SetVector2i(
                 s_DensityLocation, new(_settings.Density.Minimum, _settings.Density.Maximum));
+            s_SpotNoiseShader.SetVector2(s_ScaleLocation, new(_settings.Scale.Minimum, _settings.Scale.Maximum));
             s_SpotNoiseShader.SetInt32(s_SeedLocation, _settings.Seed);
 
             s_SpotNoiseShader.SetInt32(s_ChannelLocation, (int)channel);
@@ -110,6 +113,12 @@ namespace Cardamom.ImageProcessing.Filters
             public Builder SetDensity(IntInterval density)
             {
                 _settings.Density = density;
+                return this;
+            }
+
+            public Builder SetScale(Interval scale)
+            {
+                _settings.Scale = scale;
                 return this;
             }
 

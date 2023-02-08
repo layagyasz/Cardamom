@@ -17,8 +17,9 @@ layout(location=2) uniform int octaves;
 layout(location=3) uniform float persistence;
 layout(location=4) uniform float amplitude;
 layout(location=5) uniform ivec2 density;
-layout(location=6) uniform int seed;
-layout(location=7) uniform int channel;
+layout(location=6) uniform vec2 scale;
+layout(location=7) uniform int seed;
+layout(location=8) uniform int channel;
 
 const vec4 r0 = vec4(823746.0f, 12306.0f, 823452.0f, 3234874.0f);
 const vec4 r1 = vec4(23784.0f, 9183.0f, 23874.0f, 27432.0f);
@@ -53,11 +54,7 @@ float rand(vec4 v, int seed) {
 	return construct_float(hash(floatBitsToUint(v), seed));
 }
 
-float generate_octave(vec3 position, float size) {
-	if (size < EPSILON) {
-		return -1f;
-	}
-
+float generate_octave(vec3 position) {
 	int gx = int(floor(position.x));
 	int gy = int(floor(position.y));
 	int gz = int(floor(position.z));
@@ -77,11 +74,12 @@ float generate_octave(vec3 position, float size) {
 				for (int i = 0; i < num_spots; ++i)
 				{
 					s.w = i;
+					float a = (scale.y - scale.x) * rand(s, seed) + scale.x;
 					vec3 c = 
 						vec3(
 							dx - x - rand(s * r1, seed) - 0.5f,
 							dy - y - rand(s * r2, seed) - 0.5f,
-							dz - z - rand(s * r3, seed) - 0.5f) / size;
+							dz - z - rand(s * r3, seed) - 0.5f) / a;
 					val = max(val, 1f - clamp(dot(c, c), 0f, 2f));
 				}
 			}
@@ -96,7 +94,7 @@ float generate(vec3 position) {
 	float f = frequency;
     for (int i = 0; i < octaves; ++i)
     {
-        total = max(total, generate_octave(f * position, a));
+        total = max(total, a * generate_octave(f * position));
         a *= persistence;
         f *= lacunarity;
     }
