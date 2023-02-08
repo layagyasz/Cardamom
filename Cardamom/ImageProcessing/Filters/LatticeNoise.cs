@@ -112,8 +112,8 @@ namespace Cardamom.ImageProcessing.Filters
             s_LatticeNoiseShader.SetInt32(s_EvaluatorLocation, (int)_settings.Evaluator);
             s_LatticeNoiseShader.SetInt32(s_InterpolatorLocation, (int)_settings.Interpolator);
             s_LatticeNoiseShader.SetInt32(s_PreTreatmentLocation, (int)_settings.PreTreatment);
-            s_LatticeNoiseShader.SetInt32(s_SeedLocation, _settings.Seed);
             s_LatticeNoiseShader.SetInt32(s_PostTreatmentLocation, (int)_settings.PostTreatment);
+            s_LatticeNoiseShader.SetInt32(s_SeedLocation, _settings.Seed);
 
             s_LatticeNoiseShader.SetInt32(s_ChannelLocation, (int)channel);
 

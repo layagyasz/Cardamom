@@ -29,12 +29,7 @@ namespace Cardamom
             var canvases = new CachingCanvasProvider(new((int)resolution, (int)resolution), Color4.Black);
             var random = new Random();
             var seed = ConstantSupplier<int>.Create(random.Next());
-            var noiseFrequency = ConstantSupplier<float>.Create(2f);
-            var noiseEvaluator = ConstantSupplier<LatticeNoise.Evaluator>.Create(LatticeNoise.Evaluator.Gradient);
-            var noiseInterpolator =
-            ConstantSupplier<LatticeNoise.Interpolator>.Create(LatticeNoise.Interpolator.HermiteQuintic);
-            var noisePreTreatment = ConstantSupplier<LatticeNoise.Treatment>.Create(LatticeNoise.Treatment.None);
-            var noisePostTreatment = ConstantSupplier<LatticeNoise.Treatment>.Create(LatticeNoise.Treatment.None);
+            var noiseFrequency = ConstantSupplier<float>.Create(50f);
             var pipeline =
                 new Pipeline.Builder()
                     .AddNode(new GeneratorNode.Builder().SetKey("new"))
@@ -57,31 +52,22 @@ namespace Cardamom
                             .SetChannel(Channel.All)
                             .SetInput("input", "gradient"))
                     .AddNode(
-                        new LatticeNoiseNode.Builder()
-                            .SetKey("lattice-noise")
+                        new SpotNoiseNode.Builder()
+                            .SetKey("spot-noise")
                             .SetChannel(Channel.Color)
                             .SetInput("input", "spherize")
                             .SetParameters(
                                 new()
                                 {
                                     Seed = seed,
-                                    Frequency = noiseFrequency,
-                                    Evaluator = noiseEvaluator,
-                                    Interpolator = noiseInterpolator,
-                                    PreTreatment = noisePreTreatment,
-                                    PostTreatment = noisePostTreatment
+                                    Frequency = noiseFrequency
                                 }))
-                    .AddNode(
-                        new DenormalizeNode.Builder()
-                            .SetKey("denormalize")
-                            .SetChannel(Channel.Color)
-                            .SetInput("input", "lattice-noise"))
                     .AddNode(
                         new SobelNode.Builder()
                             .SetKey("sobel")
                             .SetChannel(Channel.Red)
-                            .SetInput("input", "denormalize"))
-                    .AddOutput("denormalize")
+                            .SetInput("input", "spot-noise"))
+                    .AddOutput("spot-noise")
                     .AddOutput("sobel")
                     .Build();
             var output = pipeline.Run(canvases);
@@ -131,7 +117,7 @@ namespace Cardamom
                     new(0, text.Item1.Position.Y + text.Item1.Size.Y, 0));
             pane.Add(table.Item1);
 
-            var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(1, 64);
+            var uvSphereSolid = Solid<Spherical3>.GenerateSphericalUvSphere(990, 64);
             VertexLit3[] vertices = new VertexLit3[6 * uvSphereSolid.Faces.Length];
             var projection = new CylindricalProjection.Spherical();
             for (int i=0; i<uvSphereSolid.Faces.Length; ++i)
@@ -145,17 +131,13 @@ namespace Cardamom
                 }
             }
             var sphereModel =
-                new InteractiveModel<VertexLit3>(
-                    new Model<VertexLit3>(
-                        new(vertices, PrimitiveType.Triangles), 
-                        resources.GetShader("shader-simple-light"), 
-                        new(
-                            Texture.Create(new(resolution, resolution), Color4.White), 
-                            output[1].GetTexture(),
-                            Texture.Create(new(resolution, resolution), new(1f, 128f, 0, 0.25f)))), 
-                    new Sphere(new(), 1),
-                    new DebugController());
-            sphereModel.Controller.Clicked += (s, e) => Console.WriteLine(e.Position.Length);
+                new Model<VertexLit3>(
+                    new(vertices, PrimitiveType.Triangles),
+                    resources.GetShader("shader-default"),
+                    new(
+                        output[0].GetTexture(),
+                        output[1].GetTexture(),
+                        Texture.Create(new(resolution, resolution), new(1f, 128f, 0, 0.25f))));
 
             var camera = new SubjectiveCamera3d(1000);
             camera.SetDistance(2);
