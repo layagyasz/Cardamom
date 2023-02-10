@@ -20,25 +20,22 @@ namespace Cardamom.Graphing
             while (open.Count > 0)
             {
                 var current = (LeftWrapper)open.Pop();
-                while (current.HasNextPreference())
+                while (Equals(current.Match, default) && current.HasNextPreference())
                 {
-                    while (Equals(current.Match, default))
+                    var r = (RightWrapper)current.GetNextPreference();
+                    var preference = r.GetCost(current);
+                    var currentMatch = (LeftWrapper?)r.Match;
+                    if (Equals(currentMatch, default))
                     {
-                        var r = (RightWrapper)current.GetNextPreference();
-                        var preference = r.GetCost(current);
-                        var currentMatch = (LeftWrapper?)r.Match;
-                        if (Equals(currentMatch, default))
-                        {
-                            r.Update(current);
-                            current.Update(r);
-                        }
-                        else if (r.GetCost(current) > r.GetCost(currentMatch))
-                        {
-                            open.Push(currentMatch);
-                            currentMatch.Update(default);
-                            r.Update(current);
-                            current.Update(r);
-                        }
+                        r.Update(current);
+                        current.Update(r);
+                    }
+                    else if (r.GetCost(current) > r.GetCost(currentMatch))
+                    {
+                        open.Push(currentMatch);
+                        currentMatch.Update(default);
+                        r.Update(current);
+                        current.Update(r);
                     }
                 }
             }

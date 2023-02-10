@@ -64,6 +64,10 @@ namespace Cardamom.Collections
 
         public void Add(T key, float value)
         {
+            if (value < 0)
+            {
+                throw new ArgumentException("Cannot add negative value to WeightedVector");
+            }
             if (Count + 1 == _values.Length)
             {
                 T[] newK = new T[2 * _values.Length];
