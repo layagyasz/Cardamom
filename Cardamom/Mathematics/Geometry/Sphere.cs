@@ -15,12 +15,17 @@ namespace Cardamom.Mathematics.Geometry
 
         public float? GetRayIntersection(Ray3 ray)
         {
-            var q = ray.Point - Center;
+            return GetRayIntersection(Center, Radius, ray);
+        }
+
+        public static float? GetRayIntersection(Vector3 center, float radius, Ray3 ray)
+        {
+            var q = ray.Point - center;
             var (t1, t2) = 
                 Quadratic.Solve(
                     ray.Direction.LengthSquared, 
                     2 * Vector3.Dot(ray.Direction, q), 
-                    q.LengthSquared - Radius * Radius);
+                    q.LengthSquared - radius * radius);
             if (t1 == null || t2 == null)
             {
                 return null;

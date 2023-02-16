@@ -22,7 +22,7 @@ namespace Cardamom.Collections
             get { return _values.Where(x => !x?.Equals(default) ?? false).Select(x => x!).ToList(); }
         }
 
-        public int Count { get { return _values.Length; } }
+        public int Count { get { return _values.Count(x => !Equals(x, default)); } }
         public bool IsReadOnly { get; } = false;
 
         public EnumMap()

@@ -39,7 +39,11 @@ namespace Cardamom.Json.Collections
                 var files = new HashSet<string>();
                 foreach (var pattern in patterns)
                 {
-                    foreach (var file in Directory.EnumerateFiles(string.Empty, pattern, SearchOption.AllDirectories))
+                    var p = pattern.Split("::");
+                    foreach (var file 
+                        in Directory.EnumerateFiles(
+                            p.Length > 1 ? p[0] : string.Empty, p.Length > 1 ? p[1] : p[0], 
+                            SearchOption.AllDirectories))
                     {
                         files.Add(file);
                     }

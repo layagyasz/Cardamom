@@ -29,7 +29,7 @@
 
         public ArrayList()
         {
-            _values = Array.Empty<T>();
+            _values = new T[1];
         }
 
         public ArrayList(int initialSize)

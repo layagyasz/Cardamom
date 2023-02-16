@@ -5,15 +5,15 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class InteractiveModel<T> : IInteractive, IRenderable where T : struct
+    public class InteractiveModel : GraphicsResource, IInteractive, IRenderable
     {
         public IElementController Controller { get; }
         public IControlledElement? Parent { get; set; }
 
-        private readonly Model<T> _model;
+        private readonly IRenderable _model;
         private readonly ICollider3 _collider;
 
-        public InteractiveModel(Model<T> model, ICollider3 collider, IElementController controller)
+        public InteractiveModel(IRenderable model, ICollider3 collider, IElementController controller)
         {
             Controller = controller;
             _model = model;
@@ -45,6 +45,14 @@ namespace Cardamom.Ui.Elements
         public virtual void Update(long delta)
         {
             _model.Update(delta);
+        }
+
+        protected override void DisposeImpl()
+        {
+            if (_model is GraphicsResource graphicsResource)
+            {
+                graphicsResource.Dispose();
+            }
         }
     }
 }

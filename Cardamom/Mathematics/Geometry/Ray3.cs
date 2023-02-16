@@ -12,5 +12,15 @@ namespace Cardamom.Mathematics.Geometry
             Point = point;
             Direction = direction;
         }
+
+        public Vector3 Get(float length)
+        {
+            return Point + Direction * length;
+        }
+
+        public override string ToString()
+        {
+            return string.Format($"[Ray3: Point={Point}, Direction={Direction}]");
+        }
     }
 }

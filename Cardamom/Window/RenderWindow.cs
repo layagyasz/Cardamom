@@ -29,7 +29,7 @@ namespace Cardamom.Window
                 {
                     Title = title,
                     Size = size,
-                    Flags = ContextFlags.ForwardCompatible,
+                    Flags = ContextFlags.ForwardCompatible
                 });
             _window.Context.SwapInterval = 0;
             _window.Closing += HandleClosed;
