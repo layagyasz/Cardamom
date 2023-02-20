@@ -38,7 +38,6 @@ namespace Cardamom
 
         public class Builder
         {
-            [JsonConverter(typeof(FromFileJsonConverter))]
             public TextureLibrary Textures { get; set; } = TextureLibrary.Empty;
 
             [JsonConverter(typeof(FromFileJsonConverter))]

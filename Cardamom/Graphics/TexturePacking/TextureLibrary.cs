@@ -1,4 +1,5 @@
-﻿using Cardamom.Json.Graphics.TexturePacking;
+﻿using Cardamom.Json.Collections;
+using Cardamom.Json.Graphics.TexturePacking;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics.TexturePacking
@@ -29,6 +30,7 @@ namespace Cardamom.Graphics.TexturePacking
 
         public class Builder
         {
+            [JsonConverter(typeof(FromMultipleFileJsonConverter))]
             public List<ITextureVolume.IBuilder> Volumes { get; set; } = new();
 
             public TextureLibrary Build()

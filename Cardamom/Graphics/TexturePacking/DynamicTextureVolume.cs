@@ -1,7 +1,6 @@
 ﻿using Cardamom.Json.Collections;
 using Cardamom.Mathematics;
 using OpenTK.Mathematics;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics.TexturePacking
@@ -135,19 +134,29 @@ namespace Cardamom.Graphics.TexturePacking
                 public string? Path { get; set; }
             }
 
+            public string Prefix { get; set; } = string.Empty;
+
             [JsonConverter(typeof(FromMultipleFileJsonConverter))]
             public List<DynamicSegment> Explicit { get; set; } = new();
             public List<string> Implicit { get; set; } = new();
 
             public IEnumerable<DynamicSegment> GetSegments()
             {
+                foreach (var segment in Explicit)
+                {
+                    yield return new()
+                    { 
+                        Key = Prefix + segment.Key,
+                        Path = segment.Path 
+                    };
+                }
                 foreach (var pattern in Implicit)
                 {
                     foreach (var file in Directory.EnumerateFiles(string.Empty, pattern, SearchOption.AllDirectories))
                     {
                         yield return new DynamicSegment()
                         {
-                            Key = Path.GetFileNameWithoutExtension(file),
+                            Key = Prefix + Path.GetFileNameWithoutExtension(file),
                             Path = file
                         };
                     }

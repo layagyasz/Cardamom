@@ -78,6 +78,7 @@ namespace Cardamom.Graphics
             {
                 GL.Disable(EnableCap.DepthTest);
             }
+            GL.DepthMask(resources.EnableDepthMask);
 
             GL.Enable(EnableCap.Blend);
             GL.BlendEquation(resources.BlendMode.Equation);

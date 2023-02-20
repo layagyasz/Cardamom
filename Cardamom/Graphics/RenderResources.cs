@@ -9,6 +9,7 @@
         public Texture? Texture2 { get; set; }
         public bool IsPretransformed { get; set; }
         public bool EnableDepthTest { get; set; } = true;
+        public bool EnableDepthMask { get; set; } = true;
 
         public RenderResources(BlendMode blendMode, RenderShader shader)
         {
