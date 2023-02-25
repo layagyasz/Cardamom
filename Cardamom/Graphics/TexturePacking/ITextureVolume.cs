@@ -2,7 +2,7 @@
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public interface ITextureVolume
+    public interface ITextureVolume : IDisposable
     {
         IEnumerable<TextureSegment> GetSegments();
         IEnumerable<Texture> GetTextures();

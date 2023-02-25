@@ -2,10 +2,10 @@
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public class StaticTexturePage : ITexturePage, ITextureVolume
+    public class StaticTexturePage : GraphicsResource, ITexturePage, ITextureVolume
     {
-        private readonly Texture _texture;
-        private readonly Dictionary<string, TextureSegment> _segments;
+        private Texture? _texture;
+        private Dictionary<string, TextureSegment>? _segments;
 
         public StaticTexturePage(Texture texture, IEnumerable<TextureSegment> segments)
         {
@@ -13,19 +13,26 @@ namespace Cardamom.Graphics.TexturePacking
             _segments = segments.ToDictionary(x => x.Key, x => x);
         }
 
+        protected override void DisposeImpl()
+        {
+            _texture!.Dispose();
+            _texture = null;
+            _segments = null;
+        }
+
         public IEnumerable<TextureSegment> GetSegments()
         {
-            return _segments.Values;
+            return _segments!.Values;
         }
 
         public Texture GetTexture()
         {
-            return _texture; 
+            return _texture!; 
         }
 
         public IEnumerable<Texture> GetTextures()
         {
-            yield return _texture;
+            yield return _texture!;
         }
 
         public bool Add(Texture texture, out Box2i bounds)
@@ -50,7 +57,7 @@ namespace Cardamom.Graphics.TexturePacking
 
         public TextureSegment Get(string key)
         {
-            return _segments[key];
+            return _segments![key];
         }
 
         public class Builder : ITextureVolume.IBuilder

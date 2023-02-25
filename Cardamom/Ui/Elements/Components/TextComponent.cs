@@ -11,10 +11,10 @@ namespace Cardamom.Ui.Elements.Components
 
         public void SetAttributes(ClassAttributes attributes)
         {
-            _text.SetFont(attributes.FontFace!.Element!);
+            _text.SetFont(attributes.FontFace!);
             _text.SetCharacterSize(attributes.FontSize);
             _text.SetColor(attributes.Color);
-            _text.SetShader(attributes.Shader!.Element!);
+            _text.SetShader(attributes.Shader);
         }
 
         public void AppendText(string text)

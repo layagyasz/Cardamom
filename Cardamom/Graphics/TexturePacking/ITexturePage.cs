@@ -2,7 +2,7 @@
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public interface ITexturePage
+    public interface ITexturePage : IDisposable
     {
         Texture GetTexture();
         bool Add(Texture texture, out Box2i bounds);

@@ -25,7 +25,7 @@ namespace Cardamom.Ui.Elements
         public override void SetAttributes(ClassAttributes attributes)
         {
             base.SetAttributes(attributes);
-            _cursorShader = attributes.Shader!.Element;
+            _cursorShader = attributes.Shader;
             _cursor[0] = new(new(), attributes.Color, new());
             _cursor[1] = new(new(1, 0, 0), attributes.Color, new(1, 0));
             _cursor[2] = new(new(0, attributes.FontSize, 0), attributes.Color, new(0, 1));

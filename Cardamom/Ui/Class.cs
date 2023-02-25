@@ -1,9 +1,10 @@
-﻿using Cardamom.Json;
+﻿using Cardamom.Graphics;
+using Cardamom.Json;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Ui
 {
-    public class Class : IKeyed
+    public class Class : GraphicsResource, IKeyed
     {
         [Flags]
         [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -18,7 +19,7 @@ namespace Cardamom.Ui
 
         public string Key { get; set; }
 
-        private readonly ClassAttributes[] _attributes;
+        private ClassAttributes[]? _attributes;
 
         public Class(string key, ClassAttributes[] classForStates)
         {
@@ -26,9 +27,18 @@ namespace Cardamom.Ui
             _attributes = Precondition.HasSize<ClassAttributes[], ClassAttributes>(classForStates, 16);
         }
 
+        protected override void DisposeImpl()
+        {
+            foreach (var attributes in _attributes!)
+            {
+                attributes.Dispose();
+            }
+            _attributes = null;
+        }
+
         public ClassAttributes Get(State state)
         {
-            return _attributes[(int)state];
+            return _attributes![(int)state];
         }
 
         public class Builder : IKeyed

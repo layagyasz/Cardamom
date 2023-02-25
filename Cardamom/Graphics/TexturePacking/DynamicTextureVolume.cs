@@ -5,10 +5,10 @@ using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public class DynamicTextureVolume : ITextureVolume
+    public class DynamicTextureVolume : GraphicsResource, ITextureVolume
     {
-        private readonly List<DynamicVariableSizeTexturePage> _pages = new();
-        private readonly Dictionary<string, TextureSegment> _segments = new();
+        private List<DynamicVariableSizeTexturePage>? _pages = new();
+        private Dictionary<string, TextureSegment>? _segments = new();
 
         private readonly ITexturePageSupplier _pageSupplier;
         private readonly bool _checkAllPages;
@@ -19,14 +19,24 @@ namespace Cardamom.Graphics.TexturePacking
             _checkAllPages = checkAllPages;
         }
 
+        protected override void DisposeImpl()
+        {
+            foreach (var page in _pages!)
+            {
+                page.Dispose();
+            }
+            _pages = null;
+            _segments = null;
+        }
+
         public IEnumerable<TextureSegment> GetSegments()
         {
-            return _segments.Values;
+            return _segments!.Values;
         }
 
         public IEnumerable<Texture> GetTextures()
         {
-            return _pages.Select(x => x.GetTexture());
+            return _pages!.Select(x => x.GetTexture());
         }
 
         public TextureSegment Add(string key, Texture texture)
@@ -34,7 +44,7 @@ namespace Cardamom.Graphics.TexturePacking
             Box2i bounds;
             if (_checkAllPages)
             {
-                foreach (var page in _pages)
+                foreach (var page in _pages!)
                 {
                     if (AddToPage(page, key, texture, out var segment))
                     {
@@ -44,7 +54,7 @@ namespace Cardamom.Graphics.TexturePacking
             }
             else
             {
-                if (AddToPage(_pages.Last(), key, texture, out var segment))
+                if (AddToPage(_pages!.Last(), key, texture, out var segment))
                 {
                     return segment!;
                 }
@@ -54,7 +64,7 @@ namespace Cardamom.Graphics.TexturePacking
             if (newPage.Add(texture, out bounds))
             {
                 var segment = new TextureSegment(key, newPage.GetTexture(), bounds);
-                _segments.Add(key, segment);
+                _segments!.Add(key, segment);
                 return segment;
             }
             else
@@ -68,7 +78,7 @@ namespace Cardamom.Graphics.TexturePacking
             Box2i bounds;
             if (_checkAllPages)
             {
-                foreach (var page in _pages)
+                foreach (var page in _pages!)
                 {
                     if (AddToPage(page, key, bitmap, out var segment))
                     {
@@ -78,7 +88,7 @@ namespace Cardamom.Graphics.TexturePacking
             }
             else
             {
-                if (AddToPage(_pages.Last(), key, bitmap, out var segment))
+                if (AddToPage(_pages!.Last(), key, bitmap, out var segment))
                 {
                     return segment!;
                 }
@@ -88,7 +98,7 @@ namespace Cardamom.Graphics.TexturePacking
             if (newPage.Add(bitmap, out bounds))
             {
                 var segment = new TextureSegment(key, newPage.GetTexture(), bounds);
-                _segments.Add(key, segment);
+                _segments!.Add(key, segment);
                 return segment;
             }
             else
@@ -99,7 +109,7 @@ namespace Cardamom.Graphics.TexturePacking
 
         public TextureSegment Get(string key)
         {
-            return _segments[key];
+            return _segments![key];
         }
 
         private bool AddToPage(ITexturePage page, string key, Texture texture, out TextureSegment? segment)
@@ -107,7 +117,7 @@ namespace Cardamom.Graphics.TexturePacking
             if (page.Add(texture, out var bounds))
             {
                 segment = new TextureSegment(key, page.GetTexture(), bounds);
-                _segments.Add(key, segment);
+                _segments!.Add(key, segment);
                 return true;
             }
             segment = null;
@@ -119,7 +129,7 @@ namespace Cardamom.Graphics.TexturePacking
             if (page.Add(bitmap, out var bounds))
             {
                 segment = new TextureSegment(key, page.GetTexture(), bounds);
-                _segments.Add(key, segment);
+                _segments!.Add(key, segment);
                 return true;
             }
             segment = null;

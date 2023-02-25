@@ -12,11 +12,11 @@ namespace Cardamom
 {
     [JsonConverter(typeof(BuilderJsonConverter))]
     [BuilderClass(typeof(Builder))]
-    public class GameResources
+    public class GameResources : GraphicsResource
     {
-        private readonly TextureLibrary _textures;
-        private readonly Library<RenderShader> _shaders;
-        private readonly Library<Class> _classes = new();
+        private TextureLibrary? _textures;
+        private Library<RenderShader>? _shaders;
+        private Library<Class>? _classes = new();
 
         public GameResources(
             TextureLibrary textures, Library<RenderShader> shaders, Library<Class> classes)
@@ -26,14 +26,30 @@ namespace Cardamom
             _classes = classes;
         }
 
+        protected override void DisposeImpl()
+        {
+            _textures!.Dispose();
+            _textures = null;
+            foreach (var shader in _shaders!.Values)
+            {
+                shader.Dispose();
+            }
+            _shaders = null;
+            foreach (var @class in _classes!.Values)
+            {
+                @class.Dispose();
+            }
+            _classes = null;
+        }
+
         public Class GetClass(string key)
         {
-            return _classes[key];
+            return _classes![key];
         }
 
         public RenderShader GetShader(string key)
         {
-            return _shaders[key];
+            return _shaders![key];
         }
 
         public class Builder

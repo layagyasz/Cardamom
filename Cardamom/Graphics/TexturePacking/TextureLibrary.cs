@@ -5,12 +5,12 @@ using System.Text.Json.Serialization;
 namespace Cardamom.Graphics.TexturePacking
 {
     [JsonConverter(typeof(TextureLibraryJsonConverter))]
-    public class TextureLibrary
+    public class TextureLibrary : GraphicsResource
     {
         public static readonly TextureLibrary Empty = new(Enumerable.Empty<ITextureVolume>());
 
-        private readonly List<ITextureVolume> _volumes;
-        private readonly Dictionary<string, TextureSegment> _segments;
+        private List<ITextureVolume>? _volumes;
+        private Dictionary<string, TextureSegment>? _segments;
 
         public TextureLibrary(IEnumerable<ITextureVolume> volumes)
         {
@@ -18,14 +18,24 @@ namespace Cardamom.Graphics.TexturePacking
             _segments = volumes.SelectMany(x => x.GetSegments()).ToDictionary(x => x.Key, x => x);
         }
 
+        protected override void DisposeImpl()
+        {
+            foreach (var volume in _volumes!)
+            {
+                volume.Dispose();
+            }
+            _volumes = null;
+            _segments = null;
+        }
+
         public TextureSegment Get(string key)
         {
-            return _segments[key];
+            return _segments![key];
         }
 
         public IEnumerable<TextureSegment> GetSegments()
         {
-            return _segments.Values;
+            return _segments!.Values;
         }
 
         public class Builder

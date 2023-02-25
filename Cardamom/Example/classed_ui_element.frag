@@ -12,13 +12,13 @@ in vec3 vert_internal_coord;
 layout(binding = 0) uniform settings
 {
     int mode;
-    vec2 size;
     float border_width[4];
     vec4 border_color[4];
     vec2 corner_radius[4];
 };
 
 layout(binding = 0) uniform sampler2D texture0;
+uniform vec2 size;
 
 bool outside_ellipse(vec2 point, vec2 radius)
 {

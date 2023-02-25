@@ -2,7 +2,7 @@
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public class DynamicStaticSizeTexturePage : ITexturePage
+    public class DynamicStaticSizeTexturePage : GraphicsResource, ITexturePage
     {
         public class Supplier : ITexturePageSupplier
         {
@@ -29,7 +29,7 @@ namespace Cardamom.Graphics.TexturePacking
         public Vector2i ElementSize { get; }
         public Vector2i Padding { get; }
 
-        private readonly Texture _texture;
+        private Texture? _texture;
 
         private Vector2i _cursor;
 
@@ -41,16 +41,22 @@ namespace Cardamom.Graphics.TexturePacking
             _texture = Texture.Create(size, fill);
         }
 
+        protected override void DisposeImpl()
+        {
+            _texture!.Dispose();
+            _texture = null;
+        }
+
         public Texture GetTexture()
         {
-            return _texture;
+            return _texture!;
         }
 
         public bool Add(Texture texture, out Box2i bounds)
         {
             if (ReserveSpace(out bounds))
             {
-                _texture.Update(bounds.Min, texture);
+                _texture!.Update(bounds.Min, texture);
                 return true;
             }
             return false;
@@ -60,7 +66,7 @@ namespace Cardamom.Graphics.TexturePacking
         {
             if (ReserveSpace(out bounds))
             {
-                _texture.Update(bounds.Min, bitmap);
+                _texture!.Update(bounds.Min, bitmap);
                 return true;
             }
             return false;

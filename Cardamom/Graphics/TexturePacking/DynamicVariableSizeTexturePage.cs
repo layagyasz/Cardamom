@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public class DynamicVariableSizeTexturePage : ITexturePage
+    public class DynamicVariableSizeTexturePage : GraphicsResource, ITexturePage
     {
         private static readonly float s_MaxRowRatio = 1.4f;
 
@@ -45,7 +45,7 @@ namespace Cardamom.Graphics.TexturePacking
         private readonly Color4 _fill;
         private readonly List<Row> _rows = new();
 
-        private Texture _texture;
+        private Texture? _texture;
         private int _nextRowTop;
 
         public DynamicVariableSizeTexturePage(
@@ -57,16 +57,22 @@ namespace Cardamom.Graphics.TexturePacking
             RowHeightRatio = rowHeightRatio;
         }
 
+        protected override void DisposeImpl()
+        {
+            _texture!.Dispose();
+            _texture = null;
+        }
+
         public Texture GetTexture()
         {
-            return _texture;
+            return _texture!;
         }
 
         public bool Add(Texture texture, out Box2i bounds)
         {
             if (ReserveSpace(texture.Size, out bounds))
             {
-                _texture.Update(bounds.Min, texture);
+                _texture!.Update(bounds.Min, texture);
                 return true;
             }
             return false;
@@ -76,7 +82,7 @@ namespace Cardamom.Graphics.TexturePacking
         {
             if (ReserveSpace(bitmap.Size, out bounds))
             {
-                _texture.Update(bounds.Min, bitmap);
+                _texture!.Update(bounds.Min, bitmap);
                 return true;
             }
             return false;
@@ -94,7 +100,7 @@ namespace Cardamom.Graphics.TexturePacking
                 {
                     continue;
                 }
-                if (paddedSize.X + row.Width > _texture.Size.X)
+                if (paddedSize.X + row.Width > _texture!.Size.X)
                 {
                     continue;
                 }
@@ -128,7 +134,7 @@ namespace Cardamom.Graphics.TexturePacking
             _nextRowTop += height;
             _rows.Add(row);
 
-            while (_nextRowTop > _texture.Size.Y || width > _texture.Size.X)
+            while (_nextRowTop > _texture!.Size.Y || width > _texture.Size.X)
             {
                 Resize();
             }
@@ -138,7 +144,7 @@ namespace Cardamom.Graphics.TexturePacking
 
         private void Resize()
         {
-            var newTexture = Texture.Create(2 * _texture.Size, _fill);
+            var newTexture = Texture.Create(2 * _texture!.Size, _fill);
             newTexture.Update(_texture);
             _texture.Dispose();
             _texture = newTexture;
