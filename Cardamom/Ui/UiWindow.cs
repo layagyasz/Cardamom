@@ -1,4 +1,5 @@
 ﻿using Cardamom.Graphics;
+using Cardamom.Ui.Controller.Element;
 using Cardamom.Window;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -57,6 +58,11 @@ namespace Cardamom.Ui
             _uiRoot.Initialize();
             Vector2 viewport = RenderWindow.GetViewPort().Size;
             _uiRoot.ResizeContext(new(viewport.X, viewport.Y, 0));
+        }
+
+        public void SetFocus(IControlledElement element)
+        {
+            _controller.SetFocus(element);
         }
 
         public void Start()

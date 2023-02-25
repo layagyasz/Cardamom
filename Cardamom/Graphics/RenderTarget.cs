@@ -2,6 +2,7 @@
 using Cardamom.Mathematics.Geometry;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
+using System.Resources;
 
 namespace Cardamom.Graphics
 {
@@ -18,6 +19,7 @@ namespace Cardamom.Graphics
         public override void Clear()
         {
             SetActive(true);
+            GL.DepthMask(true);
             GL.Disable(EnableCap.ScissorTest);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
         }
@@ -25,6 +27,7 @@ namespace Cardamom.Graphics
         public override void Flatten()
         {
             SetActive(true);
+            GL.DepthMask(true);
             GL.Disable(EnableCap.ScissorTest);
             GL.Clear(ClearBufferMask.DepthBufferBit);
         }

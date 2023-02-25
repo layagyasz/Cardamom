@@ -54,6 +54,12 @@ namespace Cardamom.Ui
             }
         }
 
+        public void SetFocus(IControlledElement element)
+        {
+            _focus = element;
+            _focusAncestry = GetAncestry(element);
+        }
+
         private void HandleKeyDown(object? sender, KeyDownEventArgs e)
         {
             Consume(_mouseOver, x => x.Controller?.HandleKeyDown(e) ?? false);

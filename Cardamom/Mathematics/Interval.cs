@@ -40,5 +40,14 @@ namespace Cardamom.Mathematics
         {
             return string.Format($"[{Minimum}, {Maximum}]");
         }
+
+        public static Interval Intersection(Interval left, Interval right)
+        {
+            if (left.Maximum < right.Minimum || left.Minimum > right.Maximum)
+            {
+                return new(float.NaN, float.NaN);
+            }
+            return new(Math.Max(left.Minimum, right.Minimum), Math.Min(left.Maximum, right.Maximum));
+        }
     }
 }

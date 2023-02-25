@@ -15,9 +15,9 @@ namespace Cardamom.Json.Mathematics
             reader.Read();
 
             var value = new Interval();
-            value.Minimum = reader.GetSingle();
+            value.Minimum = JsonSerializer.Deserialize<float>(ref reader, options);
             reader.Read();
-            value.Maximum = reader.GetSingle();
+            value.Maximum = JsonSerializer.Deserialize<float>(ref reader, options);
             reader.Read();
 
             if (reader.TokenType != JsonTokenType.EndArray)
