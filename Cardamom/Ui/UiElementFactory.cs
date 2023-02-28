@@ -108,5 +108,10 @@ namespace Cardamom.Ui
                 new EditableTextUiElement(_resources.GetClass(className), controller) { Position = position },
                 controller);
         }
+
+        public Class GetClass(string className)
+        {
+            return _resources.GetClass(className);
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Cardamom.Graphics.TexturePacking
 {
     public class DynamicTextureVolume : GraphicsResource, ITextureVolume
     {
-        private List<DynamicVariableSizeTexturePage>? _pages = new();
+        private List<ITexturePage>? _pages = new();
         private Dictionary<string, TextureSegment>? _segments = new();
 
         private readonly ITexturePageSupplier _pageSupplier;
@@ -54,7 +54,7 @@ namespace Cardamom.Graphics.TexturePacking
             }
             else
             {
-                if (AddToPage(_pages!.Last(), key, texture, out var segment))
+                if (_pages!.Count > 0 && AddToPage(_pages!.Last(), key, texture, out var segment))
                 {
                     return segment!;
                 }
@@ -65,6 +65,7 @@ namespace Cardamom.Graphics.TexturePacking
             {
                 var segment = new TextureSegment(key, newPage.GetTexture(), bounds);
                 _segments!.Add(key, segment);
+                _pages.Add(newPage);
                 return segment;
             }
             else
@@ -99,6 +100,7 @@ namespace Cardamom.Graphics.TexturePacking
             {
                 var segment = new TextureSegment(key, newPage.GetTexture(), bounds);
                 _segments!.Add(key, segment);
+                _pages!.Add(newPage);
                 return segment;
             }
             else
@@ -179,7 +181,7 @@ namespace Cardamom.Graphics.TexturePacking
             public TextureSet? Textures { get; set; }
             public Vector2i Size { get; set; } = new(1024, 1024);
             public Vector2i ElementSize { get; set; } = new();
-            public Color4 PageFill { get; set; } = new();
+            public Color4 PageFill { get; set; } = Color4.White;
             public Vector2i SegmentPadding { get; set; } = new();
 
             public ITextureVolume Build()
@@ -188,7 +190,7 @@ namespace Cardamom.Graphics.TexturePacking
                     new(new DynamicStaticSizeTexturePage.Supplier(Size, ElementSize, PageFill, SegmentPadding), false);
                 foreach (var segment in Textures!.GetSegments())
                 {
-                    using var texture = Texture.FromFile(segment.Path!);
+                    var texture = Texture.FromFile(segment.Path!);
                     volume.Add(segment.Key!, texture);
                 }
                 return volume;

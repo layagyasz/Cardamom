@@ -15,7 +15,7 @@ namespace Cardamom.Graphics.TexturePacking
         public TextureLibrary(IEnumerable<ITextureVolume> volumes)
         {
             _volumes = volumes.ToList();
-            _segments = volumes.SelectMany(x => x.GetSegments()).ToDictionary(x => x.Key, x => x);
+            _segments = _volumes.SelectMany(x => x.GetSegments()).ToDictionary(x => x.Key, x => x);
         }
 
         protected override void DisposeImpl()
@@ -26,6 +26,18 @@ namespace Cardamom.Graphics.TexturePacking
             }
             _volumes = null;
             _segments = null;
+        }
+
+        public void Dump()
+        {
+            int i = 0;
+            foreach (var volume in _volumes!)
+            {
+                foreach (var texture in volume.GetTextures())
+                {
+                    texture.CopyToImage().SaveToFile($"texture-page-{i++}.png");
+                }
+            }
         }
 
         public TextureSegment Get(string key)

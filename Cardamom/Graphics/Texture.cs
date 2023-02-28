@@ -50,7 +50,6 @@ namespace Cardamom.Graphics
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, handle);
 
-            StbImage.stbi_set_flip_vertically_on_load(1);
             Vector2i size;
             using (Stream stream = File.OpenRead(path))
             {
@@ -97,14 +96,14 @@ namespace Cardamom.Graphics
 
         public Texture Copy()
         {
-            var texture = Texture.Create(Size);
+            var texture = Create(Size);
             texture.Update(this);
             return texture;
         }
 
         public Image CopyToImage()
         {
-            return Image.FromData(Size, GetData(), /* invertYAxis= */ true);
+            return Image.FromData(Size, GetData(), /* invertYAxis= */ false);
         }
 
         public void Fill(Color4 color)
@@ -122,14 +121,12 @@ namespace Cardamom.Graphics
 
         public void Update(Texture other)
         {
-            other.Bind(TextureUnit.Texture0);
-            GL.CopyTextureSubImage2D(Handle, 0, 0, 0, 0, 0, other.Size.X, other.Size.Y);
+            Update(new(), other.GetData());
         }
 
         public void Update(Vector2i offset, Texture other)
         {
-            other.Bind(TextureUnit.Texture0);
-            GL.CopyTextureSubImage2D(Handle, 0, offset.X, offset.Y, 0, 0, other.Size.X, other.Size.Y);
+            Update(offset, other.GetData());
         }
 
         public void Update(Vector2i offset, Bitmap bitmap)

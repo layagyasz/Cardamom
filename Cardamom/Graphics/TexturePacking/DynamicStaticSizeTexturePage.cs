@@ -77,7 +77,7 @@ namespace Cardamom.Graphics.TexturePacking
             var paddedSize = ElementSize + 2 * Padding;
             if (Size.X >= _cursor.X + paddedSize.X)
             {
-                bounds = new(_cursor + Padding, ElementSize);
+                bounds = new(_cursor + Padding, _cursor + Padding + ElementSize);
                 _cursor.X += paddedSize.X;
                 return true;
             }
@@ -85,7 +85,7 @@ namespace Cardamom.Graphics.TexturePacking
             _cursor.Y += ElementSize.Y;
             if (Size.Y >= _cursor.Y + paddedSize.Y)
             {
-                bounds = new(_cursor + Padding, ElementSize);
+                bounds = new(_cursor + Padding, _cursor + Padding + ElementSize);
                 _cursor.X += paddedSize.X;
                 return true;
             }
