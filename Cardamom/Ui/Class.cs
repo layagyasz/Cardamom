@@ -51,6 +51,7 @@ namespace Cardamom.Ui
             }
 
             public string Key { get; set; } = string.Empty;
+            [JsonConverter(typeof(ReferenceJsonConverter))]
             public Builder? Parent { get; set; }
             public ClassAttributes.Builder? Default { get; set; }
             public List<ClassAttributesBuilderWithState> States { get; set; } = new();

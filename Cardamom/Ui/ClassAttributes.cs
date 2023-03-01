@@ -1,5 +1,6 @@
 ﻿using Cardamom.Graphics;
 using Cardamom.Graphics.TexturePacking;
+using Cardamom.Json;
 using OpenTK.Mathematics;
 using System.Text.Json.Serialization;
 
@@ -91,13 +92,16 @@ namespace Cardamom.Ui
             public Color4[]? BorderColor { get; set; }
             public float[]? BorderWidth { get; set; }
             public Vector2[]? CornerRadius { get; set; }
+            [JsonConverter(typeof(ReferenceJsonConverter))]
             public KeyedWrapper<RenderShader>? BackgroundShader { get; set; }
+            [JsonConverter(typeof(ReferenceJsonConverter))]
             public TextureSegment? Texture { get; set; }
-
+            [JsonConverter(typeof(ReferenceJsonConverter))]
             public KeyedWrapper<Font>? FontFace { get; set; }
             public uint? FontSize { get; set; }
             public Alignment? Align { get; set; }
             public Color4? Color { get; set; }
+            [JsonConverter(typeof(ReferenceJsonConverter))]
             public KeyedWrapper<RenderShader>? Shader { get; set; }
             public bool? DisableScissor { get; set; }
 
