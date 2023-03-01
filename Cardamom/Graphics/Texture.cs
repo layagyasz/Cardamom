@@ -1,7 +1,6 @@
 ﻿using Cardamom.Graphics.Core;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using SharpFont;
 using StbImageSharp;
 
 namespace Cardamom.Graphics
@@ -121,12 +120,16 @@ namespace Cardamom.Graphics
 
         public void Update(Texture other)
         {
-            Update(new(), other.GetData());
+            Update(new(), other);
         }
 
         public void Update(Vector2i offset, Texture other)
         {
-            Update(offset, other.GetData());
+            var buffer = new GLFrameBuffer();
+            buffer.Attach(FramebufferAttachment.ColorAttachment0, other);
+            GL.CopyTextureSubImage2D(Handle, 0, offset.X, offset.Y, 0, 0, other.Size.X, other.Size.Y);
+            buffer.Unbind();
+            buffer.Dispose();
         }
 
         public void Update(Vector2i offset, Bitmap bitmap)

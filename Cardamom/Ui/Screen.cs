@@ -8,18 +8,18 @@ namespace Cardamom.Ui
     {
         public IController Controller { get; }
 
-        protected readonly IUiLayer[] _uiLayers;
+        public IUiLayer[] UiLayers { get; }
 
         public Screen(IController controller, IEnumerable<IUiLayer> uiLayers)
         {
             Controller = controller;
-            _uiLayers = uiLayers.ToArray();
+            UiLayers = uiLayers.ToArray();
         }
 
         public virtual void Initialize()
         {
             Controller.Bind(this);
-            foreach (var layer in _uiLayers)
+            foreach (var layer in UiLayers)
             {
                 layer.Initialize();
             }
@@ -29,7 +29,7 @@ namespace Cardamom.Ui
 
         public virtual void Draw(RenderTarget target, UiContext context)
         {
-            foreach (var layer in _uiLayers)
+            foreach (var layer in UiLayers)
             {
                 layer.Draw(target, context);
             }
@@ -37,7 +37,7 @@ namespace Cardamom.Ui
 
         public virtual void Update(long delta)
         {
-            foreach (var layer in _uiLayers)
+            foreach (var layer in UiLayers)
             {
                 layer.Update(delta);
             }

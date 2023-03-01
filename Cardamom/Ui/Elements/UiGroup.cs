@@ -19,6 +19,11 @@ namespace Cardamom.Ui.Elements
             _elements.Add(element);
         }
 
+        public void Clear()
+        {
+            _elements.Clear();
+        }
+
         public void Remove(IRenderable element)
         {
             _elements.Remove(element);

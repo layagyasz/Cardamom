@@ -89,7 +89,7 @@ namespace Cardamom.Graphics.TexturePacking
             }
             else
             {
-                if (AddToPage(_pages!.Last(), key, bitmap, out var segment))
+                if (_pages!.Count > 0 && AddToPage(_pages!.Last(), key, bitmap, out var segment))
                 {
                     return segment!;
                 }
@@ -142,8 +142,14 @@ namespace Cardamom.Graphics.TexturePacking
         {
             public struct DynamicSegment
             {
-                public string? Key { get; set; }
-                public string? Path { get; set; }
+                public string Key { get; set; }
+                public string Path { get; set; }
+
+                public DynamicSegment(string key, string path)
+                {
+                    Key = key;
+                    Path = path;
+                }
             }
 
             public string Prefix { get; set; } = string.Empty;
@@ -180,9 +186,9 @@ namespace Cardamom.Graphics.TexturePacking
         {
             public TextureSet? Textures { get; set; }
             public Vector2i Size { get; set; } = new(1024, 1024);
-            public Vector2i ElementSize { get; set; } = new();
-            public Color4 PageFill { get; set; } = Color4.White;
-            public Vector2i SegmentPadding { get; set; } = new();
+            public Vector2i ElementSize { get; set; }
+            public Color4 PageFill { get; set; }
+            public Vector2i SegmentPadding { get; set; }
 
             public ITextureVolume Build()
             {
@@ -190,8 +196,8 @@ namespace Cardamom.Graphics.TexturePacking
                     new(new DynamicStaticSizeTexturePage.Supplier(Size, ElementSize, PageFill, SegmentPadding), false);
                 foreach (var segment in Textures!.GetSegments())
                 {
-                    var texture = Texture.FromFile(segment.Path!);
-                    volume.Add(segment.Key!, texture);
+                    var bitmap = Bitmap.FromFile(segment.Path);
+                    volume.Add(segment.Key!, bitmap);
                 }
                 return volume;
             }
@@ -214,8 +220,8 @@ namespace Cardamom.Graphics.TexturePacking
                             WidthRange, HeightRange, PageFill, SegmentPadding, RowHeightRatio), true);
                 foreach (var segment in Textures!.GetSegments())
                 {
-                    using var texture = Texture.FromFile(segment.Path!);
-                    volume.Add(segment.Key!, texture);
+                    var bitmap = Bitmap.FromFile(segment.Path);
+                    volume.Add(segment.Key!, bitmap);
                 }
                 return volume;
             }

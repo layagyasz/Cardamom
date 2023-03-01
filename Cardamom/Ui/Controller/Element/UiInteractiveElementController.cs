@@ -15,7 +15,7 @@ namespace Cardamom.Ui.Controller.Element
             _element = (T)@object;
         }
 
-        public void Unbind()
+        public virtual void Unbind()
         {
             _element = default;
         }

@@ -48,6 +48,22 @@ namespace Cardamom.Ui.Controller
             _panes!.Add(pane);
         }
 
+        public void Clear()
+        {
+            foreach (var element in _panes!)
+            {
+                if (element is IControlledElement pane)
+                {
+                    if (pane.Controller is PaneController controller)
+                    {
+                        controller.Closed -= HandleClose;
+                        controller.Focused -= HandleFocus;
+                    }
+                }
+            }
+            _panes!.Clear();
+        }
+
         public void Remove(IUiElement pane)
         {
             if (pane.Controller is PaneController controller)

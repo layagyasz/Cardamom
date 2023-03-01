@@ -30,7 +30,7 @@ namespace Cardamom.Ui
             Scene.Draw(target, context);
             target.Flatten();
             context.Flatten();
-            foreach (var layer in _uiLayers)
+            foreach (var layer in UiLayers)
             {
                 layer.Draw(target, context);
             }
