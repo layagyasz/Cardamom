@@ -14,7 +14,7 @@ namespace Cardamom.Ui.Elements.Components
             _text.SetFont(attributes.FontFace!);
             _text.SetCharacterSize(attributes.FontSize);
             _text.SetColor(attributes.Color);
-            _text.SetShader(attributes.Shader);
+            _text.SetShader(attributes.Shader!);
         }
 
         public void AppendText(string text)

@@ -1,5 +1,6 @@
 ﻿using Cardamom.Graphics;
 using Cardamom.Ui.Controller;
+using Cardamom.Ui.Elements;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
@@ -8,9 +9,9 @@ namespace Cardamom.Ui
     {
         public IController Controller { get; }
 
-        public IUiGroup[] UiLayers { get; }
+        public UiGroup[] UiLayers { get; }
 
-        public Screen(IController controller, IEnumerable<IUiGroup> uiLayers)
+        public Screen(IController controller, IEnumerable<UiGroup> uiLayers)
         {
             Controller = controller;
             UiLayers = uiLayers.ToArray();

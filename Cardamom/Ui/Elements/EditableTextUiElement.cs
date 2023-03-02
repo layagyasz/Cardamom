@@ -19,8 +19,8 @@ namespace Cardamom.Ui.Elements
         private Vector3 _cursorPosition;
         private RenderShader? _cursorShader;
 
-        public EditableTextUiElement(Class @class, IElementController controller)
-            : base(@class, controller) { }
+        public EditableTextUiElement(Class @class, IElementController controller, string text)
+            : base(@class, controller, text) { }
 
         public override void SetAttributes(ClassAttributes attributes)
         {

@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiSerialContainer : SimpleUiElement, IUiGroup
+    public class UiSerialContainer : SimpleUiElement, IUiContainer
     {
         public enum Orientation
         {

@@ -140,7 +140,7 @@ namespace Cardamom.Ui
 
             private static T Inherit<T>(IEnumerable<T> ancestors, T child)
             {
-                return ancestors.Aggregate((left, right) => left ?? right) ?? child;
+                return child ?? ancestors.Aggregate((left, right) => left ?? right);
             }
 
             private static T[] ExpandOrThrow<T>(T[] data)

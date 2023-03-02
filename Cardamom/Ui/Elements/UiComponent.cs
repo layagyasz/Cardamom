@@ -1,35 +1,54 @@
 ﻿using Cardamom.Graphics;
 using Cardamom.Ui.Controller;
+using Cardamom.Ui.Controller.Element;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiComponent : IUiGroup
+    public class UiComponent : IUiContainer
     {
-        public IController Controller { get; }
-
-        private IUiGroup _group;
-
-        public UiComponent(IController controller, IUiGroup group)
+        public IController ComponentController { get; }
+        public IElementController Controller => _container.Controller;
+        public IControlledElement? Parent
         {
-            Controller = controller;
-            _group = group;
+            get => _container.Parent;
+            set => _container.Parent = value;
+        }
+        public Vector3 Position
+        {
+            get => _container.Position;
+            set => _container.Position = value;
+        }
+
+        public Vector3 Size => _container.Size;
+        public bool Visible
+        {
+            get => _container.Visible;
+            set => _container.Visible = value;
+        }
+
+        private IUiContainer _container;
+
+        public UiComponent(IController componentController, IUiContainer container)
+        {
+            ComponentController = componentController;
+            _container = container;
         }
 
         public void Initialize()
         {
-            Controller.Bind(this);
-            _group.Initialize();
+            _container.Initialize();
+            ComponentController.Bind(this);
         }
 
         public void Draw(RenderTarget target, UiContext context)
         {
-            _group.Draw(target, context);
+            _container.Draw(target, context);
         }
 
         public IEnumerator<IRenderable> GetEnumerator()
         {
-            return _group.GetEnumerator();
+            return _container.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -39,12 +58,12 @@ namespace Cardamom.Ui.Elements
 
         public void ResizeContext(Vector3 bounds)
         {
-            _group.ResizeContext(bounds);
+            _container.ResizeContext(bounds);
         }
 
         public void Update(long delta)
         {
-            _group.Update(delta);
+            _container.Update(delta);
         }
     }
 }

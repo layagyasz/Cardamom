@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiContainer : SimpleUiElement, IUiGroup
+    public class UiContainer : SimpleUiElement, IUiContainer
     {
         private class UiElementComparer : IComparer<Vector3>
         {

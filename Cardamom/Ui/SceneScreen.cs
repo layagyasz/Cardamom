@@ -1,5 +1,6 @@
 ﻿using Cardamom.Graphics;
 using Cardamom.Ui.Controller;
+using Cardamom.Ui.Elements;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
@@ -8,7 +9,7 @@ namespace Cardamom.Ui
     {
         public IScene Scene { get; }
 
-        public SceneScreen(IController controller, IEnumerable<IUiGroup> uiLayers, IScene scene)
+        public SceneScreen(IController controller, IEnumerable<UiGroup> uiLayers, IScene scene)
             : base(controller, uiLayers)
         {
             Scene = scene;

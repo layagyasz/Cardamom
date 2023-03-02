@@ -16,10 +16,11 @@ namespace Cardamom.Ui.Elements
         private ClassAttributes.Alignment _align;
         private string _text = string.Empty;
 
-        public TextUiElement(Class @class, IElementController controller)
+        public TextUiElement(Class @class, IElementController controller, string text)
             : base(@class, controller)
         {
             SetAttributes(@class.Get(Class.State.None));
+            SetText(text);
         }
 
         public override void Draw(RenderTarget target, UiContext context)

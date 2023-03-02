@@ -11,9 +11,9 @@ namespace Cardamom.Ui.Controller.Element
         private OptionController<T>? _selected;
         private T? _value;
 
-        public SelectController(string Key)
+        public SelectController(string key)
         {
-            this.Key = Key;
+            Key = key;
         }
 
         public T? GetValue()
@@ -35,10 +35,10 @@ namespace Cardamom.Ui.Controller.Element
                 }
                 else
                 {
-                    throw new InvalidOperationException("Selects may only contain SelectOptions.");
+                    throw new InvalidOperationException("Selects may only contain Options.");
                 }
             }
-            throw new ArgumentException("No SelectOption found for value.");
+            throw new ArgumentException("No Option found for value.");
         }
 
         public override void Bind(object @object)
@@ -95,7 +95,7 @@ namespace Cardamom.Ui.Controller.Element
             }
             else
             {
-                throw new InvalidOperationException("Selects may only contain SelectOptions.");
+                throw new InvalidOperationException("Selects may only contain Options.");
             }
         }
 

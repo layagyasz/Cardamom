@@ -45,8 +45,7 @@ namespace Cardamom.Ui
         public (IUiElement, OptionController<T>) CreateSelectOption<T>(string className, T value, string text)
         {
             var controller = new OptionController<T>(value);
-            var option = new TextUiElement(_resources.GetClass(className), controller);
-            option.SetText(text);
+            var option = new TextUiElement(_resources.GetClass(className), controller, text);
             return (option, controller);
         }
 
@@ -93,11 +92,10 @@ namespace Cardamom.Ui
         {
             var controller = new ButtonController();
             var button =
-                new TextUiElement(_resources.GetClass(className), controller)
+                new TextUiElement(_resources.GetClass(className), controller, text)
                 {
                     Position = position
                 };
-            button.SetText(text);
             return (button, controller);
         }
 
@@ -105,7 +103,8 @@ namespace Cardamom.Ui
         {
             var controller = new TextInputController("text");
             return (
-                new EditableTextUiElement(_resources.GetClass(className), controller) { Position = position },
+                new EditableTextUiElement(
+                    _resources.GetClass(className), controller, string.Empty) { Position = position },
                 controller);
         }
 

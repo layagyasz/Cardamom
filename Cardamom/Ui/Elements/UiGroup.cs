@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiGroup : IUiGroup, IRenderable
+    public class UiGroup : IEnumerable<IRenderable>, IRenderable
     {
         public IController Controller { get; }
 

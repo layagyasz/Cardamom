@@ -9,7 +9,7 @@ namespace Cardamom.Ui.Elements
         private bool _open;
 
         public Select(Class @class, IElementController controller, UiSerialContainer dropBox)
-            : base(@class, controller)
+            : base(@class, controller, string.Empty)
         {
             _dropBox = dropBox;
             _dropBox.Parent = this;

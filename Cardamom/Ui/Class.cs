@@ -83,7 +83,7 @@ namespace Cardamom.Ui
             private static IEnumerable<ClassAttributes.Builder> GetAncestry(
                 State state, IEnumerable<ClassAttributesBuilderWithState> potentialAncestors)
             {
-                foreach (var potentialAncestor in potentialAncestors)
+                foreach (var potentialAncestor in potentialAncestors.OrderBy(x => -(int)x.State))
                 {
                     if (IsAncestor(state, potentialAncestor.State))
                     {
