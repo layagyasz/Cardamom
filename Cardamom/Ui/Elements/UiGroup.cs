@@ -6,6 +6,8 @@ namespace Cardamom.Ui.Elements
 {
     public class UiGroup : IEnumerable<IRenderable>, IRenderable
     {
+        public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
+
         public IController Controller { get; }
 
         private readonly List<IRenderable> _elements = new();
@@ -26,6 +28,7 @@ namespace Cardamom.Ui.Elements
         public void Add(IRenderable element)
         {
             _elements.Add(element);
+            ElementAdded?.Invoke(this, new(element));
         }
 
         public void Clear()

@@ -10,6 +10,7 @@ namespace Cardamom.Ui.Controller
         public void Bind(object @object)
         {
             _panes = (UiGroup)@object;
+            _panes.ElementAdded += HandleElementAdded;
             foreach (var pane in _panes)
             {
                 if (pane is IUiElement element)
@@ -25,6 +26,7 @@ namespace Cardamom.Ui.Controller
 
         public void Unbind()
         {
+            _panes!.ElementAdded -= HandleElementAdded;
             foreach (var pane in _panes!)
             {
                 if (pane is IUiElement element)
@@ -37,16 +39,6 @@ namespace Cardamom.Ui.Controller
                 }
             }
             _panes = null;
-        }
-
-        public void Add(IUiElement pane)
-        {
-            if (pane.Controller is PaneController controller)
-            {
-                controller.Closed += HandleClose;
-                controller.Focused += HandleFocus;
-            }
-            _panes!.Add(pane);
         }
 
         public void Clear()
@@ -65,14 +57,27 @@ namespace Cardamom.Ui.Controller
             _panes!.Clear();
         }
 
-        public void Remove(IUiElement pane)
+        private void Add(IUiElement pane)
+        {
+            if (pane.Controller is PaneController controller)
+            {
+                controller.Closed += HandleClose;
+                controller.Focused += HandleFocus;
+            }
+        }
+
+        private void Remove(IUiElement pane)
         {
             if (pane.Controller is PaneController controller)
             {
                 controller.Closed -= HandleClose;
                 controller.Focused -= HandleFocus;
             }
-            _panes!.Remove(pane);
+        }
+
+        private void HandleElementAdded(object? sender, ElementEventArgs e)
+        {
+            Add((IUiElement)e.Element);
         }
 
         private void HandleFocus(object? sender, EventArgs e)
@@ -89,6 +94,7 @@ namespace Cardamom.Ui.Controller
             if (sender is PaneController controller)
             {
                 Remove(controller.GetElement());
+                _panes!.Remove(controller.GetElement());
             }
         }
     }

@@ -4,7 +4,7 @@ namespace Cardamom.Ui.Controller.Element
 {
     public class TableController : ClassedUiElementController<UiSerialContainer>, IUiCollectionController
     {
-        public EventHandler<ElementEventArgs>? ElementClicked { get; set; }
+        public EventHandler<ElementClickedEventArgs>? ElementClicked { get; set; }
 
         public override void Bind(object @object)
         {
@@ -47,7 +47,7 @@ namespace Cardamom.Ui.Controller.Element
 
         private void HandleElementClicked(object? sender, MouseButtonClickEventArgs e)
         {
-            ElementClicked?.Invoke(this, new ElementEventArgs((IElementController)sender!, e));
+            ElementClicked?.Invoke(this, new ElementClickedEventArgs((IElementController)sender!, e));
         }
     }
 }

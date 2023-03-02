@@ -1,22 +1,12 @@
-﻿using Cardamom.Ui.Controller.Element;
-using OpenTK.Windowing.Common;
-
-namespace Cardamom.Ui
+﻿namespace Cardamom.Ui
 {
-    public readonly struct ElementEventArgs
+    public struct ElementEventArgs
     {
-        public IElementController Element { get; }
-        public MouseButtonClickEventArgs MouseEvent { get; }
+        public object Element { get; }
 
-        public ElementEventArgs(IElementController element, MouseButtonClickEventArgs mouseEvent)
+        public ElementEventArgs(object element)
         {
             Element = element;
-            MouseEvent = mouseEvent;
-        }
-
-        public override string ToString()
-        {
-            return string.Format($"[ElementEventArgs: Element={Element}, MouseEvent={MouseEvent}");
         }
     }
 }

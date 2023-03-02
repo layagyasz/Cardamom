@@ -5,8 +5,10 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiComponent : IUiContainer
+    public class UiComponent : GraphicsResource, IUiContainer
     {
+        public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
+
         public IController ComponentController { get; }
         public IElementController Controller => _container.Controller;
         public IControlledElement? Parent
@@ -35,10 +37,16 @@ namespace Cardamom.Ui.Elements
             _container = container;
         }
 
+        protected override void DisposeImpl()
+        {
+            _container.Dispose();
+        }
+
         public void Initialize()
         {
             _container.Initialize();
             ComponentController.Bind(this);
+            _container.ElementAdded += HandleElementAdded;
         }
 
         public void Draw(RenderTarget target, UiContext context)
@@ -64,6 +72,11 @@ namespace Cardamom.Ui.Elements
         public void Update(long delta)
         {
             _container.Update(delta);
+        }
+
+        private void HandleElementAdded(object? sender, ElementEventArgs e)
+        {
+            ElementAdded?.Invoke(this, e);
         }
     }
 }

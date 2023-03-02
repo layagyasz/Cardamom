@@ -1,4 +1,4 @@
-﻿namespace Cardamom.Ui
+﻿namespace Cardamom.Ui.Controller
 {
     public readonly struct ValueChangedEventArgs<TKey, TValue>
     {

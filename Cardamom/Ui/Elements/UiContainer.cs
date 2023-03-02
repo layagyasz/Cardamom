@@ -24,6 +24,8 @@ namespace Cardamom.Ui.Elements
             }
         }
 
+        public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
+
         private readonly SortedList<Vector3, IUiElement> _elements = new(new UiElementComparer());
 
         public UiContainer(Class @class, IElementController controller)
@@ -42,6 +44,7 @@ namespace Cardamom.Ui.Elements
         {
             _elements.Add(element.Position, element);
             element.Parent = this;
+            ElementAdded?.Invoke(this, new(element));
         }
 
         public IEnumerator<IRenderable> GetEnumerator()

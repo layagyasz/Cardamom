@@ -12,6 +12,8 @@ namespace Cardamom.Ui.Elements
             Vertical
         }
 
+        public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
+
         private readonly List<IUiElement> _elements = new();
         private readonly Orientation _orientation;
 
@@ -34,6 +36,7 @@ namespace Cardamom.Ui.Elements
         {
             _elements.Add(element);
             element.Parent = this;
+            ElementAdded?.Invoke(this, new(element));
         }
 
         public void TryAdjustOffset(float Amount)

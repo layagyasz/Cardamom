@@ -2,6 +2,6 @@
 {
     public interface IUiCollectionController : IElementController
     {
-        EventHandler<ElementEventArgs>? ElementClicked { get; set; }
+        EventHandler<ElementClickedEventArgs>? ElementClicked { get; set; }
     }
 }

@@ -99,7 +99,7 @@ namespace Cardamom.Ui.Controller.Element
             }
         }
 
-        private void HandleElementClicked(object? sender, ElementEventArgs e)
+        private void HandleElementClicked(object? sender, ElementClickedEventArgs e)
         {
             SetSelected(e.Element);
         }
