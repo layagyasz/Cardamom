@@ -15,10 +15,10 @@ namespace Cardamom.Ui
             _resources = resources;
         }
 
-        public static (UiGroupLayer, PaneLayerController) CreatePaneLayer(IEnumerable<IRenderable> panes)
+        public static (UiGroup, PaneLayerController) CreatePaneLayer(IEnumerable<IRenderable> panes)
         {
             var controller = new PaneLayerController();
-            var layer = new UiGroupLayer(controller);
+            var layer = new UiGroup(controller);
             foreach (var pane in panes)
             {
                 layer.Add(pane);
@@ -42,9 +42,9 @@ namespace Cardamom.Ui
                 CreateTable(dropBoxClassName, options).Item1), controller);
         }
 
-        public (IUiElement, SelectOptionController<T>) CreateSelectOption<T>(string className, T value, string text)
+        public (IUiElement, OptionController<T>) CreateSelectOption<T>(string className, T value, string text)
         {
-            var controller = new SelectOptionController<T>(value);
+            var controller = new OptionController<T>(value);
             var option = new TextUiElement(_resources.GetClass(className), controller);
             option.SetText(text);
             return (option, controller);

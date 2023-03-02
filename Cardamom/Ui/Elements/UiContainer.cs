@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiContainer : SimpleUiElement, IEnumerable<IUiElement>
+    public class UiContainer : SimpleUiElement, IUiGroup
     {
         private class UiElementComparer : IComparer<Vector3>
         {
@@ -44,7 +44,7 @@ namespace Cardamom.Ui.Elements
             element.Parent = this;
         }
 
-        public IEnumerator<IUiElement> GetEnumerator()
+        public IEnumerator<IRenderable> GetEnumerator()
         {
             return _elements.Values.GetEnumerator();
         }

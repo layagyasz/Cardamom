@@ -1,6 +1,6 @@
-﻿namespace Cardamom.Ui.Controller.Element
+﻿namespace Cardamom.Ui.Controller
 {
-    public interface IFormElementController<TKey, TValue> : IElementController
+    public interface IFormElementController<TKey, TValue>
     {
         EventHandler<ValueChangedEventArgs<TKey, TValue>>? ValueChanged { get; set; }
 

@@ -160,7 +160,7 @@ namespace Cardamom
             var screen = 
                 new SceneScreen(
                     new NoOpController<Screen>(),
-                    new List<UiGroupLayer>()
+                    new List<UiGroup>()
                     {
                         UiElementFactory.CreatePaneLayer(new List<IRenderable>() { pane }).Item1
                     },

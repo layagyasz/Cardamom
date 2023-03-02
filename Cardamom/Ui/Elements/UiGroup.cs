@@ -1,14 +1,23 @@
 ﻿using Cardamom.Graphics;
+using Cardamom.Ui.Controller;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiGroup : IEnumerable<IRenderable>, IRenderable
+    public class UiGroup : IUiGroup, IRenderable
     {
+        public IController Controller { get; }
+
         private readonly List<IRenderable> _elements = new();
+
+        public UiGroup(IController controller)
+        {
+            Controller = controller;
+        }
 
         public virtual void Initialize()
         {
+            Controller.Bind(this);
             _elements.ForEach(x => x.Initialize());
         }
 

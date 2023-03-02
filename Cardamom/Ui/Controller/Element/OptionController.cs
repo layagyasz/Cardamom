@@ -2,8 +2,7 @@
 
 namespace Cardamom.Ui.Controller.Element
 {
-    public class SelectOptionController<T>
-        : ClassedUiElementController<TextUiElement>, IFormElementController<T, bool>
+    public class OptionController<T> : ClassedUiElementController<TextUiElement>, IFormElementController<T, bool>
     {
         public EventHandler<ValueChangedEventArgs<T, bool>>? ValueChanged { get; set; }
 
@@ -11,7 +10,7 @@ namespace Cardamom.Ui.Controller.Element
 
         private bool _value;
 
-        public SelectOptionController(T key)
+        public OptionController(T key)
         {
             Key = key;
         }

@@ -1,14 +1,15 @@
 ﻿using Cardamom.Ui.Controller.Element;
+using Cardamom.Ui.Elements;
 
 namespace Cardamom.Ui.Controller
 {
     public class PaneLayerController : IController
     {
-        private UiGroupLayer? _panes;
+        private UiGroup? _panes;
 
         public void Bind(object @object)
         {
-            _panes = (UiGroupLayer)@object;
+            _panes = (UiGroup)@object;
             foreach (var pane in _panes)
             {
                 if (pane is IUiElement element)

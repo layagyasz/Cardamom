@@ -1,5 +1,4 @@
 ﻿using Cardamom.Ui.Elements;
-using OpenTK.Windowing.Common;
 
 namespace Cardamom.Ui.Controller.Element
 {
@@ -10,7 +9,7 @@ namespace Cardamom.Ui.Controller.Element
         public override void Bind(object @object)
         {
             base.Bind(@object);
-            foreach (var element in _element!)
+            foreach (var element in _element!.Cast<IUiElement>())
             {
                 element.Controller.Clicked += HandleElementClicked;
             }

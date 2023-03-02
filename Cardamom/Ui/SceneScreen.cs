@@ -8,7 +8,7 @@ namespace Cardamom.Ui
     {
         public IScene Scene { get; }
 
-        public SceneScreen(IController controller, IEnumerable<IUiLayer> uiLayers, IScene scene)
+        public SceneScreen(IController controller, IEnumerable<IUiGroup> uiLayers, IScene scene)
             : base(controller, uiLayers)
         {
             Scene = scene;

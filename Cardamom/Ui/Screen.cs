@@ -8,9 +8,9 @@ namespace Cardamom.Ui
     {
         public IController Controller { get; }
 
-        public IUiLayer[] UiLayers { get; }
+        public IUiGroup[] UiLayers { get; }
 
-        public Screen(IController controller, IEnumerable<IUiLayer> uiLayers)
+        public Screen(IController controller, IEnumerable<IUiGroup> uiLayers)
         {
             Controller = controller;
             UiLayers = uiLayers.ToArray();
