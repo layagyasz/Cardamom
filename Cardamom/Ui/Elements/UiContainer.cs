@@ -25,8 +25,9 @@ namespace Cardamom.Ui.Elements
         }
 
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
+        public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
-        private readonly SortedList<Vector3, IUiElement> _elements = new(new UiElementComparer());
+        protected readonly SortedList<Vector3, IUiElement> _elements = new(new UiElementComparer());
 
         public UiContainer(Class @class, IElementController controller)
             : base(@class, controller) { }
@@ -81,6 +82,16 @@ namespace Cardamom.Ui.Elements
                 }
                 target.PopModelMatrix();
                 target.PopModelMatrix();
+            }
+        }
+
+        public void Remove(IUiElement element)
+        {
+            int index = _elements.IndexOfValue(element);
+            if (index > -1)
+            {
+                _elements.RemoveAt(index);
+                ElementRemoved?.Invoke(this, new(element));
             }
         }
 

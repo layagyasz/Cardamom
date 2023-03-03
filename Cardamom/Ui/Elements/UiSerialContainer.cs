@@ -13,8 +13,9 @@ namespace Cardamom.Ui.Elements
         }
 
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
+        public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
-        private readonly List<IUiElement> _elements = new();
+        protected readonly List<IUiElement> _elements = new();
         private readonly Orientation _orientation;
 
         private Vector3 _offset;
@@ -89,6 +90,14 @@ namespace Cardamom.Ui.Elements
                 target.PopScissor();
             }
             target.PopModelMatrix();
+        }
+
+        public void Remove(IUiElement element)
+        {
+            if (_elements.Remove(element))
+            {
+                ElementRemoved?.Invoke(this, new(element));
+            }
         }
 
         public override void Update(long delta)

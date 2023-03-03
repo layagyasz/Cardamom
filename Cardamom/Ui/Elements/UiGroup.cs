@@ -7,6 +7,7 @@ namespace Cardamom.Ui.Elements
     public class UiGroup : IEnumerable<IRenderable>, IRenderable
     {
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
+        public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
         public IController Controller { get; }
 
@@ -33,12 +34,19 @@ namespace Cardamom.Ui.Elements
 
         public void Clear()
         {
+            foreach (var element in _elements)
+            {
+                ElementRemoved?.Invoke(this, new(element));
+            }
             _elements.Clear();
         }
 
         public void Remove(IRenderable element)
         {
-            _elements.Remove(element);
+            if (_elements.Remove(element))
+            {
+                ElementRemoved?.Invoke(this, new(element));
+            }
         }
 
         public IEnumerator<IRenderable> GetEnumerator()

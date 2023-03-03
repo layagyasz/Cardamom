@@ -9,7 +9,7 @@ namespace Cardamom.Ui.Controller
 
         public string Key { get; }
 
-        UiComponent? _element;
+        UiCompoundComponent? _element;
         private OptionController<T>? _selected;
         private T? _value;
 
@@ -41,7 +41,7 @@ namespace Cardamom.Ui.Controller
 
         public void Bind(object @object)
         {
-            _element = (UiComponent)@object;
+            _element = (UiCompoundComponent)@object;
             foreach (var option in _element.Cast<IUiElement>())
             {
                 if (option.Controller is OptionController<T> controller)

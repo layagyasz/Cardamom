@@ -5,9 +5,10 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiComponent : GraphicsResource, IUiContainer
+    public class UiCompoundComponent : GraphicsResource, IUiContainer
     {
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
+        public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
         public IController ComponentController { get; }
         public IElementController Controller => _container.Controller;
@@ -29,12 +30,17 @@ namespace Cardamom.Ui.Elements
             set => _container.Visible = value;
         }
 
-        private IUiContainer _container;
+        private readonly IUiContainer _container;
 
-        public UiComponent(IController componentController, IUiContainer container)
+        public UiCompoundComponent(IController componentController, IUiContainer container)
         {
             ComponentController = componentController;
             _container = container;
+        }
+
+        public void Add(IUiElement element)
+        {
+            _container.Add(element);
         }
 
         protected override void DisposeImpl()
@@ -47,6 +53,7 @@ namespace Cardamom.Ui.Elements
             _container.Initialize();
             ComponentController.Bind(this);
             _container.ElementAdded += HandleElementAdded;
+            _container.ElementRemoved += HandleElementRemoved;
         }
 
         public void Draw(RenderTarget target, UiContext context)
@@ -64,6 +71,11 @@ namespace Cardamom.Ui.Elements
             return GetEnumerator();
         }
 
+        public void Remove(IUiElement element)
+        {
+            _container.Remove(element);
+        }
+
         public void ResizeContext(Vector3 bounds)
         {
             _container.ResizeContext(bounds);
@@ -77,6 +89,11 @@ namespace Cardamom.Ui.Elements
         private void HandleElementAdded(object? sender, ElementEventArgs e)
         {
             ElementAdded?.Invoke(this, e);
+        }
+
+        private void HandleElementRemoved(object? sender, ElementEventArgs e)
+        {
+            ElementRemoved?.Invoke(this, e);
         }
     }
 }
