@@ -1,11 +1,79 @@
 ﻿using Cardamom.Graphics;
 using Cardamom.Json;
+using OpenTK.Mathematics;
+using System.Collections;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Ui
 {
     public class Class : GraphicsResource, IKeyed
     {
+        private static readonly string[] s_Uniforms =
+            { "mode", "border_width", "border_color", "corner_radius" };
+
+        public class BuilderResources
+        {
+            private Dictionary<UniformBufferKey, UniformBuffer> _uniformBuffers = new();
+
+            public UniformBuffer Get(UniformBufferKey key)
+            {
+                if (_uniformBuffers.TryGetValue(key, out var uniformBuffer))
+                {
+                    return uniformBuffer;
+                }
+                uniformBuffer = new UniformBuffer(key.Shader.GetUniformBlockSize("settings"));
+                var offsets = key.Shader.GetUniformOffsets(s_Uniforms);
+                uniformBuffer.Set(offsets[0], sizeof(int), key.Mode);
+                uniformBuffer.SetArray(offsets[1], sizeof(float), key.BorderWidth);
+                uniformBuffer.SetArray(offsets[2], 4 * sizeof(float), key.BorderColor);
+                uniformBuffer.SetArray(offsets[3], 2 * sizeof(float), key.CornerRadius);
+                _uniformBuffers.Add(key, uniformBuffer);
+                return uniformBuffer;
+            }
+        }
+
+        public class UniformBufferKey
+        {
+            public RenderShader Shader { get; }
+            public int Mode { get; }
+            public float[] BorderWidth { get; }
+            public Color4[] BorderColor { get; }
+            public Vector2[] CornerRadius { get; }
+
+            public UniformBufferKey(
+                RenderShader shader, int mode, float[] borderWidth, Color4[] borderColor, Vector2[] cornerRadius)
+            {
+                Shader = shader;
+                Mode = mode;
+                BorderWidth = borderWidth;
+                BorderColor = borderColor;
+                CornerRadius = cornerRadius;
+            }
+
+            public override bool Equals(object? @object)
+            {
+                if (@object is UniformBufferKey other)
+                {
+                    return Mode == other.Mode 
+                        && BorderWidth.SequenceEqual(other.BorderWidth) 
+                        && BorderColor.SequenceEqual(other.BorderColor) 
+                        && CornerRadius.SequenceEqual(other.CornerRadius);
+                }
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(
+                    Mode, HashArray(BorderWidth), HashArray(BorderColor), HashArray(CornerRadius));
+            }
+            
+            private static int HashArray<T>(T[] array)
+            {
+                return ((IStructuralEquatable)array).GetHashCode(EqualityComparer<T>.Default);
+            }
+        }
+
         [Flags]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum State
@@ -56,7 +124,7 @@ namespace Cardamom.Ui
             public ClassAttributes.Builder? Default { get; set; }
             public List<ClassAttributesBuilderWithState> States { get; set; } = new();
 
-            public Class Build()
+            public Class Build(BuilderResources resources)
             {
                 var attributesForStates = new ClassAttributes[16];
                 for (int i = 0; i < attributesForStates.Length; ++i)
@@ -75,7 +143,7 @@ namespace Cardamom.Ui
                         }
                         p = p.Parent;
                     }
-                    attributesForStates[i] = builder.Attributes.Build(ancestors);
+                    attributesForStates[i] = builder.Attributes.Build(resources, ancestors);
                 }
                 return new Class(Precondition.IsNotEmpty<string, char>(Key!), attributesForStates);
             }

@@ -84,10 +84,11 @@ namespace Cardamom
 
             public GameResources Build()
             {
+                var resources = new Class.BuilderResources();
                 return new GameResources(
                     Textures,
                     Shaders.ToLibrary(x => x.Key, x => x.Value.Element!),
-                    Classes.ToLibrary(x => x.Key, x => x.Value.Build()));
+                    Classes.ToLibrary(x => x.Key, x => x.Value.Build(resources)));
             }
         }
     }

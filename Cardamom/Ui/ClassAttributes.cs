@@ -8,9 +8,6 @@ namespace Cardamom.Ui
 {
     public class ClassAttributes : GraphicsResource
     {
-        private static readonly string[] s_Uniforms =
-            { "mode", "border_width", "border_color", "corner_radius" };
-
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public enum Alignment
         {
@@ -105,7 +102,7 @@ namespace Cardamom.Ui
             public KeyedWrapper<RenderShader>? Shader { get; set; }
             public bool? DisableScissor { get; set; }
 
-            public ClassAttributes Build(IEnumerable<Builder> ancestors)
+            public ClassAttributes Build(Class.BuilderResources resources, IEnumerable<Builder> ancestors)
             {
                 var backgroundShader = Inherit(ancestors.Select(x => x.BackgroundShader), BackgroundShader)!.Element!;
                 TextureSegment texture = Inherit(ancestors.Select(x => x.Texture), Texture)
@@ -116,12 +113,9 @@ namespace Cardamom.Ui
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.BorderWidth), BorderWidth) ?? new float[4]);
                 var cornerRadius = 
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.CornerRadius), CornerRadius) ?? new Vector2[4]);
-                var uniforms = new UniformBuffer(backgroundShader.GetUniformBlockSize("settings"));
-                var offsets = backgroundShader.GetUniformOffsets(s_Uniforms);
-                uniforms.Set(offsets[0], sizeof(int), texture.Texture == null ? 0 : 1);
-                uniforms.SetArray(offsets[1], sizeof(float), borderWidth);
-                uniforms.SetArray(offsets[2], 4 * sizeof(float), borderColor);
-                uniforms.SetArray(offsets[3], 2 * sizeof(float), cornerRadius);
+                var uniforms = resources.Get(
+                    new Class.UniformBufferKey(
+                        backgroundShader, texture.Texture == null ? 0 : 1, borderWidth, borderColor, cornerRadius));
                 return new(
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.Margin), Margin) ?? new float[4]),
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.Padding), Padding) ?? new float[4]),
