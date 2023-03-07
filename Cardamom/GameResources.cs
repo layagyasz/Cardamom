@@ -52,6 +52,11 @@ namespace Cardamom
             return _shaders![key];
         }
 
+        public TextureSegment GetTexture(string key)
+        {
+            return _textures!.Get(key);
+        }
+
         public void DumpTextures()
         {
             _textures!.Dump();

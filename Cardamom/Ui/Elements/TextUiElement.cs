@@ -13,7 +13,7 @@ namespace Cardamom.Ui.Elements
 
         protected Vector3 _alignAdjust;
 
-        private ClassAttributes.Alignment _align;
+        private ClassAttributes.HorizontalAlignment _align;
         private string _text = string.Empty;
 
         public TextUiElement(Class @class, IElementController controller, string text)
@@ -66,33 +66,19 @@ namespace Cardamom.Ui.Elements
         protected override void SetDyamicSizeImpl(Vector2 size)
         {
             _rectComponent.SetSize(size);
+            _alignAdjust = GetAlign(new(_textComponent.Size));
         }
 
         public void SetText(string text)
         {
             _text = text;
             _textComponent.SetText(text);
-            _alignAdjust = GetAlign();
+            _alignAdjust = GetAlign(new(_textComponent.Size));
         }
 
         public string GetText()
         {
             return _text;
-        }
-
-        protected Vector3 GetAlign()
-        {
-            switch (_align)
-            {
-                case ClassAttributes.Alignment.Left:
-                    return new();
-                case ClassAttributes.Alignment.Center:
-                    return new(0.5f * (InternalSize.X - _textComponent.Size.X), 0, 0);
-                case ClassAttributes.Alignment.Right:
-                    return new(InternalSize.X - _textComponent.Size.X, 0, 0);
-                default:
-                    throw new InvalidProgramException();
-            }
         }
 
         protected override void DisposeImpl()

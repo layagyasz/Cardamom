@@ -1,4 +1,5 @@
 ﻿using Cardamom.Graphics;
+using Cardamom.Graphics.TexturePacking;
 using Cardamom.Ui.Controller;
 using Cardamom.Ui.Controller.Element;
 using Cardamom.Ui.Elements;
@@ -108,9 +109,19 @@ namespace Cardamom.Ui
                 controller);
         }
 
-        public Class GetClass(string className)
+        public Class GetClass(string key)
         {
-            return _resources.GetClass(className);
+            return _resources.GetClass(key);
+        }
+
+        public RenderShader GetShader(string key)
+        {
+            return _resources.GetShader(key);
+        }
+
+        public TextureSegment GetTexture(string key)
+        {
+            return _resources.GetTexture(key);
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Cardamom.Ui.Controller.Element;
+using Cardamom.Ui.Elements.Components;
+using OpenTK.Graphics.ES11;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
@@ -14,6 +16,8 @@ namespace Cardamom.Ui
         public override Vector3 Size => TrueSize + LeftMargin + RightMargin;
         public ElementSizeDefinition SizeDefinition { get; private set; }
         public bool DisableScissor { get; private set; }
+        public ClassAttributes.HorizontalAlignment Align { get; private set; }
+        public ClassAttributes.VerticalAlignment VerticalAlign { get; private set; }
 
 
         private readonly Class _class;
@@ -32,6 +36,8 @@ namespace Cardamom.Ui
             RightPadding = new(attributes.RightPadding.X, attributes.RightPadding.Y, 0);
             SizeDefinition = attributes.Size;
             DisableScissor = attributes.DisableScissor;
+            Align = attributes.Align;
+            VerticalAlign = attributes.VerticalAlign;
 
             if (SizeDefinition.Width.Mode == ElementSizeDefinition.Mode.Static)
             {
@@ -67,7 +73,34 @@ namespace Cardamom.Ui
         {
             SetAttributes(_class.Get(state));
         }
+        
+        protected Vector3 GetAlign(Vector3 size)
+        {
+            return new(GetHorizontalAlign(size.X), GetVerticalAlign(size.Y), 0);
+        }
 
         protected abstract void SetDyamicSizeImpl(Vector2 size);
+
+        private float GetHorizontalAlign(float width)
+        {
+            return Align switch
+            {
+                ClassAttributes.HorizontalAlignment.Left => 0,
+                ClassAttributes.HorizontalAlignment.Center => 0.5f * (InternalSize.X - width),
+                ClassAttributes.HorizontalAlignment.Right => InternalSize.X - width,
+                _ => throw new InvalidProgramException(),
+            };
+        }
+
+        private float GetVerticalAlign(float height)
+        {
+            return VerticalAlign switch
+            {
+                ClassAttributes.VerticalAlignment.Top => 0,
+                ClassAttributes.VerticalAlignment.Center => 0.5f * (InternalSize.Y - height),
+                ClassAttributes.VerticalAlignment.Bottom => InternalSize.Y - height,
+                _ => throw new InvalidProgramException(),
+            };
+        }
     }
 }

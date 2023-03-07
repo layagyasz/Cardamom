@@ -21,10 +21,7 @@ namespace Cardamom.Ui.Elements.Components
 
         public float? GetRayIntersection(Ray3 ray)
         {
-            if (ray.Point.X >= _vertices[0].Position.X
-                && ray.Point.Y >= _vertices[0].Position.Y
-                && ray.Point.X <= _vertices[5].Position.X
-                && ray.Point.Y <= _vertices[5].Position.Y)
+            if (ray.Point.X >= 0 && ray.Point.Y >= 0 && ray.Point.X <= _size.X && ray.Point.Y <= _size.Y)
             {
                 return ray.Point.Z / ray.Direction.Z;
             }

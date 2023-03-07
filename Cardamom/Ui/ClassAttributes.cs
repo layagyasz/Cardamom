@@ -9,11 +9,19 @@ namespace Cardamom.Ui
     public class ClassAttributes : GraphicsResource
     {
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public enum Alignment
+        public enum HorizontalAlignment
         {
             Left,
             Center,
             Right
+        }
+
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public enum VerticalAlignment
+        {
+            Top,
+            Center,
+            Bottom
         }
 
         public float[] Margin { get; }
@@ -30,7 +38,8 @@ namespace Cardamom.Ui
 
         public Font? FontFace { get; }
         public uint FontSize { get; }
-        public Alignment Align { get; }
+        public HorizontalAlignment Align { get; }
+        public VerticalAlignment VerticalAlign { get; }
         public Color4 Color { get; }
         public RenderShader? Shader { get; }
 
@@ -47,7 +56,8 @@ namespace Cardamom.Ui
             TextureSegment texture,
             Font? fontFace, 
             uint fontSize, 
-            Alignment align, 
+            HorizontalAlignment align, 
+            VerticalAlignment verticalAlign,
             Color4 color, 
             RenderShader? shader,
             bool disableScissor,
@@ -62,6 +72,7 @@ namespace Cardamom.Ui
             FontFace = fontFace;
             FontSize = fontSize;
             Align = align;
+            VerticalAlign = verticalAlign;
             Color = color;
             Shader = shader;
             DisableScissor = disableScissor;
@@ -96,7 +107,8 @@ namespace Cardamom.Ui
             [JsonConverter(typeof(ReferenceJsonConverter))]
             public KeyedWrapper<Font>? FontFace { get; set; }
             public uint? FontSize { get; set; }
-            public Alignment? Align { get; set; }
+            public HorizontalAlignment? Align { get; set; }
+            public VerticalAlignment? VerticalAlign { get; set; }
             public Color4? Color { get; set; }
             [JsonConverter(typeof(ReferenceJsonConverter))]
             public KeyedWrapper<RenderShader>? Shader { get; set; }
@@ -125,7 +137,8 @@ namespace Cardamom.Ui
                     texture,
                     Inherit(ancestors.Select(x => x.FontFace), FontFace)?.Element,
                     Inherit(ancestors.Select(x => x.FontSize), FontSize) ?? 12,
-                    Inherit(ancestors.Select(x => x.Align), Align) ?? Alignment.Left,
+                    Inherit(ancestors.Select(x => x.Align), Align) ?? HorizontalAlignment.Left,
+                    Inherit(ancestors.Select(x => x.VerticalAlign), VerticalAlign) ?? VerticalAlignment.Top,
                     Inherit(ancestors.Select(x => x.Color), Color) ?? Color4.Black,
                     Inherit(ancestors.Select(x => x.Shader), Shader)?.Element,
                     Inherit(ancestors.Select(x => x.DisableScissor), DisableScissor) ?? false,
