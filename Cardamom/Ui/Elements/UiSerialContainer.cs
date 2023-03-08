@@ -52,7 +52,7 @@ namespace Cardamom.Ui.Elements
             }
         }
 
-        public IEnumerator<IRenderable> GetEnumerator()
+        public IEnumerator<IUiElement> GetEnumerator()
         {
             return _elements.GetEnumerator();
         }

@@ -48,7 +48,7 @@ namespace Cardamom.Ui.Elements
             ElementAdded?.Invoke(this, new(element));
         }
 
-        public IEnumerator<IRenderable> GetEnumerator()
+        public IEnumerator<IUiElement> GetEnumerator()
         {
             return _elements.Values.GetEnumerator();
         }

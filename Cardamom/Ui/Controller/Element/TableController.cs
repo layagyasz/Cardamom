@@ -9,16 +9,43 @@ namespace Cardamom.Ui.Controller.Element
         public override void Bind(object @object)
         {
             base.Bind(@object);
-            foreach (var element in _element!.Cast<IUiElement>())
+            _element!.ElementAdded += HandleElementAdded;
+            _element!.ElementRemoved += HandleElementRemoved;
+            foreach (var element in _element!)
             {
-                element.Controller.Clicked += HandleElementClicked;
+                BindElement(element);
             }
         }
 
-        public void Add(IUiElement element)
+        public virtual void BindElement(IUiElement element)
         {
-            _element!.Add(element);
             element.Controller.Clicked += HandleElementClicked;
+        }
+
+        public override void Unbind()
+        {
+            _element!.ElementAdded += HandleElementAdded;
+            _element!.ElementRemoved += HandleElementRemoved;
+            foreach (var element in _element!)
+            {
+                UnbindElement(element);
+            }
+            base.Unbind();
+        }
+
+        public virtual void UnbindElement(IUiElement element)
+        {
+            element.Controller.Clicked -= HandleElementClicked;
+        }
+
+        public virtual void HandleElementAdded(object? sender, ElementEventArgs e)
+        {
+            BindElement((IUiElement)e.Element);
+        }
+
+        public virtual void HandleElementRemoved(object? sender, ElementEventArgs e)
+        {
+            UnbindElement((IUiElement)e.Element);
         }
 
         public override bool HandleMouseEntered()

@@ -1,6 +1,4 @@
 ﻿using Cardamom.Ui.Controller.Element;
-using Cardamom.Ui.Elements.Components;
-using OpenTK.Graphics.ES11;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Ui

@@ -61,7 +61,7 @@ namespace Cardamom.Ui.Elements
             _container.Draw(target, context);
         }
 
-        public IEnumerator<IRenderable> GetEnumerator()
+        public IEnumerator<IUiElement> GetEnumerator()
         {
             return _container.GetEnumerator();
         }

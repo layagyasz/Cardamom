@@ -1,10 +1,12 @@
-﻿namespace Cardamom.Ui
+﻿using Cardamom.Graphics;
+
+namespace Cardamom.Ui
 {
     public struct ElementEventArgs
     {
-        public object Element { get; }
+        public IRenderable Element { get; }
 
-        public ElementEventArgs(object element)
+        public ElementEventArgs(IRenderable element)
         {
             Element = element;
         }

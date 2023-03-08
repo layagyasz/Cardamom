@@ -22,5 +22,10 @@ namespace Cardamom.Graphics
             Color = color;
             TexCoords = texCoords;
         }
+
+        public override string ToString()
+        {
+            return $"[Vertex3: Position={Position}, Color={Color}, TexCoord={TexCoords}]";
+        }
     }
 }
