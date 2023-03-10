@@ -1,12 +1,18 @@
-﻿using Cardamom.Window;
-using OpenTK.Mathematics;
-using OpenTK.Windowing.GraphicsLibraryFramework;
-
-namespace Cardamom.Ui.Controller.Element
+﻿namespace Cardamom.Ui.Controller.Element
 {
-    public class PaneController : ClassedUiElementController<ClassedUiElement>
+    public class OptionElementController<T> : ClassedUiElementController<ClassedUiElement>, IOptionController<T>
     {
-        public EventHandler<EventArgs>? Closed { get; set; }
+        public T Key { get; }
+
+        public OptionElementController(T key)
+        {
+            Key = key;
+        }
+
+        public void SetSelected(bool selected)
+        {
+            SetToggle(selected);
+        }
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
@@ -23,15 +29,6 @@ namespace Cardamom.Ui.Controller.Element
         public override bool HandleMouseLeft()
         {
             SetHover(false);
-            return true;
-        }
-
-        public override bool HandleMouseButtonDragged(MouseButtonDragEventArgs e)
-        {
-            if (e.Button == MouseButton.Left && _element != null)
-            {
-                _element.Position += new Vector3(e.Delta.X, e.Delta.Y, 0f);
-            }
             return true;
         }
 

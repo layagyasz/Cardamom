@@ -90,7 +90,7 @@ namespace Cardamom.Ui
                     _focusAncestry = newAncestry;
                 }
             }
-            _mouseOver?.Controller?.HandleMouseButtonClicked(
+            MouseButtonClickEventArgs mouseEvent =
                 new()
                 {
                     Action = e.Action,
@@ -98,7 +98,8 @@ namespace Cardamom.Ui
                     Modifiers = e.Modifiers,
                     IsPressed = e.IsPressed,
                     Position = _context!.GetTopIntersection()
-                });
+                };
+            Consume(_mouseOver, x => x.Controller?.HandleMouseButtonClicked(mouseEvent) ?? false);
         }
 
         private void HandleMouseButtonDragged(object? sender, MouseButtonDragEventArgs e)

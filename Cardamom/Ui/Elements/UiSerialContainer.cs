@@ -40,6 +40,15 @@ namespace Cardamom.Ui.Elements
             ElementAdded?.Invoke(this, new(element));
         }
 
+        public void Clear()
+        {
+            foreach (var element in _elements)
+            {
+                ElementRemoved?.Invoke(this, new(element));
+            }
+            _elements.Clear();
+        }
+
         public void TryAdjustOffset(float Amount)
         {
             if (_orientation == Orientation.Vertical)

@@ -1,11 +1,11 @@
 ﻿namespace Cardamom.Ui.Controller.Element
 {
-    public class ButtonController : ClassedUiElementController<ClassedUiElement>
+    public class InlayController : ClassedUiElementController<ClassedUiElement>
     {
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
             Clicked?.Invoke(this, e);
-            return true;
+            return false;
         }
 
         public override bool HandleMouseEntered()

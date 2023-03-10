@@ -48,6 +48,12 @@ namespace Cardamom.Ui.Controller.Element
             UnbindElement((IUiElement)e.Element);
         }
 
+        public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
+        {
+            Clicked?.Invoke(this, e);
+            return true;
+        }
+
         public override bool HandleMouseEntered()
         {
             SetHover(true);

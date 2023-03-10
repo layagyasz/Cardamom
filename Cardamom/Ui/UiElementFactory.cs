@@ -43,9 +43,9 @@ namespace Cardamom.Ui
                 CreateTable(dropBoxClassName, options).Item1), controller);
         }
 
-        public (IUiElement, OptionController<T>) CreateSelectOption<T>(string className, T value, string text)
+        public (IUiElement, OptionElementController<T>) CreateSelectOption<T>(string className, T value, string text)
         {
-            var controller = new OptionController<T>(value);
+            var controller = new SelectOptionElementController<T>(value);
             var option = new TextUiElement(_resources.GetClass(className), controller, text);
             return (option, controller);
         }

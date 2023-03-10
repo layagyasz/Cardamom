@@ -48,6 +48,15 @@ namespace Cardamom.Ui.Elements
             ElementAdded?.Invoke(this, new(element));
         }
 
+        public void Clear()
+        {
+            foreach (var element in _elements.Values)
+            {
+                ElementRemoved?.Invoke(this, new(element));
+            }
+            _elements.Clear();
+        }
+
         public IEnumerator<IUiElement> GetEnumerator()
         {
             return _elements.Values.GetEnumerator();

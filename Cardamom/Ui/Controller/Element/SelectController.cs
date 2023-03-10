@@ -8,7 +8,7 @@ namespace Cardamom.Ui.Controller.Element
 
         public string Key { get; }
 
-        private OptionController<T>? _selected;
+        private OptionElementController<T>? _selected;
         private T? _value;
 
         public SelectController(string key)
@@ -25,7 +25,7 @@ namespace Cardamom.Ui.Controller.Element
         {
             foreach (var element in _element!.GetDropBox().Cast<IUiElement>())
             {
-                if (element.Controller is OptionController<T> controller)
+                if (element.Controller is OptionElementController<T> controller)
                 {
                     if (Equals(controller.Key, value))
                     {
@@ -49,6 +49,12 @@ namespace Cardamom.Ui.Controller.Element
                 dropBoxController.ElementClicked = HandleElementClicked;
             }
             SetSelected(_element!.GetDropBox().Cast<IUiElement>().First().Controller);
+        }
+
+        public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
+        {
+            Clicked?.Invoke(this, e);
+            return true;
         }
 
         public override bool HandleMouseEntered()
@@ -84,10 +90,10 @@ namespace Cardamom.Ui.Controller.Element
 
         private void SetSelected(IElementController elementController)
         {
-            if (elementController is OptionController<T> controller)
+            if (elementController is SelectOptionElementController<T> controller)
             {
-                _selected?.SetValue(false);
-                controller.SetValue(true);
+                _selected?.SetSelected(false);
+                controller.SetSelected(true);
                 _element!.SetText(controller.GetText());
                 _selected = controller;
                 _value = controller.Key;

@@ -45,11 +45,7 @@ namespace Cardamom.Ui.Controller.Element
             return false;
         }
 
-        public virtual bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
-        {
-            Clicked?.Invoke(this, e);
-            return true;
-        }
+        public abstract bool HandleMouseButtonClicked(MouseButtonClickEventArgs e);
 
         public virtual bool HandleMouseButtonDragged(MouseButtonDragEventArgs e)
         {

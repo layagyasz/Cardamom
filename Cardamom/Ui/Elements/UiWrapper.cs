@@ -1,4 +1,5 @@
 ﻿using Cardamom.Graphics;
+using Cardamom.Ui.Controller.Element;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
@@ -10,8 +11,8 @@ namespace Cardamom.Ui.Elements
 
         public IUiElement Element { get; }
 
-        public UiWrapper(Class @class, IUiElement element)
-            : base(@class, element.Controller)
+        public UiWrapper(Class @class, IElementController controller, IUiElement element)
+            : base(@class, controller)
         {
             Element = element;
             Element.Parent = this;
@@ -22,10 +23,15 @@ namespace Cardamom.Ui.Elements
             throw new NotSupportedException();
         }
 
+        public void Clear()
+        {
+            throw new NotSupportedException();
+        }
+
         public override void Initialize()
         {
-            base.Initialize();
             Element.Initialize();
+            base.Initialize();
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
