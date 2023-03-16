@@ -9,6 +9,7 @@ namespace Cardamom.Ui.Elements.Components
     {
         private RenderShader? _shader;
 
+        private bool _disableDraw;
         private Vector2 _size;
         private Texture? _texture;
         private UniformBuffer? _uniforms;
@@ -30,6 +31,7 @@ namespace Cardamom.Ui.Elements.Components
 
         public void SetAttributes(ClassAttributes attributes)
         {
+            _disableDraw = attributes.DisableDraw;
             _shader = attributes.BackgroundShader;
             _texture = attributes.Texture.Texture;
             _uniforms = attributes.GetUniforms();
@@ -56,14 +58,17 @@ namespace Cardamom.Ui.Elements.Components
 
         public void Draw(RenderTarget target)
         {
-            _uniforms!.Bind(0);
-            _shader!.SetVector2("size", _size);
-            target.Draw(
-                _vertices,
-                PrimitiveType.Triangles,
-                0,
-                _vertices.Length,
-                _texture == null ? new(BlendMode.Alpha, _shader!) : new(BlendMode.Alpha, _shader!, _texture!));
+            if (!_disableDraw)
+            {
+                _uniforms!.Bind(0);
+                _shader!.SetVector2("size", _size);
+                target.Draw(
+                    _vertices,
+                    PrimitiveType.Triangles,
+                    0,
+                    _vertices.Length,
+                    _texture == null ? new(BlendMode.Alpha, _shader!) : new(BlendMode.Alpha, _shader!, _texture!));
+            }
         }
     }
 }

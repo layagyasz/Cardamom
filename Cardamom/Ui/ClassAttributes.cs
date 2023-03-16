@@ -42,8 +42,9 @@ namespace Cardamom.Ui
         public VerticalAlignment VerticalAlign { get; }
         public Color4 Color { get; }
         public RenderShader? Shader { get; }
-
+        
         public bool DisableScissor { get; }
+        public bool DisableDraw { get; }
 
         private UniformBuffer? _uniforms;
 
@@ -61,6 +62,7 @@ namespace Cardamom.Ui
             Color4 color, 
             RenderShader? shader,
             bool disableScissor,
+            bool disableDraw,
             UniformBuffer uniforms)
         {
             Margin = margin;
@@ -76,6 +78,7 @@ namespace Cardamom.Ui
             Color = color;
             Shader = shader;
             DisableScissor = disableScissor;
+            DisableDraw = disableDraw;
             _uniforms = uniforms;
         }
 
@@ -119,6 +122,8 @@ namespace Cardamom.Ui
                 var backgroundShader = Inherit(ancestors.Select(x => x.BackgroundShader), BackgroundShader)!.Element!;
                 TextureSegment texture = Inherit(ancestors.Select(x => x.Texture), Texture)
                     ?? new(string.Empty, null, new(new(), new(1, 1)));
+                var backgroundColor =
+                    ExpandOrThrow(Inherit(ancestors.Select(x => x.BackgroundColor), BackgroundColor) ?? new Color4[4]);
                 var borderColor = 
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.BorderColor), BorderColor) ?? new Color4[4]);
                 var borderWidth = 
@@ -132,7 +137,7 @@ namespace Cardamom.Ui
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.Margin), Margin) ?? new float[4]),
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.Padding), Padding) ?? new float[4]),
                     Inherit(ancestors.Select(x => x.Size), Size) ?? new(),
-                    ExpandOrThrow(Inherit(ancestors.Select(x => x.BackgroundColor), BackgroundColor) ?? new Color4[4]),
+                    backgroundColor,
                     backgroundShader,
                     texture,
                     Inherit(ancestors.Select(x => x.FontFace), FontFace)?.Element,
@@ -142,6 +147,8 @@ namespace Cardamom.Ui
                     Inherit(ancestors.Select(x => x.Color), Color) ?? Color4.Black,
                     Inherit(ancestors.Select(x => x.Shader), Shader)?.Element,
                     Inherit(ancestors.Select(x => x.DisableScissor), DisableScissor) ?? false,
+                    backgroundColor.All(x => x.A < float.Epsilon) 
+                        && (borderColor.All(x => x.A < float.Epsilon) || borderWidth.All(x => x < float.Epsilon)),
                     uniforms);
             }
 
