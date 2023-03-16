@@ -4,7 +4,7 @@ namespace Cardamom.Ui.Controller.Element
 {
     public class SelectController<T> : ClassedUiElementController<Select>, IFormElementController<string, T>
     {
-        public EventHandler<ValueChangedEventArgs<string, T>>? ValueChanged { get; set; }
+        public EventHandler<ValueChangedEventArgs<string, T?>>? ValueChanged { get; set; }
 
         public string Key { get; }
 
@@ -97,7 +97,7 @@ namespace Cardamom.Ui.Controller.Element
                 _element!.SetText(controller.GetText());
                 _selected = controller;
                 _value = controller.Key;
-                ValueChanged?.Invoke(this, new ValueChangedEventArgs<string, T>(Key, _value));
+                ValueChanged?.Invoke(this, new(Key, _value));
             }
             else
             {

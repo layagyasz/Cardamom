@@ -10,7 +10,7 @@ namespace Cardamom.Ui.Controller.Element
     {
         private static readonly EnumSet<Keys> s_DisregardKeys = new() { Keys.Enter, Keys.Tab };
 
-        public EventHandler<ValueChangedEventArgs<string, string>>? ValueChanged { get; set; }
+        public EventHandler<ValueChangedEventArgs<string, string?>>? ValueChanged { get; set; }
 
         public string Key { get; }
 
