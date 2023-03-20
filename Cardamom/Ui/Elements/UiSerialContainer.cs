@@ -49,15 +49,27 @@ namespace Cardamom.Ui.Elements
             _elements.Clear();
         }
 
-        public void TryAdjustOffset(float Amount)
+        public void SetOffset(float amount)
         {
             if (_orientation == Orientation.Vertical)
             {
-                _offset = new(0, Math.Min(Math.Max(_offset.Y + Amount, _maxOffset), 0), 0);
+                _offset = new(0, Math.Min(Math.Max(amount, _maxOffset), 0), 0);
             }
             else
             {
-                _offset = new(Math.Min(Math.Max(_offset.X + Amount, _maxOffset), 0), 0, 0);
+                _offset = new(Math.Min(Math.Max(amount, _maxOffset), 0), 0, 0);
+            }
+        }
+
+        public void TryAdjustOffset(float amount)
+        {
+            if (_orientation == Orientation.Vertical)
+            {
+                _offset = new(0, Math.Min(Math.Max(_offset.Y + amount, _maxOffset), 0), 0);
+            }
+            else
+            {
+                _offset = new(Math.Min(Math.Max(_offset.X + amount, _maxOffset), 0), 0, 0);
             }
         }
 

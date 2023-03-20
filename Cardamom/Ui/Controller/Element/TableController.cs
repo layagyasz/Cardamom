@@ -1,10 +1,17 @@
 ﻿using Cardamom.Ui.Elements;
+using OpenTK.Windowing.Common;
 
 namespace Cardamom.Ui.Controller.Element
 {
     public class TableController : ClassedUiElementController<UiSerialContainer>, IUiCollectionController
     {
         public EventHandler<ElementClickedEventArgs>? ElementClicked { get; set; }
+        public float ScrollSpeed { get; set; }
+
+        public TableController(float scrollSpeed)
+        {
+            ScrollSpeed = scrollSpeed;
+        }
 
         public override void Bind(object @object)
         {
@@ -52,6 +59,16 @@ namespace Cardamom.Ui.Controller.Element
         {
             Clicked?.Invoke(this, e);
             return true;
+        }
+
+        public override bool HandleMouseWheelScrolled(MouseWheelEventArgs e)
+        {
+            if (ScrollSpeed > float.Epsilon)
+            {
+                _element!.TryAdjustOffset(ScrollSpeed * e.OffsetY);
+                return true;
+            }
+            return false;
         }
 
         public override bool HandleMouseEntered()

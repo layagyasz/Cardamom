@@ -61,11 +61,12 @@ namespace Cardamom.Ui
         public (UiSerialContainer, TableController) CreateTable(
             string className, IEnumerable<IUiElement> rows, float scrollSpeed = 0, Vector3 position = new())
         {
-            TableController controller =
-                scrollSpeed > 0 ? new ScrollingTableController(scrollSpeed) : new StaticTableController();
+            var controller = new TableController(scrollSpeed);
             var table =
                 new UiSerialContainer(
-                    _resources.GetClass(className), controller, UiSerialContainer.Orientation.Vertical)
+                    _resources.GetClass(className), 
+                    controller, 
+                    UiSerialContainer.Orientation.Vertical)
                 {
                     Position = position
                 };
