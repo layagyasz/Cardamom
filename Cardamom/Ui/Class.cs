@@ -9,7 +9,7 @@ namespace Cardamom.Ui
     public class Class : GraphicsResource, IKeyed
     {
         private static readonly string[] s_Uniforms =
-            { "mode", "border_width", "border_color", "corner_radius" };
+            { "foreground_color", "border_width", "border_color", "corner_radius" };
 
         public class BuilderResources
         {
@@ -23,7 +23,7 @@ namespace Cardamom.Ui
                 }
                 uniformBuffer = new UniformBuffer(key.Shader.GetUniformBlockSize("settings"));
                 var offsets = key.Shader.GetUniformOffsets(s_Uniforms);
-                uniformBuffer.Set(offsets[0], sizeof(int), key.Mode);
+                uniformBuffer.Set(offsets[0], 4 * sizeof(float), key.ForegroundColor);
                 uniformBuffer.SetArray(offsets[1], sizeof(float), key.BorderWidth);
                 uniformBuffer.SetArray(offsets[2], 4 * sizeof(float), key.BorderColor);
                 uniformBuffer.SetArray(offsets[3], 2 * sizeof(float), key.CornerRadius);
@@ -35,16 +35,20 @@ namespace Cardamom.Ui
         public class UniformBufferKey
         {
             public RenderShader Shader { get; }
-            public int Mode { get; }
+            public Color4 ForegroundColor;
             public float[] BorderWidth { get; }
             public Color4[] BorderColor { get; }
             public Vector2[] CornerRadius { get; }
 
             public UniformBufferKey(
-                RenderShader shader, int mode, float[] borderWidth, Color4[] borderColor, Vector2[] cornerRadius)
+                RenderShader shader, 
+                Color4 foregroundColor,
+                float[] borderWidth, 
+                Color4[] borderColor,
+                Vector2[] cornerRadius)
             {
                 Shader = shader;
-                Mode = mode;
+                ForegroundColor = foregroundColor;
                 BorderWidth = borderWidth;
                 BorderColor = borderColor;
                 CornerRadius = cornerRadius;
@@ -54,7 +58,7 @@ namespace Cardamom.Ui
             {
                 if (@object is UniformBufferKey other)
                 {
-                    return Mode == other.Mode 
+                    return ForegroundColor == other.ForegroundColor
                         && BorderWidth.SequenceEqual(other.BorderWidth) 
                         && BorderColor.SequenceEqual(other.BorderColor) 
                         && CornerRadius.SequenceEqual(other.CornerRadius);
@@ -65,7 +69,7 @@ namespace Cardamom.Ui
             public override int GetHashCode()
             {
                 return HashCode.Combine(
-                    Mode, HashArray(BorderWidth), HashArray(BorderColor), HashArray(CornerRadius));
+                    ForegroundColor, HashArray(BorderWidth), HashArray(BorderColor), HashArray(CornerRadius));
             }
             
             private static int HashArray<T>(T[] array)

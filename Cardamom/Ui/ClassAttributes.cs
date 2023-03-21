@@ -100,6 +100,7 @@ namespace Cardamom.Ui
             public ElementSizeDefinition? Size { get; set; }
 
             public Color4[]? BackgroundColor { get; set; }
+            public Color4? ForegroundColor { get; set; }
             public Color4[]? BorderColor { get; set; }
             public float[]? BorderWidth { get; set; }
             public Vector2[]? CornerRadius { get; set; }
@@ -124,6 +125,8 @@ namespace Cardamom.Ui
                     ?? new(string.Empty, null, new(new(), new(1, 1)));
                 var backgroundColor =
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.BackgroundColor), BackgroundColor) ?? new Color4[4]);
+                var foregroundColor = 
+                    Inherit(ancestors.Select(x => x.ForegroundColor), ForegroundColor) ?? Color4.White;
                 var borderColor = 
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.BorderColor), BorderColor) ?? new Color4[4]);
                 var borderWidth = 
@@ -132,7 +135,7 @@ namespace Cardamom.Ui
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.CornerRadius), CornerRadius) ?? new Vector2[4]);
                 var uniforms = resources.Get(
                     new Class.UniformBufferKey(
-                        backgroundShader, texture.Texture == null ? 0 : 1, borderWidth, borderColor, cornerRadius));
+                        backgroundShader, foregroundColor, borderWidth, borderColor, cornerRadius));
                 return new(
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.Margin), Margin) ?? new float[4]),
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.Padding), Padding) ?? new float[4]),
