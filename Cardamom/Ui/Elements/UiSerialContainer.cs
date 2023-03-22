@@ -40,13 +40,18 @@ namespace Cardamom.Ui.Elements
             ElementAdded?.Invoke(this, new(element));
         }
 
-        public void Clear()
+        public void Clear(bool dispose)
         {
             foreach (var element in _elements)
             {
                 ElementRemoved?.Invoke(this, new(element));
+                if (dispose)
+                {
+                    element.Dispose();
+                }
             }
             _elements.Clear();
+            _offset = new();
         }
 
         public void SetOffset(float amount)
@@ -127,6 +132,15 @@ namespace Cardamom.Ui.Elements
             foreach (var element in _elements)
             {
                 element.Update(delta);
+            }
+        }
+
+        protected override void DisposeImpl()
+        {
+            base.DisposeImpl();
+            foreach (var element in _elements)
+            {
+                element.Dispose();
             }
         }
     }

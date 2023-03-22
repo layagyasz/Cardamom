@@ -8,7 +8,7 @@ namespace Cardamom.Ui
         EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
         void Add(IUiElement element);
-        void Clear();
+        void Clear(bool dispose);
         void Remove(IUiElement element);
     }
 }

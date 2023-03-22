@@ -1,6 +1,7 @@
 ﻿using Cardamom.Graphics;
 using Cardamom.Ui.Controller.Element;
 using OpenTK.Mathematics;
+using System.Xml.Linq;
 
 namespace Cardamom.Ui.Elements
 {
@@ -23,7 +24,7 @@ namespace Cardamom.Ui.Elements
             throw new NotSupportedException();
         }
 
-        public void Clear()
+        public void Clear(bool dispose)
         {
             throw new NotSupportedException();
         }
@@ -74,6 +75,12 @@ namespace Cardamom.Ui.Elements
         public override void Update(long delta)
         {
             Element.Update(delta);
+        }
+
+        protected override void DisposeImpl()
+        {
+            base.DisposeImpl();
+            Element.Dispose();
         }
     }
 }

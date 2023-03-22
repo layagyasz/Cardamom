@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
 {
-    public interface IUiElement : IRenderable, IControlledElement
+    public interface IUiElement : IRenderable, IControlledElement, IDisposable
     {
         bool Visible { get; set; }
         Vector3 Position { get; set; }

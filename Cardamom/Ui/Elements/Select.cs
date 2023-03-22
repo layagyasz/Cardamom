@@ -31,6 +31,11 @@ namespace Cardamom.Ui.Elements
             _open = value;
         }
 
+        public void ToggleOpen()
+        {
+            _open = !_open;
+        }
+
         public override void Draw(RenderTarget target, UiContext context)
         {
             base.Draw(target, context);

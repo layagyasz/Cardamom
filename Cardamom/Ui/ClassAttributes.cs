@@ -135,7 +135,12 @@ namespace Cardamom.Ui
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.CornerRadius), CornerRadius) ?? new Vector2[4]);
                 var uniforms = resources.Get(
                     new Class.UniformBufferKey(
-                        backgroundShader, foregroundColor, borderWidth, borderColor, cornerRadius));
+                        backgroundShader,
+                        texture.Texture == null ? 0 : 1,
+                        foregroundColor, 
+                        borderWidth,
+                        borderColor,
+                        cornerRadius));
                 return new(
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.Margin), Margin) ?? new float[4]),
                     ExpandOrThrow(Inherit(ancestors.Select(x => x.Padding), Padding) ?? new float[4]),

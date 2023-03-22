@@ -43,9 +43,9 @@ namespace Cardamom.Ui.Elements
             _container.Add(element);
         }
 
-        public void Clear()
+        public void Clear(bool dispose)
         {
-            _container.Clear();
+            _container.Clear(dispose);
         }
 
         protected override void DisposeImpl()

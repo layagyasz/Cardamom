@@ -54,6 +54,7 @@ namespace Cardamom.Ui.Controller.Element
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
             Clicked?.Invoke(this, e);
+            _element!.ToggleOpen();
             return true;
         }
 
@@ -77,7 +78,6 @@ namespace Cardamom.Ui.Controller.Element
         public override bool HandleFocusEntered()
         {
             SetFocus(true);
-            _element!.SetOpen(true);
             return true;
         }
 
