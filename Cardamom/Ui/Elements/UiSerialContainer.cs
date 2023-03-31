@@ -90,6 +90,10 @@ namespace Cardamom.Ui.Elements
 
         public override void Draw(RenderTarget target, UiContext context)
         {
+            if (!Visible)
+            {
+                return;
+            }
             base.Draw(target, context);
             target.PushTranslation(Position + LeftMargin + LeftPadding);
             if (!DisableScissor)
@@ -101,9 +105,7 @@ namespace Cardamom.Ui.Elements
             Box3 bounds = new();
             foreach (var element in _elements)
             {
-                element.Position =
-                    _orientation == Orientation.Vertical
-                        ? new(0, offset, Position.Z) : new(offset, 0, Position.Z);
+                element.Position = _orientation == Orientation.Vertical ? new(0, offset, 0) : new(offset, 0, 0);
                 _maxOffset = -offset;
                 offset += _orientation == Orientation.Vertical ? element.Size.Y : element.Size.X;
                 bounds.Inflate(element.Position + element.Size);

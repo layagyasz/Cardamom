@@ -4,7 +4,7 @@ namespace Cardamom.Graphics.Camera
 {
     public interface ICamera
     {
-        EventHandler<EventArgs>? OnCameraChange { get; set; }
+        EventHandler<EventArgs>? Changed { get; set; }
 
         Vector3 Position { get; }
         float AspectRatio { get; }

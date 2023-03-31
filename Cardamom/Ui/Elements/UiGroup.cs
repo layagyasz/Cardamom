@@ -1,33 +1,61 @@
 ﻿using Cardamom.Graphics;
 using Cardamom.Ui.Controller;
+using Cardamom.Ui.Controller.Element;
 using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiGroup : IEnumerable<IRenderable>, IRenderable
+    public class UiGroup : GraphicsResource, IEnumerable<IControlledElement>, IRenderable, IControlledElement
     {
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
         public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
-        public IController Controller { get; }
+        public IElementController Controller { get; } = new NoOpElementController<UiGroup>();
+        public IControlledElement? Parent
+        {
+            get => _parent;
+            set
+            {
+                _parent = value;
+                foreach (var  element in _elements)
+                {
+                    element.Parent = _parent;
+                }
+            }
+        }
+        public IController GroupController { get; }
 
-        private readonly List<IRenderable> _elements = new();
+        private IControlledElement? _parent;
+        protected readonly List<IControlledElement> _elements = new();
 
         public UiGroup(IController controller)
         {
-            Controller = controller;
+            GroupController = controller;
+        }
+
+        protected override void DisposeImpl()
+        {
+            foreach (var element in _elements)
+            {
+                if (element is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+            }
+            _elements.Clear();
         }
 
         public virtual void Initialize()
         {
-            Controller.Bind(this);
+            GroupController.Bind(this);
             _elements.ForEach(x => x.Initialize());
         }
 
         public void ResizeContext(Vector3 bounds) { }
 
-        public void Add(IRenderable element)
+        public void Add(IControlledElement element)
         {
+            element.Parent = _parent;
             _elements.Add(element);
             ElementAdded?.Invoke(this, new(element));
         }
@@ -41,7 +69,7 @@ namespace Cardamom.Ui.Elements
             _elements.Clear();
         }
 
-        public void Remove(IRenderable element)
+        public void Remove(IControlledElement element)
         {
             if (_elements.Remove(element))
             {
@@ -49,7 +77,7 @@ namespace Cardamom.Ui.Elements
             }
         }
 
-        public IEnumerator<IRenderable> GetEnumerator()
+        public IEnumerator<IControlledElement> GetEnumerator()
         {
             return _elements.GetEnumerator();
         }

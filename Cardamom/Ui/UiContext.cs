@@ -76,7 +76,14 @@ namespace Cardamom.Ui
             }
         }
 
-        private Vector2 WindowToNdc(Vector2 position)
+        public Vector2 NdcToWindow(Vector2 position)
+        {
+            return new(
+                _context!.GetViewPort().HalfSize.X * (position.X + 1), 
+                _context.GetViewPort().HalfSize.Y * (1 - position.Y));
+        }
+
+        public Vector2 WindowToNdc(Vector2 position)
         {
             return new(
                 position.X / _context!.GetViewPort().HalfSize.X - 1,

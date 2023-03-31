@@ -1,6 +1,8 @@
-﻿namespace Cardamom.Ui.Controller.Element
+﻿using Cardamom.Graphics;
+
+namespace Cardamom.Ui.Controller.Element
 {
-    public interface IControlledElement
+    public interface IControlledElement : IRenderable
     {
         IElementController Controller { get; }
         IControlledElement? Parent { get; set; }

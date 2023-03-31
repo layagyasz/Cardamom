@@ -162,7 +162,7 @@ namespace Cardamom
                     new NoOpController<Screen>(),
                     new List<UiGroup>()
                     {
-                        UiElementFactory.CreatePaneLayer(new List<IRenderable>() { pane }).Item1
+                        UiElementFactory.CreatePaneLayer(new List<IUiElement>() { pane }).Item1
                     },
                     scene);
             ui.SetRoot(screen);

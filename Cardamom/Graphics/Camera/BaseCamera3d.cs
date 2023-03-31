@@ -4,7 +4,7 @@ namespace Cardamom.Graphics.Camera
 {
     public abstract class BaseCamera3d : ICamera
     {
-        public EventHandler<EventArgs>? OnCameraChange { get; set; }
+        public EventHandler<EventArgs>? Changed { get; set; }
 
         public Vector3 Position { get; protected set; }
         public float Pitch { get; private set; } = 0;
@@ -30,35 +30,35 @@ namespace Cardamom.Graphics.Camera
         public void InvalidateView()
         {
             _updateView = true;
-            OnCameraChange?.Invoke(this, EventArgs.Empty);
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetAspectRatio(float aspectRatio)
         {
             AspectRatio = aspectRatio;
             _updateProjection = true;
-            OnCameraChange?.Invoke(this, EventArgs.Empty);
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetPitch(float pitch)
         {
             Pitch = pitch;
             _updateView = true;
-            OnCameraChange?.Invoke(this, EventArgs.Empty);
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetYaw(float yaw)
         {
             Yaw = yaw;
             _updateView = true;
-            OnCameraChange?.Invoke(this, EventArgs.Empty);
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetFieldOfView(float fieldOfView)
         {
             FieldOfView = MathHelper.Clamp(FieldOfView + fieldOfView, 0.01f, MathHelper.Pi - 0.1f);
             _updateProjection = true;
-            OnCameraChange?.Invoke(this, EventArgs.Empty);
+            Changed?.Invoke(this, EventArgs.Empty);
         }
 
         public Matrix4 GetViewMatrix()

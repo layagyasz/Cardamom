@@ -20,6 +20,11 @@ namespace Cardamom.Ui.Elements
             _collider = collider;
         }
 
+        public IRenderable GetModel()
+        {
+            return _model;
+        }
+
         public void Initialize()
         {
             Controller.Bind(this);

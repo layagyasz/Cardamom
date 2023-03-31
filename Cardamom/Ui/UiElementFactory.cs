@@ -16,7 +16,7 @@ namespace Cardamom.Ui
             _resources = resources;
         }
 
-        public static (UiGroup, PaneLayerController) CreatePaneLayer(IEnumerable<IRenderable> panes)
+        public static (UiGroup, PaneLayerController) CreatePaneLayer(IEnumerable<IUiElement> panes)
         {
             var controller = new PaneLayerController();
             var layer = new UiGroup(controller);
