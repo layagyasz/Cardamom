@@ -1,5 +1,6 @@
 ﻿using Cardamom.ImageProcessing.Filters;
 using Cardamom.Utils.Suppliers;
+using OpenTK.Mathematics;
 
 namespace Cardamom.ImageProcessing.Pipelines.Nodes
 {
@@ -8,8 +9,8 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
         public class Parameters
         {
             public ISupplier<int>? Seed { get; set; }
-            public ISupplier<float>? Frequency { get; set; }
-            public ISupplier<float>? Lacunarity { get; set; }
+            public ISupplier<Vector3>? Frequency { get; set; }
+            public ISupplier<Vector3>? Lacunarity { get; set; }
             public ISupplier<int>? Octaves { get; set; }
             public ISupplier<float>? Persistence { get; set; }
             public ISupplier<float>? Amplitude { get; set; }

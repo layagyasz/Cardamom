@@ -76,8 +76,8 @@ namespace Cardamom.ImageProcessing.Filters
 
         public struct Settings
         {
-            public float Frequency { get; set; } = 1f;
-            public float Lacunarity { get; set; } = 2;
+            public Vector3 Frequency { get; set; } = new(1, 1, 1);
+            public Vector3 Lacunarity { get; set; } = new(2, 2, 2);
             public int Octaves { get; set; } = 6;
             public float Persistence { get; set; } = 0.6f;
             public float Amplitude { get; set; } = 1;
@@ -104,8 +104,8 @@ namespace Cardamom.ImageProcessing.Filters
             s_LatticeNoiseShader ??=
                 ComputeShader.FromFile("Resources/ImageProcessing/Filters/lattice_noise.comp", s_LocalGroupSize);
 
-            s_LatticeNoiseShader.SetFloat(s_FrequencyLocation, _settings.Frequency);
-            s_LatticeNoiseShader.SetFloat(s_LacunarityLocation, _settings.Lacunarity);
+            s_LatticeNoiseShader.SetVector3(s_FrequencyLocation, _settings.Frequency);
+            s_LatticeNoiseShader.SetVector3(s_LacunarityLocation, _settings.Lacunarity);
             s_LatticeNoiseShader.SetInt32(s_OctavesLocation, _settings.Octaves);
             s_LatticeNoiseShader.SetFloat(s_PersistenceLocation, _settings.Persistence);
             s_LatticeNoiseShader.SetFloat(s_AmplitudeLocation, _settings.Amplitude);
@@ -136,13 +136,13 @@ namespace Cardamom.ImageProcessing.Filters
                 return this;
             }
 
-            public Builder SetFrequency(float frequency)
+            public Builder SetFrequency(Vector3 frequency)
             {
                 _settings.Frequency = frequency;
                 return this;
             }
 
-            public Builder SetLacunarity(float lacunarity)
+            public Builder SetLacunarity(Vector3 lacunarity)
             {
                 _settings.Lacunarity = lacunarity;
                 return this;
