@@ -1,5 +1,6 @@
 ﻿using Cardamom.Ui.Controller.Element;
 using Cardamom.Ui.Elements;
+using OpenTK.Graphics.GL;
 
 namespace Cardamom.Ui.Controller
 {
@@ -54,10 +55,14 @@ namespace Cardamom.Ui.Controller
                 BindElement(option);
             }
             var selected = 
-                _element!.Cast<IUiElement>().Where(x => x.Controller is OptionElementController<T>).FirstOrDefault();
+                _element!
+                    .SelectMany(GetControllers)
+                    .Where(x => x is IOptionController<T>)
+                    .Cast<IOptionController<T>>()
+                    .FirstOrDefault();
             if (selected != null)
             {
-                SetSelected(selected.Controller);
+                SetSelected(selected);
             }
         }
 
@@ -76,7 +81,12 @@ namespace Cardamom.Ui.Controller
         {
             if (element.Controller is IOptionController<T> controller)
             {
-                controller.Clicked += HandleElementClicked;
+                controller.Selected += HandleElementSelected;
+            }
+            if (element is UiCompoundComponent compound 
+                && compound.ComponentController is IOptionController<T> componentController)
+            {
+                componentController.Selected += HandleElementSelected;
             }
         }
 
@@ -84,11 +94,16 @@ namespace Cardamom.Ui.Controller
         {
             if (element.Controller is IOptionController<T> controller)
             {
-                controller.Clicked -= HandleElementClicked;
+                controller.Selected -= HandleElementSelected;
+            }
+            if (element is UiCompoundComponent compound
+                && compound.ComponentController is IOptionController<T> componentController)
+            {
+                componentController.Selected -= HandleElementSelected;
             }
         }
 
-        private void SetSelected(IElementController? elementController)
+        private void SetSelected(IOptionController<T>? elementController)
         {
             _selected?.SetSelected(false);
             if (elementController == null)
@@ -111,14 +126,23 @@ namespace Cardamom.Ui.Controller
             BindElement((IUiElement)e.Element);
         }
 
-        private void HandleElementClicked(object? sender, MouseButtonClickEventArgs e)
+        private void HandleElementSelected(object? sender, EventArgs e)
         {
-            SetSelected((IElementController)sender!);
+            SetSelected((IOptionController<T>)sender!);
         }
 
         private void HandleElementRemoved(object? sender, ElementEventArgs e)
         {
             UnbindElement((IUiElement)e.Element);
+        }
+        
+        private static IEnumerable<IController> GetControllers(IUiElement element)
+        {
+            yield return element.Controller;
+            if (element is UiCompoundComponent compound)
+            {
+                yield return compound.ComponentController;
+            }
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Cardamom.Ui
 
         private void HandleTextEntered(object? sender, TextEnteredEventArgs e)
         {
-            _focus?.Controller?.HandleTextEntered(e);
+            Consume(_focus, x => x?.Controller?.HandleTextEntered(e) ?? false);
         }
 
         private void HandleMouseButtonClicked(object? sender, MouseButtonEventArgs e)

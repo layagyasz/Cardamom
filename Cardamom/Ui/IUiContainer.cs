@@ -1,6 +1,4 @@
-﻿using Cardamom.Graphics;
-
-namespace Cardamom.Ui
+﻿namespace Cardamom.Ui
 {
     public interface IUiContainer : IEnumerable<IUiElement>, IUiElement, IDisposable
     { 

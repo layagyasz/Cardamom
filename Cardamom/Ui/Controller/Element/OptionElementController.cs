@@ -1,7 +1,11 @@
-﻿namespace Cardamom.Ui.Controller.Element
+﻿using OpenTK.Windowing.GraphicsLibraryFramework;
+
+namespace Cardamom.Ui.Controller.Element
 {
     public class OptionElementController<T> : ClassedUiElementController<ClassedUiElement>, IOptionController<T>
     {
+        public EventHandler<EventArgs>? Selected { get; set; }
+
         public T Key { get; }
 
         public OptionElementController(T key)
@@ -17,6 +21,10 @@
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
             Clicked?.Invoke(this, e);
+            if (e.Button == MouseButton.Left)
+            {
+                Selected?.Invoke(this, EventArgs.Empty);
+            }
             return true;
         }
 

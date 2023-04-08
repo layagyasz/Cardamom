@@ -30,7 +30,7 @@ namespace Cardamom.Ui.Elements
             set => _container.Visible = value;
         }
 
-        private readonly IUiContainer _container;
+        protected readonly IUiContainer _container;
 
         public UiCompoundComponent(IController componentController, IUiContainer container)
         {

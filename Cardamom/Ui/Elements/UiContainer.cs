@@ -35,7 +35,7 @@ namespace Cardamom.Ui.Elements
         public override void Initialize()
         {
             base.Initialize();
-            foreach (var element in _elements.Values)
+            foreach (var element in _elements.Values.ToList())
             {
                 element.Initialize();
             }

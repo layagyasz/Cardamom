@@ -40,6 +40,11 @@ namespace Cardamom.Ui.Controller.Element
             base.Unbind();
         }
 
+        public void Reset()
+        {
+            _element!.SetOffset(0);
+        }
+
         public virtual void UnbindElement(IUiElement element)
         {
             element.Controller.Clicked -= HandleElementClicked;

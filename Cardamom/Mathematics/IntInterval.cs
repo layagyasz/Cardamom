@@ -26,7 +26,7 @@ namespace Cardamom.Mathematics
             Maximum = Math.Max(Maximum, value);
         }
 
-        public float Clamp(int value)
+        public int Clamp(int value)
         {
             return MathHelper.Clamp(value, Minimum, Maximum);
         }
