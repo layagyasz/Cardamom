@@ -1,16 +1,13 @@
-﻿using Cardamom.Ui.Controller.Element;
-using Cardamom.Ui.Elements;
-using OpenTK.Graphics.GL;
+﻿using Cardamom.Ui.Elements;
 
 namespace Cardamom.Ui.Controller
 {
-    public class RadioController<T> : IController, IFormElementController<string, T>
+    public class RadioController<T> : DynamicComponentControllerBase, IController, IFormElementController<string, T>
     {
         public EventHandler<ValueChangedEventArgs<string, T?>>? ValueChanged { get; set; }
 
         public string Key { get; }
 
-        UiCompoundComponent? _element;
         private IOptionController<T>? _selected;
         private T? _value;
 
@@ -31,7 +28,7 @@ namespace Cardamom.Ui.Controller
                 SetSelected(null);
                 return;
             }
-            foreach (var element in _element!.Cast<IUiElement>())
+            foreach (var element in _component!.Cast<IUiElement>())
             {
                 if (element.Controller is IOptionController<T> controller)
                 {
@@ -45,61 +42,38 @@ namespace Cardamom.Ui.Controller
             throw new ArgumentException("No Option found for value.");
         }
 
-        public void Bind(object @object)
+        public override void BindElement(IUiElement element)
         {
-            _element = (UiCompoundComponent)@object;
-            _element.ElementAdded += HandleElementAdded;
-            _element.ElementRemoved += HandleElementRemoved;
-            foreach (var option in _element.Cast<IUiElement>())
+            foreach (var controller in GetControllers(element))
             {
-                BindElement(option);
-            }
-            var selected = 
-                _element!
-                    .SelectMany(GetControllers)
-                    .Where(x => x is IOptionController<T>)
-                    .Cast<IOptionController<T>>()
-                    .FirstOrDefault();
-            if (selected != null)
-            {
-                SetSelected(selected);
+                if (controller is IOptionController<T> option)
+                {
+                    option.Selected += HandleElementSelected;
+                    if (_selected == null)
+                    {
+                        SetSelected(option);
+                    }
+                }
             }
         }
 
-        public void Unbind()
+        public override void UnbindElement(IUiElement element)
         {
-            foreach (var option in _element!.Cast<IUiElement>())
+            foreach (var controller in GetControllers(element))
             {
-                UnbindElement(option);
-            }
-            _element!.ElementAdded -= HandleElementAdded;
-            _element!.ElementRemoved -= HandleElementRemoved;
-            _element = null;
-        }
-
-        private void BindElement(IUiElement element)
-        {
-            if (element.Controller is IOptionController<T> controller)
-            {
-                controller.Selected += HandleElementSelected;
-            }
-            if (element is UiCompoundComponent compound 
-                && compound.ComponentController is IOptionController<T> componentController)
-            {
-                componentController.Selected += HandleElementSelected;
-            }
-        }
-
-        private void UnbindElement(IUiElement element)
-        {
-            if (element.Controller is IOptionController<T> controller)
-            {
-                controller.Selected -= HandleElementSelected;
-            }
-            if (element is UiCompoundComponent compound
-                && compound.ComponentController is IOptionController<T> componentController)
-            {
-                componentController.Selected -= HandleElementSelected;
+                if (controller is IOptionController<T> option)
+                {
+                    option.Selected -= HandleElementSelected;
+                    if (option == _selected)
+                    {
+                        SetSelected(
+                            _component!
+                                .SelectMany(GetControllers)
+                                .Where(x => x is IOptionController<T>)
+                                .Cast<IOptionController<T>>()
+                                .FirstOrDefault());
+                    }
+                }
             }
         }
 
@@ -121,19 +95,9 @@ namespace Cardamom.Ui.Controller
             }
         }
 
-        private void HandleElementAdded(object? sender, ElementEventArgs e)
-        {
-            BindElement((IUiElement)e.Element);
-        }
-
         private void HandleElementSelected(object? sender, EventArgs e)
         {
             SetSelected((IOptionController<T>)sender!);
-        }
-
-        private void HandleElementRemoved(object? sender, ElementEventArgs e)
-        {
-            UnbindElement((IUiElement)e.Element);
         }
         
         private static IEnumerable<IController> GetControllers(IUiElement element)

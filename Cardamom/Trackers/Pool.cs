@@ -6,10 +6,10 @@ namespace Cardamom.Trackers
 		public float MaxAmount { get; private set; }
 		public float Remaining => MaxAmount - Amount;
 
-		public Pool(float maxAmount)
+		public Pool(float maxAmount, bool startFull = true)
 		{
 			MaxAmount = maxAmount;
-			Amount = maxAmount;
+			Amount = startFull ? maxAmount : 0;
 		}
 
 		public void Change(float amount)

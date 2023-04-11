@@ -40,7 +40,7 @@ namespace Cardamom.Ui.Controller.Element
             base.Unbind();
         }
 
-        public void Reset()
+        public void ResetOffset()
         {
             _element!.SetOffset(0);
         }
@@ -50,12 +50,12 @@ namespace Cardamom.Ui.Controller.Element
             element.Controller.Clicked -= HandleElementClicked;
         }
 
-        public virtual void HandleElementAdded(object? sender, ElementEventArgs e)
+        public void HandleElementAdded(object? sender, ElementEventArgs e)
         {
             BindElement((IUiElement)e.Element);
         }
 
-        public virtual void HandleElementRemoved(object? sender, ElementEventArgs e)
+        public void HandleElementRemoved(object? sender, ElementEventArgs e)
         {
             UnbindElement((IUiElement)e.Element);
         }

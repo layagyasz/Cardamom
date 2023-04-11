@@ -6,10 +6,10 @@
         public int MaxAmount { get; private set; }
         public int Remaining => MaxAmount - Amount;
 
-        public IntPool(int maxAmount)
+        public IntPool(int maxAmount, bool startFull = true)
         {
             MaxAmount = maxAmount;
-            Amount = maxAmount;
+            Amount = startFull ? maxAmount : 0;
         }
 
         public void Change(int amount)
