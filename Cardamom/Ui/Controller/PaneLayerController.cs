@@ -15,7 +15,7 @@ namespace Cardamom.Ui.Controller
             {
                 if (pane is IUiElement element)
                 {
-                    if (element.Controller is PaneController controller)
+                    if (element.Controller is IPaneController controller)
                     {
                         controller.Closed += HandleClose;
                         controller.Focused += HandleFocus;
@@ -31,7 +31,7 @@ namespace Cardamom.Ui.Controller
             {
                 if (pane is IUiElement element)
                 {
-                    if (element.Controller is PaneController controller)
+                    if (element.Controller is IPaneController controller)
                     {
                         controller.Closed -= HandleClose;
                         controller.Focused -= HandleFocus;
@@ -47,7 +47,7 @@ namespace Cardamom.Ui.Controller
             {
                 if (element is IControlledElement pane)
                 {
-                    if (pane.Controller is PaneController controller)
+                    if (pane.Controller is IPaneController controller)
                     {
                         controller.Closed -= HandleClose;
                         controller.Focused -= HandleFocus;
@@ -59,7 +59,7 @@ namespace Cardamom.Ui.Controller
 
         private void Add(IUiElement pane)
         {
-            if (pane.Controller is PaneController controller)
+            if (pane.Controller is IPaneController controller)
             {
                 controller.Closed += HandleClose;
                 controller.Focused += HandleFocus;
@@ -68,7 +68,7 @@ namespace Cardamom.Ui.Controller
 
         private void Remove(IUiElement pane)
         {
-            if (pane.Controller is PaneController controller)
+            if (pane.Controller is IPaneController controller)
             {
                 controller.Closed -= HandleClose;
                 controller.Focused -= HandleFocus;
@@ -82,10 +82,10 @@ namespace Cardamom.Ui.Controller
 
         private void HandleFocus(object? sender, EventArgs e)
         {
-            if (sender is PaneController controller)
+            if (sender is IPaneController controller)
             {
-                _panes!.Remove(controller.GetElement());
-                _panes!.Add(controller.GetElement());
+                _panes!.Remove(controller.GetPane());
+                _panes!.Add(controller.GetPane());
             }
         }
 

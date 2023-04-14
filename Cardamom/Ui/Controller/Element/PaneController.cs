@@ -4,9 +4,14 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui.Controller.Element
 {
-    public class PaneController : ClassedUiElementController<ClassedUiElement>
+    public class PaneController : ClassedUiElementController<ClassedUiElement>, IPaneController
     {
         public EventHandler<EventArgs>? Closed { get; set; }
+
+        public IUiElement GetPane()
+        {
+            return _element!;
+        }
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {

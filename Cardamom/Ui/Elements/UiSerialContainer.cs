@@ -15,6 +15,8 @@ namespace Cardamom.Ui.Elements
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
         public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
+        public int Count => _elements.Count;
+
         protected readonly List<IUiElement> _elements = new();
         private readonly Orientation _orientation;
 

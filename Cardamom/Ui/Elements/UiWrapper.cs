@@ -1,7 +1,6 @@
 ﻿using Cardamom.Graphics;
 using Cardamom.Ui.Controller.Element;
 using OpenTK.Mathematics;
-using System.Xml.Linq;
 
 namespace Cardamom.Ui.Elements
 {
@@ -10,6 +9,7 @@ namespace Cardamom.Ui.Elements
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
         public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
+        public int Count => 1;
         public IUiElement Element { get; }
 
         public UiWrapper(Class @class, IElementController controller, IUiElement element)

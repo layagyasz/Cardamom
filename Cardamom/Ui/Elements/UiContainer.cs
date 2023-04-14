@@ -27,6 +27,8 @@ namespace Cardamom.Ui.Elements
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
         public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
+        public int Count => _elements.Count;
+
         protected readonly SortedList<Vector3, IUiElement> _elements = new(new UiElementComparer());
 
         public UiContainer(Class @class, IElementController controller)

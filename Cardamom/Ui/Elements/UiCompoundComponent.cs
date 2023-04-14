@@ -12,6 +12,7 @@ namespace Cardamom.Ui.Elements
 
         public IController ComponentController { get; }
         public IElementController Controller => _container.Controller;
+        public int Count => _container.Count;
         public IControlledElement? Parent
         {
             get => _container.Parent;

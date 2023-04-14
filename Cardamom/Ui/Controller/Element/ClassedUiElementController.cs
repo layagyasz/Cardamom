@@ -35,7 +35,6 @@
         {
             _hover = value;
             _element!.SetState(GetClassState());
-
         }
 
         public bool GetFocus()
