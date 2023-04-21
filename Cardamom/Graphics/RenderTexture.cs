@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics
 {
-    public class RenderTexture : RenderTarget, IDisposable
+    public class RenderTexture : BaseRenderTarget
     {
         public Vector2i Size { get; }
 

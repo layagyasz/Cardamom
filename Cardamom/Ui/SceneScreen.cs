@@ -26,7 +26,7 @@ namespace Cardamom.Ui
             Scene.ResizeContext(bounds);
         }
 
-        public override void Draw(RenderTarget target, UiContext context)
+        public override void Draw(IRenderTarget target, IUiContext context)
         {
             Scene.Draw(target, context);
             target.Flatten();

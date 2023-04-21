@@ -12,7 +12,7 @@ namespace Cardamom.Ui
         public RenderWindow RenderWindow { get; }
 
         private readonly UiRootController _controller;
-        private readonly UiContext _context;
+        private readonly SimpleUiContext _context;
 
         private IRenderable? _uiRoot;
         private MouseListener? _mouseListener;

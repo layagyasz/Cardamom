@@ -52,7 +52,7 @@ namespace Cardamom.Ui.Elements
             }
         }
 
-        public override void Draw(RenderTarget target, UiContext context)
+        public override void Draw(IRenderTarget target, IUiContext context)
         {
             if (Visible)
             {

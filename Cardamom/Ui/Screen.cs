@@ -28,7 +28,7 @@ namespace Cardamom.Ui
 
         public virtual void ResizeContext(Vector3 bounds) { }
 
-        public virtual void Draw(RenderTarget target, UiContext context)
+        public virtual void Draw(IRenderTarget target, IUiContext context)
         {
             foreach (var layer in UiLayers)
             {

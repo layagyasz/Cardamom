@@ -7,7 +7,7 @@ namespace Cardamom.Ui
 {
     public class UiRootController
     {
-        private UiContext? _context;
+        private IUiContext? _context;
 
         private IControlledElement? _focus;
         private HashSet<IControlledElement> _focusAncestry = new();
@@ -30,7 +30,7 @@ namespace Cardamom.Ui
             mouseListener.MouseLingerBroken += HandleMouseLingerBroken;
         }
 
-        public void Bind(UiContext context)
+        public void Bind(IUiContext context)
         {
             _context = context;
         }

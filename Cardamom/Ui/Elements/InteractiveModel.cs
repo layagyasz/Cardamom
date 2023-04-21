@@ -41,7 +41,7 @@ namespace Cardamom.Ui.Elements
             return _collider.GetRayIntersection(ray);
         }
 
-        public void Draw(RenderTarget target, UiContext context)
+        public void Draw(IRenderTarget target, IUiContext context)
         {
             context.Register(this);
             _model.Draw(target, context);

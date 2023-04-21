@@ -18,7 +18,7 @@ namespace Cardamom.Graphics
 
         public void Initialize() { }
 
-        public void Draw(RenderTarget target, UiContext context)
+        public void Draw(IRenderTarget target, IUiContext context)
         {
             target.Draw(
                 Buffer,

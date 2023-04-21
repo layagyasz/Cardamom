@@ -36,7 +36,7 @@ namespace Cardamom.Ui.Elements
             _open = !_open;
         }
 
-        public override void Draw(RenderTarget target, UiContext context)
+        public override void Draw(IRenderTarget target, IUiContext context)
         {
             base.Draw(target, context);
             if (_open)

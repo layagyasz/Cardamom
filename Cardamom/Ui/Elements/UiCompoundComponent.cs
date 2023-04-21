@@ -62,7 +62,7 @@ namespace Cardamom.Ui.Elements
             _container.ElementRemoved += HandleElementRemoved;
         }
 
-        public void Draw(RenderTarget target, UiContext context)
+        public virtual void Draw(IRenderTarget target, IUiContext context)
         {
             _container.Draw(target, context);
         }

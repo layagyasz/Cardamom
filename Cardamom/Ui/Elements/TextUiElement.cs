@@ -23,7 +23,7 @@ namespace Cardamom.Ui.Elements
             SetText(text);
         }
 
-        public override void Draw(RenderTarget target, UiContext context)
+        public override void Draw(IRenderTarget target, IUiContext context)
         {
             if (Visible)
             {

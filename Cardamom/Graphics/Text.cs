@@ -142,7 +142,7 @@ namespace Cardamom.Graphics
 
         public void Update(long delta) { }
 
-        public void Draw(RenderTarget target, UiContext context)
+        public void Draw(IRenderTarget target, IUiContext context)
         {
             ForceUpdate();
             if (_updateBuffer)

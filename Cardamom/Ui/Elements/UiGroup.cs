@@ -87,7 +87,7 @@ namespace Cardamom.Ui.Elements
             return GetEnumerator();
         }
 
-        public virtual void Draw(RenderTarget target, UiContext context)
+        public virtual void Draw(IRenderTarget target, IUiContext context)
         {
             foreach (var element in _elements)
             {

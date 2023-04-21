@@ -32,7 +32,7 @@ namespace Cardamom.Ui.Elements.Components
             _text.SetText(text);
         }
 
-        public void Draw(RenderTarget target, UiContext context)
+        public void Draw(IRenderTarget target, IUiContext context)
         {
             _text.Draw(target, context);
         }

@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
 {
-    public class UiContext
+    public class SimpleUiContext : IUiContext
     {
         private MouseListener? _mouseListener;
         private GraphicsContext? _context;
@@ -79,7 +79,7 @@ namespace Cardamom.Ui
         public Vector2 NdcToWindow(Vector2 position)
         {
             return new(
-                _context!.GetViewPort().HalfSize.X * (position.X + 1), 
+                _context!.GetViewPort().HalfSize.X * (position.X + 1),
                 _context.GetViewPort().HalfSize.Y * (1 - position.Y));
         }
 

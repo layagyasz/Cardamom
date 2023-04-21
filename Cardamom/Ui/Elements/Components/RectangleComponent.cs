@@ -56,7 +56,7 @@ namespace Cardamom.Ui.Elements.Components
             _vertices[5].Position = new(size.X, size.Y, 0);
         }
 
-        public void Draw(RenderTarget target)
+        public void Draw(IRenderTarget target)
         {
             if (!_disableDraw)
             {

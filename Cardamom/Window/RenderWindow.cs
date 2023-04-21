@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace Cardamom.Window
 {
-    public class RenderWindow : RenderTarget
+    public class RenderWindow : BaseRenderTarget
     {
         public EventHandler<EventArgs>? Closed { get; set; }
         public EventHandler<MouseButtonEventArgs>? MouseButtonPressed { get; set; }

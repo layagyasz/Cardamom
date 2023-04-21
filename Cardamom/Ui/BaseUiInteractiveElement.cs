@@ -27,7 +27,7 @@ namespace Cardamom.Ui
 
         public abstract float? GetRayIntersection(Ray3 ray);
 
-        public abstract void Draw(RenderTarget target, UiContext context);
+        public abstract void Draw(IRenderTarget target, IUiContext context);
 
         public abstract void Update(long delta);
     }

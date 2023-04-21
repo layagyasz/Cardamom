@@ -38,7 +38,7 @@ namespace Cardamom.Ui
             Camera.SetAspectRatio(bounds.X / bounds.Y);
         }
 
-        public void Draw(RenderTarget target, UiContext context)
+        public void Draw(IRenderTarget target, IUiContext context)
         {
             target.PushViewMatrix(Camera.GetViewMatrix());
             target.PushProjection(Camera.GetProjection());

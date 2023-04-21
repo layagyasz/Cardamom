@@ -156,7 +156,8 @@ namespace Cardamom.Ui
                     Inherit(ancestors.Select(x => x.Shader), Shader)?.Element,
                     Inherit(ancestors.Select(x => x.DisableScissor), DisableScissor) ?? false,
                     backgroundColor.All(x => x.A < float.Epsilon) 
-                        && (borderColor.All(x => x.A < float.Epsilon) || borderWidth.All(x => x < float.Epsilon)),
+                        && (borderColor.All(x => x.A < float.Epsilon) || borderWidth.All(x => x < float.Epsilon))
+                        && (foregroundColor.A < float.Epsilon),
                     uniforms);
             }
 

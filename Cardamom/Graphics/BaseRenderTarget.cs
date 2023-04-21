@@ -1,16 +1,14 @@
 ﻿using Cardamom.Graphics.Core;
-using Cardamom.Mathematics.Geometry;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
-using System.Resources;
 
 namespace Cardamom.Graphics
 {
-    public abstract class RenderTarget : GraphicsContext
+    public abstract class BaseRenderTarget : GraphicsContext, IRenderTarget
     {
         private VertexBuffer<Vertex3>? _defaultBuffer;
 
-        protected RenderTarget(Box2i viewPort)
+        protected BaseRenderTarget(Box2i viewPort)
             : base(viewPort) { }
 
         public abstract void SetActive(bool active);
@@ -47,8 +45,8 @@ namespace Cardamom.Graphics
             Draw(_defaultBuffer, start, count, resources);
         }
 
-        public void Draw<T>(VertexBuffer<T> buffer, int start, int count, RenderResources resources) 
-            where T :struct
+        public void Draw<T>(VertexBuffer<T> buffer, int start, int count, RenderResources resources)
+            where T : struct
         {
             SetActive(true);
             Error.LogGLError("bind context");
@@ -105,8 +103,8 @@ namespace Cardamom.Graphics
                 }
                 GL.Enable(EnableCap.ScissorTest);
                 GL.Scissor(
-                    (int)scissor.Value.Min.X, 
-                    (int)(GetViewPort().Size.Y - scissor.Value.Min.Y - scissor.Value.Size.Y), 
+                    (int)scissor.Value.Min.X,
+                    (int)(GetViewPort().Size.Y - scissor.Value.Min.Y - scissor.Value.Size.Y),
                     (int)scissor.Value.Size.X,
                     (int)scissor.Value.Size.Y);
                 Error.LogGLError($"set scissor {scissor}");

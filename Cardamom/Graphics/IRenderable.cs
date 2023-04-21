@@ -5,7 +5,7 @@ namespace Cardamom.Graphics
 {
     public interface IRenderable : IInitializable
     {
-        void Draw(RenderTarget target, UiContext context);
+        void Draw(IRenderTarget target, IUiContext context);
         void Update(long delta);
         void ResizeContext(Vector3 bounds);
     }

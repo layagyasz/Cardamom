@@ -1,3 +1,4 @@
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Collections;
 
 namespace Cardamom.Collections
@@ -91,18 +92,18 @@ namespace Cardamom.Collections
 
         public bool Remove(TKey key, TValue value)
         {
-            if (_dict.ContainsKey(key))
+            if (_dict.TryGetValue(key, out var list))
             {
-                return _dict[key].Remove(value);
+                return list.Remove(value);
             }
             return false;
         }
 
-        public int RemoveAll(TKey Key, Predicate<TValue> predicate)
+        public int RemoveAll(TKey key, Predicate<TValue> predicate)
         {
-            if (_dict.ContainsKey(Key))
+            if (_dict.TryGetValue(key, out var list))
             {
-                return _dict[Key].RemoveAll(predicate);
+                return list.RemoveAll(predicate);
             }
             return 0;
         }
@@ -114,7 +115,13 @@ namespace Cardamom.Collections
 
         public bool TryGetValue(TKey key, out IEnumerable<TValue> value)
         {
-            throw new NotImplementedException();
+            if (_dict.TryGetValue(key, out var list))
+            {
+                value = list;
+                return true;
+            }
+            value = Enumerable.Empty<TValue>();
+            return false;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
