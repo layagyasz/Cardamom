@@ -88,6 +88,7 @@ namespace Cardamom.Ui.Elements
                 foreach (var element in _elements.Values)
                 {
                     bounds.Inflate(element.Position + element.Size);
+                    element.OverrideDepth = OverrideDepth;
                     element.Draw(target, context);
                 }
                 SetDynamicSize(bounds.Size + LeftPadding + RightPadding);

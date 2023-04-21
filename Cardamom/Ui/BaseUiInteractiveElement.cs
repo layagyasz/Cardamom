@@ -12,6 +12,7 @@ namespace Cardamom.Ui
         public Vector3 Position { get; set; }
         public abstract Vector3 Size { get; }
         public IControlledElement? Parent { get; set; }
+        public float? OverrideDepth { get; set; }
 
         public BaseUiInteractiveElement(IElementController controller)
         {

@@ -11,6 +11,7 @@ namespace Cardamom.Ui
         public IElementController Controller { get; }
         public IControlledElement? Parent { get; set; }
         public ICamera Camera { get; }
+        public float? OverrideDepth { get; set; }
 
         private readonly List<IRenderable> _elements;
 

@@ -30,6 +30,11 @@ namespace Cardamom.Ui.Elements
             get => _container.Visible;
             set => _container.Visible = value;
         }
+        public float? OverrideDepth
+        { 
+            get => _container.OverrideDepth; 
+            set => _container.OverrideDepth = value;
+        }
 
         protected readonly IUiContainer _container;
 

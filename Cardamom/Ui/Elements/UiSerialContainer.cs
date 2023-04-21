@@ -108,6 +108,7 @@ namespace Cardamom.Ui.Elements
             foreach (var element in _elements)
             {
                 element.Position = _orientation == Orientation.Vertical ? new(0, offset, 0) : new(offset, 0, 0);
+                element.OverrideDepth = OverrideDepth;
                 _maxOffset = -offset;
                 offset += _orientation == Orientation.Vertical ? element.Size.Y : element.Size.X;
                 bounds.Inflate(element.Position + element.Size);

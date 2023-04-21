@@ -9,6 +9,7 @@ namespace Cardamom.Ui.Elements
     {
         public IElementController Controller { get; }
         public IControlledElement? Parent { get; set; }
+        public float? OverrideDepth { get; set; }
 
         private readonly IRenderable _model;
         private readonly ICollider3 _collider;

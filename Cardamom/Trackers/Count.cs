@@ -15,5 +15,10 @@
         {
             return new Count<T>(key, value);
         }
+
+        public override string ToString()
+        {
+            return $"[Count: Key={Key}, Value={Value}]";
+        }
     }
 }

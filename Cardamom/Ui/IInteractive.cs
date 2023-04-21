@@ -3,5 +3,8 @@ using Cardamom.Ui.Controller.Element;
 
 namespace Cardamom.Ui
 {
-    public interface IInteractive : IControlledElement, ICollider3 { }
+    public interface IInteractive : IControlledElement, ICollider3 
+    {
+        float? OverrideDepth { get; set; }
+    }
 }

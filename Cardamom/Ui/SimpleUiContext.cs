@@ -64,9 +64,14 @@ namespace Cardamom.Ui
                         worldMouse + new Vector4(inverted.Row2.X, inverted.Row2.Y, inverted.Row2.Z, inverted.Row2.W);
                     worldMouse /= worldMouse.W;
                     var dz = worldMouse - front / front.W;
+                    dz.Normalize();
                     var ray = new Ray3(worldMouse.Xyz, dz.Xyz);
                     float? d = element.GetRayIntersection(ray);
-                    if (d != null && !(d < 0) && d <= _topDistance)
+                    if (element.OverrideDepth.HasValue)
+                    {
+                        d = d.HasValue ? element.OverrideDepth : d;
+                    }
+                    if (d.HasValue && !(d < 0) && d <= _topDistance)
                     {
                         _topElement = element;
                         _topDistance = d.Value;
@@ -76,14 +81,7 @@ namespace Cardamom.Ui
             }
         }
 
-        public Vector2 NdcToWindow(Vector2 position)
-        {
-            return new(
-                _context!.GetViewPort().HalfSize.X * (position.X + 1),
-                _context.GetViewPort().HalfSize.Y * (1 - position.Y));
-        }
-
-        public Vector2 WindowToNdc(Vector2 position)
+        private Vector2 WindowToNdc(Vector2 position)
         {
             return new(
                 position.X / _context!.GetViewPort().HalfSize.X - 1,

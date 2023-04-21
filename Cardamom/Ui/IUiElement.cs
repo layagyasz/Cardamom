@@ -9,5 +9,6 @@ namespace Cardamom.Ui
         bool Visible { get; set; }
         Vector3 Position { get; set; }
         Vector3 Size { get; }
+        float? OverrideDepth { get; set; }
     }
 }

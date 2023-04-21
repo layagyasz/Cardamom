@@ -15,5 +15,10 @@
         {
             return new Quantity<T>(key, value);
         }
+
+        public override string ToString()
+        {
+            return $"[Quantity: Key={Key}, Value={Value}]";
+        }
     }
 }

@@ -17,7 +17,6 @@ namespace Cardamom.Ui
         public ClassAttributes.HorizontalAlignment Align { get; private set; }
         public ClassAttributes.VerticalAlignment VerticalAlign { get; private set; }
 
-
         private readonly Class _class;
 
         public ClassedUiElement(Class @class, IElementController controller)
