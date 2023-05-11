@@ -68,16 +68,20 @@ namespace Cardamom.Ui.Elements
             }
         }
 
-        public void TryAdjustOffset(float amount)
+        public bool TryAdjustOffset(float amount)
         {
+            Vector3 newOffset;
             if (_orientation == Orientation.Vertical)
             {
-                _offset = new(0, Math.Min(Math.Max(_offset.Y + amount, _maxOffset), 0), 0);
+                newOffset = new(0, Math.Min(Math.Max(_offset.Y + amount, _maxOffset), 0), 0);
             }
             else
             {
-                _offset = new(Math.Min(Math.Max(_offset.X + amount, _maxOffset), 0), 0, 0);
+                newOffset = new(Math.Min(Math.Max(_offset.X + amount, _maxOffset), 0), 0, 0);
             }
+            bool changed = (_offset - newOffset).LengthSquared > float.Epsilon;
+            _offset = newOffset;
+            return changed;
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
@@ -109,12 +113,13 @@ namespace Cardamom.Ui.Elements
             {
                 element.Position = _orientation == Orientation.Vertical ? new(0, offset, 0) : new(offset, 0, 0);
                 element.OverrideDepth = OverrideDepth;
-                _maxOffset = -offset;
                 offset += _orientation == Orientation.Vertical ? element.Size.Y : element.Size.X;
                 bounds.Inflate(element.Position + element.Size);
                 element.Draw(target, context);
             }
             SetDynamicSize(bounds.Size + LeftPadding + RightPadding);
+            _maxOffset =
+                Math.Min(0, (_orientation == Orientation.Vertical ? InternalSize.Y : InternalSize.X) - offset);
             target.PopModelMatrix();
             if (!DisableScissor)
             {

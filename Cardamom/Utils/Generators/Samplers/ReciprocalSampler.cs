@@ -2,20 +2,22 @@
 {
     public class ReciprocalSampler : ISampler
     {
-        public float Support { get; set; }
         public float Scale { get; set; }
+        public float Rate { get; set; }
+        public float Support { get; set; }
 
         public ReciprocalSampler() { }
 
-        public ReciprocalSampler(float support, float scale)
+        public ReciprocalSampler(float scale, float rate, float support)
         {
-            Support = support;
             Scale = scale;
+            Rate = rate;
+            Support= support;
         }
 
         public float Generate(Random random)
         {
-            return Support * (float)Math.Pow(Scale, random.NextDouble());
+            return Scale * (float)(Math.Pow(Rate, random.NextDouble()) - 1f) + Support;
         }
     }
 }

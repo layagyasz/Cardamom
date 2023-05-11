@@ -16,6 +16,12 @@ namespace Cardamom.Ui.Controller
             Key = key;
         }
 
+        public RadioController(string key, T? initialValue)
+        {
+            Key = key;
+            _value = initialValue;
+        }
+
         public T? GetValue()
         {
             return _value;
@@ -23,6 +29,10 @@ namespace Cardamom.Ui.Controller
 
         public void SetValue(T? value)
         {
+            if (Equals(value, _value))
+            {
+                return;
+            }
             if (value == null)
             {
                 SetSelected(null);
@@ -49,7 +59,7 @@ namespace Cardamom.Ui.Controller
                 if (controller is IOptionController<T> option)
                 {
                     option.Selected += HandleElementSelected;
-                    if (_selected == null)
+                    if ((_value == null && _selected == null) || (_value?.Equals(option.Key) ?? false))
                     {
                         SetSelected(option);
                     }

@@ -92,7 +92,7 @@ namespace Cardamom.Ui.Elements
             _container.Remove(element);
         }
 
-        public void ResizeContext(Vector3 bounds)
+        public virtual void ResizeContext(Vector3 bounds)
         {
             _container.ResizeContext(bounds);
         }

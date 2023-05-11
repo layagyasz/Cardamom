@@ -70,8 +70,7 @@ namespace Cardamom.Ui.Controller.Element
         {
             if (ScrollSpeed > float.Epsilon)
             {
-                _element!.TryAdjustOffset(ScrollSpeed * e.OffsetY);
-                return true;
+                return _element!.TryAdjustOffset(ScrollSpeed * e.OffsetY);
             }
             return false;
         }

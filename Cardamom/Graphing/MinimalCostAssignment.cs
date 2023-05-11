@@ -1,72 +1,112 @@
-﻿namespace Cardamom.Graphing
+﻿using Cardamom.Collections;
+
+namespace Cardamom.Graphing
 {
-    public static class MaxCostAssignment
+    public static class MinimalCostAssignment
     {
-        public static IEnumerable<Tuple<TLeft, TRight>> Compute<TLeft, TRight>(
+        public static IEnumerable<Tuple<TLeft, TRight>> ComputeGreedy<TLeft, TRight>(
+             IEnumerable<TLeft> left, IEnumerable<TRight> right, Func<TLeft, TRight, float> costFn)
+             where TLeft : notnull where TRight : notnull
+        {
+            (var leftNodes, var rightNodes) =
+                BipartiteGraph.Generate(left, right, new GraphGenerator<TLeft, TRight>(costFn));
+            AssignGreedy(leftNodes, rightNodes);
+
+            return leftNodes.Select(x => new Tuple<TLeft, TRight>((TLeft)x.Value, (TRight)x.Match!.Value)).ToList();
+        }
+
+        public static IEnumerable<Tuple<TLeft, TRight>> ComputeOptimum<TLeft, TRight>(
             IEnumerable<TLeft> left, IEnumerable<TRight> right, Func<TLeft, TRight, float> costFn) 
             where TLeft : notnull where TRight : notnull
         {
             (var leftNodes, var rightNodes) = 
                 BipartiteGraph.Generate(left, right, new GraphGenerator<TLeft, TRight>(costFn));
-            Assign(leftNodes, rightNodes);
+            AssignHungarian(leftNodes, rightNodes);
 
-            return leftNodes.Select(x => new Tuple<TLeft, TRight>((TLeft)x.Value, (TRight)x.Match!.Value));
+            return leftNodes.Select(x => new Tuple<TLeft, TRight>((TLeft)x.Value, (TRight)x.Match!.Value)).ToList();
         }
 
-        private static void Assign(HungarianNode[] leftNodes, HungarianNode[] rightNodes)
+        private static void AssignGreedy(HungarianNode[] leftNodes, HungarianNode[] rightNodes)
+        {
+            foreach (var left in leftNodes)
+            {
+                left.Match = rightNodes.Where(r => r.Match == null).ArgMin(left.GetCost);
+                left.Match!.Match = left;
+            }
+        }
+
+        private static void AssignHungarian(HungarianNode[] leftNodes, HungarianNode[] rightNodes)
         {
             int rounds = 0;
-            Array.ForEach(leftNodes, l => l.Potential = l.Costs.Max());
-            Array.ForEach(rightNodes, r => r.Potential = r.Costs.Max());
-            Queue<HungarianNode> queue = new();
+            Array.ForEach(leftNodes, l => l.Potential = l.Costs.Min());
+            Array.ForEach(rightNodes,r => r.Potential = leftNodes.Min(l => r.GetCost(l) - l.Potential));
+            foreach (var left in leftNodes)
+            {
+                foreach (var right in rightNodes)
+                {
+                    if (Math.Abs(left.GetCost(right) - left.Potential - right.Potential) < float.Epsilon
+                        && right.Match == null)
+                    {
+                        left.Match = right;
+                        right.Match = left;
+                        ++rounds;
+                        break;
+                    }
+                }
+            }
             while (rounds < leftNodes.Length)
             {
-                rounds += Augment(queue, leftNodes, rightNodes);
+                rounds += Augment(leftNodes, rightNodes);
             }
         }
 
-        private static int Augment(Queue<HungarianNode> queue, HungarianNode[] leftNodes, HungarianNode[] rightNodes)
+        private static int Augment(HungarianNode[] leftNodes, HungarianNode[] rightNodes)
         {
-            HungarianNode? root = null;
+            Queue<HungarianNode> queue = new();
             foreach (var node in leftNodes)
             {
-                if (node.Match == null)
-                {
-                    queue.Enqueue(node);
-                    node.Parent = null;
-                    node.Mark = true;
-                    root = node;
-                }
+                node.Mark = false;
             }
+            var root = leftNodes.First(x => x.Match == null);
+            queue.Enqueue(root);
+            root.Mark = true;
+            root.Parent = null;
 
             foreach (var node in rightNodes)
             {
-                node.Slack = root!.Potential + node.Potential - root.GetCost(node);
+                node.Mark = false;
+                node.Slack = root.GetCost(node) - root.Potential - node.Potential;
                 node.SlackNode = root;
             }
 
-            var exposed = ExposePath(queue, rightNodes);
-
-            if (exposed.Item2 == null)
+            (HungarianNode?, HungarianNode?) exposed;
+            do
             {
-                UpdateLabels(leftNodes, rightNodes);
-                exposed = ImproveLabeling(queue, rightNodes);
-            }
-            if (exposed.Item2 != null)
-            {
-                var currentRight = exposed.Item2;
-                var currentLeft = exposed.Item1;
-                while (currentLeft != null && currentRight != null)
+                exposed = ExposePath(queue, rightNodes);
+                if (exposed.Item2 == null)
                 {
-                    var tempRight = currentLeft.Match;
-                    currentRight.Match = currentLeft;
-                    currentLeft.Match = currentRight;
-                    currentRight = tempRight;
-                    currentLeft = currentLeft.Parent;
+                    UpdatePotentials(leftNodes, rightNodes);
+                    exposed = ImprovePotentials(queue, rightNodes);
                 }
-                return 1;
+                else
+                {
+                }
             }
-            return 0;
+            while (exposed.Item2 == null);
+
+            var currentRight = exposed.Item2;
+            var currentLeft = exposed.Item1;
+            while (currentLeft != null && currentRight != null)
+            {
+                var tempRight = currentLeft.Match;
+
+                currentRight.Match = currentLeft;
+                currentLeft.Match = currentRight;
+
+                currentRight = tempRight;
+                currentLeft = currentLeft.Parent;
+            }
+            return 1;
         }
 
         private static void AddToTree(HungarianNode from, HungarianNode to, HungarianNode[] rightNodes)
@@ -75,9 +115,9 @@
             to.Parent = from;
             foreach (var right in rightNodes)
             {
-                if (to.Potential + right.Potential - to.GetCost(right) < right.Slack)
+                if (to.GetCost(right) - to.Potential - right.Potential < right.Slack)
                 {
-                    right.Slack = to.Potential + right.Potential - to.GetCost(right);
+                    right.Slack = to.GetCost(right) - to.Potential - right.Potential;
                     right.SlackNode = to;
                 }
             }
@@ -101,8 +141,8 @@
                         else
                         {
                             node.Mark = true;
-                            queue.Enqueue(node);
-                            AddToTree(node, current, rightNodes);
+                            queue.Enqueue(node.Match);
+                            AddToTree(current, node.Match, rightNodes);
                         }
                     }
                 }
@@ -110,7 +150,7 @@
             return (null, null);
         }
 
-        private static (HungarianNode?, HungarianNode?) ImproveLabeling(
+        private static (HungarianNode?, HungarianNode?) ImprovePotentials(
             Queue<HungarianNode> queue, HungarianNode[] rightNodes)
         {
             foreach (var node in rightNodes)
@@ -135,21 +175,21 @@
             return (null, null);
         }
 
-        private static void UpdateLabels(HungarianNode[] leftNodes, HungarianNode[] rightNodes)
+        private static void UpdatePotentials(HungarianNode[] leftNodes, HungarianNode[] rightNodes)
         {
-            float delta = rightNodes.Min(r => !r.Mark ? r.Slack : float.PositiveInfinity);
+            float delta = rightNodes.Min(r => !r.Mark ? r.Slack : float.MaxValue);
             foreach (var node in leftNodes)
             {
                 if (node.Mark)
                 {
-                    node.Potential -= delta;
+                    node.Potential += delta;
                 }
             }
             foreach (var node in rightNodes)
             {
                 if (node.Mark)
                 {
-                    node.Potential += delta;
+                    node.Potential -= delta;
                 }
                 else
                 {
