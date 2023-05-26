@@ -23,7 +23,7 @@ namespace Cardamom.Ui.Controller.Element
 
         public void SetValue(T? value)
         {
-            foreach (var element in _element!.GetDropBox().Cast<IUiElement>())
+            foreach (var element in _element!.Cast<IUiElement>())
             {
                 if (element.Controller is OptionElementController<T> controller)
                 {
@@ -44,11 +44,24 @@ namespace Cardamom.Ui.Controller.Element
         public override void Bind(object @object)
         {
             base.Bind(@object);
-            if (_element!.GetDropBox().Controller is TableController dropBoxController)
+            _element!.ElementAdded += HandleElementAdded;
+            _element!.ElementRemoved += HandleElementRemoved;
+            foreach (var option in _element)
             {
-                dropBoxController.ElementClicked = HandleElementClicked;
+                BindElement(option);
             }
-            SetSelected(_element!.GetDropBox().Cast<IUiElement>().First().Controller);
+            SetSelected(_element!.Cast<IUiElement>().FirstOrDefault()?.Controller);
+        }
+
+        public override void Unbind()
+        {
+            _element!.ElementAdded -= HandleElementAdded;
+            _element!.ElementRemoved -= HandleElementRemoved;
+            foreach (var option in _element)
+            {
+                UnbindElement(option);
+            }
+            base.Unbind();
         }
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
@@ -88,9 +101,41 @@ namespace Cardamom.Ui.Controller.Element
             return true;
         }
 
-        private void SetSelected(IElementController elementController)
+        private void BindElement(IUiElement element)
         {
-            if (elementController is SelectOptionElementController<T> controller)
+            var controller = (OptionElementController<T>)element.Controller;
+            controller.Selected += HandleElementSelected;
+            if ((_value == null && _selected == null) || (_value?.Equals(controller.Key) ?? false))
+            {
+                SetSelected(controller);
+            }
+        }
+
+        private void UnbindElement(IUiElement element)
+        {
+            var controller = (IOptionController<T>)element.Controller;
+            controller.Selected -= HandleElementSelected;
+            if (controller == _selected)
+            {
+                SetSelected(
+                    _element!
+                        .Cast<IUiElement>()
+                        .Select(x => x.Controller)
+                        .Cast<OptionElementController<T>>()
+                        .FirstOrDefault());
+            }
+        }
+
+        private void SetSelected(IElementController? elementController)
+        {
+            _selected?.SetSelected(false);
+            if (elementController == null)
+            {
+                _selected = null;
+                _value = default;
+                ValueChanged?.Invoke(this, new(Key, _value));
+            }
+            else if (elementController is SelectOptionElementController<T> controller)
             {
                 _selected?.SetSelected(false);
                 controller.SetSelected(true);
@@ -105,9 +150,19 @@ namespace Cardamom.Ui.Controller.Element
             }
         }
 
-        private void HandleElementClicked(object? sender, ElementClickedEventArgs e)
+        private void HandleElementAdded(object? sender, ElementEventArgs e)
         {
-            SetSelected(e.Element);
+            BindElement((IUiElement)e.Element);
+        }
+
+        private void HandleElementRemoved(object? sender, ElementEventArgs e)
+        {
+            UnbindElement((IUiElement)e.Element);
+        }
+
+        private void HandleElementSelected(object? sender, EventArgs e)
+        {
+            SetSelected((IElementController)sender!);
         }
     }
 }

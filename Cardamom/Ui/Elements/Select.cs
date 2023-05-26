@@ -3,8 +3,13 @@ using Cardamom.Ui.Controller.Element;
 
 namespace Cardamom.Ui.Elements
 {
-    public class Select : TextUiElement
+    public class Select : TextUiElement, IUiContainer
     {
+        public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
+        public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
+
+        public int Count => _dropBox.Count;
+
         private readonly UiSerialContainer _dropBox;
         private bool _open;
 
@@ -13,6 +18,28 @@ namespace Cardamom.Ui.Elements
         {
             _dropBox = dropBox;
             _dropBox.Parent = this;
+            _dropBox.ElementAdded += HandleOptionAdded;
+            _dropBox.ElementRemoved += HandleOptionRemoved;
+        }
+
+        public void Add(IUiElement element)
+        {
+            _dropBox.Add(element);
+        }
+
+        public void Clear(bool dispose)
+        {
+            _dropBox.Clear(dispose);
+        }
+
+        public IEnumerator<IUiElement> GetEnumerator()
+        {
+            return _dropBox.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public override void Initialize()
@@ -21,9 +48,9 @@ namespace Cardamom.Ui.Elements
             base.Initialize();
         }
 
-        public UiSerialContainer GetDropBox()
+        public void Remove(IUiElement element)
         {
-            return _dropBox;
+            _dropBox.Remove(element);
         }
 
         public void SetOpen(bool value)
@@ -55,6 +82,16 @@ namespace Cardamom.Ui.Elements
             {
                 _dropBox.Update(delta);
             }
+        }
+
+        private void HandleOptionAdded(object? sender, ElementEventArgs e)
+        {
+            ElementAdded?.Invoke(this, e);
+        }
+
+        private void HandleOptionRemoved(object? sender, ElementEventArgs e)
+        {
+            ElementRemoved?.Invoke(this, e);
         }
     }
 }
