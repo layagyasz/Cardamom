@@ -91,6 +91,7 @@ namespace Cardamom.Ui.Controller.Element
         public override bool HandleFocusEntered()
         {
             SetFocus(true);
+            Focused?.Invoke(this, EventArgs.Empty);
             return true;
         }
 

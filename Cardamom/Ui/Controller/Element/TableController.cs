@@ -3,9 +3,8 @@ using OpenTK.Windowing.Common;
 
 namespace Cardamom.Ui.Controller.Element
 {
-    public class TableController : ClassedUiElementController<UiSerialContainer>, IUiCollectionController
+    public class TableController : ClassedUiElementController<UiSerialContainer>
     {
-        public EventHandler<ElementClickedEventArgs>? ElementClicked { get; set; }
         public float ScrollSpeed { get; set; }
 
         public TableController(float scrollSpeed)
@@ -13,51 +12,9 @@ namespace Cardamom.Ui.Controller.Element
             ScrollSpeed = scrollSpeed;
         }
 
-        public override void Bind(object @object)
-        {
-            base.Bind(@object);
-            _element!.ElementAdded += HandleElementAdded;
-            _element!.ElementRemoved += HandleElementRemoved;
-            foreach (var element in _element!)
-            {
-                BindElement(element);
-            }
-        }
-
-        public virtual void BindElement(IUiElement element)
-        {
-            element.Controller.Clicked += HandleElementClicked;
-        }
-
-        public override void Unbind()
-        {
-            _element!.ElementAdded += HandleElementAdded;
-            _element!.ElementRemoved += HandleElementRemoved;
-            foreach (var element in _element!)
-            {
-                UnbindElement(element);
-            }
-            base.Unbind();
-        }
-
         public void ResetOffset()
         {
             _element!.SetOffset(0);
-        }
-
-        public virtual void UnbindElement(IUiElement element)
-        {
-            element.Controller.Clicked -= HandleElementClicked;
-        }
-
-        public void HandleElementAdded(object? sender, ElementEventArgs e)
-        {
-            BindElement((IUiElement)e.Element);
-        }
-
-        public void HandleElementRemoved(object? sender, ElementEventArgs e)
-        {
-            UnbindElement((IUiElement)e.Element);
         }
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
@@ -85,23 +42,6 @@ namespace Cardamom.Ui.Controller.Element
         {
             SetHover(false);
             return true;
-        }
-
-        public override bool HandleFocusEntered()
-        {
-            SetFocus(true);
-            return true;
-        }
-
-        public override bool HandleFocusLeft()
-        {
-            SetFocus(false);
-            return true;
-        }
-
-        private void HandleElementClicked(object? sender, MouseButtonClickEventArgs e)
-        {
-            ElementClicked?.Invoke(this, new ElementClickedEventArgs((IElementController)sender!, e));
         }
     }
 }

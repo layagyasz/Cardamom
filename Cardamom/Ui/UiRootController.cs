@@ -78,16 +78,20 @@ namespace Cardamom.Ui
                 if (newFocus != _focus)
                 {
                     var newAncestry = GetAncestry(newFocus);
-                    foreach (var element in _focusAncestry.Except(newAncestry))
-                    {
-                        element.Controller?.HandleFocusLeft();
-                    }
+                    bool anyNewFocus = false;
                     foreach (var element in newAncestry.Except(_focusAncestry))
                     {
-                        element.Controller?.HandleFocusEntered();
+                        anyNewFocus |= element.Controller.HandleFocusEntered();
                     }
-                    _focus = newFocus;
-                    _focusAncestry = newAncestry;
+                    if (anyNewFocus)
+                    {
+                        foreach (var element in _focusAncestry.Except(newAncestry))
+                        {
+                            element.Controller?.HandleFocusLeft();
+                        }
+                        _focus = newFocus;
+                        _focusAncestry = newAncestry;
+                    }
                 }
             }
             MouseButtonClickEventArgs mouseEvent =

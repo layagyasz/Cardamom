@@ -69,8 +69,7 @@ namespace Cardamom.Ui.Controller.Element
 
         public virtual bool HandleFocusEntered()
         {
-            Focused?.Invoke(this, EventArgs.Empty);
-            return true;
+            return false;
         }
 
         public virtual bool HandleFocusLeft()

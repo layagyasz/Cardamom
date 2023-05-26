@@ -57,6 +57,7 @@ namespace Cardamom.Ui.Controller.Element
             SetFocus(true);
             _element!.SetCursorActive(true);
             SetCursor(0);
+            Focused?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
