@@ -5,12 +5,12 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui.Controller.Element
 {
-    public class TextInputController
-        : ClassedUiElementController<EditableTextUiElement>, IFormElementController<string, string>
+    public class TextInputController 
+        : ClassedUiElementController<EditableTextUiElement>, IFormElementController<string>
     {
         private static readonly EnumSet<Keys> s_DisregardKeys = new() { Keys.Enter, Keys.Tab };
 
-        public EventHandler<ValueChangedEventArgs<string, string?>>? ValueChanged { get; set; }
+        public EventHandler<string?>? ValueChanged { get; set; }
 
         public string Key { get; }
 
@@ -31,7 +31,7 @@ namespace Cardamom.Ui.Controller.Element
         {
             _value = value ?? string.Empty;
             _element!.SetText(_value);
-            ValueChanged?.Invoke(this, new(Key, _value));
+            ValueChanged?.Invoke(this, _value);
         }
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)

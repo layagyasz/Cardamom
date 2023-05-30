@@ -54,10 +54,26 @@ namespace Cardamom.Ui
             }
         }
 
-        public void SetFocus(IControlledElement element)
+        public void SetFocus(IControlledElement? element)
         {
-            _focus = element;
-            _focusAncestry = GetAncestry(element);
+            if (element != _focus)
+            {
+                var newAncestry = GetAncestry(element);
+                bool anyNewFocus = false;
+                foreach (var e in newAncestry.Except(_focusAncestry))
+                {
+                    anyNewFocus |= e.Controller.HandleFocusEntered();
+                }
+                if (anyNewFocus)
+                {
+                    foreach (var e in _focusAncestry.Except(newAncestry))
+                    {
+                        e.Controller?.HandleFocusLeft();
+                    }
+                    _focus = element;
+                    _focusAncestry = newAncestry;
+                }
+            }
         }
 
         private void HandleKeyDown(object? sender, KeyDownEventArgs e)
@@ -74,25 +90,7 @@ namespace Cardamom.Ui
         {
             if (e.Button == MouseButton.Left)
             {
-                var newFocus = _context?.GetTopElement();
-                if (newFocus != _focus)
-                {
-                    var newAncestry = GetAncestry(newFocus);
-                    bool anyNewFocus = false;
-                    foreach (var element in newAncestry.Except(_focusAncestry))
-                    {
-                        anyNewFocus |= element.Controller.HandleFocusEntered();
-                    }
-                    if (anyNewFocus)
-                    {
-                        foreach (var element in _focusAncestry.Except(newAncestry))
-                        {
-                            element.Controller?.HandleFocusLeft();
-                        }
-                        _focus = newFocus;
-                        _focusAncestry = newAncestry;
-                    }
-                }
+                SetFocus(_context?.GetTopElement());
             }
             MouseButtonClickEventArgs mouseEvent =
                 new()

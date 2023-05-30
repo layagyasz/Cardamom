@@ -39,18 +39,5 @@ namespace Cardamom.Ui.Controller.Element
             SetHover(false);
             return true;
         }
-
-        public override bool HandleFocusEntered()
-        {
-            SetFocus(true);
-            Focused?.Invoke(this, EventArgs.Empty);
-            return true;
-        }
-
-        public override bool HandleFocusLeft()
-        {
-            SetFocus(false);
-            return true;
-        }
     }
 }

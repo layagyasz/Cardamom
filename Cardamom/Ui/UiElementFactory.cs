@@ -36,7 +36,7 @@ namespace Cardamom.Ui
         public (IUiElement, SelectController<T>) CreateSelect<T>(
             string className, string dropBoxClassName, IEnumerable<IUiElement> options, float scrollSpeed = 0)
         {
-            var controller = new SelectController<T>("select");
+            var controller = new SelectController<T>();
             return (new Select(
                 _resources.GetClass(className),
                 controller,

@@ -2,23 +2,17 @@
 
 namespace Cardamom.Ui.Controller
 {
-    public class RadioController<T> : DynamicComponentControllerBase, IController, IFormElementController<string, T>
+    public class RadioController<T> : DynamicComponentControllerBase, IController, IFormElementController<T>
     {
-        public EventHandler<ValueChangedEventArgs<string, T?>>? ValueChanged { get; set; }
-
-        public string Key { get; }
+        public EventHandler<T?>? ValueChanged { get; set; }
 
         private IOptionController<T>? _selected;
         private T? _value;
 
-        public RadioController(string key)
-        {
-            Key = key;
-        }
+        public RadioController() { }
 
-        public RadioController(string key, T? initialValue)
+        public RadioController(T? initialValue)
         {
-            Key = key;
             _value = initialValue;
         }
 
@@ -94,14 +88,14 @@ namespace Cardamom.Ui.Controller
             {
                 _selected = null;
                 _value = default;
-                ValueChanged?.Invoke(this, new(Key, _value));
+                ValueChanged?.Invoke(this, _value);
             }
             else if (elementController is IOptionController<T> controller)
             {
                 controller.SetSelected(true);
                 _selected = controller;
                 _value = controller.Key;
-                ValueChanged?.Invoke(this, new(Key, _value));
+                ValueChanged?.Invoke(this, _value);
             }
         }
 

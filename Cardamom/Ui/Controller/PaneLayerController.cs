@@ -11,6 +11,7 @@ namespace Cardamom.Ui.Controller
         {
             _panes = (UiGroup)@object;
             _panes.ElementAdded += HandleElementAdded;
+            _panes.ElementRemoved += HandleElementRemoved;
             foreach (var pane in _panes)
             {
                 if (pane is IUiElement element)
@@ -27,6 +28,7 @@ namespace Cardamom.Ui.Controller
         public void Unbind()
         {
             _panes!.ElementAdded -= HandleElementAdded;
+            _panes.ElementRemoved -= HandleElementRemoved;
             foreach (var pane in _panes!)
             {
                 if (pane is IUiElement element)
@@ -57,7 +59,7 @@ namespace Cardamom.Ui.Controller
             _panes!.Clear();
         }
 
-        private void Add(IUiElement pane)
+        private void BindElement(IUiElement pane)
         {
             if (pane.Controller is IPaneController controller)
             {
@@ -66,7 +68,7 @@ namespace Cardamom.Ui.Controller
             }
         }
 
-        private void Remove(IUiElement pane)
+        private void UnbindElement(IUiElement pane)
         {
             if (pane.Controller is IPaneController controller)
             {
@@ -77,7 +79,12 @@ namespace Cardamom.Ui.Controller
 
         private void HandleElementAdded(object? sender, ElementEventArgs e)
         {
-            Add((IUiElement)e.Element);
+            BindElement((IUiElement)e.Element);
+        }
+
+        private void HandleElementRemoved(object? sender, ElementEventArgs e)
+        {
+            UnbindElement((IUiElement)e.Element);
         }
 
         private void HandleFocus(object? sender, EventArgs e)
@@ -93,7 +100,7 @@ namespace Cardamom.Ui.Controller
         {
             if (sender is PaneController controller)
             {
-                Remove(controller.GetElement());
+                UnbindElement(controller.GetElement());
                 _panes!.Remove(controller.GetElement());
             }
         }
