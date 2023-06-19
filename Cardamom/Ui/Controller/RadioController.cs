@@ -11,7 +11,8 @@ namespace Cardamom.Ui.Controller
 
         public RadioController() { }
 
-        public RadioController(T? initialValue)
+        public RadioController(T? initialValue, int bindRecursionDepth = 0)
+            : base(bindRecursionDepth)
         {
             _value = initialValue;
         }
@@ -32,7 +33,7 @@ namespace Cardamom.Ui.Controller
                 SetSelected(null);
                 return;
             }
-            foreach (var element in _component!.Cast<IUiElement>())
+            foreach (var element in GetChildren().Cast<IUiElement>())
             {
                 if (element.Controller is IOptionController<T> controller)
                 {
@@ -46,7 +47,7 @@ namespace Cardamom.Ui.Controller
             throw new ArgumentException("No Option found for value.");
         }
 
-        public override void BindElement(IUiElement element)
+        protected override void BindElement(IUiElement element)
         {
             foreach (var controller in GetControllers(element))
             {
@@ -61,7 +62,7 @@ namespace Cardamom.Ui.Controller
             }
         }
 
-        public override void UnbindElement(IUiElement element)
+        protected override void UnbindElement(IUiElement element)
         {
             foreach (var controller in GetControllers(element))
             {
@@ -71,7 +72,7 @@ namespace Cardamom.Ui.Controller
                     if (option == _selected)
                     {
                         SetSelected(
-                            _component!
+                            GetChildren()
                                 .SelectMany(GetControllers)
                                 .Where(x => x is IOptionController<T>)
                                 .Cast<IOptionController<T>>()

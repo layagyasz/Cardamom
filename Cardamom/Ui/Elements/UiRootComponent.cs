@@ -76,10 +76,12 @@ namespace Cardamom.Ui.Elements
         public virtual void Draw(IRenderTarget target, IUiContext context)
         {
             _root.Draw(target, context);
+            target.PushEmptyScissor();
             foreach (var child in _children)
             {
                 child.Draw(target, context);
             }
+            target.PopScissor();
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
