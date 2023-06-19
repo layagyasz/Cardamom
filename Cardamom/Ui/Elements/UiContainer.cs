@@ -34,15 +34,6 @@ namespace Cardamom.Ui.Elements
         public UiContainer(Class @class, IElementController controller)
             : base(@class, controller) { }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-            foreach (var element in _elements.Values.ToList())
-            {
-                element.Initialize();
-            }
-        }
-
         public void Add(IUiElement element)
         {
             _elements.Add(element.Position, element);
@@ -61,16 +52,6 @@ namespace Cardamom.Ui.Elements
                 }
             }
             _elements.Clear();
-        }
-
-        public IEnumerator<IUiElement> GetEnumerator()
-        {
-            return _elements.Values.GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public override void Draw(IRenderTarget target, IUiContext context)
@@ -99,6 +80,30 @@ namespace Cardamom.Ui.Elements
                 target.PopModelMatrix();
                 target.PopModelMatrix();
             }
+        }
+
+        public IEnumerator<IUiElement> GetEnumerator()
+        {
+            return _elements.Values.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            foreach (var element in _elements.Values.ToList())
+            {
+                element.Initialize();
+            }
+        }
+
+        public void Insert(int index, IUiElement element)
+        {
+            throw new NotSupportedException();
         }
 
         public void Remove(IUiElement element)

@@ -1,6 +1,6 @@
 namespace Cardamom.Trackers
 {
-	public class Pool
+	public class Pool : IPool
 	{
 		public float Amount { get; private set; }
 		public float MaxAmount { get; private set; }
@@ -42,6 +42,22 @@ namespace Cardamom.Trackers
 		public float PercentFull()
 		{
 			return Amount / MaxAmount;
+		}
+
+		public void Set(float amount)
+		{
+			Amount = Math.Min(amount, MaxAmount);
+		}
+
+		public void SetMax(float amount)
+		{
+			MaxAmount = amount;
+			Amount = Math.Min(Amount, MaxAmount);
+		}
+
+		public string ToString(string format)
+		{
+			return $"{Amount.ToString(format)}/{MaxAmount.ToString(format)}";
 		}
 	}
 }

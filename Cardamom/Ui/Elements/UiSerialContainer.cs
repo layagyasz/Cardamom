@@ -29,12 +29,6 @@ namespace Cardamom.Ui.Elements
             _orientation = orientation;
         }
 
-        public override void Initialize()
-        {
-            base.Initialize();
-            _elements.ForEach(x => x.Initialize());
-        }
-
         public void Add(IUiElement element)
         {
             _elements.Add(element);
@@ -54,44 +48,6 @@ namespace Cardamom.Ui.Elements
             }
             _elements.Clear();
             _offset = new();
-        }
-
-        public void SetOffset(float amount)
-        {
-            if (_orientation == Orientation.Vertical)
-            {
-                _offset = new(0, Math.Min(Math.Max(amount, _maxOffset), 0), 0);
-            }
-            else
-            {
-                _offset = new(Math.Min(Math.Max(amount, _maxOffset), 0), 0, 0);
-            }
-        }
-
-        public bool TryAdjustOffset(float amount)
-        {
-            Vector3 newOffset;
-            if (_orientation == Orientation.Vertical)
-            {
-                newOffset = new(0, Math.Min(Math.Max(_offset.Y + amount, _maxOffset), 0), 0);
-            }
-            else
-            {
-                newOffset = new(Math.Min(Math.Max(_offset.X + amount, _maxOffset), 0), 0, 0);
-            }
-            bool changed = (_offset - newOffset).LengthSquared > float.Epsilon;
-            _offset = newOffset;
-            return changed;
-        }
-
-        public IEnumerator<IUiElement> GetEnumerator()
-        {
-            return _elements.GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public override void Draw(IRenderTarget target, IUiContext context)
@@ -128,12 +84,62 @@ namespace Cardamom.Ui.Elements
             target.PopModelMatrix();
         }
 
+        public IEnumerator<IUiElement> GetEnumerator()
+        {
+            return _elements.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
+            _elements.ForEach(x => x.Initialize());
+        }
+
+        public void Insert(int index, IUiElement element)
+        {
+            _elements.Insert(index, element);
+            ElementAdded?.Invoke(this, new(element));
+        }
+
         public void Remove(IUiElement element)
         {
             if (_elements.Remove(element))
             {
                 ElementRemoved?.Invoke(this, new(element));
             }
+        }
+
+        public void SetOffset(float amount)
+        {
+            if (_orientation == Orientation.Vertical)
+            {
+                _offset = new(0, Math.Min(Math.Max(amount, _maxOffset), 0), 0);
+            }
+            else
+            {
+                _offset = new(Math.Min(Math.Max(amount, _maxOffset), 0), 0, 0);
+            }
+        }
+
+        public bool TryAdjustOffset(float amount)
+        {
+            Vector3 newOffset;
+            if (_orientation == Orientation.Vertical)
+            {
+                newOffset = new(0, Math.Min(Math.Max(_offset.Y + amount, _maxOffset), 0), 0);
+            }
+            else
+            {
+                newOffset = new(Math.Min(Math.Max(_offset.X + amount, _maxOffset), 0), 0, 0);
+            }
+            bool changed = (_offset - newOffset).LengthSquared > float.Epsilon;
+            _offset = newOffset;
+            return changed;
         }
 
         public override void Update(long delta)

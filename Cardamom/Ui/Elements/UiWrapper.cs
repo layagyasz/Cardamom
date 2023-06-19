@@ -29,22 +29,6 @@ namespace Cardamom.Ui.Elements
             throw new NotSupportedException();
         }
 
-        public override void Initialize()
-        {
-            Element.Initialize();
-            base.Initialize();
-        }
-
-        public IEnumerator<IUiElement> GetEnumerator()
-        {
-            yield return Element;
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
         public override void Draw(IRenderTarget target, IUiContext context)
         {
             if (Visible)
@@ -65,6 +49,27 @@ namespace Cardamom.Ui.Elements
                 }
                 target.PopModelMatrix();
             }
+        }
+
+        public IEnumerator<IUiElement> GetEnumerator()
+        {
+            yield return Element;
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public override void Initialize()
+        {
+            Element.Initialize();
+            base.Initialize();
+        }
+
+        public void Insert(int index, IUiElement element)
+        {
+            throw new NotImplementedException();
         }
 
         public void Remove(IUiElement element)

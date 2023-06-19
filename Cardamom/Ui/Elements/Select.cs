@@ -48,6 +48,11 @@ namespace Cardamom.Ui.Elements
             base.Initialize();
         }
 
+        public void Insert(int index, IUiElement element)
+        {
+            _dropBox.Insert(index, element);
+        }
+
         public void Remove(IUiElement element)
         {
             _dropBox.Remove(element);

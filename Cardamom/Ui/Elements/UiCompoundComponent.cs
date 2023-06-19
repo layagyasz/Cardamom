@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiCompoundComponent : GraphicsResource, IUiContainer
+    public class UiCompoundComponent : GraphicsResource, IUiContainer, IUiComponent
     {
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
         public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
@@ -59,14 +59,6 @@ namespace Cardamom.Ui.Elements
             _container.Dispose();
         }
 
-        public void Initialize()
-        {
-            _container.Initialize();
-            ComponentController.Bind(this);
-            _container.ElementAdded += HandleElementAdded;
-            _container.ElementRemoved += HandleElementRemoved;
-        }
-
         public virtual void Draw(IRenderTarget target, IUiContext context)
         {
             _container.Draw(target, context);
@@ -85,6 +77,19 @@ namespace Cardamom.Ui.Elements
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public void Initialize()
+        {
+            _container.Initialize();
+            ComponentController.Bind(this);
+            _container.ElementAdded += HandleElementAdded;
+            _container.ElementRemoved += HandleElementRemoved;
+        }
+
+        public void Insert(int index, IUiElement element)
+        {
+            _container.Insert(index, element);
         }
 
         public void Remove(IUiElement element)
