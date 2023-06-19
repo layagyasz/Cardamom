@@ -10,7 +10,7 @@ namespace Cardamom.Ui.Controller.Element
     {
         private static readonly EnumSet<Keys> s_DisregardKeys = new() { Keys.Enter, Keys.Tab };
 
-        public EventHandler<string?>? ValueChanged { get; set; }
+        public EventHandler<EventArgs>? ValueChanged { get; set; }
 
         public string Key { get; }
 
@@ -31,7 +31,7 @@ namespace Cardamom.Ui.Controller.Element
         {
             _value = value ?? string.Empty;
             _element!.SetText(_value);
-            ValueChanged?.Invoke(this, _value);
+            ValueChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)

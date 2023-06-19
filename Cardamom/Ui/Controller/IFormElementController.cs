@@ -2,7 +2,7 @@
 {
     public interface IFormElementController<T>
     {
-        EventHandler<T?>? ValueChanged { get; set; }
+        EventHandler<EventArgs>? ValueChanged { get; set; }
 
         T? GetValue();
         void SetValue(T? value);

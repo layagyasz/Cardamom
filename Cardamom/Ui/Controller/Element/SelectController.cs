@@ -4,7 +4,7 @@ namespace Cardamom.Ui.Controller.Element
 {
     public class SelectController<T> : ClassedUiElementController<Select>, IFormElementController<T>
     {
-        public EventHandler<T?>? ValueChanged { get; set; }
+        public EventHandler<EventArgs>? ValueChanged { get; set; }
 
         private OptionElementController<T>? _selected;
         private T? _value;
@@ -127,7 +127,7 @@ namespace Cardamom.Ui.Controller.Element
             {
                 _selected = null;
                 _value = default;
-                ValueChanged?.Invoke(this, _value);
+                ValueChanged?.Invoke(this, EventArgs.Empty);
             }
             else if (elementController is SelectOptionElementController<T> controller)
             {
@@ -136,7 +136,7 @@ namespace Cardamom.Ui.Controller.Element
                 _element!.SetText(controller.GetText());
                 _selected = controller;
                 _value = controller.Key;
-                ValueChanged?.Invoke(this, _value);
+                ValueChanged?.Invoke(this, EventArgs.Empty);
             }
             else
             {

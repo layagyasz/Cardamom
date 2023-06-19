@@ -4,7 +4,7 @@ namespace Cardamom.Ui.Controller
 {
     public class RadioController<T> : DynamicComponentControllerBase, IController, IFormElementController<T>
     {
-        public EventHandler<T?>? ValueChanged { get; set; }
+        public EventHandler<EventArgs>? ValueChanged { get; set; }
 
         private IOptionController<T>? _selected;
         private T? _value;
@@ -89,14 +89,14 @@ namespace Cardamom.Ui.Controller
             {
                 _selected = null;
                 _value = default;
-                ValueChanged?.Invoke(this, _value);
+                ValueChanged?.Invoke(this, EventArgs.Empty);
             }
             else if (elementController is IOptionController<T> controller)
             {
                 controller.SetSelected(true);
                 _selected = controller;
                 _value = controller.Key;
-                ValueChanged?.Invoke(this, _value);
+                ValueChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
