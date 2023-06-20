@@ -71,6 +71,7 @@ namespace Cardamom.Ui.Controller.Element
             {
                 _element!.SetOpen(true);
             }
+            MouseEntered?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
@@ -78,6 +79,7 @@ namespace Cardamom.Ui.Controller.Element
         {
             SetHover(false);
             _element!.SetOpen(false);
+            MouseLeft?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
@@ -92,6 +94,7 @@ namespace Cardamom.Ui.Controller.Element
         {
             SetFocus(false);
             _element!.SetOpen(false);
+            FocusLeft?.Invoke(this, EventArgs.Empty);
             return true;
         }
 

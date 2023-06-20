@@ -76,12 +76,14 @@ namespace Cardamom.Ui.Elements
         public virtual void Draw(IRenderTarget target, IUiContext context)
         {
             _root.Draw(target, context);
+            target.PushTranslation(_root.Position);
             target.PushEmptyScissor();
             foreach (var child in _children)
             {
                 child.Draw(target, context);
             }
             target.PopScissor();
+            target.PopModelMatrix();
         }
 
         public IEnumerator<IUiElement> GetEnumerator()

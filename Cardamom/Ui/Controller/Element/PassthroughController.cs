@@ -7,6 +7,9 @@ namespace Cardamom.Ui.Controller.Element
     {
         public EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }
+        public EventHandler<EventArgs>? FocusLeft { get; set; }
+        public EventHandler<EventArgs>? MouseEntered { get; set; }
+        public EventHandler<EventArgs>? MouseLeft { get; set; }
 
         private object? _object;
         private IElementController? _subcontroller;
@@ -23,6 +26,9 @@ namespace Cardamom.Ui.Controller.Element
             _subcontroller = subcontroller;
             _subcontroller.Clicked += Clicked;
             _subcontroller.Focused += Focused;
+            _subcontroller.FocusLeft += FocusLeft;
+            _subcontroller.MouseEntered += MouseEntered;
+            _subcontroller.MouseLeft += MouseLeft;
         }
 
         public virtual void Bind(object @object)
@@ -38,6 +44,9 @@ namespace Cardamom.Ui.Controller.Element
                 _subcontroller.Unbind();
                 _subcontroller.Clicked -= Clicked;
                 _subcontroller.Focused -= Focused;
+                _subcontroller.FocusLeft -= FocusLeft;
+                _subcontroller.MouseEntered -= MouseEntered;
+                _subcontroller.MouseLeft -= MouseLeft;
             }
         }
 

@@ -43,12 +43,14 @@ namespace Cardamom.Ui.Controller.Element
         public override bool HandleMouseEntered()
         {
             SetHover(true);
+            MouseEntered?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
         public override bool HandleMouseLeft()
         {
             SetHover(false);
+            MouseEntered?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
@@ -66,6 +68,7 @@ namespace Cardamom.Ui.Controller.Element
             SetFocus(false);
             _element!.SetCursorActive(false);
             SetCursor(0);
+            FocusLeft?.Invoke(this, EventArgs.Empty);
             return true;
         }
 

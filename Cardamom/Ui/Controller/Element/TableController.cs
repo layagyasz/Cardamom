@@ -35,12 +35,14 @@ namespace Cardamom.Ui.Controller.Element
         public override bool HandleMouseEntered()
         {
             SetHover(true);
+            MouseEntered?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
         public override bool HandleMouseLeft()
         {
             SetHover(false);
+            MouseLeft?.Invoke(this, EventArgs.Empty);
             return true;
         }
     }

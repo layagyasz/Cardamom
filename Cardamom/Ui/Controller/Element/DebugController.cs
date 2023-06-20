@@ -7,9 +7,13 @@ namespace Cardamom.Ui.Controller.Element
     {
         public EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }
+        public EventHandler<EventArgs>? FocusLeft { get; set; }
+        public EventHandler<EventArgs>? MouseEntered { get; set; }
+        public EventHandler<EventArgs>? MouseLeft { get; set; }
 
 
         protected object? _object;
+        protected bool _focused;
 
         public virtual void Bind(object @object)
         {
@@ -36,12 +40,14 @@ namespace Cardamom.Ui.Controller.Element
         public bool HandleMouseEntered()
         {
             PrintEvent("[MouseEntered]");
+            MouseEntered?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
         public bool HandleMouseLeft()
         {
             PrintEvent("[MouseLeft]");
+            MouseLeft?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
@@ -86,6 +92,7 @@ namespace Cardamom.Ui.Controller.Element
         public bool HandleFocusLeft()
         {
             PrintEvent("[FocusLeft]");
+            FocusLeft?.Invoke(this, EventArgs.Empty);
             return true;
         }
 
