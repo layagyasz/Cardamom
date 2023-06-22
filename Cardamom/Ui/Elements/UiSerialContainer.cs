@@ -103,6 +103,7 @@ namespace Cardamom.Ui.Elements
         public void Insert(int index, IUiElement element)
         {
             _elements.Insert(index, element);
+            element.Parent = this;
             ElementAdded?.Invoke(this, new(element));
         }
 

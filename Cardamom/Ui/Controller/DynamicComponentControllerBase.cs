@@ -41,7 +41,7 @@ namespace Cardamom.Ui.Controller
         {
             if (depth <= _bindRecursionDepth && element is IUiContainer container)
             {
-                UnbindContainer(container, depth + 1);
+                UnbindContainer(container, depth);
             }
             UnbindElement(element);
         }
@@ -59,7 +59,7 @@ namespace Cardamom.Ui.Controller
             container.ElementRemoved += HandleElementRemoved;
             foreach (var element in container)
             {
-                BindElement(element, depth);
+                BindElement(element, depth + 1);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Cardamom.Ui.Controller
             container.ElementRemoved -= HandleElementRemoved;
             foreach (var element in container)
             {
-                UnbindElement(element, depth);
+                UnbindElement(element, depth + 1);
             }
         }
 

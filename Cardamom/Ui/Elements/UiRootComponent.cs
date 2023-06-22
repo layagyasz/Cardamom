@@ -76,7 +76,7 @@ namespace Cardamom.Ui.Elements
         public virtual void Draw(IRenderTarget target, IUiContext context)
         {
             _root.Draw(target, context);
-            target.PushTranslation(_root.Position);
+            target.PushTranslation(_root.Position + Vector3.UnitZ);
             target.PushEmptyScissor();
             foreach (var child in _children)
             {
