@@ -27,11 +27,14 @@ namespace Cardamom.Ui.Controller.Element
             return _value;
         }
 
-        public void SetValue(string? value)
+        public void SetValue(string? value, bool notify = true)
         {
             _value = value ?? string.Empty;
             _element!.SetText(_value);
-            ValueChanged?.Invoke(this, EventArgs.Empty);
+            if (notify)
+            {
+                ValueChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
@@ -94,7 +97,7 @@ namespace Cardamom.Ui.Controller.Element
             {
                 if (_cursor > 0)
                 {
-                    SetValue(_value[..(_cursor - 1)] + _value[_cursor..]);
+                    SetValue(_value[..(_cursor - 1)] + _value[_cursor..], /* notify= */ true);
                     MoveCursor(-1);
                 }
             }
@@ -103,7 +106,7 @@ namespace Cardamom.Ui.Controller.Element
                 if (e.Text.Length > 0)
                 {
                     string newValue = _value[.._cursor] + e.Text + _value[_cursor..];
-                    SetValue(newValue);
+                    SetValue(newValue, /* notify= */ true);
                     MoveCursor(e.Text.Length);
                 }
             }

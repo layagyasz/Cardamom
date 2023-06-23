@@ -14,7 +14,7 @@ namespace Cardamom.Ui.Controller.Element
             return _value;
         }
 
-        public void SetValue(T? value)
+        public void SetValue(T? value, bool notify = true)
         {
             foreach (var element in _element!.Cast<IUiElement>())
             {
@@ -22,7 +22,7 @@ namespace Cardamom.Ui.Controller.Element
                 {
                     if (Equals(controller.Key, value))
                     {
-                        SetSelected(controller);
+                        SetSelected(controller, notify);
                         return;
                     }
                 }
@@ -43,7 +43,7 @@ namespace Cardamom.Ui.Controller.Element
             {
                 BindElement(option);
             }
-            SetSelected(_element!.Cast<IUiElement>().FirstOrDefault()?.Controller);
+            SetSelected(_element!.Cast<IUiElement>().FirstOrDefault()?.Controller, /* notify= */ true);
         }
 
         public override void Unbind()
@@ -104,7 +104,7 @@ namespace Cardamom.Ui.Controller.Element
             controller.Selected += HandleElementSelected;
             if ((_value == null && _selected == null) || (_value?.Equals(controller.Key) ?? false))
             {
-                SetSelected(controller);
+                SetSelected(controller, /* notify= */ true);
             }
         }
 
@@ -119,18 +119,22 @@ namespace Cardamom.Ui.Controller.Element
                         .Cast<IUiElement>()
                         .Select(x => x.Controller)
                         .Cast<OptionElementController<T>>()
-                        .FirstOrDefault());
+                        .FirstOrDefault(),
+                    /* notify= */ true);
             }
         }
 
-        private void SetSelected(IElementController? elementController)
+        private void SetSelected(IElementController? elementController, bool notify)
         {
             _selected?.SetSelected(false);
             if (elementController == null)
             {
                 _selected = null;
                 _value = default;
-                ValueChanged?.Invoke(this, EventArgs.Empty);
+                if (notify)
+                {
+                    ValueChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
             else if (elementController is SelectOptionElementController<T> controller)
             {
@@ -139,7 +143,10 @@ namespace Cardamom.Ui.Controller.Element
                 _element!.SetText(controller.GetText());
                 _selected = controller;
                 _value = controller.Key;
-                ValueChanged?.Invoke(this, EventArgs.Empty);
+                if (notify)
+                {
+                    ValueChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
             else
             {
@@ -159,7 +166,7 @@ namespace Cardamom.Ui.Controller.Element
 
         private void HandleElementSelected(object? sender, EventArgs e)
         {
-            SetSelected((IElementController)sender!);
+            SetSelected((IElementController)sender!, /* notify= */ true);
         }
     }
 }

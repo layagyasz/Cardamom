@@ -5,6 +5,6 @@
         EventHandler<EventArgs>? ValueChanged { get; set; }
 
         T? GetValue();
-        void SetValue(T? value);
+        void SetValue(T? value, bool notify = true);
     }
 }

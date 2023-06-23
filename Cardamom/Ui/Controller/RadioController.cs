@@ -22,7 +22,7 @@ namespace Cardamom.Ui.Controller
             return _value;
         }
 
-        public void SetValue(T? value)
+        public void SetValue(T? value, bool notify = true)
         {
             if (Equals(value, _value))
             {
@@ -30,7 +30,7 @@ namespace Cardamom.Ui.Controller
             }
             if (value == null)
             {
-                SetSelected(null);
+                SetSelected(null, notify);
                 return;
             }
             foreach (var element in GetChildren().Cast<IUiElement>())
@@ -39,7 +39,7 @@ namespace Cardamom.Ui.Controller
                 {
                     if (Equals(controller.Key, value))
                     {
-                        SetSelected(controller);
+                        SetSelected(controller, notify);
                         return;
                     }
                 }
@@ -56,7 +56,7 @@ namespace Cardamom.Ui.Controller
                     option.Selected += HandleElementSelected;
                     if ((_value == null && _selected == null) || (_value?.Equals(option.Key) ?? false))
                     {
-                        SetSelected(option);
+                        SetSelected(option, /* notify= */ true);
                     }
                 }
             }
@@ -76,33 +76,40 @@ namespace Cardamom.Ui.Controller
                                 .SelectMany(GetControllers)
                                 .Where(x => x is IOptionController<T>)
                                 .Cast<IOptionController<T>>()
-                                .FirstOrDefault());
+                                .FirstOrDefault(),
+                            /* notify= */ true);
                     }
                 }
             }
         }
 
-        private void SetSelected(IOptionController<T>? elementController)
+        private void SetSelected(IOptionController<T>? elementController, bool notify)
         {
             _selected?.SetSelected(false);
             if (elementController == null)
             {
                 _selected = null;
                 _value = default;
-                ValueChanged?.Invoke(this, EventArgs.Empty);
+                if (notify)
+                {
+                    ValueChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
             else if (elementController is IOptionController<T> controller)
             {
                 controller.SetSelected(true);
                 _selected = controller;
                 _value = controller.Key;
-                ValueChanged?.Invoke(this, EventArgs.Empty);
+                if (notify)
+                {
+                    ValueChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
 
         private void HandleElementSelected(object? sender, EventArgs e)
         {
-            SetSelected((IOptionController<T>)sender!);
+            SetSelected((IOptionController<T>)sender!, /* notify= */ true);
         }
         
         private static IEnumerable<IController> GetControllers(IUiElement element)
