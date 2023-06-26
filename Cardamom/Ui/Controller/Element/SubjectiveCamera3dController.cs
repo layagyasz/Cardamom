@@ -11,6 +11,7 @@ namespace Cardamom.Ui.Controller.Element
         public EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }
         public EventHandler<EventArgs>? FocusLeft { get; set; }
+        public EventHandler<MouseButtonDragEventArgs>? MouseDragged { get; set; }
         public EventHandler<EventArgs>? MouseEntered { get; set; }
         public EventHandler<EventArgs>? MouseLeft { get; set; }
 
@@ -79,6 +80,7 @@ namespace Cardamom.Ui.Controller.Element
             var d = (_camera.Distance - _surfaceDepth) * MouseSensitivity * e.NdcDelta;
             _camera.SetPitch(PitchRange.Clamp(_camera.Pitch + d.Y));
             _camera.SetYaw(YawRange.Clamp(_camera.Yaw + d.X));
+            MouseDragged?.Invoke(this, e);
             return true;
         }
 

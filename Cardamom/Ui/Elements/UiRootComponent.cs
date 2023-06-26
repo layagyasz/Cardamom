@@ -38,11 +38,13 @@ namespace Cardamom.Ui.Elements
 
         protected readonly IUiElement _root;
         protected readonly List<IUiElement> _children = new();
+        protected readonly bool _internalAnchor;
 
-        public UiRootComponent(IController componentController, IUiElement root)
+        public UiRootComponent(IController componentController, IUiElement root, bool internalAnchor = false)
         {
             ComponentController = componentController;
             _root = root;
+            _internalAnchor = internalAnchor;
         }
 
         public void Add(IUiElement element)
@@ -76,7 +78,14 @@ namespace Cardamom.Ui.Elements
         public virtual void Draw(IRenderTarget target, IUiContext context)
         {
             _root.Draw(target, context);
-            target.PushTranslation(_root.Position + Vector3.UnitZ);
+            if (_internalAnchor && _root is ClassedUiElement root)
+            {
+                target.PushTranslation(root.Position + root.LeftPadding + Vector3.UnitZ);
+            }
+            else
+            {
+                target.PushTranslation(_root.Position + Vector3.UnitZ);
+            }
             target.PushEmptyScissor();
             foreach (var child in _children)
             {
@@ -98,6 +107,11 @@ namespace Cardamom.Ui.Elements
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public IUiElement GetRoot()
+        {
+            return _root;
         }
 
         public void Initialize()

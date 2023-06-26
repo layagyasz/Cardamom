@@ -8,6 +8,7 @@ namespace Cardamom.Ui.Controller.Element
         EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         EventHandler<EventArgs>? Focused { get; set; }
         EventHandler<EventArgs>? FocusLeft { get; set; }
+        EventHandler<MouseButtonDragEventArgs>? MouseDragged { get; set; }
         EventHandler<EventArgs>? MouseEntered { get; set; }
         EventHandler<EventArgs>? MouseLeft { get; set; }
 

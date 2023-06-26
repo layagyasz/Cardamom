@@ -39,6 +39,7 @@ namespace Cardamom.Ui.Controller.Element
             {
                 _element.Position += new Vector3(e.Delta.X, e.Delta.Y, 0f);
             }
+            MouseDragged?.Invoke(this, e);
             return true;
         }
 
