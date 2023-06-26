@@ -69,6 +69,10 @@ namespace Cardamom.Window
                 {
                     MouseButtonClicked?.Invoke(this, e);
                 }
+            }
+            if (_drag)
+            {
+                MouseButtonDragged?.Invoke(this, new(e.Button, new(), new(), new(), new(), /* terminate= */ true));
                 _drag = false;
             }
         }
@@ -92,7 +96,8 @@ namespace Cardamom.Window
                         _depressedPosition,
                         _draggedPosition,
                         e.Delta, 
-                        WindowToNdc(e.Delta)));
+                        WindowToNdc(e.Delta),
+                        /* terminate= */ false));
             }
         }
 

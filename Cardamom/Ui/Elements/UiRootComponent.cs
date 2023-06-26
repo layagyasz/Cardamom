@@ -80,7 +80,7 @@ namespace Cardamom.Ui.Elements
             _root.Draw(target, context);
             if (_internalAnchor && _root is ClassedUiElement root)
             {
-                target.PushTranslation(root.Position + root.LeftPadding + Vector3.UnitZ);
+                target.PushTranslation(root.LeftMargin + root.Position + root.LeftPadding + Vector3.UnitZ);
             }
             else
             {

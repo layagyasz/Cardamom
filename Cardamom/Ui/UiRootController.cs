@@ -15,6 +15,8 @@ namespace Cardamom.Ui
         private IControlledElement? _mouseOver;
         private HashSet<IControlledElement> _mouseOverAncestry = new();
 
+        private IControlledElement? _mouseDrag;
+
         public void Bind(KeyboardListener keyboardListener)
         {
             keyboardListener.TextEntered += HandleTextEntered;
@@ -106,7 +108,16 @@ namespace Cardamom.Ui
 
         private void HandleMouseButtonDragged(object? sender, MouseButtonDragEventArgs e)
         {
-            Consume(_mouseOver, x => x.Controller?.HandleMouseButtonDragged(e) ?? false);
+            if (e.Terminate)
+            {
+                Consume(_mouseDrag, x => x.Controller?.HandleMouseButtonDragged(e) ?? false);
+                _mouseDrag = null;
+            }
+            else
+            {
+                _mouseDrag ??= _mouseOver;
+                Consume(_mouseDrag, x => x.Controller?.HandleMouseButtonDragged(e) ?? false);
+            }
         }
 
         private void HandleMouseWheelScrolled(object? sender, MouseWheelEventArgs e)
