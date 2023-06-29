@@ -2,12 +2,13 @@
 
 namespace Cardamom.Ui.Controller
 {
-    public class RadioController<T> : DynamicComponentControllerBase, IController, IFormElementController<T>
+    public class RadioController<T> : DynamicComponentControllerBase, IController, IRandomizableFormFieldController<T>
     {
         public EventHandler<EventArgs>? ValueChanged { get; set; }
 
         private IOptionController<T>? _selected;
         private T? _value;
+        private readonly List<IOptionController<T>> _range = new();
 
         public RadioController() { }
 
@@ -20,6 +21,11 @@ namespace Cardamom.Ui.Controller
         public T? GetValue()
         {
             return _value;
+        }
+
+        public void Randomize(Random random, bool notify = true)
+        {
+            SetSelected(_range[random.Next(_range.Count)], notify);
         }
 
         public void SetValue(T? value, bool notify = true)
@@ -54,6 +60,7 @@ namespace Cardamom.Ui.Controller
                 if (controller is IOptionController<T> option)
                 {
                     option.Selected += HandleElementSelected;
+                    _range.Add(option);
                     if ((_value == null && _selected == null) || (_value?.Equals(option.Key) ?? false))
                     {
                         SetSelected(option, /* notify= */ true);
@@ -69,6 +76,7 @@ namespace Cardamom.Ui.Controller
                 if (controller is IOptionController<T> option)
                 {
                     option.Selected -= HandleElementSelected;
+                    _range.Remove(option);
                     if (option == _selected)
                     {
                         SetSelected(

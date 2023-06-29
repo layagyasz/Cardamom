@@ -103,7 +103,7 @@ namespace Cardamom.Ui
 
         public (IUiElement, TextInputController) CreateTextInput(string className, Vector3 position = new())
         {
-            var controller = new TextInputController("text");
+            var controller = new TextInputController();
             return (
                 new EditableTextUiElement(
                     _resources.GetClass(className), controller, string.Empty) { Position = position },

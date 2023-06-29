@@ -2,7 +2,7 @@
 
 namespace Cardamom.Ui.Controller.Element
 {
-    public class SelectController<T> : ClassedUiElementController<Select>, IFormElementController<T>
+    public class SelectController<T> : ClassedUiElementController<Select>, IFormFieldController<T>
     {
         public EventHandler<EventArgs>? ValueChanged { get; set; }
 

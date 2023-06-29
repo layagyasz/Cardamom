@@ -5,22 +5,14 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui.Controller.Element
 {
-    public class TextInputController 
-        : ClassedUiElementController<EditableTextUiElement>, IFormElementController<string>
+    public class TextInputController : ClassedUiElementController<EditableTextUiElement>, IFormFieldController<string>
     {
         private static readonly EnumSet<Keys> s_DisregardKeys = new() { Keys.Enter, Keys.Tab };
 
         public EventHandler<EventArgs>? ValueChanged { get; set; }
 
-        public string Key { get; }
-
         private string _value = string.Empty;
         private int _cursor = 0;
-
-        public TextInputController(string key)
-        {
-            Key = key;
-        }
 
         public string? GetValue()
         {
