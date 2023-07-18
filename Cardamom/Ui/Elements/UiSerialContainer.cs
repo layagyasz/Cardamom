@@ -76,6 +76,7 @@ namespace Cardamom.Ui.Elements
             SetDynamicSize(bounds.Size + LeftPadding + RightPadding);
             _maxOffset =
                 Math.Min(0, (_orientation == Orientation.Vertical ? InternalSize.Y : InternalSize.X) - offset);
+            TryAdjustOffset(0);
             target.PopModelMatrix();
             if (!DisableScissor)
             {

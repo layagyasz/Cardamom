@@ -33,21 +33,22 @@ namespace Cardamom.Ui
             return (new UiContainer(_resources.GetClass(className), controller), controller);
         }
 
-        public (IUiElement, SelectController<T>) CreateSelect<T>(
-            string className, string dropBoxClassName, IEnumerable<IUiElement> options, float scrollSpeed = 0)
+        public (IUiComponent, SelectController<T>) CreateSelect<T>(
+            Select.Style style,
+            IEnumerable<SelectOption<T>> range,
+            T? initialValue = default,
+            float scrollSpeed = 0)
         {
-            var controller = new SelectController<T>();
-            return (new Select(
-                _resources.GetClass(className),
-                controller,
-                CreateTable(dropBoxClassName, options, scrollSpeed).Item1), controller);
-        }
-
-        public (IUiElement, OptionElementController<T>) CreateSelectOption<T>(string className, T value, string text)
-        {
-            var controller = new SelectOptionElementController<T>(value);
-            var option = new TextUiElement(_resources.GetClass(className), controller, text);
-            return (option, controller);
+            var controller = new SelectController<T>(range, initialValue);
+            return (
+                new Select(
+                    controller,
+                    new TextUiElement(_resources.GetClass(style.Root!), new RootElementController(), string.Empty),
+                    new UiCompoundComponent(
+                        new RadioController<T>(), 
+                        CreateTable(style.OptionContainer!, new List<IUiElement>(), scrollSpeed).Item1),
+                    _resources.GetClass(style.Option!)),
+                controller);
         }
 
         public (IUiElement, ButtonController) CreateSimpleButton(string className, Vector3 position = new())

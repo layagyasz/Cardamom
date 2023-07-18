@@ -1,102 +1,50 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Ui.Controller;
 using Cardamom.Ui.Controller.Element;
+using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class Select : TextUiElement, IUiContainer
+    public class Select : UiRootComponent
     {
-        public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
-        public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
-
-        public int Count => _dropBox.Count;
-
-        private readonly UiSerialContainer _dropBox;
-        private bool _open;
-
-        public Select(Class @class, IElementController controller, UiSerialContainer dropBox)
-            : base(@class, controller, string.Empty)
+        public class Style
         {
-            _dropBox = dropBox;
-            _dropBox.Parent = this;
-            _dropBox.ElementAdded += HandleOptionAdded;
-            _dropBox.ElementRemoved += HandleOptionRemoved;
+            public string? Root { get; set; }
+            public string? OptionContainer { get; set; }
+            public string? Option { get; set; }
         }
 
-        public void Add(IUiElement element)
+        public TextUiElement Root { get; }
+        public UiCompoundComponent Options { get; }
+
+        private readonly Class _optionClass;
+
+        public Select(IController controller, TextUiElement root, UiCompoundComponent options, Class optionClass)
+            : base(controller, root)
         {
-            _dropBox.Add(element);
+            Root = root;
+            Options = options;
+            Options.Position = root.LeftMargin + new Vector3(0, root.TrueSize.Y, 0);
+            Options.Visible = false;
+            _optionClass = optionClass;
+
+            Add(options);
         }
 
-        public void Clear(bool dispose)
+        public void AddOption<T>(SelectOption<T> option)
         {
-            _dropBox.Clear(dispose);
+            var o = new TextUiElement(_optionClass, new OptionElementController<T>(option.Value), option.Text);
+            o.Initialize();
+            Options.Add(o);
         }
 
-        public IEnumerator<IUiElement> GetEnumerator()
+        public void Clear()
         {
-            return _dropBox.GetEnumerator();
+            Options.Clear(/* dispose= */ true);
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        public void SetOpen(bool open)
         {
-            return GetEnumerator();
-        }
-
-        public override void Initialize()
-        {
-            _dropBox.Initialize();
-            base.Initialize();
-        }
-
-        public void Insert(int index, IUiElement element)
-        {
-            _dropBox.Insert(index, element);
-        }
-
-        public void Remove(IUiElement element)
-        {
-            _dropBox.Remove(element);
-        }
-
-        public void SetOpen(bool value)
-        {
-            _open = value;
-        }
-
-        public void ToggleOpen()
-        {
-            _open = !_open;
-        }
-
-        public override void Draw(IRenderTarget target, IUiContext context)
-        {
-            base.Draw(target, context);
-            if (_open)
-            {
-                target.PushEmptyScissor();
-                _dropBox.Position = new(0, TrueSize.Y, Position.Z + 1);
-                _dropBox.Draw(target, context);
-                target.PopScissor();
-            }
-        }
-
-        public override void Update(long delta)
-        {
-            base.Update(delta);
-            if (_open)
-            {
-                _dropBox.Update(delta);
-            }
-        }
-
-        private void HandleOptionAdded(object? sender, ElementEventArgs e)
-        {
-            ElementAdded?.Invoke(this, e);
-        }
-
-        private void HandleOptionRemoved(object? sender, ElementEventArgs e)
-        {
-            ElementRemoved?.Invoke(this, e);
+            Options.Visible = open;
         }
     }
 }

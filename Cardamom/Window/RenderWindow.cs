@@ -61,6 +61,11 @@ namespace Cardamom.Window
             _window.Context.SwapBuffers();
         }
 
+        public IGLFWGraphicsContext GetContext()
+        {
+            return _window.Context;
+        }
+
         public Vector2 GetMousePosition()
         {
             return _window.MousePosition;
@@ -74,6 +79,11 @@ namespace Cardamom.Window
         public bool IsKeyDown(Keys key)
         {
             return _window.IsKeyDown(key);
+        }
+
+        public void MakeCurrent()
+        {
+            _window.MakeCurrent();
         }
 
         private void HandleClosed(CancelEventArgs e)

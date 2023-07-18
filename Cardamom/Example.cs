@@ -79,15 +79,21 @@ namespace Cardamom
             var resources = GameResources.Builder.ReadFrom("Example/GraphicsResources.json").Build();
             var uiElementFactory = new UiElementFactory(resources);
             var pane = uiElementFactory.CreatePane("example-base-class").Item1;
-            var options = new List<IUiElement>();
+            var options = new List<SelectOption<int>>();
             for (int i = 0; i < 20; ++i)
             {
-                options.Add(
-                    uiElementFactory.CreateSelectOption("example-select-option-class", i, $"Button #{i}").Item1);
+                options.Add(SelectOption<int>.Create(i, $"Button #{i}"));
             }
 
-            var select = 
-                uiElementFactory.CreateSelect<int>("example-select-class", "example-select-drop-box-class", options);
+            var select =
+                uiElementFactory.CreateSelect<int>(
+                    new() 
+                    {
+                        Root = "example-select-class",
+                        OptionContainer = "example-select-drop-box-class",
+                        Option = "example-select-option-class" 
+                    },
+                    options);
             select.Item2.ValueChanged += (s, e) => Console.WriteLine(e);
             pane.Add(select.Item1);
 

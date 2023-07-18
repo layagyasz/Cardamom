@@ -33,7 +33,7 @@ namespace Cardamom.Mathematics
 
         public bool Contains(int value)
         {
-            return Minimum < value && value < Maximum;
+            return Minimum <= value && value <= Maximum;
         }
 
         public override string ToString()
