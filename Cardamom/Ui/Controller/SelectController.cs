@@ -8,7 +8,7 @@ namespace Cardamom.Ui.Controller
 
         public EventHandler<EventArgs>? ValueChanged { get; set; }
 
-        private readonly List<SelectOption<T>> _range;
+        private List<SelectOption<T>> _range;
 
         private Select? _component;
         private IRandomizableFormFieldController<T>? _optionsContainer;
@@ -65,14 +65,26 @@ namespace Cardamom.Ui.Controller
         public void Randomize(Random random, bool notify = true)
         {
             _optionsContainer!.Randomize(random, notify);
+            _value = _range.First(x => Equals(x.Value, _optionsContainer!.GetValue()));
+            UpdateText();
+            if (notify)
+            {
+                ValueChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public void SetRange(IEnumerable<SelectOption<T>> range)
         {
-            _component!.Clear();
-            foreach (var option in range)
+            _range = range.ToList();
+            if (_component != null)
             {
-                _component.AddOption(option);
+                var oldValue = _value;
+                _component!.Clear();
+                foreach (var option in range)
+                {
+                    _component.AddOption(option);
+                }
+                SetValue(oldValue == null ? default : oldValue.Value);
             }
         }
 
@@ -85,9 +97,8 @@ namespace Cardamom.Ui.Controller
             }   
             else
             {
-                _value = _range.First(x => Equals(x.Value, value));
-                _component!.Root.SetText(_value.Text);
-                _optionsContainer!.SetValue(_value.Value, /* notify= */ false);
+                _value = _range.FirstOrDefault(x => Equals(x.Value, value));
+                _optionsContainer!.SetValue(_value == null ? default : _value.Value, /* notify= */ false);
             }
             UpdateText();
             if (notify)
@@ -120,7 +131,7 @@ namespace Cardamom.Ui.Controller
 
         private void HandleValueChanged(object? sender, EventArgs e)
         {
-            _value = _range.First(x => Equals(x.Value, _optionsContainer!.GetValue()));
+            _value = _range.FirstOrDefault(x => Equals(x.Value, _optionsContainer!.GetValue()));
             UpdateText();
             ValueChanged?.Invoke(this, EventArgs.Empty);
         }
