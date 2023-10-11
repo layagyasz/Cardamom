@@ -11,32 +11,37 @@ namespace Cardamom.Ui.Elements
         public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
         public IController ComponentController { get; }
-        public IElementController Controller => _container.Controller;
-        public int Count => _container.Count;
+        public IElementController Controller => _container!.Controller;
+        public int Count => _container!.Count;
         public IControlledElement? Parent
         {
-            get => _container.Parent;
-            set => _container.Parent = value;
+            get => _container!.Parent;
+            set => _container!.Parent = value;
         }
         public Vector3 Position
         {
-            get => _container.Position;
-            set => _container.Position = value;
+            get => _container!.Position;
+            set => _container!.Position = value;
         }
 
-        public Vector3 Size => _container.Size;
+        public Vector3 Size => _container!.Size;
         public bool Visible
         {
-            get => _container.Visible;
-            set => _container.Visible = value;
+            get => _container!.Visible;
+            set => _container!.Visible = value;
         }
         public float? OverrideDepth
         { 
-            get => _container.OverrideDepth; 
-            set => _container.OverrideDepth = value;
+            get => _container!.OverrideDepth; 
+            set => _container!.OverrideDepth = value;
         }
 
-        protected readonly IUiContainer _container;
+        protected IUiContainer? _container;
+
+        public UiCompoundComponent(IController componentController)
+        {
+            ComponentController = componentController;
+        }
 
         public UiCompoundComponent(IController componentController, IUiContainer container)
         {
@@ -46,32 +51,32 @@ namespace Cardamom.Ui.Elements
 
         public void Add(IUiElement element)
         {
-            _container.Add(element);
+            _container!.Add(element);
         }
 
         public void Clear(bool dispose)
         {
-            _container.Clear(dispose);
+            _container!.Clear(dispose);
         }
 
         protected override void DisposeImpl()
         {
-            _container.Dispose();
+            _container!.Dispose();
         }
 
         public virtual void Draw(IRenderTarget target, IUiContext context)
         {
-            _container.Draw(target, context);
+            _container!.Draw(target, context);
         }
 
         public IUiContainer GetContainer()
         {
-            return _container;
+            return _container!;
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
         {
-            return _container.GetEnumerator();
+            return _container!.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -81,30 +86,38 @@ namespace Cardamom.Ui.Elements
 
         public void Initialize()
         {
-            _container.Initialize();
+            _container?.Initialize();
             ComponentController.Bind(this);
-            _container.ElementAdded += HandleElementAdded;
-            _container.ElementRemoved += HandleElementRemoved;
+            if (_container != null)
+            {
+                _container.ElementAdded += HandleElementAdded;
+                _container.ElementRemoved += HandleElementRemoved;
+            }
         }
 
         public void Insert(int index, IUiElement element)
         {
-            _container.Insert(index, element);
+            _container!.Insert(index, element);
         }
 
         public void Remove(IUiElement element)
         {
-            _container.Remove(element);
+            _container!.Remove(element);
         }
 
         public virtual void ResizeContext(Vector3 bounds)
         {
-            _container.ResizeContext(bounds);
+            _container!.ResizeContext(bounds);
         }
 
         public void Update(long delta)
         {
-            _container.Update(delta);
+            _container!.Update(delta);
+        }
+
+        protected void SetContainer(IUiContainer container)
+        {
+            _container = container;
         }
 
         private void HandleElementAdded(object? sender, ElementEventArgs e)

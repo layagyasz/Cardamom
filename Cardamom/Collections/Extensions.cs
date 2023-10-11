@@ -34,6 +34,17 @@
             return min;
         }
 
+        public static EnumSet<T> ToEnumSet<T>(this IEnumerable<T> source)
+            where T : Enum
+        {
+            var result = new EnumSet<T>();
+            foreach (var value in source)
+            {
+                result.Add(value);
+            }
+            return result;
+        }
+
         public static EnumMap<TKey, TValue> ToEnumMap<TKey, TValue, TIn>(
             this IEnumerable<TIn> source, Func<TIn, TKey> keySelector, Func<TIn, TValue> valueSelector)
             where TKey : Enum
