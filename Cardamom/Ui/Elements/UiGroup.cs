@@ -10,7 +10,7 @@ namespace Cardamom.Ui.Elements
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
         public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }
 
-        public IElementController Controller { get; } = new NoOpElementController<UiGroup>();
+        public IElementController Controller { get; } = new NoOpElementController();
         public IControlledElement? Parent
         {
             get => _parent;

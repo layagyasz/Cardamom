@@ -111,9 +111,7 @@ namespace Cardamom
                         uiElementFactory.CreateTextButton(
                             "example-cell-class", string.Format($"{(char)(i + 65)}-{j}")).Item1);
                 }
-                rows.Add(
-                    uiElementFactory.CreateTableRow(
-                        "example-row-class", elements, new NoOpElementController<UiSerialContainer>()));
+                rows.Add(uiElementFactory.CreateTableRow("example-row-class", elements, new NoOpElementController()));
             }
             var table = 
                 uiElementFactory.CreateTable(
@@ -165,7 +163,7 @@ namespace Cardamom
 
             var screen = 
                 new SceneScreen(
-                    new NoOpController<Screen>(),
+                    new NoOpController(),
                     new List<UiGroup>()
                     {
                         UiElementFactory.CreatePaneLayer(new List<IUiElement>() { pane }).Item1

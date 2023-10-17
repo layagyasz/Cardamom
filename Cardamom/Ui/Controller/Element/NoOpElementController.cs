@@ -3,7 +3,7 @@ using OpenTK.Windowing.Common;
 
 namespace Cardamom.Ui.Controller.Element
 {
-    public class NoOpElementController<T> : IElementController
+    public class NoOpElementController : IElementController
     {
         public EventHandler<MouseButtonClickEventArgs>? Clicked { get; set; }
         public EventHandler<EventArgs>? Focused { get; set; }
@@ -13,11 +13,11 @@ namespace Cardamom.Ui.Controller.Element
         public EventHandler<EventArgs>? MouseLeft { get; set; }
 
 
-        protected T? _element;
+        protected object? _element;
 
         public virtual void Bind(object @object)
         {
-            _element = (T)@object;
+            _element = @object;
         }
 
         public virtual void Unbind()
@@ -25,7 +25,7 @@ namespace Cardamom.Ui.Controller.Element
             _element = default;
         }
 
-        public T GetElement()
+        public object GetElement()
         {
             return _element!;
         }

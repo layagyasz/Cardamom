@@ -38,11 +38,6 @@ namespace Cardamom.Ui.Elements
 
         protected IUiContainer? _container;
 
-        public UiCompoundComponent(IController componentController)
-        {
-            ComponentController = componentController;
-        }
-
         public UiCompoundComponent(IController componentController, IUiContainer container)
         {
             ComponentController = componentController;
@@ -113,11 +108,6 @@ namespace Cardamom.Ui.Elements
         public void Update(long delta)
         {
             _container!.Update(delta);
-        }
-
-        protected void SetContainer(IUiContainer container)
-        {
-            _container = container;
         }
 
         private void HandleElementAdded(object? sender, ElementEventArgs e)

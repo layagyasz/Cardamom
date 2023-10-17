@@ -1,12 +1,12 @@
 ﻿namespace Cardamom.Ui.Controller
 {
-    public class NoOpController<T> : IController
+    public class NoOpController : IController
     {
-        protected T? _element;
+        protected object? _element;
 
         public void Bind(object @object)
         {
-            _element = (T)@object;
+            _element = @object;
         }
 
         public void Unbind()

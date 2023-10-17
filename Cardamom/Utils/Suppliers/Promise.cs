@@ -2,10 +2,17 @@
 {
     public class Promise<T> : ISupplier<T>
     {
+        public EventHandler<EventArgs>? Canceled { get; set; }
         public EventHandler<EventArgs>? Finished { get; set; }
 
         private T? _value;
         private bool _run;
+
+        public void Cancel()
+        {
+            Monitor.Pulse(this);
+            Canceled?.Invoke(this, EventArgs.Empty);
+        }
 
         public T Get()
         {

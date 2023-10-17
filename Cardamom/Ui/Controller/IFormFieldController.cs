@@ -1,10 +1,18 @@
 ﻿namespace Cardamom.Ui.Controller
 {
-    public interface IFormFieldController<T> : IController
+    public interface IFormFieldController<T> : IGenericFormFieldController
     {
-        EventHandler<EventArgs>? ValueChanged { get; set; }
-
         T? GetValue();
         void SetValue(T? value, bool notify = true);
+
+        object? IGenericFormFieldController.Get()
+        {
+            return GetValue();
+        }
+
+        void IGenericFormFieldController.Set(object? value, bool notify)
+        {
+            SetValue((T?)value, notify);
+        }
     }
 }
