@@ -33,6 +33,25 @@ namespace Cardamom.Ui
             return (new UiContainer(_resources.GetClass(className), controller), controller);
         }
 
+        public (IUiComponent, RadioController<T>) CreateRadio<T>(
+            Radio.Style style, IEnumerable<SelectOption<T>> range, T? initialValue = default, float scrollSpeed = 0)
+        {
+            var controller = new RadioController<T>(initialValue);
+            return (
+                new Radio(
+                    controller,
+                    CreateTable(
+                        style.Container!,
+                        range.Select(
+                            x => new TextUiElement(
+                                _resources.GetClass(style.Option!),
+                                new OptionElementController<T>(x.Value),
+                                x.Text))
+                        .ToList(), 
+                        scrollSpeed).Item1),
+                        controller);
+        }
+
         public (IUiComponent, SelectController<T>) CreateSelect<T>(
             Select.Style style,
             IEnumerable<SelectOption<T>> range,

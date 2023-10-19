@@ -61,7 +61,7 @@ namespace Cardamom.Ui.Controller
                 {
                     option.Selected += HandleElementSelected;
                     _range.Add(option);
-                    if ((_value == null && _selected == null) || (_value?.Equals(option.Key) ?? false))
+                    if (_value?.Equals(option.Key) ?? false)
                     {
                         SetSelected(option, /* notify= */ true);
                     }
