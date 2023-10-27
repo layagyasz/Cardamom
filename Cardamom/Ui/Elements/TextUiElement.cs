@@ -9,16 +9,16 @@ namespace Cardamom.Ui.Elements
     public class TextUiElement : ClassedUiElement
     {
         protected readonly RectangleComponent _rectComponent = new();
-        protected readonly TextComponent _textComponent = new();
+        protected readonly TextComponent _textComponent;
 
         protected Vector3 _alignAdjust;
 
-        private ClassAttributes.HorizontalAlignment _align;
         private string _text = string.Empty;
 
-        public TextUiElement(Class @class, IElementController controller, string text)
+        public TextUiElement(Class @class, IElementController controller, string text, bool supportLineBreak = false)
             : base(@class, controller)
         {
+            _textComponent = new(supportLineBreak);
             SetAttributes(@class.Get(Class.State.None));
             SetText(text);
         }
@@ -43,7 +43,7 @@ namespace Cardamom.Ui.Elements
                 target.PopModelMatrix();
                 target.PopModelMatrix();
 
-                SetDynamicSize(LeftPadding + RightPadding + new Vector3(_textComponent.Size));
+                SetDynamicSize(new Vector3(_textComponent.Size));
             }
         }
 
@@ -59,7 +59,6 @@ namespace Cardamom.Ui.Elements
             base.SetAttributes(attributes);
             _rectComponent.SetAttributes(attributes);
             _textComponent.SetAttributes(attributes);
-            _align = attributes.Align;
             SetDyamicSizeImpl(TrueSize.Xy);
         }
 

@@ -22,6 +22,11 @@ namespace Cardamom.Ui
 
             public AxisSize() { }
 
+            public float GetMaxSize()
+            {
+                return Mode == Mode.DynamicContents ? MaximumSize : Size;
+            }
+
             public override string ToString()
             {
                 if (Mode == Mode.Static)

@@ -42,7 +42,7 @@ namespace Cardamom.Ui.Elements
                 Box3 bounds = new();
                 Element.Draw(target, context);
                 bounds.Inflate(Element.Position + Element.Size);
-                SetDynamicSize(bounds.Size + LeftPadding + RightPadding);
+                SetDynamicSize(bounds.Size);
                 if (!DisableScissor)
                 {
                     target.PopScissor();

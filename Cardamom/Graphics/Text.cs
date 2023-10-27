@@ -20,7 +20,10 @@ namespace Cardamom.Graphics
         private uint _characterSize;
         private Color4 _color;
         private RenderShader? _shader;
+        private float _maxWidth = float.PositiveInfinity;
+
         private string _text = string.Empty;
+        private readonly ArrayList<Vector2> _positions = new(12);
         private readonly ArrayList<Vertex3> _vertices = new(48);
         private readonly VertexBuffer<Vertex3> _buffer = new(PrimitiveType.Triangles);
 
@@ -28,6 +31,8 @@ namespace Cardamom.Graphics
         private bool _updateBuffer = true;
         private Vector2 _cursor;
         private Box2 _bounds;
+        private int _lastWhitespace;
+        private int _lastBreak;
         private char _lastCharacter;
 
         public void Initialize() { }
@@ -37,65 +42,25 @@ namespace Cardamom.Graphics
         public void Append(char character)
         {
             _text += character;
-            AppendInternal(character);
+            AppendInternal(_text, _text.Length - 1);
         }
 
         public void Append(string text)
         {
             _text += text;
-            foreach (char c in text)
+            for (int i = 0; i < _text.Length; ++i)
             {
-                AppendInternal(c);
+                AppendInternal(_text, i);
             }
         }
 
         public Vector2 GetCharacterPosition(int index)
         {
-            Vector2 cursor = new(0, _characterSize);
             if (index == 0)
             {
-                return cursor;
+                return new(0, _characterSize);
             }
-            char lastCharacter = (char)0x0u;
-            Glyph? lastGlyph = null;
-            for (int i=0; i<index; ++i)
-            {
-                char character = _text[i];
-                cursor.X += _font!.GetKerning(lastCharacter, character, _characterSize);
-                lastCharacter = character;
-
-                if (character == '\r')
-                {
-                    lastGlyph = null;
-                    continue;
-                }
-                if (character == '\n')
-                {
-                    lastGlyph = null;
-                    cursor = new(0, cursor.Y + _font!.GetLineSpacing(_characterSize));
-                    continue;
-                }
-                if (character == '\t')
-                {
-                    lastGlyph = null;
-                    cursor.X += 4 * _font!.GetWhitespace(_characterSize);
-                    continue;
-                }
-                if (character == ' ')
-                {
-                    lastGlyph = null;
-                    cursor.X += _font!.GetWhitespace(_characterSize);
-                    continue;
-                }
-
-                var glyph = _font!.GetOrLoadGlyph(character, _characterSize);
-                lastGlyph = glyph;
-                if (i < index - 1)
-                {
-                    cursor.X += glyph.Advance;
-                }
-            }
-            return cursor + new Vector2(lastGlyph?.Bounds.Max.X ?? 0, 0);
+            return _positions[index - 1];
         }
 
         public void SetCharacterSize(uint characterSize)
@@ -127,6 +92,12 @@ namespace Cardamom.Graphics
                 _font = font;
                 _updateVertices = true;
             }
+        }
+
+        public void SetMaxWidth(float maxWidth)
+        {
+            _maxWidth = maxWidth;
+            _updateVertices = true;
         }
 
         public void SetShader(RenderShader shader)
@@ -169,41 +140,64 @@ namespace Cardamom.Graphics
         private void UpdateMesh()
         {
             _cursor = new(0, _characterSize);
+            _positions.Clear();
             _vertices.Clear();
             _bounds = new();
-            foreach (var character in _text)
+            for (int i=0; i<_text.Length;++i)
             {
-                AppendInternal(character);
+                AppendInternal(_text, i);
             }
             _updateBuffer = true;
         }
 
-        private void AppendInternal(char character)
+        private void AppendInternal(string value, int index)
         {
+            var character = value[index];
             _cursor.X += _font!.GetKerning(_lastCharacter, character, _characterSize);
             _lastCharacter = character;
 
-            if (character == '\r')
+            if (char.IsWhiteSpace(character))
             {
-                return;
-            }
-            if (character == '\n')
-            {
-                _cursor = new(0, _cursor.Y + _font!.GetLineSpacing(_characterSize));
-                return;
-            }
-            if (character == '\t')
-            {
-                _cursor.X += 4 * _font!.GetWhitespace(_characterSize);
-                return;
-            }
-            if (character == ' ')
-            {
-                _cursor.X += _font!.GetWhitespace(_characterSize);
+                if (character == '\r')
+                {
+                    _lastWhitespace = index;
+                    _cursor = new(0, _cursor.Y);
+                }
+                if (character == '\n')
+                {
+                    _lastWhitespace = index;
+                    _cursor = new(0, _cursor.Y + _font!.GetLineSpacing(_characterSize));
+                }
+                if (character == '\t')
+                {
+                    _lastWhitespace = index;
+                    _cursor.X += 4 * _font!.GetWhitespace(_characterSize);
+                }
+                if (character == ' ')
+                {
+                    _lastWhitespace = index;
+                    _cursor.X += _font!.GetWhitespace(_characterSize);
+                }
+                _positions.Add(_cursor);
                 return;
             }
 
             var glyph = _font!.GetOrLoadGlyph(character, _characterSize);
+
+            if (_cursor.X + glyph.Advance > _maxWidth)
+            {
+                if (_lastWhitespace > _lastBreak)
+                {
+                    _lastBreak = _lastWhitespace;
+                    _positions.Trim(index - _lastWhitespace);
+                    _vertices.Trim(6 * (index - _lastWhitespace));
+                    _cursor = new(0, _cursor.Y + _font!.GetLineSpacing(_characterSize));
+                    for (int i=_lastWhitespace + 1; i<=index; ++i)
+                    {
+                        AppendInternal(value, i);
+                    }
+                }
+            }
 
             float top = _cursor.Y + glyph.Bounds.Min.Y;
             float bottom = _cursor.Y + glyph.Bounds.Max.Y;
@@ -215,6 +209,7 @@ namespace Cardamom.Graphics
             float texLeft = glyph.TextureView.Min.X;
             float texRight = glyph.TextureView.Max.X;
 
+            _positions.Add(new(right, bottom));
             _vertices.Add(new(new(left, top, 0), _color, new(texLeft, texTop)));
             _vertices.Add(new(new(right, top, 0), _color, new(texRight, texTop)));
             _vertices.Add(new(new(left, bottom, 0), _color, new(texLeft, texBottom)));

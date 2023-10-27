@@ -49,6 +49,7 @@ namespace Cardamom.Ui
         public void SetDynamicSize(Vector3 size)
         {
             Vector3 newSize = TrueSize;
+            size += LeftPadding + RightPadding;
             if (SizeDefinition.Width.Mode == ElementSizeDefinition.Mode.DynamicContents)
             {
                 newSize.X =

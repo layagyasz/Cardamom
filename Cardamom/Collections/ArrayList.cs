@@ -7,7 +7,7 @@
 
         private T[] _values;
 
-        public T this[uint index]
+        public T this[int index]
         {
             get
             {
@@ -75,6 +75,11 @@
         public T[] GetData()
         {
             return _values;
+        }
+
+        public void Trim(int length)
+        {
+            Count -= length;
         }
 
         public bool Remove(T item)

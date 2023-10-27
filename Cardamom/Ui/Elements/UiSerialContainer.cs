@@ -73,7 +73,7 @@ namespace Cardamom.Ui.Elements
                 bounds.Inflate(element.Position + element.Size);
                 element.Draw(target, context);
             }
-            SetDynamicSize(bounds.Size + LeftPadding + RightPadding);
+            SetDynamicSize(bounds.Size);
             _maxOffset =
                 Math.Min(0, (_orientation == Orientation.Vertical ? InternalSize.Y : InternalSize.X) - offset);
             TryAdjustOffset(0);

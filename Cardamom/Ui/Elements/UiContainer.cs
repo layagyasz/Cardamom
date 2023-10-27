@@ -72,7 +72,7 @@ namespace Cardamom.Ui.Elements
                     element.OverrideDepth = OverrideDepth;
                     element.Draw(target, context);
                 }
-                SetDynamicSize(bounds.Size + LeftPadding + RightPadding);
+                SetDynamicSize(bounds.Size);
                 if (!DisableScissor)
                 {
                     target.PopScissor();

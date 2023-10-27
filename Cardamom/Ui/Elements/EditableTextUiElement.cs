@@ -80,7 +80,7 @@ namespace Cardamom.Ui.Elements
                 target.PopModelMatrix();
                 target.PopModelMatrix();
 
-                SetDynamicSize(LeftPadding + RightPadding + new Vector3(_textComponent.Size));
+                SetDynamicSize(new Vector3(_textComponent.Size));
             }
         }
 

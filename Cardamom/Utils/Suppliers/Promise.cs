@@ -10,7 +10,9 @@
 
         public void Cancel()
         {
+            Monitor.Enter(this);
             Monitor.Pulse(this);
+            Monitor.Exit(this);
             Canceled?.Invoke(this, EventArgs.Empty);
         }
 
