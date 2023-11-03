@@ -2,6 +2,7 @@
 using Cardamom.Graphics.TexturePacking;
 using Cardamom.Json;
 using OpenTK.Mathematics;
+using System.Collections;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Ui
@@ -93,6 +94,56 @@ namespace Cardamom.Ui
             return _uniforms!;
         }
 
+        public override bool Equals(object? @object)
+        {
+            if (@object is ClassAttributes other)
+            {
+                return Margin.SequenceEqual(other.Margin)
+                    && Padding.SequenceEqual(other.Padding)
+                    && Size.Equals(other.Size)
+                    && BackgroundColor.SequenceEqual(other.BackgroundColor)
+                    && BackgroundShader.Equals(other.BackgroundShader)
+                    && Texture.Equals(other.Texture)
+                    && Equals(FontFace, other.FontFace)
+                    && FontSize == other.FontSize
+                    && Align == other.Align
+                    && VerticalAlign == other.VerticalAlign
+                    && Color == other.Color
+                    && Equals(Shader, other.Shader)
+                    && DisableScissor == other.DisableScissor
+                    && DisableDraw == other.DisableDraw
+                    && Equals(_uniforms, other._uniforms);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(
+                HashCode.Combine(
+                    HashArray(Margin),
+                    HashArray(Padding),
+                    Size.GetHashCode(),
+                    HashArray(BackgroundColor),
+                    BackgroundShader.GetHashCode(),
+                    Texture.GetHashCode(),
+                    FontFace?.GetHashCode()), 
+                HashCode.Combine(
+                    FontSize.GetHashCode(),
+                    Align.GetHashCode(),
+                    VerticalAlign.GetHashCode(),
+                    Color.GetHashCode(),
+                    Shader?.GetHashCode(),
+                    DisableScissor.GetHashCode(),
+                    DisableDraw.GetHashCode(),
+                    _uniforms?.GetHashCode()));
+        }
+
+        private static int HashArray<T>(T[] array)
+        {
+            return ((IStructuralEquatable)array).GetHashCode(EqualityComparer<T>.Default);
+        }
+
         public class Builder
         {
             public float[]? Margin { get; set; }
@@ -141,24 +192,25 @@ namespace Cardamom.Ui
                         borderWidth,
                         borderColor,
                         cornerRadius));
-                return new(
-                    ExpandOrThrow(Inherit(ancestors.Select(x => x.Margin), Margin) ?? new float[4]),
-                    ExpandOrThrow(Inherit(ancestors.Select(x => x.Padding), Padding) ?? new float[4]),
-                    Inherit(ancestors.Select(x => x.Size), Size) ?? new(),
-                    backgroundColor,
-                    backgroundShader,
-                    texture,
-                    Inherit(ancestors.Select(x => x.FontFace), FontFace)?.Element,
-                    Inherit(ancestors.Select(x => x.FontSize), FontSize) ?? 12,
-                    Inherit(ancestors.Select(x => x.Align), Align) ?? HorizontalAlignment.Left,
-                    Inherit(ancestors.Select(x => x.VerticalAlign), VerticalAlign) ?? VerticalAlignment.Top,
-                    Inherit(ancestors.Select(x => x.Color), Color) ?? Color4.Black,
-                    Inherit(ancestors.Select(x => x.Shader), Shader)?.Element,
-                    Inherit(ancestors.Select(x => x.DisableScissor), DisableScissor) ?? false,
-                    backgroundColor.All(x => x.A < float.Epsilon) 
-                        && (borderColor.All(x => x.A < float.Epsilon) || borderWidth.All(x => x < float.Epsilon))
-                        && (foregroundColor.A < float.Epsilon),
-                    uniforms);
+                return resources.Dedupe(
+                    new(
+                        ExpandOrThrow(Inherit(ancestors.Select(x => x.Margin), Margin) ?? new float[4]),
+                        ExpandOrThrow(Inherit(ancestors.Select(x => x.Padding), Padding) ?? new float[4]),
+                        Inherit(ancestors.Select(x => x.Size), Size) ?? new(),
+                        backgroundColor,
+                        backgroundShader,
+                        texture,
+                        Inherit(ancestors.Select(x => x.FontFace), FontFace)?.Element,
+                        Inherit(ancestors.Select(x => x.FontSize), FontSize) ?? 12,
+                        Inherit(ancestors.Select(x => x.Align), Align) ?? HorizontalAlignment.Left,
+                        Inherit(ancestors.Select(x => x.VerticalAlign), VerticalAlign) ?? VerticalAlignment.Top,
+                        Inherit(ancestors.Select(x => x.Color), Color) ?? Color4.Black,
+                        Inherit(ancestors.Select(x => x.Shader), Shader)?.Element,
+                        Inherit(ancestors.Select(x => x.DisableScissor), DisableScissor) ?? false,
+                        backgroundColor.All(x => x.A < float.Epsilon) 
+                            && (borderColor.All(x => x.A < float.Epsilon) || borderWidth.All(x => x < float.Epsilon))
+                            && (foregroundColor.A < float.Epsilon),
+                        uniforms));
             }
 
             private static T Inherit<T>(IEnumerable<T> ancestors, T child)

@@ -130,10 +130,16 @@ namespace Cardamom.Ui.Elements
             ElementAdded?.Invoke(this, new(element));
         }
 
-        public void Remove(IUiElement element)
+        public void Remove(IUiElement element, bool dispose)
         {
-            _children.Remove(element);
-            ElementRemoved?.Invoke(this, new(element));
+            if (_children.Remove(element))
+            {
+                if (dispose)
+                {
+                    element.Dispose();
+                }
+                ElementRemoved?.Invoke(this, new(element));
+            }
         }
 
         public virtual void ResizeContext(Vector3 bounds) { }

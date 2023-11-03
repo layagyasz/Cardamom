@@ -13,7 +13,25 @@ namespace Cardamom.Ui
 
         public class BuilderResources
         {
-            private Dictionary<UniformBufferKey, UniformBuffer> _uniformBuffers = new();
+            private readonly HashSet<ClassAttributes> _classAttributes = new();
+            private readonly Dictionary<UniformBufferKey, UniformBuffer> _uniformBuffers = new();
+
+            public ClassAttributes Dedupe(ClassAttributes classAttributes)
+            {
+                if (_classAttributes.TryGetValue(classAttributes, out var current))
+                {
+                    return current;
+                }
+                foreach (var c in _classAttributes)
+                {
+                    if (c.Equals(classAttributes))
+                    {
+                        Console.WriteLine("bad hashcode {0} {1}", c.GetHashCode(), classAttributes.GetHashCode());
+                    }
+                }
+                _classAttributes.Add(classAttributes);
+                return classAttributes;
+            }
 
             public UniformBuffer Get(UniformBufferKey key)
             {
@@ -30,6 +48,16 @@ namespace Cardamom.Ui
                 uniformBuffer.SetArray(offsets[4], 2 * sizeof(float), key.CornerRadius);
                 _uniformBuffers.Add(key, uniformBuffer);
                 return uniformBuffer;
+            }
+
+            public int GetClassAttributesCount()
+            {
+                return _classAttributes.Count;
+            }
+
+            public int GetUniformBufferCount()
+            {
+                return _uniformBuffers.Count;
             }
         }
 

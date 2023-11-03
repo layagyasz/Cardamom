@@ -106,13 +106,17 @@ namespace Cardamom.Ui.Elements
             throw new NotSupportedException();
         }
 
-        public void Remove(IUiElement element)
+        public void Remove(IUiElement element, bool dispose)
         {
             int index = _elements.IndexOfValue(element);
             if (index > -1)
             {
                 _elements.RemoveAt(index);
                 ElementRemoved?.Invoke(this, new(element));
+                if (dispose)
+                {
+                    element.Dispose();
+                }
             }
         }
 

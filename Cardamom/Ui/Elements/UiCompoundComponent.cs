@@ -95,9 +95,9 @@ namespace Cardamom.Ui.Elements
             _container!.Insert(index, element);
         }
 
-        public void Remove(IUiElement element)
+        public void Remove(IUiElement element, bool dispose)
         {
-            _container!.Remove(element);
+            _container!.Remove(element, dispose);
         }
 
         public virtual void ResizeContext(Vector3 bounds)

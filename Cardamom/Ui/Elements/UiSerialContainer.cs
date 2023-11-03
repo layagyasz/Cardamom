@@ -108,11 +108,15 @@ namespace Cardamom.Ui.Elements
             ElementAdded?.Invoke(this, new(element));
         }
 
-        public void Remove(IUiElement element)
+        public void Remove(IUiElement element, bool dispose)
         {
             if (_elements.Remove(element))
             {
                 ElementRemoved?.Invoke(this, new(element));
+                if (dispose)
+                {
+                    element.Dispose();
+                }
             }
         }
 

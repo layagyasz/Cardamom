@@ -72,7 +72,7 @@ namespace Cardamom.Ui.Elements
             throw new NotImplementedException();
         }
 
-        public void Remove(IUiElement element)
+        public void Remove(IUiElement element, bool dispose)
         {
             throw new NotSupportedException();
         }
