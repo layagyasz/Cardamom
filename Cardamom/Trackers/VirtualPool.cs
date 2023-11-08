@@ -11,6 +11,11 @@
             _totalMaxFn = totalMaxFn;
         }
 
+        public bool IsEmpty()
+        {
+            return _totalFn() < float.Epsilon;
+        }
+
         public float PercentFull()
         {
             return _totalFn() / _totalMaxFn();

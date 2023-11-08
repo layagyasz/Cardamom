@@ -69,8 +69,11 @@ namespace Cardamom.Ui.Elements
             {
                 element.Position = _orientation == Orientation.Vertical ? new(0, offset, 0) : new(offset, 0, 0);
                 element.OverrideDepth = OverrideDepth;
-                offset += _orientation == Orientation.Vertical ? element.Size.Y : element.Size.X;
-                bounds.Inflate(element.Position + element.Size);
+                if (element.Visible)
+                {
+                    offset += _orientation == Orientation.Vertical ? element.Size.Y : element.Size.X;
+                    bounds.Inflate(element.Position + element.Size);
+                }
                 element.Draw(target, context);
             }
             SetDynamicSize(bounds.Size);
