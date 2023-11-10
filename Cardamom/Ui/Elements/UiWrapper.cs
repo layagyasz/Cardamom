@@ -77,6 +77,11 @@ namespace Cardamom.Ui.Elements
             throw new NotSupportedException();
         }
 
+        public void Sort(IComparer<IUiElement> element)
+        {
+            throw new NotSupportedException();
+        }
+
         public override void Update(long delta)
         {
             Element.Update(delta);

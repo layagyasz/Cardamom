@@ -144,6 +144,11 @@ namespace Cardamom.Ui.Elements
 
         public virtual void ResizeContext(Vector3 bounds) { }
 
+        public void Sort(IComparer<IUiElement> comparer) 
+        {
+            _children.Sort(comparer);
+        }
+
         public void Update(long delta)
         {
             _root.Update(delta);

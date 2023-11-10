@@ -11,5 +11,6 @@
         void Clear(bool dispose);
         void Insert(int index, IUiElement element);
         void Remove(IUiElement element, bool dispose);
+        void Sort(IComparer<IUiElement> comparer);
     }
 }

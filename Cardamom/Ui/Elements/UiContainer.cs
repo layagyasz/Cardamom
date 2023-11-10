@@ -68,9 +68,12 @@ namespace Cardamom.Ui.Elements
                 Box3 bounds = new();
                 foreach (var element in _elements.Values)
                 {
-                    bounds.Inflate(element.Position + element.Size);
-                    element.OverrideDepth = OverrideDepth;
-                    element.Draw(target, context);
+                    if (element.Visible)
+                    {
+                        bounds.Inflate(element.Position + element.Size);
+                        element.OverrideDepth = OverrideDepth;
+                        element.Draw(target, context);
+                    }
                 }
                 SetDynamicSize(bounds.Size);
                 if (!DisableScissor)
@@ -118,6 +121,11 @@ namespace Cardamom.Ui.Elements
                     element.Dispose();
                 }
             }
+        }
+
+        public void Sort(IComparer<IUiElement> comparer)
+        {
+            throw new NotSupportedException();
         }
 
         public override void Update(long delta)

@@ -36,7 +36,7 @@ namespace Cardamom.Ui.Elements
             set => _container!.OverrideDepth = value;
         }
 
-        protected IUiContainer? _container;
+        protected IUiContainer _container;
 
         public UiCompoundComponent(IController componentController, IUiContainer container)
         {
@@ -46,32 +46,34 @@ namespace Cardamom.Ui.Elements
 
         public void Add(IUiElement element)
         {
-            _container!.Add(element);
+            _container.Add(element);
         }
 
         public void Clear(bool dispose)
         {
-            _container!.Clear(dispose);
+            _container.Clear(dispose);
         }
 
         protected override void DisposeImpl()
         {
-            _container!.Dispose();
+            _container.Dispose();
+            _container.ElementAdded -= HandleElementAdded;
+            _container.ElementRemoved -= HandleElementRemoved;
         }
 
         public virtual void Draw(IRenderTarget target, IUiContext context)
         {
-            _container!.Draw(target, context);
+            _container.Draw(target, context);
         }
 
         public IUiContainer GetContainer()
         {
-            return _container!;
+            return _container;
         }
 
         public IEnumerator<IUiElement> GetEnumerator()
         {
-            return _container!.GetEnumerator();
+            return _container.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -81,33 +83,35 @@ namespace Cardamom.Ui.Elements
 
         public void Initialize()
         {
-            _container?.Initialize();
+            _container.Initialize();
             ComponentController.Bind(this);
-            if (_container != null)
-            {
-                _container.ElementAdded += HandleElementAdded;
-                _container.ElementRemoved += HandleElementRemoved;
-            }
+            _container.ElementAdded += HandleElementAdded;
+            _container.ElementRemoved += HandleElementRemoved;
         }
 
         public void Insert(int index, IUiElement element)
         {
-            _container!.Insert(index, element);
+            _container.Insert(index, element);
         }
 
         public void Remove(IUiElement element, bool dispose)
         {
-            _container!.Remove(element, dispose);
+            _container.Remove(element, dispose);
         }
 
         public virtual void ResizeContext(Vector3 bounds)
         {
-            _container!.ResizeContext(bounds);
+            _container.ResizeContext(bounds);
+        }
+
+        public void Sort(IComparer<IUiElement> comparer)
+        {
+            _container.Sort(comparer);
         }
 
         public void Update(long delta)
         {
-            _container!.Update(delta);
+            _container.Update(delta);
         }
 
         private void HandleElementAdded(object? sender, ElementEventArgs e)

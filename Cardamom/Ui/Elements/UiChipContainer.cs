@@ -4,20 +4,17 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiSerialContainer : BaseOffsetUiContainer, IUiContainer
+    public class UiChipContainer : BaseOffsetUiContainer, IUiContainer
     {
-        public enum Orientation
-        {
-            Horizontal,
-            Vertical
-        }
+        private float _maxWidth;
 
-        private readonly Orientation _orientation;
+        public UiChipContainer(Class @class, IElementController controller)
+            : base(@class, controller) { }
 
-        public UiSerialContainer(Class @class, IElementController controller, Orientation orientation)
-            : base(@class, controller)
+        public override void SetAttributes(ClassAttributes attributes)
         {
-            _orientation = orientation;
+            base.SetAttributes(attributes);
+            _maxWidth = attributes.Size.Width.GetMaxSize() - attributes.LeftPadding.X - attributes.LeftPadding.X;
         }
 
         public override void Draw(IRenderTarget target, IUiContext context)
@@ -33,23 +30,25 @@ namespace Cardamom.Ui.Elements
                 target.PushScissor(new(new(), InternalSize));
             }
             target.PushTranslation(Offset);
-            float offset = 0;
+            Vector3 cursor = new();
             Box3 bounds = new();
             foreach (var element in this)
             {
                 if (element.Visible)
                 {
-                    element.Position = MapOffset(offset);
+                    if (cursor.X + element.Size.X > _maxWidth)
+                    {
+                        cursor = new(0, bounds.Size.Y, 0);
+                    }
+                    element.Position = cursor;
                     element.OverrideDepth = OverrideDepth;
-
-                    offset += _orientation == Orientation.Vertical ? element.Size.Y : element.Size.X;
+                    cursor.X += element.Size.X;
                     bounds.Inflate(element.Position + element.Size);
                     element.Draw(target, context);
                 }
             }
             SetDynamicSize(bounds.Size);
-            SetMaxOffset(
-                Math.Min(0, (_orientation == Orientation.Vertical ? InternalSize.Y : InternalSize.X) - offset));
+            SetMaxOffset(Math.Min(0, InternalSize.Y - bounds.Size.Y));
             TryAdjustOffset(0);
             target.PopModelMatrix();
             if (!DisableScissor)
@@ -61,7 +60,7 @@ namespace Cardamom.Ui.Elements
 
         protected override Vector3 MapOffset(float offset)
         {
-            return _orientation == Orientation.Horizontal ? new(offset, 0, 0) : new(0, offset, 0);
+            return new(0, offset, 0);
         }
     }
 }
