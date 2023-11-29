@@ -19,18 +19,24 @@ namespace Cardamom.ImageProcessing.Pipelines
 
         public Canvas Get()
         {
-            if (_free.Count == 0)
+            lock (_free)
             {
-                return new Canvas(_id++, Size, Color);
+                if (_free.Count == 0)
+                {
+                    return new Canvas(_id++, Size, Color);
+                }
+                var cached = _free.Dequeue();
+                cached.GetTexture().Fill(Color);
+                return cached;
             }
-            var cached = _free.Dequeue();
-            cached.GetTexture().Fill(Color);
-            return cached;
         }
 
         public void Return(Canvas canvas)
         {
-            _free.Enqueue(canvas);
+            lock (_free)
+            {
+                _free.Enqueue(canvas);
+            }
         }
 
         public void Dispose() 

@@ -1,6 +1,6 @@
-﻿namespace Cardamom.Utils.Suppliers
+﻿namespace Cardamom.Utils.Suppliers.Promises
 {
-    public class Promise<T> : ISupplier<T>
+    public class RemotePromise<T> : IPromise<T>
     {
         public EventHandler<EventArgs>? Canceled { get; set; }
         public EventHandler<EventArgs>? Finished { get; set; }

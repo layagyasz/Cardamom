@@ -63,14 +63,17 @@ namespace Cardamom.Logging
         internal LogContext GetContext(Type? type, object? key)
         {
             var k = CompositeKey<Type?, object?>.Create(type, key);
-            if (!_contexts.TryGetValue(k, out var context))
+            lock (_contexts)
             {
-                var timer = new Stopwatch();
-                timer.Start();
-                context = new LogContext(this, type, key, _level, null, new Accessor<int>(0), null, timer);
-                _contexts.Add(k, context);
+                if (!_contexts.TryGetValue(k, out var context))
+                {
+                    var timer = new Stopwatch();
+                    timer.Start();
+                    context = new LogContext(this, type, key, _level, null, new Accessor<int>(0), null, timer);
+                    _contexts.Add(k, context);
+                }
+                return context;
             }
-            return context;
         }
     }
 }
