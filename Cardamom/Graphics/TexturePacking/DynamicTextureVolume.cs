@@ -1,5 +1,6 @@
 ﻿using Cardamom.Json.Collections;
 using Cardamom.Mathematics;
+using Cardamom.Utils.IO;
 using OpenTK.Mathematics;
 using System.Text.Json.Serialization;
 
@@ -41,7 +42,6 @@ namespace Cardamom.Graphics.TexturePacking
 
         public TextureSegment Add(string key, Texture texture)
         {
-            Box2i bounds;
             if (_checkAllPages)
             {
                 foreach (var page in _pages!)
@@ -61,7 +61,7 @@ namespace Cardamom.Graphics.TexturePacking
             }
 
             var newPage = _pageSupplier.Get();
-            if (newPage.Add(texture, out bounds))
+            if (newPage.Add(texture, out Box2i bounds))
             {
                 var segment = new TextureSegment(key, newPage.GetTexture(), bounds);
                 _segments!.Add(key, segment);
@@ -76,7 +76,6 @@ namespace Cardamom.Graphics.TexturePacking
 
         public TextureSegment Add(string key, Bitmap bitmap)
         {
-            Box2i bounds;
             if (_checkAllPages)
             {
                 foreach (var page in _pages!)
@@ -96,7 +95,7 @@ namespace Cardamom.Graphics.TexturePacking
             }
 
             var newPage = _pageSupplier.Get();
-            if (newPage.Add(bitmap, out bounds))
+            if (newPage.Add(bitmap, out Box2i bounds))
             {
                 var segment = new TextureSegment(key, newPage.GetTexture(), bounds);
                 _segments!.Add(key, segment);
@@ -140,17 +139,7 @@ namespace Cardamom.Graphics.TexturePacking
 
         public class TextureSet
         {
-            public struct DynamicSegment
-            {
-                public string Key { get; set; }
-                public string Path { get; set; }
-
-                public DynamicSegment(string key, string path)
-                {
-                    Key = key;
-                    Path = path;
-                }
-            }
+            public record struct DynamicSegment(string Key, string Path);
 
             public string Prefix { get; set; } = string.Empty;
 
@@ -168,16 +157,13 @@ namespace Cardamom.Graphics.TexturePacking
                         Path = segment.Path 
                     };
                 }
-                foreach (var pattern in Implicit)
+                foreach (var file in Implicit.SelectMany(Glob.GetFiles))
                 {
-                    foreach (var file in Directory.EnumerateFiles(string.Empty, pattern, SearchOption.AllDirectories))
+                    yield return new DynamicSegment()
                     {
-                        yield return new DynamicSegment()
-                        {
-                            Key = Prefix + Path.GetFileNameWithoutExtension(file),
-                            Path = file
-                        };
-                    }
+                        Key = Prefix + Path.GetFileNameWithoutExtension(file),
+                        Path = file
+                    };
                 }
             }
         }

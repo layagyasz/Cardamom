@@ -6,6 +6,8 @@ namespace Cardamom.Graphics
 {
     public abstract class BaseRenderTarget : GraphicsContext, IRenderTarget
     {
+        private static object s_DrawLock = new();
+
         private VertexBuffer<Vertex3>? _defaultBuffer;
 
         protected BaseRenderTarget(Box2i viewPort)
@@ -48,83 +50,86 @@ namespace Cardamom.Graphics
         public void Draw<T>(VertexBuffer<T> buffer, int start, int count, RenderResources resources)
             where T : struct
         {
-            SetActive(true);
-            Error.LogGLError("bind context");
-
-            resources.Texture0?.Bind(TextureUnit.Texture0);
-            resources.Texture1?.Bind(TextureUnit.Texture1);
-            resources.Texture2?.Bind(TextureUnit.Texture2);
-
-            Error.LogGLError("bind context");
-
-            resources.Shader.Bind();
-            resources.Shader.SetMatrix4("projection", GetProjection().Matrix);
-            if (resources.IsPretransformed)
+            lock (s_DrawLock)
             {
-                resources.Shader.SetMatrix4("view", Matrix4.Identity);
-                resources.Shader.SetMatrix4("model", Matrix4.Identity);
-            }
-            else
-            {
-                resources.Shader.SetMatrix4("view", GetViewMatrix());
-                resources.Shader.SetMatrix4("model", GetModelMatrix());
-            }
+                SetActive(true);
+                Error.LogGLError("bind context");
 
-            if (resources.EnableDepthTest)
-            {
-                GL.Enable(EnableCap.DepthTest);
-                GL.DepthFunc(DepthFunction.Lequal);
-            }
-            else
-            {
-                GL.Disable(EnableCap.DepthTest);
-            }
-            GL.DepthMask(resources.EnableDepthMask);
+                resources.Texture0?.Bind(TextureUnit.Texture0);
+                resources.Texture1?.Bind(TextureUnit.Texture1);
+                resources.Texture2?.Bind(TextureUnit.Texture2);
 
-            GL.Enable(EnableCap.Blend);
-            GL.BlendEquation(resources.BlendMode.Equation);
-            GL.BlendFuncSeparate(
-                resources.BlendMode.ColorSourceFactor,
-                resources.BlendMode.ColorDestinationFactor,
-                resources.BlendMode.AlphaSourceFactor,
-                resources.BlendMode.AlphaDestinationFactor);
-            Error.LogGLError("set blend");
+                Error.LogGLError("bind context");
 
-            var scissor = GetScissor();
-            if (scissor == null)
-            {
-                GL.Disable(EnableCap.ScissorTest);
-            }
-            else
-            {
-                if (scissor.Value.Size.X < 0 || scissor.Value.Size.Y < 0)
+                resources.Shader.Bind();
+                resources.Shader.SetMatrix4("projection", GetProjection().Matrix);
+                if (resources.IsPretransformed)
                 {
-                    return;
+                    resources.Shader.SetMatrix4("view", Matrix4.Identity);
+                    resources.Shader.SetMatrix4("model", Matrix4.Identity);
                 }
-                GL.Enable(EnableCap.ScissorTest);
-                GL.Scissor(
-                    (int)scissor.Value.Min.X,
-                    (int)(GetViewPort().Size.Y - scissor.Value.Min.Y - scissor.Value.Size.Y),
-                    (int)scissor.Value.Size.X,
-                    (int)scissor.Value.Size.Y);
-                Error.LogGLError($"set scissor {scissor}");
-            }
+                else
+                {
+                    resources.Shader.SetMatrix4("view", GetViewMatrix());
+                    resources.Shader.SetMatrix4("model", GetModelMatrix());
+                }
 
-            buffer.Draw(start, count);
+                if (resources.EnableDepthTest)
+                {
+                    GL.Enable(EnableCap.DepthTest);
+                    GL.DepthFunc(DepthFunction.Lequal);
+                }
+                else
+                {
+                    GL.Disable(EnableCap.DepthTest);
+                }
+                GL.DepthMask(resources.EnableDepthMask);
 
-            if (resources.Texture0 != null)
-            {
-                Texture.Unbind(TextureUnit.Texture0);
+                GL.Enable(EnableCap.Blend);
+                GL.BlendEquation(resources.BlendMode.Equation);
+                GL.BlendFuncSeparate(
+                    resources.BlendMode.ColorSourceFactor,
+                    resources.BlendMode.ColorDestinationFactor,
+                    resources.BlendMode.AlphaSourceFactor,
+                    resources.BlendMode.AlphaDestinationFactor);
+                Error.LogGLError("set blend");
+
+                var scissor = GetScissor();
+                if (scissor == null)
+                {
+                    GL.Disable(EnableCap.ScissorTest);
+                }
+                else
+                {
+                    if (scissor.Value.Size.X < 0 || scissor.Value.Size.Y < 0)
+                    {
+                        return;
+                    }
+                    GL.Enable(EnableCap.ScissorTest);
+                    GL.Scissor(
+                        (int)scissor.Value.Min.X,
+                        (int)(GetViewPort().Size.Y - scissor.Value.Min.Y - scissor.Value.Size.Y),
+                        (int)scissor.Value.Size.X,
+                        (int)scissor.Value.Size.Y);
+                    Error.LogGLError($"set scissor {scissor}");
+                }
+
+                buffer.Draw(start, count);
+
+                if (resources.Texture0 != null)
+                {
+                    Texture.Unbind(TextureUnit.Texture0);
+                }
+                if (resources.Texture1 != null)
+                {
+                    Texture.Unbind(TextureUnit.Texture1);
+                }
+                if (resources.Texture2 != null)
+                {
+                    Texture.Unbind(TextureUnit.Texture2);
+                }
+                SetActive(false);
             }
-            if (resources.Texture1 != null)
-            {
-                Texture.Unbind(TextureUnit.Texture1);
-            }
-            if (resources.Texture2 != null)
-            {
-                Texture.Unbind(TextureUnit.Texture2);
-            }
-            SetActive(false);
         }
     }
 }

@@ -41,6 +41,10 @@ namespace Cardamom.Trackers
 
 		public float PercentFull()
 		{
+			if (Amount < float.Epsilon || MaxAmount < float.Epsilon)
+			{
+				return 0;
+			}
 			return Amount / MaxAmount;
 		}
 

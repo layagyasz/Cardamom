@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using Cardamom.Utils.IO;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Json.Collections
@@ -36,18 +37,7 @@ namespace Cardamom.Json.Collections
             {
                 var result = (TCollection)Activator.CreateInstance(typeToConvert)!;
                 var patterns = JsonSerializer.Deserialize<List<string>>(ref reader, options)!;
-                var files = new HashSet<string>();
-                foreach (var pattern in patterns)
-                {
-                    var p = pattern.Split("::");
-                    foreach (var file 
-                        in Directory.EnumerateFiles(
-                            p.Length > 1 ? p[0] : string.Empty, p.Length > 1 ? p[1] : p[0], 
-                            SearchOption.AllDirectories))
-                    {
-                        files.Add(file);
-                    }
-                }
+                var files = new HashSet<string>(patterns.SelectMany(Glob.GetFiles));
                 foreach (var file in files)
                 {
                     foreach (var value in JsonSerializer.Deserialize<TCollection>(File.ReadAllText(file), options)!)

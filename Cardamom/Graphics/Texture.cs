@@ -130,6 +130,7 @@ namespace Cardamom.Graphics
             GL.CopyTextureSubImage2D(Handle, 0, offset.X, offset.Y, 0, 0, other.Size.X, other.Size.Y);
             buffer.Unbind();
             buffer.Dispose();
+            GL.Flush();
         }
 
         public void Update(Vector2i offset, Bitmap bitmap)
