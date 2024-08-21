@@ -91,7 +91,7 @@ namespace Cardamom.Graphics
             {
                 return page;
             }
-            var newPage = new DynamicVariableSizeTexturePage(new(128, 128), new(1, 1, 1, 0), new(1, 1), 1.1f);
+            var newPage = new DynamicVariableSizeTexturePage(new(128, 128), new(1, 1, 1, 0), new(1, 1), 1.1f, new());
             _pages.Add(characterSize, newPage);
             return newPage;
         }

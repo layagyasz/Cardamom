@@ -10,18 +10,25 @@ namespace Cardamom.Graphics.TexturePacking
             public Vector2i ElementSize { get; }
             public Color4 Fill { get; }
             public Vector2i Padding { get; }
+            public Texture.Parameters TextureParameters { get; }
 
-            public Supplier(Vector2i size, Vector2i elementSize, Color4 fill, Vector2i padding)
+            public Supplier(
+                Vector2i size,
+                Vector2i elementSize,
+                Color4 fill, 
+                Vector2i padding, 
+                Texture.Parameters textureParameters)
             {
                 Size = size;
                 ElementSize = elementSize;
                 Fill = fill;
                 Padding = padding;
+                TextureParameters = textureParameters;
             }
 
             public ITexturePage Get()
             {
-                return new DynamicStaticSizeTexturePage(Size, ElementSize, Fill, Padding);
+                return new DynamicStaticSizeTexturePage(Size, ElementSize, Fill, Padding, TextureParameters);
             }
         }
 
@@ -33,12 +40,13 @@ namespace Cardamom.Graphics.TexturePacking
 
         private Vector2i _cursor;
 
-        public DynamicStaticSizeTexturePage(Vector2i size, Vector2i elementSize, Color4 fill, Vector2i padding)
+        public DynamicStaticSizeTexturePage(
+            Vector2i size, Vector2i elementSize, Color4 fill, Vector2i padding, Texture.Parameters textureParameters)
         {
             Size = size;
             ElementSize = elementSize;
             Padding = padding;
-            _texture = Texture.Create(size, fill);
+            _texture = Texture.Create(size, fill, textureParameters);
         }
 
         protected override void DisposeImpl()

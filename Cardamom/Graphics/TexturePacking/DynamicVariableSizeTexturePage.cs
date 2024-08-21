@@ -14,21 +14,28 @@ namespace Cardamom.Graphics.TexturePacking
             public Color4 Fill { get; }
             public Vector2i Padding { get; }
             public float RowHeightRatio { get; }
+            public Texture.Parameters TextureParameters { get; }
 
             public Supplier(
-                IntInterval widthRange, IntInterval heightRange, Color4 fill, Vector2i padding, float rowHeightRatio)
+                IntInterval widthRange, 
+                IntInterval heightRange,
+                Color4 fill,
+                Vector2i padding,
+                float rowHeightRatio, 
+                Texture.Parameters textureParameters)
             {
                 WidthRange = widthRange;
                 HeightRange = heightRange;
                 Fill = fill;
                 Padding = padding;
                 RowHeightRatio = rowHeightRatio;
+                TextureParameters = textureParameters;
             }
 
             public ITexturePage Get()
             {
                 return new DynamicVariableSizeTexturePage(
-                    new(WidthRange.Minimum, HeightRange.Minimum), Fill, Padding, RowHeightRatio);
+                    new(WidthRange.Minimum, HeightRange.Minimum), Fill, Padding, RowHeightRatio, TextureParameters);
             }
         }
 
@@ -44,15 +51,21 @@ namespace Cardamom.Graphics.TexturePacking
 
         private readonly Color4 _fill;
         private readonly List<Row> _rows = new();
+        private readonly Texture.Parameters _textureParameters;
 
         private Texture? _texture;
         private int _nextRowTop;
 
         public DynamicVariableSizeTexturePage(
-            Vector2i initialSize, Color4 fill, Vector2i padding, float rowHeightRatio)
+            Vector2i initialSize,
+            Color4 fill, 
+            Vector2i padding,
+            float rowHeightRatio,
+            Texture.Parameters textureParameters)
         {
             _fill = fill;
-            _texture = Texture.Create(initialSize, fill);
+            _texture = Texture.Create(initialSize, fill, textureParameters);
+            _textureParameters = textureParameters;
             Padding = padding;
             RowHeightRatio = rowHeightRatio;
         }
@@ -144,7 +157,7 @@ namespace Cardamom.Graphics.TexturePacking
 
         private void Resize()
         {
-            var newTexture = Texture.Create(2 * _texture!.Size, _fill);
+            var newTexture = Texture.Create(2 * _texture!.Size, _fill, _textureParameters);
             newTexture.Update(_texture);
             _texture.Dispose();
             _texture = newTexture;

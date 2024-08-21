@@ -141,7 +141,7 @@ namespace Cardamom
                     new(
                         output[0].GetTexture(),
                         output[1].GetTexture(),
-                        Texture.Create(new(resolution, resolution), new(1f, 128f, 0, 0.25f))));
+                        Texture.Create(new(resolution, resolution), new(1f, 128f, 0, 0.25f), new())));
 
             var camera = new SubjectiveCamera3d(1000);
             camera.SetDistance(2);

@@ -159,5 +159,10 @@ namespace Cardamom.Collections
                 Add(item);
             }
         }
+
+        public override string ToString()
+        {
+            return string.Format($"[{string.Join(", ", this)}]");
+        }
     }
 }

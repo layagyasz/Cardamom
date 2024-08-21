@@ -17,7 +17,7 @@ namespace Cardamom.Graphics
         {
             Size = size;
 
-            _texture = Texture.Create(size, Color4.Black);
+            _texture = Texture.Create(size, Color4.Black, new());
             _depthBuffer = 
                 new GLRenderBuffer(
                     RenderbufferStorage.Depth24Stencil8, FramebufferAttachment.DepthStencilAttachment, size);

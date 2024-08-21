@@ -175,11 +175,14 @@ namespace Cardamom.Graphics.TexturePacking
             public Vector2i ElementSize { get; set; }
             public Color4 PageFill { get; set; }
             public Vector2i SegmentPadding { get; set; }
+            public Texture.Parameters TextureParameters { get; set; }
 
             public ITextureVolume Build()
             {
                 DynamicTextureVolume volume =
-                    new(new DynamicStaticSizeTexturePage.Supplier(Size, ElementSize, PageFill, SegmentPadding), false);
+                    new(
+                        new DynamicStaticSizeTexturePage.Supplier(
+                            Size, ElementSize, PageFill, SegmentPadding, TextureParameters), false);
                 foreach (var segment in Textures!.GetSegments())
                 {
                     var bitmap = Bitmap.FromFile(segment.Path);
@@ -197,13 +200,15 @@ namespace Cardamom.Graphics.TexturePacking
             public Color4 PageFill { get; set; } = new();
             public Vector2i SegmentPadding { get; set; } = new();
             public float RowHeightRatio { get; set; } = 1.1f;
+            public Texture.Parameters TextureParameters { get; set; } = new();
 
             public ITextureVolume Build()
             {
                 DynamicTextureVolume volume = 
                     new(
                         new DynamicVariableSizeTexturePage.Supplier(
-                            WidthRange, HeightRange, PageFill, SegmentPadding, RowHeightRatio), true);
+                            WidthRange, HeightRange, PageFill, SegmentPadding, RowHeightRatio, TextureParameters), 
+                        true);
                 foreach (var segment in Textures!.GetSegments())
                 {
                     var bitmap = Bitmap.FromFile(segment.Path);

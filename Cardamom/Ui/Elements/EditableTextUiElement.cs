@@ -7,7 +7,7 @@ namespace Cardamom.Ui.Elements
 {
     public class EditableTextUiElement : TextUiElement
     {
-        private static readonly Texture s_Blank = Texture.Create(new(1, 1), Color4.White);
+        private static readonly Texture s_Blank = Texture.Create(new(1, 1), Color4.White, new());
         private static readonly float s_LeftCursorBuffer = 1;
         private static readonly float s_RightCursorBuffer = 20;
         private static readonly int s_CursorPeriod = 1000;

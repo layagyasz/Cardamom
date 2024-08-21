@@ -11,7 +11,7 @@ namespace Cardamom.ImageProcessing
         public Canvas(int id, Vector2i size, Color4 color)
         {
             Id = id;
-            _texture = Texture.Create(size, color);
+            _texture = Texture.Create(size, color, new());
         }
 
         public Canvas(Texture texture)
