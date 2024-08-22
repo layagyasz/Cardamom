@@ -8,7 +8,7 @@ namespace Cardamom.ImageProcessing.Pipelines.Nodes
     {
         public class Parameters
         {
-            public ISupplier<Vector4i>? Seed { get; set; }
+            public ISupplier<int>? Seed { get; set; }
         }
 
         public override bool Inline => true;

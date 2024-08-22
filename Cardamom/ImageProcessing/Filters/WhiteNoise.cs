@@ -13,9 +13,9 @@ namespace Cardamom.ImageProcessing.Filters
         private static readonly int s_SeedLocation = 0;
         private static readonly int s_ChannelLocation = 1;
 
-        private readonly Vector4i _seed;
+        private readonly int _seed;
 
-        public WhiteNoise(Vector4i seed)
+        public WhiteNoise(int seed)
         {
             _seed = seed;
         }
@@ -27,7 +27,7 @@ namespace Cardamom.ImageProcessing.Filters
             s_WhiteNoiseShader ??= 
                 ComputeShader.FromFile("Resources/ImageProcessing/Filters/white_noise.comp", s_LocalGroupSize);
 
-            s_WhiteNoiseShader.SetVector4i(s_SeedLocation, _seed);
+            s_WhiteNoiseShader.SetInt32(s_SeedLocation, _seed);
             s_WhiteNoiseShader.SetInt32(s_ChannelLocation, (int)channel);
 
             var inTex = inputs.First().Value.GetTexture();
@@ -41,9 +41,9 @@ namespace Cardamom.ImageProcessing.Filters
 
         public class Builder : IFilter.IFilterBuilder
         {
-            private Vector4i _seed;
+            private int _seed;
 
-            public Builder SetSeed(Vector4i seed)
+            public Builder SetSeed(int seed)
             {
                 _seed = seed;
                 return this;

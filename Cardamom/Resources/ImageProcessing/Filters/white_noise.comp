@@ -9,7 +9,7 @@ layout(local_size_x = 32, local_size_y = 32, local_size_z = 1) in;
 layout(rgba32f, binding = 0) uniform image2D in_texture;
 layout(rgba32f, binding = 1) uniform image2D out_texture;
 
-layout(location=0) uniform ivec4 seed;
+layout(location=0) uniform int seed;
 layout(location=1) uniform int channel;
 
 uint hash(uint x) 
@@ -44,11 +44,12 @@ void main() {
 	vec2 p = gl_GlobalInvocationID.xy;
 	ivec2 position = ivec2(gl_GlobalInvocationID.xy);
     vec4 current = imageLoad(out_texture, position);
+    float value = generate(p, seed);
 	vec4 new = 
 		vec4(
-			(channel & CHANNEL_RED) != 0 ? generate(p, seed.r) : current.r,
-			(channel & CHANNEL_GREEN) != 0 ? generate(p, seed.g) : current.g,
-			(channel & CHANNEL_BLUE) != 0 ? generate(p, seed.b) : current.b,
-			(channel & CHANNEL_ALPHA) != 0 ? generate(p, seed.a) : current.a);
+			(channel & CHANNEL_RED) != 0 ? value : current.r,
+			(channel & CHANNEL_GREEN) != 0 ? value : current.g,
+			(channel & CHANNEL_BLUE) != 0 ? value : current.b,
+			(channel & CHANNEL_ALPHA) != 0 ? value : current.a);
     imageStore(out_texture, position, new);
 }
