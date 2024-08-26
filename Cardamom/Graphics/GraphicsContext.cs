@@ -17,6 +17,7 @@ namespace Cardamom.Graphics
         }
 
         public abstract void Clear();
+        public abstract void Clear(Color4 color);
         public abstract void Flatten();
 
         public Matrix4 GetModelMatrix()

@@ -5,6 +5,7 @@ namespace Cardamom.Graphics
     public interface IGraphicsContext
     {
         void Clear();
+        void Clear(Color4 color);
         void Flatten();
         Matrix4 GetModelMatrix();
         Projection GetProjection();

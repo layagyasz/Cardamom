@@ -44,9 +44,9 @@ namespace Cardamom.Graphics
 
         public override void Display() { }
 
-        public Texture CopyTexture()
+        public Texture GetTexture()
         {
-            return _texture.Copy();
+            return _texture;
         }
 
         public Image CopyToImage()

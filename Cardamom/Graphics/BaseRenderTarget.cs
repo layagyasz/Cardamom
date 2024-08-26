@@ -22,6 +22,16 @@ namespace Cardamom.Graphics
             GL.DepthMask(true);
             GL.Disable(EnableCap.ScissorTest);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            SetActive(false);
+        }
+
+        public override void Clear(Color4 color)
+        {
+            SetActive(true);
+            GL.ClearColor(color);
+            Clear();
+            GL.ClearColor(new());
+            SetActive(false);
         }
 
         public override void Flatten()
@@ -30,6 +40,7 @@ namespace Cardamom.Graphics
             GL.DepthMask(true);
             GL.Disable(EnableCap.ScissorTest);
             GL.Clear(ClearBufferMask.DepthBufferBit);
+            SetActive(false);
         }
 
         public void Draw(
