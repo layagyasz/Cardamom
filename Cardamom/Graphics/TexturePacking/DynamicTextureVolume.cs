@@ -175,7 +175,7 @@ namespace Cardamom.Graphics.TexturePacking
             public Vector2i ElementSize { get; set; }
             public Color4 PageFill { get; set; }
             public Vector2i SegmentPadding { get; set; }
-            public Texture.Parameters TextureParameters { get; set; }
+            public Texture.Parameters TextureParameters { get; set; } = new();
 
             public ITextureVolume Build()
             {
