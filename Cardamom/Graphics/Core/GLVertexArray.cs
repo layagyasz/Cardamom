@@ -64,6 +64,11 @@ namespace Cardamom.Graphics.Core
             _buffer.Buffer(_size, data, start, count);
         }
 
+        public void SubDataArray(T[] data, int start, int count)
+        {
+            _buffer.SubDataArray(_size * start, _size, data, count);
+        }
+
         protected override void DisposeImpl()
         {
             GL.DeleteVertexArray(Handle);

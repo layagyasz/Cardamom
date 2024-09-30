@@ -33,6 +33,11 @@ namespace Cardamom.Graphics
             Length = count;
         }
 
+        public void Sub(T[] data, int start, int count)
+        {
+            _vertices.SubDataArray(data, start, count);
+        }
+
         public void Draw(int start, int count)
         {
             _vertices.Draw(PrimitiveType, start, count);

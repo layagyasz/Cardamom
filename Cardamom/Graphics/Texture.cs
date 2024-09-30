@@ -2,6 +2,7 @@
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using StbImageSharp;
+using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics
 {
@@ -9,8 +10,13 @@ namespace Cardamom.Graphics
     {
         public struct Parameters
         {
+            [JsonConverter(typeof(JsonStringEnumConverter))]
             public TextureMinFilter MinFilter { get; set; } = TextureMinFilter.Linear;
+
+            [JsonConverter(typeof(JsonStringEnumConverter))]
             public TextureMagFilter MagFilter { get; set; } = TextureMagFilter.Linear;
+
+            [JsonConverter(typeof(JsonStringEnumConverter))]
             public TextureWrapMode WrapMode { get; set; } = TextureWrapMode.Repeat;
 
             public Parameters() { }
