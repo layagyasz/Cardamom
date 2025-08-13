@@ -3,19 +3,11 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui
 {
-    public struct MouseButtonClickEventArgs
-    {
-        public InputAction Action { get; set; }
-        public MouseButton Button { get; set; }
-        public KeyModifiers Modifiers { get; set; }
-        public bool IsPressed { get; set; }
-        public Vector3 Position { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format(
-                $"[MouseButtonClickEvent: Action={Action}, Button={Button}, Modifiers={Modifiers}, "
-                + $"IsPressed={IsPressed}, Position={Position}]");
-        }
-    }
+    public record struct MouseButtonClickEventArgs(
+        InputAction Action,
+        MouseButton Button,
+        KeyModifiers Modifierd,
+        bool IsPressed, 
+        Vector3 Position, 
+        Vector2 ScreenPosition) { }
 }

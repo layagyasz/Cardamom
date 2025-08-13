@@ -46,6 +46,11 @@ namespace Cardamom.Ui
             return _topIntersection;
         }
 
+        public Vector2 GetCursorPosition()
+        {
+            return _mouseListener!.GetMousePosition();
+        }
+
         public void Register(IInteractive element)
         {
             if (_mouseListener != null && _context != null)

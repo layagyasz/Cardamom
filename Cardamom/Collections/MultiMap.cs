@@ -8,7 +8,7 @@ namespace Cardamom.Collections
 
         public IEnumerable<TValue> this[TKey Key]
         {
-            get => _dict.ContainsKey(Key) ? _dict[Key] : Enumerable.Empty<TValue>();
+            get => _dict.TryGetValue(Key, out var value) ? value : Enumerable.Empty<TValue>();
             set => _dict[Key] = value.ToList();
         }
 
@@ -31,9 +31,9 @@ namespace Cardamom.Collections
 
         public void Add(TKey key, TValue value)
         {
-            if (_dict.ContainsKey(key))
+            if (_dict.TryGetValue(key, out var list))
             {
-                _dict[key].Add(value);
+                list.Add(value);
             }
             else
             {
@@ -43,9 +43,9 @@ namespace Cardamom.Collections
 
         public void Add(TKey key, IEnumerable<TValue> value)
         {
-            if (_dict.ContainsKey(key))
+            if (_dict.TryGetValue(key, out var list))
             {
-                _dict[key].AddRange(value);
+                list.AddRange(value);
             }
             else
             {
@@ -60,7 +60,7 @@ namespace Cardamom.Collections
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            _dict.Clear();
         }
 
         public bool Contains(KeyValuePair<TKey, IEnumerable<TValue>> item)
@@ -93,7 +93,14 @@ namespace Cardamom.Collections
         {
             if (_dict.TryGetValue(key, out var list))
             {
-                return list.Remove(value);
+                if (list.Remove(value))
+                {
+                    if (!list.Any())
+                    {
+                        Remove(key);
+                    }
+                    return true;
+                }
             }
             return false;
         }

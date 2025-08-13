@@ -1,6 +1,6 @@
 ﻿namespace Cardamom.Trackers
 {
-    public class Quantity<T>
+    public record class Quantity<T>
     {
         public T Key { get; set; }
         public float Value { get; set; }
@@ -14,11 +14,6 @@
         public static Quantity<T> Create(T key, float value)
         {
             return new Quantity<T>(key, value);
-        }
-
-        public override string ToString()
-        {
-            return $"[Quantity: Key={Key}, Value={Value}]";
         }
     }
 }

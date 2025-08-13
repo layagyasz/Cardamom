@@ -35,7 +35,21 @@ namespace Cardamom.Json
             public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
             {
                 var builder = JsonSerializer.Deserialize(ref reader, _builderType, options);
-                return (T?)_buildMethod.Invoke(builder, s_Args);
+                var built = (T?)_buildMethod.Invoke(builder, s_Args);
+                if (options.ReferenceHandler != null && built != null)
+                {
+                    if (built is IKeyed keyed)
+                    {
+                        keyed.Key = keyed.Key[1..];
+                    }
+                    var resolver = options.ReferenceHandler.CreateResolver();
+                    var referenceId = resolver.GetReference(built, out bool exists);
+                    if (!exists)
+                    {
+                        resolver.AddReference(referenceId, built);
+                    }
+                }
+                return built;
             }
 
             public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)

@@ -34,9 +34,13 @@ namespace Cardamom.Ui
         }
 
         public (IUiComponent, RadioController<T>) CreateRadio<T>(
-            Radio.Style style, IEnumerable<SelectOption<T>> range, T? initialValue = default, float scrollSpeed = 0)
+            Radio.Style style,
+            IEnumerable<SelectOption<T>> range,
+            bool isNullable = false, 
+            T? initialValue = default,
+            float scrollSpeed = 0)
         {
-            var controller = new RadioController<T>(initialValue);
+            var controller = new RadioController<T>(isNullable, initialValue);
             return (
                 new Radio(
                     controller,

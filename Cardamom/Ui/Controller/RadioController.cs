@@ -7,14 +7,20 @@ namespace Cardamom.Ui.Controller
         public EventHandler<EventArgs>? ValueChanged { get; set; }
 
         private IOptionController<T>? _selected;
+        private readonly bool _isNullable;
         private T? _value;
         private readonly List<IOptionController<T>> _range = new();
 
-        public RadioController() { }
+        public RadioController()
+            : this(/* isNullable= */ false, /* inititalValue= */ default) { }
 
-        public RadioController(T? initialValue, int bindRecursionDepth = 0)
+        public RadioController(bool isNullable)
+            : this(isNullable, /* initialValue= */ default) { }
+
+        public RadioController(bool isNullable, T? initialValue, int bindRecursionDepth = 0)
             : base(bindRecursionDepth)
         {
+            _isNullable = isNullable;
             _value = initialValue;
         }
 
@@ -61,7 +67,11 @@ namespace Cardamom.Ui.Controller
                 {
                     option.Selected += HandleElementSelected;
                     _range.Add(option);
-                    if (_value?.Equals(option.Key) ?? false)
+                    if (_value != null && _value.Equals(option.Key))
+                    {
+                        SetSelected(option, /* notify= */ false);
+                    }
+                    else if(_value == null && !_isNullable)
                     {
                         SetSelected(option, /* notify= */ true);
                     }
@@ -79,13 +89,7 @@ namespace Cardamom.Ui.Controller
                     _range.Remove(option);
                     if (option == _selected)
                     {
-                        SetSelected(
-                            GetChildren()
-                                .SelectMany(GetControllers)
-                                .Where(x => x is IOptionController<T>)
-                                .Cast<IOptionController<T>>()
-                                .FirstOrDefault(),
-                            /* notify= */ true);
+                        SetSelected(_isNullable ? null : _range.FirstOrDefault(), /* notify= */ true);
                     }
                 }
             }

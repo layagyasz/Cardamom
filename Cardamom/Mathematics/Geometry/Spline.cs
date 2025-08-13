@@ -43,8 +43,8 @@ namespace Cardamom.Mathematics.Geometry
         public static Vector3 GetPoint(
             float x, Vector3 left, Vector3 right, Vector3 tangentLeft, Vector3 tangentRight, float tension = 0)
         {
-            return (1 + x * x * (-3 + x * 2)) * left +
-                (1 - tension) * (x * (1 + x * (-2 + x))) * tangentLeft +
+            return (1 + 2 * x) * (1 - x) * (1 - x) * left +
+                (1 - tension) * x * (1 - x) * (1 - x) * tangentLeft +
                 x * x * (3 - 2 * x) * right +
                 (1 - tension) * (x * x * (x - 1)) * tangentRight;
         }

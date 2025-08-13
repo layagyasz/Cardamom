@@ -95,14 +95,13 @@ namespace Cardamom.Ui
                 SetFocus(_context?.GetTopElement());
             }
             MouseButtonClickEventArgs mouseEvent =
-                new()
-                {
-                    Action = e.Action,
-                    Button = e.Button,
-                    Modifiers = e.Modifiers,
-                    IsPressed = e.IsPressed,
-                    Position = _context!.GetTopIntersection()
-                };
+                new(
+                    e.Action,
+                    e.Button, 
+                    e.Modifiers,
+                    e.IsPressed, 
+                    _context!.GetTopIntersection(), 
+                    _context.GetCursorPosition());
             Consume(_mouseOver, x => x.Controller?.HandleMouseButtonClicked(mouseEvent) ?? false);
         }
 

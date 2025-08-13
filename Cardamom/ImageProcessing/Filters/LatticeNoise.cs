@@ -74,7 +74,7 @@ namespace Cardamom.ImageProcessing.Filters
             SemiRidge = 4
         }
 
-        public struct Settings
+        public class Settings
         {
             public Vector3 Frequency { get; set; } = new(1, 1, 1);
             public Vector3 Lacunarity { get; set; } = new(2, 2, 2);
