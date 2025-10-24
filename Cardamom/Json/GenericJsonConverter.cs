@@ -1,5 +1,4 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Cardamom.Json

@@ -19,7 +19,6 @@ namespace Cardamom.Ui.Elements
         protected BaseOffsetUiContainer(Class @class, IElementController controller)
             : base(@class, controller) { }
 
-
         public void Add(IUiElement element)
         {
             _elements.Add(element);
@@ -29,7 +28,7 @@ namespace Cardamom.Ui.Elements
 
         public void Clear(bool dispose)
         {
-            foreach (var element in _elements)
+            foreach (var element in _elements.ToList())
             {
                 ElementRemoved?.Invoke(this, new(element));
                 if (dispose)

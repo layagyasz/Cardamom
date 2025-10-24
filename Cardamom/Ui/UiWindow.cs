@@ -98,6 +98,11 @@ namespace Cardamom.Ui
 
         private void HandleResize(object? sender, ResizeEventArgs e)
         {
+            if (e.Width == 0 || e.Height == 0)
+            {
+                return;
+            }
+
             RenderWindow.SetViewPort(new(new(), e.Size));
 
             var projection = GetDefaultProjection();

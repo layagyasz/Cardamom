@@ -21,7 +21,7 @@ namespace Cardamom.Window
 
         private readonly NativeWindow _window;
 
-        public RenderWindow(string title, Vector2i size)
+        public RenderWindow(string title, Vector2i size, bool isFullscreen = true)
             : base(new(new(), size))
         {
             _window = new NativeWindow(
@@ -29,7 +29,8 @@ namespace Cardamom.Window
                 {
                     Title = title,
                     Size = size,
-                    Flags = ContextFlags.ForwardCompatible
+                    Flags = ContextFlags.ForwardCompatible,
+                    WindowState = isFullscreen ? WindowState.Fullscreen : WindowState.Normal
                 });
             _window.Context.SwapInterval = 0;
             _window.Closing += HandleClosed;
