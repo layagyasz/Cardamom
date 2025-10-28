@@ -1,6 +1,6 @@
 ﻿namespace Cardamom.Graphics
 {
-    public class Material : GraphicsResource
+    public class Material : ManagedResource
     {
         public Texture Diffuse { get; }
         public Texture Normal { get; }

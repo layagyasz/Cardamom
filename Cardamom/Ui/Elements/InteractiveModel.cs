@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class InteractiveModel : GraphicsResource, IInteractive, IRenderable
+    public class InteractiveModel : ManagedResource, IInteractive, IRenderable
     {
         public IElementController Controller { get; }
         public IControlledElement? Parent { get; set; }
@@ -55,7 +55,7 @@ namespace Cardamom.Ui.Elements
 
         protected override void DisposeImpl()
         {
-            if (_model is GraphicsResource graphicsResource)
+            if (_model is ManagedResource graphicsResource)
             {
                 graphicsResource.Dispose();
             }

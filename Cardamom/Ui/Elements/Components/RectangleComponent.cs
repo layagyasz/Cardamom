@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements.Components
 {
-    public class RectangleComponent : GraphicsResource
+    public class RectangleComponent : ManagedResource
     {
         private RenderShader? _shader;
 

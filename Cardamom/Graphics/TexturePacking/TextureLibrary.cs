@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace Cardamom.Graphics.TexturePacking
 {
     [JsonConverter(typeof(TextureLibraryJsonConverter))]
-    public class TextureLibrary : GraphicsResource
+    public class TextureLibrary : ManagedResource
     {
         public static readonly TextureLibrary Empty = new(Enumerable.Empty<ITextureVolume>());
 

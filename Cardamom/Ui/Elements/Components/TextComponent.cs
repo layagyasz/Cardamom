@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements.Components
 {
-    public class TextComponent : GraphicsResource
+    public class TextComponent : ManagedResource
     {
         public Vector2 Size => _text.Size;
 

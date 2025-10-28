@@ -1,6 +1,6 @@
-﻿namespace Cardamom.Graphics
+﻿namespace Cardamom
 {
-    public abstract class GraphicsResource : IDisposable
+    public abstract class ManagedResource : IDisposable
     {
         public void Dispose()
         {

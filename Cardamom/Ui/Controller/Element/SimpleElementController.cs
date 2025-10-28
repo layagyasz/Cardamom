@@ -1,9 +1,15 @@
-﻿namespace Cardamom.Ui.Controller.Element
+﻿using Cardamom.Audio;
+
+namespace Cardamom.Ui.Controller.Element
 {
-    public class ButtonController : ClassedUiElementController<ClassedUiElement>
+    public class SimpleElementController : ClassedUiElementController<ClassedUiElement>
     {
+        public SimpleElementController(AudioPlayer? audioPlayer)
+            : base(audioPlayer) { }
+
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
+            Click();
             Clicked?.Invoke(this, e);
             return true;
         }

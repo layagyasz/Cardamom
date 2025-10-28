@@ -1,36 +1,20 @@
-﻿using Cardamom.Window;
+﻿using Cardamom.Audio;
+using Cardamom.Window;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui.Controller.Element
 {
-    public class PaneController : ClassedUiElementController<ClassedUiElement>, IPaneController
+    public class PaneController : SimpleElementController, IPaneController
     {
         public EventHandler<EventArgs>? Closed { get; set; }
+
+        public PaneController(AudioPlayer? audioPlayer)
+            : base(audioPlayer) { }
 
         public IUiElement GetPane()
         {
             return _element!;
-        }
-
-        public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
-        {
-            Clicked?.Invoke(this, e);
-            return true;
-        }
-
-        public override bool HandleMouseEntered()
-        {
-            SetHover(true);
-            MouseEntered?.Invoke(this, EventArgs.Empty);
-            return true;
-        }
-
-        public override bool HandleMouseLeft()
-        {
-            SetHover(false);
-            MouseLeft?.Invoke(this, EventArgs.Empty);
-            return true;
         }
 
         public override bool HandleMouseButtonDragged(MouseButtonDragEventArgs e)

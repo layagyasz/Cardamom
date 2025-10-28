@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace Cardamom.Ui
 {
-    public class Class : GraphicsResource, IKeyed
+    public class Class : ManagedResource, IKeyed
     {
         private static readonly string[] s_Uniforms =
             { "textured", "foreground_color", "border_width", "border_color", "corner_radius" };

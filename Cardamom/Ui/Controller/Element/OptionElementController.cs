@@ -1,14 +1,16 @@
-﻿using OpenTK.Windowing.GraphicsLibraryFramework;
+﻿using Cardamom.Audio;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Cardamom.Ui.Controller.Element
 {
-    public class OptionElementController<T> : ClassedUiElementController<ClassedUiElement>, IOptionController<T>
+    public class OptionElementController<T> : SimpleElementController, IOptionController<T>
     {
         public EventHandler<EventArgs>? Selected { get; set; }
 
         public T Key { get; }
 
-        public OptionElementController(T key)
+        public OptionElementController(AudioPlayer? audioPlayer, T key)
+            : base(audioPlayer)
         {
             Key = key;
         }
@@ -20,25 +22,11 @@ namespace Cardamom.Ui.Controller.Element
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
-            Clicked?.Invoke(this, e);
+            base.HandleMouseButtonClicked(e);
             if (e.Button == MouseButton.Left)
             {
                 Selected?.Invoke(this, EventArgs.Empty);
             }
-            return true;
-        }
-
-        public override bool HandleMouseEntered()
-        {
-            SetHover(true);
-            MouseEntered?.Invoke(this, EventArgs.Empty);
-            return true;
-        }
-
-        public override bool HandleMouseLeft()
-        {
-            SetHover(false);
-            MouseLeft?.Invoke(this, EventArgs.Empty);
             return true;
         }
     }

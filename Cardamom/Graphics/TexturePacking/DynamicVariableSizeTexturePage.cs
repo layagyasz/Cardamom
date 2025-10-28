@@ -3,7 +3,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public class DynamicVariableSizeTexturePage : GraphicsResource, ITexturePage
+    public class DynamicVariableSizeTexturePage : ManagedResource, ITexturePage
     {
         private static readonly float s_MaxRowRatio = 1.4f;
 

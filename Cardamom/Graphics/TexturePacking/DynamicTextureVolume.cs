@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public class DynamicTextureVolume : GraphicsResource, ITextureVolume
+    public class DynamicTextureVolume : ManagedResource, ITextureVolume
     {
         private List<ITexturePage>? _pages = new();
         private Dictionary<string, TextureSegment>? _segments = new();

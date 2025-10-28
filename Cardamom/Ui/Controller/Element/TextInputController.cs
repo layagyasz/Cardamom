@@ -1,4 +1,5 @@
-﻿using Cardamom.Collections;
+﻿using Cardamom.Audio;
+using Cardamom.Collections;
 using Cardamom.Ui.Elements;
 using Cardamom.Window;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -13,6 +14,9 @@ namespace Cardamom.Ui.Controller.Element
 
         private string _value = string.Empty;
         private int _cursor = 0;
+
+        public TextInputController(AudioPlayer? audioPlayer)
+            : base(audioPlayer) { }
 
         public string? GetValue()
         {
@@ -31,6 +35,7 @@ namespace Cardamom.Ui.Controller.Element
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
+            Click();
             Clicked?.Invoke(this, e);
             return true;
         }

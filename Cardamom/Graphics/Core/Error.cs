@@ -2,7 +2,7 @@
 
 namespace Cardamom.Graphics.Core
 {
-    public static class Error
+    internal static class Error
     {
         public static void LogGLError(string callPoint)
         {
@@ -10,7 +10,7 @@ namespace Cardamom.Graphics.Core
             var code = GL.GetError();
             if (code != ErrorCode.NoError)
             {
-                throw new InvalidProgramException($"({callPoint}): {code}");
+                throw new Exception($"({callPoint}): {code}");
             }
 # endif
         }

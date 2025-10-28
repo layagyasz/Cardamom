@@ -1,4 +1,5 @@
-﻿using Cardamom.Ui.Elements;
+﻿using Cardamom.Audio;
+using Cardamom.Ui.Elements;
 using OpenTK.Windowing.Common;
 
 namespace Cardamom.Ui.Controller.Element
@@ -7,7 +8,8 @@ namespace Cardamom.Ui.Controller.Element
     {
         public float ScrollSpeed { get; set; }
 
-        public TableController(float scrollSpeed)
+        public TableController(AudioPlayer? audioPlayer, float scrollSpeed)
+            : base(audioPlayer)
         {
             ScrollSpeed = scrollSpeed;
         }
@@ -19,6 +21,7 @@ namespace Cardamom.Ui.Controller.Element
 
         public override bool HandleMouseButtonClicked(MouseButtonClickEventArgs e)
         {
+            Click();
             Clicked?.Invoke(this, e);
             return true;
         }

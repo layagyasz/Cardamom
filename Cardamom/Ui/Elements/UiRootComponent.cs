@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui.Elements
 {
-    public class UiRootComponent : GraphicsResource, IUiContainer, IUiComponent
+    public class UiRootComponent : ManagedResource, IUiContainer, IUiComponent
     {
         public EventHandler<ElementEventArgs>? ElementAdded { get; set; }
         public EventHandler<ElementEventArgs>? ElementRemoved { get; set; }

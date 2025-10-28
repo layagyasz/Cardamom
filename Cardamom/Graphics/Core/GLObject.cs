@@ -1,6 +1,6 @@
 ﻿namespace Cardamom.Graphics.Core
 {
-    public abstract class GLObject : GraphicsResource
+    public abstract class GLObject : ManagedResource
     {
         public int Handle { get; }
 
@@ -12,6 +12,7 @@
         public override bool Equals(object? @object)
         {
             return @object != null
+                && @object.GetType() == GetType()
                 && @object is GLObject other
                 && other.Handle == Handle;
         }

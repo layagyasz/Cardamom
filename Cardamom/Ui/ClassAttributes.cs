@@ -1,4 +1,5 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Audio;
+using Cardamom.Graphics;
 using Cardamom.Graphics.TexturePacking;
 using Cardamom.Json;
 using OpenTK.Mathematics;
@@ -7,24 +8,8 @@ using System.Text.Json.Serialization;
 
 namespace Cardamom.Ui
 {
-    public class ClassAttributes : GraphicsResource
+    public class ClassAttributes : ManagedResource
     {
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public enum HorizontalAlignment
-        {
-            Left,
-            Center,
-            Right
-        }
-
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public enum VerticalAlignment
-        {
-            Top,
-            Center,
-            Bottom
-        }
-
         public float[] Margin { get; }
         public Vector2 LeftMargin => new(Margin[0], Margin[1]);
         public Vector2 RightMargin => new(Margin[2], Margin[3]);
@@ -43,7 +28,10 @@ namespace Cardamom.Ui
         public VerticalAlignment VerticalAlign { get; }
         public Color4 Color { get; }
         public RenderShader? Shader { get; }
-        
+
+        public ISound? SfxMouseOver { get; }
+        public ISound? SfxClick { get; }
+
         public bool DisableScissor { get; }
         public bool DisableDraw { get; }
 
@@ -62,6 +50,8 @@ namespace Cardamom.Ui
             VerticalAlignment verticalAlign,
             Color4 color, 
             RenderShader? shader,
+            ISound? sfxMouseOver,
+            ISound? sfxClick,
             bool disableScissor,
             bool disableDraw,
             UniformBuffer uniforms)
@@ -78,6 +68,8 @@ namespace Cardamom.Ui
             VerticalAlign = verticalAlign;
             Color = color;
             Shader = shader;
+            SfxMouseOver = sfxMouseOver;
+            SfxClick = sfxClick;
             DisableScissor = disableScissor;
             DisableDraw = disableDraw;
             _uniforms = uniforms;
@@ -110,6 +102,8 @@ namespace Cardamom.Ui
                     && VerticalAlign == other.VerticalAlign
                     && Color == other.Color
                     && Equals(Shader, other.Shader)
+                    && Equals(SfxMouseOver, other.SfxMouseOver)
+                    && Equals(SfxClick, other.SfxClick)
                     && DisableScissor == other.DisableScissor
                     && DisableDraw == other.DisableDraw
                     && Equals(_uniforms, other._uniforms);
@@ -134,6 +128,9 @@ namespace Cardamom.Ui
                     VerticalAlign.GetHashCode(),
                     Color.GetHashCode(),
                     Shader?.GetHashCode(),
+                    SfxMouseOver?.GetHashCode(),
+                    SfxClick?.GetHashCode()),
+                HashCode.Combine(
                     DisableScissor.GetHashCode(),
                     DisableDraw.GetHashCode(),
                     _uniforms?.GetHashCode()));
@@ -167,6 +164,10 @@ namespace Cardamom.Ui
             public Color4? Color { get; set; }
             [JsonConverter(typeof(ReferenceJsonConverter))]
             public KeyedWrapper<RenderShader>? Shader { get; set; }
+            [JsonConverter(typeof(ReferenceJsonConverter))]
+            public KeyedWrapper<ISound>? SfxMouseOver { get; set; }
+            [JsonConverter(typeof(ReferenceJsonConverter))]
+            public KeyedWrapper<ISound>? SfxClick { get; set; }
             public bool? DisableScissor { get; set; }
 
             public ClassAttributes Build(Class.BuilderResources resources, IEnumerable<Builder> ancestors)
@@ -206,6 +207,8 @@ namespace Cardamom.Ui
                         Inherit(ancestors.Select(x => x.VerticalAlign), VerticalAlign) ?? VerticalAlignment.Top,
                         Inherit(ancestors.Select(x => x.Color), Color) ?? Color4.Black,
                         Inherit(ancestors.Select(x => x.Shader), Shader)?.Element,
+                        Inherit(ancestors.Select(x => x.SfxMouseOver), SfxMouseOver)?.Element,
+                        Inherit(ancestors.Select(x => x.SfxClick), SfxClick)?.Element,
                         Inherit(ancestors.Select(x => x.DisableScissor), DisableScissor) ?? false,
                         backgroundColor.All(x => x.A < float.Epsilon) 
                             && (borderColor.All(x => x.A < float.Epsilon) || borderWidth.All(x => x < float.Epsilon))

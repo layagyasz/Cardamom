@@ -14,8 +14,8 @@ namespace Cardamom.Ui
         public override Vector3 Size => TrueSize + LeftMargin + RightMargin;
         public ElementSizeDefinition SizeDefinition { get; private set; }
         public bool DisableScissor { get; private set; }
-        public ClassAttributes.HorizontalAlignment Align { get; private set; }
-        public ClassAttributes.VerticalAlignment VerticalAlign { get; private set; }
+        public HorizontalAlignment Align { get; private set; }
+        public VerticalAlignment VerticalAlign { get; private set; }
 
         private readonly Class _class;
 
@@ -23,6 +23,11 @@ namespace Cardamom.Ui
             : base(controller)
         {
             _class = @class;
+        }
+
+        public ClassAttributes GetAttributes(Class.State state)
+        {
+            return _class.Get(state);
         }
 
         public virtual void SetAttributes(ClassAttributes attributes)
@@ -83,9 +88,9 @@ namespace Cardamom.Ui
         {
             return Align switch
             {
-                ClassAttributes.HorizontalAlignment.Left => 0,
-                ClassAttributes.HorizontalAlignment.Center => 0.5f * (InternalSize.X - width),
-                ClassAttributes.HorizontalAlignment.Right => InternalSize.X - width,
+                HorizontalAlignment.Left => 0, 
+                HorizontalAlignment.Center => 0.5f * (InternalSize.X - width),
+                HorizontalAlignment.Right => InternalSize.X - width,
                 _ => throw new InvalidProgramException(),
             };
         }
@@ -94,9 +99,9 @@ namespace Cardamom.Ui
         {
             return VerticalAlign switch
             {
-                ClassAttributes.VerticalAlignment.Top => 0,
-                ClassAttributes.VerticalAlignment.Center => 0.5f * (InternalSize.Y - height),
-                ClassAttributes.VerticalAlignment.Bottom => InternalSize.Y - height,
+                VerticalAlignment.Top => 0,
+                VerticalAlignment.Center => 0.5f * (InternalSize.Y - height),
+                VerticalAlignment.Bottom => InternalSize.Y - height,
                 _ => throw new InvalidProgramException(),
             };
         }

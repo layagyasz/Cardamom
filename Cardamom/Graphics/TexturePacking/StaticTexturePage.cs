@@ -2,7 +2,7 @@
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public class StaticTexturePage : GraphicsResource, ITexturePage, ITextureVolume
+    public class StaticTexturePage : ManagedResource, ITexturePage, ITextureVolume
     {
         private Texture? _texture;
         private Dictionary<string, TextureSegment>? _segments;

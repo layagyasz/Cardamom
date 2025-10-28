@@ -1,7 +1,9 @@
-﻿using Cardamom.Collections;
+﻿using Cardamom.Audio;
+using Cardamom.Collections;
 using Cardamom.Graphics;
 using Cardamom.Graphics.TexturePacking;
 using Cardamom.Json;
+using Cardamom.Json.Audio;
 using Cardamom.Json.Collections;
 using Cardamom.Json.OpenTK;
 using Cardamom.Ui;
@@ -12,15 +14,17 @@ namespace Cardamom
 {
     [JsonConverter(typeof(BuilderJsonConverter))]
     [BuilderClass(typeof(Builder))]
-    public class GameResources : GraphicsResource
+    public class GameResources : ManagedResource
     {
+        private readonly Library<ISound> _sounds;
         private TextureLibrary? _textures;
         private Library<RenderShader>? _shaders;
         private Library<Class>? _classes = new();
 
         public GameResources(
-            TextureLibrary textures, Library<RenderShader> shaders, Library<Class> classes)
+            Library<ISound> sounds, TextureLibrary textures, Library<RenderShader> shaders, Library<Class> classes)
         {
+            _sounds = sounds;
             _textures = textures;
             _shaders = shaders;
             _classes = classes;
@@ -52,18 +56,20 @@ namespace Cardamom
             return _shaders![key];
         }
 
+        public ISound GetSound(string key)
+        {
+            return _sounds[key];
+        }
+
         public TextureSegment GetTexture(string key)
         {
             return _textures!.Get(key);
         }
 
-        public void DumpTextures()
-        {
-            _textures!.Dump();
-        }
-
         public class Builder
         {
+            [JsonConverter(typeof(FromFileJsonConverter))]
+            public Library<KeyedWrapper<ISound>> Sounds { get; set; } = new();
             public TextureLibrary Textures { get; set; } = TextureLibrary.Empty;
 
             [JsonConverter(typeof(FromFileJsonConverter))]
@@ -84,6 +90,7 @@ namespace Cardamom
                 options.Converters.Add(new ColorJsonConverter());
                 options.Converters.Add(new Vector2JsonConverter());
                 options.Converters.Add(new Vector2iJsonConverter());
+                options.Converters.Add(new FileStreamSoundConverter());
                 return JsonSerializer.Deserialize<Builder>(File.ReadAllText(path), options)!;
             }
 
@@ -91,6 +98,7 @@ namespace Cardamom
             {
                 var resources = new Class.BuilderResources();
                 return new GameResources(
+                    Sounds.ToLibrary(x => x.Key, x => x.Value.Element!),
                     Textures,
                     Shaders.ToLibrary(x => x.Key, x => x.Value.Element!),
                     Classes.ToLibrary(x => x.Key, x => x.Value.Build(resources)));

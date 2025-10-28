@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace Cardamom.Graphics
 {
-    public class UniformBuffer : GraphicsResource
+    public class UniformBuffer : ManagedResource
     {
         private readonly GLBuffer _buffer;
 

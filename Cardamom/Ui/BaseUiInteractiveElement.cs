@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Ui
 {
-    public abstract class BaseUiInteractiveElement : GraphicsResource, IInteractive, IUiElement
+    public abstract class BaseUiInteractiveElement : ManagedResource, IInteractive, IUiElement
     {
         public bool Visible { get; set; } = true;
         public IElementController Controller { get; }

@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Cardamom.Graphics
 {
-    public class Text : GraphicsResource, IRenderable
+    public class Text : ManagedResource, IRenderable
     {
         public Vector2 Size
         {

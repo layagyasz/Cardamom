@@ -1,4 +1,5 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Audio;
+using Cardamom.Graphics;
 using Cardamom.Graphics.Camera;
 using Cardamom.ImageProcessing;
 using Cardamom.ImageProcessing.Filters;
@@ -77,7 +78,7 @@ namespace Cardamom
             ui.Bind(
                 new KeyboardListener(SimpleKeyMapper.Us, new Keys[] { Keys.Left, Keys.Right, Keys.Up, Keys.Down }));
             var resources = GameResources.Builder.ReadFrom("Example/GraphicsResources.json").Build();
-            var uiElementFactory = new UiElementFactory(resources);
+            var uiElementFactory = new UiElementFactory(new AudioPlayer(), resources);
             var pane = uiElementFactory.CreatePane("example-base-class").Item1;
             var options = new List<SelectOption<int>>();
             for (int i = 0; i < 20; ++i)

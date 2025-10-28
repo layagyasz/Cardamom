@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace Cardamom.Graphics
 {
-    public class VertexBuffer<T> : GraphicsResource where T : struct
+    public class VertexBuffer<T> : ManagedResource where T : struct
     {
         public int Length { get; private set; }
         public PrimitiveType PrimitiveType { get;  set; }

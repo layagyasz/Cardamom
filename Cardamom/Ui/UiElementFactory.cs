@@ -1,4 +1,5 @@
-﻿using Cardamom.Graphics;
+﻿using Cardamom.Audio;
+using Cardamom.Graphics;
 using Cardamom.Graphics.TexturePacking;
 using Cardamom.Ui.Controller;
 using Cardamom.Ui.Controller.Element;
@@ -9,10 +10,12 @@ namespace Cardamom.Ui
 {
     public class UiElementFactory
     {
+        private readonly AudioPlayer _audioPlayer;
         private readonly GameResources _resources;
 
-        public UiElementFactory(GameResources resources)
+        public UiElementFactory(AudioPlayer audioPlayer, GameResources resources)
         {
+            _audioPlayer = audioPlayer;
             _resources = resources;
         }
 
@@ -29,7 +32,7 @@ namespace Cardamom.Ui
 
         public (UiContainer, PaneController) CreatePane(string className)
         {
-            var controller = new PaneController();
+            var controller = new PaneController(_audioPlayer);
             return (new UiContainer(_resources.GetClass(className), controller), controller);
         }
 
@@ -49,7 +52,7 @@ namespace Cardamom.Ui
                         range.Select(
                             x => new TextUiElement(
                                 _resources.GetClass(style.Option!),
-                                new OptionElementController<T>(x.Value),
+                                new OptionElementController<T>(_audioPlayer, x.Value),
                                 x.Text))
                         .ToList(), 
                         scrollSpeed).Item1),
@@ -66,17 +69,19 @@ namespace Cardamom.Ui
             return (
                 new Select(
                     controller,
-                    new TextUiElement(_resources.GetClass(style.Root!), new RootElementController(), string.Empty),
+                    new TextUiElement(
+                        _resources.GetClass(style.Root!), new RootElementController(_audioPlayer), string.Empty),
                     new UiCompoundComponent(
                         new RadioController<T>(), 
                         CreateTable(style.OptionContainer!, new List<IUiElement>(), scrollSpeed).Item1),
-                    _resources.GetClass(style.Option!)),
+                    _resources.GetClass(style.Option!),
+                    _audioPlayer),
                 controller);
         }
 
-        public (IUiElement, ButtonController) CreateSimpleButton(string className, Vector3 position = new())
+        public (IUiElement, SimpleElementController) CreateSimpleButton(string className, Vector3 position = new())
         {
-            var controller = new ButtonController();
+            var controller = new SimpleElementController(_audioPlayer);
             return
                 (new SimpleUiElement(_resources.GetClass(className), controller) { Position = position },
                 controller);
@@ -85,7 +90,7 @@ namespace Cardamom.Ui
         public (UiSerialContainer, TableController) CreateTable(
             string className, IEnumerable<IUiElement> rows, float scrollSpeed = 0, Vector3 position = new())
         {
-            var controller = new TableController(scrollSpeed);
+            var controller = new TableController(_audioPlayer, scrollSpeed);
             var table =
                 new UiSerialContainer(
                     _resources.GetClass(className), 
@@ -114,9 +119,9 @@ namespace Cardamom.Ui
             return row;
         }
 
-        public (IUiElement, ButtonController) CreateTextButton(string className, string text, Vector3 position = new())
+        public (IUiElement, SimpleElementController) CreateTextButton(string className, string text, Vector3 position = new())
         {
-            var controller = new ButtonController();
+            var controller = new SimpleElementController(_audioPlayer);
             var button =
                 new TextUiElement(_resources.GetClass(className), controller, text)
                 {
@@ -127,11 +132,16 @@ namespace Cardamom.Ui
 
         public (IUiElement, TextInputController) CreateTextInput(string className, Vector3 position = new())
         {
-            var controller = new TextInputController();
+            var controller = new TextInputController(_audioPlayer);
             return (
                 new EditableTextUiElement(
                     _resources.GetClass(className), controller, string.Empty) { Position = position },
                 controller);
+        }
+
+        public AudioPlayer GetAudioPlayer()
+        {
+            return _audioPlayer;
         }
 
         public Class GetClass(string key)

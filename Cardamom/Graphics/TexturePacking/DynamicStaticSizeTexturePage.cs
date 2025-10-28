@@ -2,7 +2,7 @@
 
 namespace Cardamom.Graphics.TexturePacking
 {
-    public class DynamicStaticSizeTexturePage : GraphicsResource, ITexturePage
+    public class DynamicStaticSizeTexturePage : ManagedResource, ITexturePage
     {
         public class Supplier : ITexturePageSupplier
         {

@@ -1,11 +1,29 @@
-﻿namespace Cardamom.Ui.Controller.Element
+﻿using Cardamom.Audio;
+
+namespace Cardamom.Ui.Controller.Element
 {
     public abstract class ClassedUiElementController<T> : UiInteractiveElementController<T> where T : ClassedUiElement
     {
+        private readonly AudioPlayer? _audioPlayer;
+
         private bool _disable;
         private bool _hover;
         private bool _focus;
         private bool _toggle;
+
+        public ClassedUiElementController(AudioPlayer? audioPlayer)
+        {
+            _audioPlayer = audioPlayer;
+        }
+
+        public void Click()
+        {
+            var sound = _element!.GetAttributes(GetClassState()).SfxClick;
+            if (sound != null)
+            {
+                _audioPlayer?.Play(sound.GetSampleProvider());
+            }
+        }
 
         public Class.State GetClassState()
         {
@@ -35,6 +53,14 @@
         {
             _hover = value;
             _element!.SetState(GetClassState());
+            if (value)
+            {
+                var sound = _element!.GetAttributes(GetClassState()).SfxMouseOver;
+                if (sound != null)
+                {
+                    _audioPlayer?.Play(sound.GetSampleProvider());
+                }
+            }
         }
 
         public bool GetFocus()
