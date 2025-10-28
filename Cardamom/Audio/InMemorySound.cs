@@ -16,15 +16,20 @@ namespace Cardamom.Audio
 
         public static InMemorySound FromFile(string path)
         {
-            using var reader = new AudioFileReader(path);
-            var data = new List<float>((int)(0.25f * reader.Length));
+            var reader = AudioLoader.GetReader(path);
+            var data = new List<float>();
             var readBuffer = new float[reader.WaveFormat.SampleRate * reader.WaveFormat.Channels];
             int samplesRead;
             while ((samplesRead = reader.Read(readBuffer, 0, readBuffer.Length)) > 0)
             {
                 data.AddRange(readBuffer.Take(samplesRead));
             }
-            return new(reader.WaveFormat, data.ToArray());
+            var sound = new InMemorySound(reader.WaveFormat, data.ToArray());
+            if (reader is IDisposable d)
+            {
+                d.Dispose();
+            }
+            return sound;
         }
 
         public ISampleProvider GetSampleProvider()

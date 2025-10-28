@@ -1,5 +1,4 @@
-﻿using NAudio.Vorbis;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 
 namespace Cardamom.Audio
 {
@@ -19,7 +18,7 @@ namespace Cardamom.Audio
 
         public ISampleProvider GetSampleProvider()
         {
-            return new AutoDisposeSampleProvider(new VorbisWaveReader(_path));
+            return new AutoDisposeSampleProvider(AudioLoader.GetReader(_path));
         }
     }
 }

@@ -90,7 +90,7 @@ namespace Cardamom
                 options.Converters.Add(new ColorJsonConverter());
                 options.Converters.Add(new Vector2JsonConverter());
                 options.Converters.Add(new Vector2iJsonConverter());
-                options.Converters.Add(new FileStreamSoundConverter());
+                options.Converters.Add(new InMemorySoundConverter());
                 return JsonSerializer.Deserialize<Builder>(File.ReadAllText(path), options)!;
             }
 
