@@ -47,6 +47,13 @@
             }
         }
 
+        public static List<T> ShuffleCopy<T>(IList<T> list, Random random)
+        {
+            var result = new List<T>(list);
+            result.Shuffle(random);
+            return result;
+        }
+
         public static EnumSet<T> ToEnumSet<T>(this IEnumerable<T> source)
             where T : Enum
         {
